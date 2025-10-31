@@ -51,6 +51,21 @@
         .card.slide-in {
             animation: slide-in-right 0.4s ease;
         }
+
+        /* === НОВЫЕ СТИЛИ ДЛЯ МОДАЛЬНОГО ОКНА === */
+        #hint-modal {
+            transition: opacity 0.3s ease;
+        }
+        #hint-modal-content {
+            transition: transform 0.3s ease;
+            transform: scale(0.95);
+        }
+        #hint-modal.is-open {
+            opacity: 1;
+        }
+        #hint-modal.is-open #hint-modal-content {
+            transform: scale(1);
+        }
     </style>
 </head>
 
@@ -94,9 +109,14 @@
             </div>
 
             <!-- Кнопки управления -->
-            <div id="controls-show" class="text-center">
+            <!-- === ИЗМЕНЕНИЕ ЗДЕСЬ: Добавлен space-y-3 === -->
+            <div id="controls-show" class="text-center space-y-3">
                 <button onclick="App.showAnswer()" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-lg shadow-md hover:bg-blue-600">
                     Показать ответ
+                </button>
+                <!-- === НОВАЯ КНОПКА ПОДСКАЗКИ === -->
+                <button id="hint-button" onclick="App.showHint()" class="w-full py-2 px-4 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow-md hover:bg-yellow-500 hidden">
+                    💡 Показать подсказку
                 </button>
             </div>
             
@@ -127,6 +147,21 @@
 
     </div>
 
+    <!-- === НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ПОДСКАЗКИ (изначально скрыто) === -->
+    <div id="hint-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="App.closeHintModal()">
+        <div id="hint-modal-content" class="bg-white p-4 rounded-lg shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 class="text-lg font-semibold mb-3">Подсказка:</h3>
+            <!-- Картинка будет вставлена сюда -->
+            <img id="hint-image" src="" alt="Подсказка" class="w-full h-auto rounded-md object-contain max-h-64">
+            <!-- Кнопка Закрыть -->
+            <button onclick="App.closeHintModal()" class="w-full mt-4 py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300">
+                Закрыть
+            </button>
+        </div>
+    </div>
+    <!-- === КОНЕЦ МОДАЛЬНОГО ОКНА === -->
+
+
     <!-- "МАГИЯ" (JavaScript) -->
     <script>
         
@@ -150,14 +185,25 @@
 
         /**
          * 2. Вставьте сюда ваши наборы слов.
+         * === ИЗМЕНЕНИЕ ЗДЕСЬ: Добавьте `hintImage: "ссылка..."` для карточек с подсказками. ===
          */
         const wordSets = [
             {
                 id: "a1_nouns_1",
                 name: "Существительные A1 (Часть 1)",
                 cards: [
-                    { id: "der_Tisch", front: "стол", back: "der Tisch" },
-                    { id: "die_Frau", front: "женщина", back: "die Frau" },
+                    { 
+                        id: "der_Tisch", 
+                        front: "стол", 
+                        back: "der Tisch",
+                        hintImage: "https://placehold.co/400x300/F9E5C3/4A2E00?text=Foto+eines+Tisches" // <-- ПРИМЕР: Вставьте вашу ссылку
+                    },
+                    { 
+                        id: "die_Frau", 
+                        front: "женщина", 
+                        back: "die Frau"
+                        // <-- Здесь нет hintImage, кнопка не появится
+                    },
                     { id: "das_Buch", front: "книга", back: "das Buch" },
                     { id: "der_Mann", front: "мужчина", back: "der Mann" },
                     { id: "die_Stadt", front: "город", back: "die Stadt" }
@@ -359,6 +405,14 @@
                 const card = this.sessionCards[this.currentCardIndex];
                 document.getElementById('card-front-text').textContent = card.front;
                 document.getElementById('card-back-text').textContent = card.back;
+
+                // === НОВОЕ ИЗМЕНЕНИЕ: Показываем или прячем кнопку подсказки ===
+                const hintButton = document.getElementById('hint-button');
+                if (card.hintImage) {
+                    hintButton.classList.remove('hidden');
+                } else {
+                    hintButton.classList.add('hidden');
+                }
             },
             
             /**
@@ -431,6 +485,46 @@
                 }
             },
 
+            // === НОВЫЕ ФУНКЦИИ ДЛЯ МОДАЛЬНОГО ОКНА ===
+            /**
+             * 9. Показать подсказку
+             */
+            showHint() {
+                const card = this.sessionCards[this.currentCardIndex];
+                if (!card || !card.hintImage) return;
+
+                const modal = document.getElementById('hint-modal');
+                const modalContent = document.getElementById('hint-modal-content');
+                const img = document.getElementById('hint-image');
+                
+                img.src = card.hintImage; // Устанавливаем картинку
+                
+                modal.classList.remove('hidden');
+                // Запускаем анимацию появления
+                setTimeout(() => {
+                    modal.classList.add('is-open', 'opacity-100');
+                    modalContent.classList.add('is-open');
+                }, 10); // небольшая задержка для срабатывания CSS transition
+            },
+
+            /**
+             * 10. Закрыть подсказку
+             */
+            closeHintModal() {
+                const modal = document.getElementById('hint-modal');
+                const modalContent = document.getElementById('hint-modal-content');
+                
+                // Запускаем анимацию исчезновения
+                modal.classList.remove('is-open', 'opacity-100');
+                modalContent.classList.remove('is-open');
+                
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300); // Ждем 300ms (длительность transition)
+            },
+            // === КОНЕЦ НОВЫХ ФУНКЦИЙ ===
+
+
             // --- Вспомогательные функции ---
             
             showScreen(screenId) {
@@ -469,6 +563,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
