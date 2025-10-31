@@ -34,6 +34,23 @@
         .card-back {
             transform: rotateY(180deg);
         }
+        
+        /* Стили для анимации "ухода" и "появления" карточки */
+        @keyframes slide-left {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(-100%); opacity: 0; }
+        }
+        @keyframes slide-in-right {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .card.slide-out {
+            animation: slide-left 0.4s ease forwards;
+        }
+        .card.slide-in {
+            animation: slide-in-right 0.4s ease;
+        }
     </style>
 </head>
 
@@ -50,7 +67,7 @@
         <!-- 2. Экран Главного Меню (скрыт) -->
         <div id="main-menu-screen" class="hidden">
             <h1 class="text-2xl font-bold text-center mb-6">Ваши наборы слов</h1>
-            <div id="set-list" class="space-y-3">
+            <div id="set-list" class="space-y-4">
                 <!-- Сюда будут вставлены наборы слов -->
             </div>
         </div>
@@ -91,12 +108,18 @@
                     Помню ✅
                 </button>
             </div>
+             <!-- Кнопка "Назад в меню" во время сессии -->
+            <div class="text-center mt-4">
+                <button onclick="App.showScreen('main-menu-screen')" class="text-gray-500 hover:text-gray-700">
+                    Назад в меню
+                </button>
+            </div>
         </div>
         
         <!-- 4. Экран Завершения (скрыт) -->
          <div id="finish-screen" class="hidden text-center py-20">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Отлично!</h2>
-            <p class="text-gray-600 mb-6">Вы повторили все карточки на сегодня. Возвращайтесь завтра!</p>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Сессия завершена!</h2>
+            <p id="finish-screen-text" class="text-gray-600 mb-6">Вы прошли все карточки в этой сессии.</p>
             <button onclick="App.showScreen('main-menu-screen')" class="py-3 px-6 bg-blue-500 text-white font-bold rounded-lg shadow-md hover:bg-blue-600">
                 В меню
             </button>
@@ -113,24 +136,20 @@
 
         /**
          * 1. Вставьте сюда ключи вашего проекта Firebase
-         * (Мы получим их на следующем шаге)
          */
- const firebaseConfig = {
-  apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
-  authDomain: "flash-app-19ddb.firebaseapp.com",
-  projectId: "flash-app-19ddb",
-  storageBucket: "flash-app-19ddb.firebasestorage.app",
-  messagingSenderId: "779096518661",
-  appId: "1:779096518661:web:397ba47299418261d56c6c",
-  measurementId: "G-EP0YBD164K"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
+            authDomain: "flash-app-19ddb.firebaseapp.com",
+            projectId: "flash-app-19ddb",
+            storageBucket: "flash-app-19ddb.appspot.com",
+            messagingSenderId: "779096518661",
+            appId: "1:779096518661:web:397ba47299418261d56c6c",
+            measurementId: "G-EP0YBD164K"
+        };
 
 
         /**
          * 2. Вставьте сюда ваши наборы слов.
-         * id - уникальный идентификатор (только латиница, без пробелов)
-         * name - название, которое увидит пользователь
-         * cards - массив с вашими словами
          */
         const wordSets = [
             {
@@ -146,7 +165,7 @@
             },
             {
                 id: "a1_verbs_1",
-                name: "Глаголы A1 (Ча«»сть 1)",
+                name: "Глаголы A1 (Часть 1)",
                 cards: [
                     { id: "gehen", front: "идти", back: "gehen" },
                     { id: "sehen", front: "видеть", back: "sehen" },
@@ -154,60 +173,51 @@
                     { id: "kommen", front: "приходить", back: "kommen" }
                 ]
             }
-            // ... вы можете добавить сюда сколько угодно наборов
         ];
 
         /**
          * 3. Настройка алгоритма интервального повторения.
-         * (Время в днях для каждой "коробочки")
          */
         const repetitionIntervals = {
-            1: 1,  // После 1-го успеха -> повтор через 1 день
-            2: 3,  // После 2-го успеха -> повтор через 3 дня
-            3: 7,  // После 3-го успеха -> повтор через 7 дней
-            4: 14, // После 4-го успеха -> повтор через 14 дней
-            5: 30  // После 5-го успеха -> повтор через 30 дней
-            // ... можно добавить еще
+            1: 1,  // 1 день
+            2: 3,  // 3 дня
+            3: 7,  // 7 дней
+            4: 14, // 2 недели
+            5: 30, // 1 месяц
+            6: 90  // 3 месяца
         };
 
         // ==========================================================
         // КОНЕЦ НАСТРОЙКИ
-        // (Дальше идет "магия", которую не нужно трогать)
         // ==========================================================
 
-        /**
-         * Главный объект нашего приложения
-         */
         const App = {
             db: null,
             userId: null,
-            userProgress: {}, // { "card_id": { box: 1, nextReview: "2025-10-31" }, ... }
-            sessionCards: [], // Карточки для текущей сессии
+            userProgress: {}, 
+            sessionCards: [], 
             currentCardIndex: 0,
+            isPracticeMode: false,
+            isAdvancing: false, // Защита от двойных кликов
 
             /**
              * 1. Инициализация всего приложения
              */
             async init() {
                 try {
-                    // Инициализируем Firebase
                     firebase.initializeApp(firebaseConfig);
                     this.db = firebase.firestore();
-
-                    // Инициализируем Telegram
                     Telegram.WebApp.ready();
                     
-                    // Получаем ID пользователя
                     if (!Telegram.WebApp.initDataUnsafe || !Telegram.WebApp.initDataUnsafe.user) {
-                        this.showError("Не удалось получить данные пользователя Telegram.");
-                        return;
+                        // Режим отладки в браузере
+                        console.warn("Не удалось получить данные Telegram. Запуск в режиме отладки.");
+                        this.userId = "test_user_123"; 
+                    } else {
+                        this.userId = Telegram.WebApp.initDataUnsafe.user.id.toString();
                     }
-                    this.userId = Telegram.WebApp.initDataUnsafe.user.id.toString();
                     
-                    // Загружаем прогресс пользователя из Firebase
                     await this.loadProgress();
-                    
-                    // Рисуем главное меню
                     this.renderMainMenu();
                     this.showScreen('main-menu-screen');
 
@@ -228,7 +238,9 @@
                 if (doc.exists) {
                     this.userProgress = doc.data().cards || {};
                 } else {
+                    // Создаем запись для нового пользователя
                     this.userProgress = {};
+                    await this.saveProgress();
                 }
             },
 
@@ -241,61 +253,76 @@
                 const today = this.getTodayDateString();
 
                 wordSets.forEach(set => {
-                    // Считаем, сколько карточек пора повторить
                     let dueCount = 0;
                     set.cards.forEach(card => {
                         const progress = this.userProgress[card.id];
                         if (!progress) {
-                            dueCount++; // Новая карточка, нужно учить
+                            dueCount++; 
                         } else if (progress.nextReview && progress.nextReview <= today) {
-                            dueCount++; // Подошло время повторения
+                            dueCount++; 
                         }
                     });
 
-                    // Создаем кнопку для набора
-                    const button = document.createElement('button');
-                    button.className = "w-full text-left p-4 bg-white rounded-lg shadow-md flex justify-between items-center";
-                    button.onclick = () => this.startSession(set.id);
+                    // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Создаем блок для набора слов ---
+                    const setContainer = document.createElement('div');
+                    setContainer.className = "w-full p-4 bg-white rounded-lg shadow-md";
                     
-                    button.innerHTML = `
-                        <div>
-                            <span class="font-semibold text-gray-800">${set.name}</span>
-                            <span class="block text-sm text-gray-500">${set.cards.length} слов</span>
+                    setContainer.innerHTML = `
+                        <div class="flex justify-between items-center mb-3">
+                            <div>
+                                <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
+                                <span class="block text-sm text-gray-500">${set.cards.length} слов</span>
+                            </div>
+                            ${dueCount > 0 ? 
+                                `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">${dueCount} к повтору</span>` :
+                                `<span class="text-green-500 font-semibold">✓</span>`
+                            }
                         </div>
-                        ${dueCount > 0 ? 
-                            `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">${dueCount} к повтору</span>` :
-                            `<span class="text-green-500 font-semibold">✓</span>`
-                        }
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-lg text-sm hover:bg-blue-600" 
+                                    onclick="App.startSession('${set.id}', 'review')">
+                                Повторить (${dueCount})
+                            </button>
+                            <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-lg text-sm hover:bg-gray-300" 
+                                    onclick="App.startSession('${set.id}', 'practice')">
+                                Практика (Все)
+                            </button>
+                        </div>
                     `;
-                    setListDiv.appendChild(button);
+                    setListDiv.appendChild(setContainer);
                 });
             },
             
             /**
              * 4. Запуск сессии повторения
              */
-            startSession(setId) {
+            startSession(setId, mode) {
                 const set = wordSets.find(s => s.id === setId);
                 if (!set) return;
 
-                const today = this.getTodayDateString();
+                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Устанавливаем режим сессии ---
+                this.isPracticeMode = (mode === 'practice');
                 
-                // Фильтруем карточки:
-                // 1. Новые (нет в прогрессе)
-                // 2. Те, у которых подошла дата повторения
-                this.sessionCards = set.cards.filter(card => {
-                    const progress = this.userProgress[card.id];
-                    return !progress || (progress.nextReview && progress.nextReview <= today);
-                });
+                if (this.isPracticeMode) {
+                    // Режим "Практика": берем все карточки из набора
+                    this.sessionCards = set.cards.map(card => ({...card})); // Копируем карточки
+                } else {
+                    // Режим "Повторение": берем только "созревшие" и новые
+                    const today = this.getTodayDateString();
+                    this.sessionCards = set.cards.filter(card => {
+                        const progress = this.userProgress[card.id];
+                        return !progress || (progress.nextReview && progress.nextReview <= today);
+                    });
+                }
+                
+                if (this.sessionCards.length === 0) {
+                    alert(this.isPracticeMode ? 'В этом наборе нет карточек.' : 'Для этого набора нет карточек к повторению на сегодня!');
+                    return;
+                }
                 
                 // Перемешиваем карточки для сессии
                 this.sessionCards.sort(() => Math.random() - 0.5);
                 this.currentCardIndex = 0;
-
-                if (this.sessionCards.length === 0) {
-                    alert('Для этого набора нет карточек к повторению на сегодня!');
-                    return;
-                }
                 
                 this.showScreen('study-screen');
                 this.showNextCard();
@@ -309,13 +336,22 @@
                     this.showScreen('finish-screen');
                     return;
                 }
+                
+                const cardEl = document.getElementById('card');
+                
+                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Исправляем "мерцание" ---
+                // 1. Мгновенно переворачиваем карточку "лицом" вверх
+                cardEl.classList.remove('is-flipped');
+                
+                // 2. Добавляем анимацию появления
+                cardEl.classList.add('slide-in');
+                setTimeout(() => cardEl.classList.remove('slide-in'), 400);
 
                 // Обновляем прогресс-бар
-                const percent = (this.currentCardIndex / this.sessionCards.length) * 100;
+                const percent = ((this.currentCardIndex + 1) / this.sessionCards.length) * 100;
                 document.getElementById('progress-bar').style.width = `${percent}%`;
 
-                // Возвращаем карточку в исходное состояние
-                document.getElementById('card').classList.remove('is-flipped');
+                // Возвращаем кнопки в исходное состояние
                 document.getElementById('controls-show').classList.remove('hidden');
                 document.getElementById('controls-rate').classList.add('hidden');
 
@@ -338,36 +374,47 @@
              * 7. Обработка ответа пользователя (Алгоритм)
              */
             async handleAnswer(knewIt) {
-                const card = this.sessionCards[this.currentCardIndex];
-                let progress = this.userProgress[card.id] || { box: 0 };
+                if (this.isAdvancing) return; // Защита от двойных кликов
+                this.isAdvancing = true;
 
-                if (knewIt) {
-                    // Пользователь знает: двигаем в следующую коробочку
-                    progress.box = (progress.box || 0) + 1;
-                } else {
-                    // Пользователь не знает: возвращаем в первую коробочку
-                    progress.box = 1;
+                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Проверяем режим "Практика" ---
+                // Если это режим "Практика", мы не сохраняем прогресс.
+                if (!this.isPracticeMode) {
+                    const card = this.sessionCards[this.currentCardIndex];
+                    let progress = this.userProgress[card.id] || { box: 0 };
+
+                    if (knewIt) {
+                        progress.box = (progress.box || 0) + 1;
+                    } else {
+                        progress.box = 1;
+                    }
+                    
+                    const interval = repetitionIntervals[progress.box];
+                    if (interval) {
+                        progress.nextReview = this.getFutureDateString(interval);
+                    } else {
+                        const maxBox = Math.max(...Object.keys(repetitionIntervals));
+                        const finalInterval = repetitionIntervals[maxBox] || 90;
+                        progress.nextReview = this.getFutureDateString(finalInterval);
+                    }
+                    
+                    this.userProgress[card.id] = progress;
+                    
+                    // Асинхронно сохраняем прогресс
+                    this.saveProgress();
                 }
                 
-                // Рассчитываем следующую дату повторения
-                const interval = repetitionIntervals[progress.box];
-                if (interval) {
-                    progress.nextReview = this.getFutureDateString(interval);
-                } else {
-                    // Карточка выучена (достигла последней коробочки)
-                    progress.nextReview = this.getFutureDateString(3650); // Повтор через 10 лет :)
-                }
-                
-                // Обновляем наш локальный кэш прогресса
-                this.userProgress[card.id] = progress;
-                
-                // Переходим к следующей карточке
-                this.currentCardIndex++;
-                this.showNextCard();
-                
-                // Асинхронно сохраняем прогресс в Firebase
-                // (не блокируем интерфейс, пока идет сохранение)
-                this.saveProgress();
+                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Плавный переход ---
+                // 1. Запускаем анимацию "ухода"
+                document.getElementById('card').classList.add('slide-out');
+
+                // 2. Ждем, пока анимация ухода закончится (400ms)
+                setTimeout(() => {
+                    document.getElementById('card').classList.remove('slide-out'); // Убираем класс ухода
+                    this.currentCardIndex++; // Переходим к следующей
+                    this.isAdvancing = false; // Снимаем защиту
+                    this.showNextCard(); // Показываем следующую карточку
+                }, 400); // Эта задержка должна совпадать с CSS-анимацией
             },
             
             /**
@@ -376,12 +423,11 @@
             async saveProgress() {
                 try {
                     const progressRef = this.db.collection('userProgress').doc(this.userId);
-                    // Перезаписываем весь прогресс пользователя
                     await progressRef.set({ cards: this.userProgress });
                     console.log('Прогресс сохранен в Firebase');
                 } catch (error) {
                     console.error('Ошибка сохранения прогресса:', error);
-                    alert('Не удалось сохранить ваш прогресс. Проверьте интернет-соединение.');
+                    // Не показываем alert, чтобы не мешать пользователю
                 }
             },
 
@@ -392,6 +438,11 @@
                     document.getElementById(id).classList.add('hidden');
                 });
                 document.getElementById(screenId).classList.remove('hidden');
+                
+                if (screenId === 'main-menu-screen') {
+                    // Обновляем меню, чтобы видеть актуальный счетчик
+                    this.renderMainMenu();
+                }
             },
             
             showError(message) {
@@ -418,3 +469,5 @@
     </script>
 </body>
 </html>
+
+
