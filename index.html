@@ -52,18 +52,18 @@
             animation: slide-in-right 0.4s ease;
         }
 
-        /* Стили для модального окна подсказки */
-        #hint-modal {
+        /* Стили для модальных окон */
+        .modal {
             transition: opacity 0.3s ease;
         }
-        #hint-modal-content {
+        .modal-content {
             transition: transform 0.3s ease;
             transform: scale(0.95);
         }
-        #hint-modal.is-open {
+        .modal.is-open {
             opacity: 1;
         }
-        #hint-modal.is-open #hint-modal-content {
+        .modal.is-open .modal-content {
             transform: scale(1);
         }
     </style>
@@ -113,7 +113,6 @@
                 <button onclick="App.showAnswer()" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-lg shadow-md hover:bg-blue-600">
                     Показать ответ
                 </button>
-                <!-- КНОПКА ПОДСКАЗКИ -->
                 <button id="hint-button" onclick="App.showHint()" class="w-full py-2 px-4 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow-md hover:bg-yellow-500 hidden">
                     💡 Показать подсказку
                 </button>
@@ -147,8 +146,8 @@
     </div>
 
     <!-- МОДАЛЬНОЕ ОКНО ДЛЯ ПОДСКАЗКИ (изначально скрыто) -->
-    <div id="hint-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="App.closeHintModal()">
-        <div id="hint-modal-content" class="bg-white p-4 rounded-lg shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+    <div id="hint-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="App.closeHintModal()">
+        <div id="hint-modal-content" class="modal-content bg-white p-4 rounded-lg shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
             <h3 class="text-lg font-semibold mb-3">Подсказка:</h3>
             <img id="hint-image" src="" alt="Подсказка" class="w-full h-auto rounded-md object-contain max-h-64">
             <button onclick="App.closeHintModal()" class="w-full mt-4 py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300">
@@ -156,6 +155,25 @@
             </button>
         </div>
     </div>
+
+    <!-- === НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА НАПРАВЛЕНИЯ === -->
+    <div id="direction-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="App.closeDirectionModal()">
+        <div id="direction-modal-content" class="modal-content bg-white p-6 rounded-lg shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 class="text-lg font-semibold mb-4 text-center">Выберите направление</h3>
+            <div class="space-y-3">
+                <button onclick="App.startSessionWithDirection('ru-de')" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-lg shadow-md hover:bg-blue-600">
+                    Русский → Немецкий
+                </button>
+                <button onclick="App.startSessionWithDirection('de-ru')" class="w-full py-3 px-4 bg-purple-500 text-white font-bold rounded-lg shadow-md hover:bg-purple-600">
+                    Немецкий → Русский
+                </button>
+                <button onclick="App.closeDirectionModal()" class="w-full mt-2 py-2 px-4 text-gray-600 font-semibold rounded-lg hover:bg-gray-100">
+                    Отмена
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- === КОНЕЦ МОДАЛЬНОГО ОКНА === -->
 
 
     <!-- "МАГИЯ" (JavaScript) -->
@@ -175,9 +193,6 @@
             measurementId: "G-EP0YBD164K"
         };
 
-        /**
-         * === ИЗМЕНЕНИЕ ЗДЕСЬ: Используйте локальные пути к картинкам ===
-         */
         const wordSets = [
             {
                 id: "a1_nouns_1",
@@ -187,7 +202,7 @@
                         id: "der_Tisch", 
                         front: "стол", 
                         back: "der Tisch",
-                        hintImage: "images/tisch.jpg" // <-- ПРИМЕР: ссылка на ваш локальный файл
+                        hintImage: "images/tisch.jpg" 
                     },
                     { 
                         id: "die_Frau", 
@@ -198,7 +213,7 @@
                         id: "das_Buch", 
                         front: "книга", 
                         back: "das Buch",
-                        hintImage: "images/der Daumen.webp" // <-- ПРИМЕР: ссылка на ваш локальный файл
+                        hintImage: "images/buch.png" 
                     },
                     { id: "der_Mann", front: "мужчина", back: "der Mann" },
                     { id: "die_Stadt", front: "город", back: "die Stadt" }
@@ -237,6 +252,9 @@
             currentCardIndex: 0,
             isPracticeMode: false,
             isAdvancing: false,
+            currentDirection: 'ru-de', // --- НОВОЕ: Направление по умолчанию ---
+            tempSetId: null, // --- НОВОЕ: Временное хранилище для выбора ---
+            tempMode: null,  // --- НОВОЕ: Временное хранилище для выбора ---
 
             async init() {
                 try {
@@ -293,6 +311,7 @@
                     const setContainer = document.createElement('div');
                     setContainer.className = "w-full p-4 bg-white rounded-lg shadow-md";
                     
+                    // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Кнопки теперь вызывают promptForDirection ---
                     setContainer.innerHTML = `
                         <div class="flex justify-between items-center mb-3">
                             <div>
@@ -306,11 +325,11 @@
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-lg text-sm hover:bg-blue-600" 
-                                    onclick="App.startSession('${set.id}', 'review')">
+                                    onclick="App.promptForDirection('${set.id}', 'review')">
                                 Повторить (${dueCount})
                             </button>
                             <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-lg text-sm hover:bg-gray-300" 
-                                    onclick="App.startSession('${set.id}', 'practice')">
+                                    onclick="App.promptForDirection('${set.id}', 'practice')">
                                 Практика (Все)
                             </button>
                         </div>
@@ -319,6 +338,26 @@
                 });
             },
             
+            // --- НОВАЯ ФУНКЦИЯ: Показать окно выбора направления ---
+            promptForDirection(setId, mode) {
+                this.tempSetId = setId;
+                this.tempMode = mode;
+                this.openModal('direction-modal');
+            },
+
+            // --- НОВАЯ ФУНКЦИЯ: Закрыть окно выбора направления ---
+            closeDirectionModal() {
+                this.closeModal('direction-modal');
+            },
+
+            // --- НОВАЯ ФУНКЦИЯ: Запускает сессию после выбора направления ---
+            startSessionWithDirection(direction) {
+                this.currentDirection = direction; // Сохраняем направление
+                this.closeDirectionModal();
+                this.startSession(this.tempSetId, this.tempMode); // Запускаем сессию с сохраненными параметрами
+            },
+            
+            // --- ИЗМЕНЕНИЕ ЗДЕСЬ: startSession больше не принимает 'direction' ---
             startSession(setId, mode) {
                 const set = wordSets.find(s => s.id === setId);
                 if (!set) return;
@@ -366,8 +405,15 @@
                 document.getElementById('controls-rate').classList.add('hidden');
 
                 const card = this.sessionCards[this.currentCardIndex];
-                document.getElementById('card-front-text').textContent = card.front;
-                document.getElementById('card-back-text').textContent = card.back;
+                
+                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Устанавливаем front/back в зависимости от направления ---
+                if (this.currentDirection === 'ru-de') {
+                    document.getElementById('card-front-text').textContent = card.front;
+                    document.getElementById('card-back-text').textContent = card.back;
+                } else {
+                    document.getElementById('card-front-text').textContent = card.back;
+                    document.getElementById('card-back-text').textContent = card.front;
+                }
                 
                 const hintButton = document.getElementById('hint-button');
                 if (card.hintImage) {
@@ -429,27 +475,21 @@
                 }
             },
 
-            showHint() {
-                const card = this.sessionCards[this.currentCardIndex];
-                if (!card || !card.hintImage) return;
-
-                const modal = document.getElementById('hint-modal');
-                const modalContent = document.getElementById('hint-modal-content');
-                const img = document.getElementById('hint-image');
-                
-                // === ИЗМЕНЕНИЕ ЗДЕСЬ: Устанавливаем относительный путь ===
-                img.src = card.hintImage; 
+            // --- НОВЫЕ ОБЩИЕ ФУНКЦИИ ДЛЯ МОДАЛЬНЫХ ОКОН ---
+            openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                const modalContent = document.getElementById(`${modalId}-content`);
                 
                 modal.classList.remove('hidden');
                 setTimeout(() => {
                     modal.classList.add('is-open', 'opacity-100');
                     modalContent.classList.add('is-open');
-                }, 10); 
+                }, 10);
             },
-
-            closeHintModal() {
-                const modal = document.getElementById('hint-modal');
-                const modalContent = document.getElementById('hint-modal-content');
+            
+            closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                const modalContent = document.getElementById(`${modalId}-content`);
                 
                 modal.classList.remove('is-open', 'opacity-100');
                 modalContent.classList.remove('is-open');
@@ -457,6 +497,18 @@
                 setTimeout(() => {
                     modal.classList.add('hidden');
                 }, 300);
+            },
+            
+            showHint() {
+                const card = this.sessionCards[this.currentCardIndex];
+                if (!card || !card.hintImage) return;
+                const img = document.getElementById('hint-image');
+                img.src = card.hintImage; 
+                this.openModal('hint-modal');
+            },
+
+            closeHintModal() {
+                this.closeModal('hint-modal');
             },
             
             showScreen(screenId) {
@@ -493,6 +545,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
