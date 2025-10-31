@@ -44,12 +44,19 @@
             0% { transform: translateX(100%); opacity: 0; }
             100% { transform: translateX(0); opacity: 1; }
         }
-
         .card.slide-out {
             animation: slide-left 0.4s ease forwards;
         }
         .card.slide-in {
             animation: slide-in-right 0.4s ease;
+        }
+        
+        /* Стили для модального окна подсказки */
+        #hint-modal {
+            transition: opacity 0.3s ease;
+        }
+        #hint-modal-content {
+            transition: transform 0.3s ease;
         }
     </style>
 </head>
@@ -94,9 +101,13 @@
             </div>
 
             <!-- Кнопки управления -->
-            <div id="controls-show" class="text-center">
+            <div id="controls-show" class="text-center space-y-3">
                 <button onclick="App.showAnswer()" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-lg shadow-md hover:bg-blue-600">
                     Показать ответ
+                </button>
+                <!-- НОВАЯ КНОПКА ПОДСКАЗКИ -->
+                <button id="hint-button" onclick="App.showHint()" class="w-full py-2 px-4 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow-md hover:bg-yellow-500">
+                    💡 Показать подсказку
                 </button>
             </div>
             
@@ -127,6 +138,18 @@
 
     </div>
 
+    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ПОДСКАЗКИ (скрыто) -->
+    <div id="hint-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="App.closeHintModal()">
+        <div id="hint-modal-content" class="bg-white p-4 rounded-lg shadow-xl max-w-sm w-full transform scale-95" onclick="event.stopPropagation()">
+            <h3 class="text-lg font-semibold mb-3">Подсказка:</h3>
+            <img id="hint-image" src="" alt="Подсказка" class="w-full h-auto rounded-md object-contain max-h-64">
+            <button onclick="App.closeHintModal()" class="w-full mt-4 py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300">
+                Закрыть
+            </button>
+        </div>
+    </div>
+
+
     <!-- "МАГИЯ" (JavaScript) -->
     <script>
         
@@ -138,27 +161,39 @@
          * 1. Вставьте сюда ключи вашего проекта Firebase
          */
         const firebaseConfig = {
-            apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
-            authDomain: "flash-app-19ddb.firebaseapp.com",
-            projectId: "flash-app-19ddb",
-            storageBucket: "flash-app-19ddb.appspot.com",
-            messagingSenderId: "779096518661",
-            appId: "1:779096518661:web:397ba47299418261d56c6c",
-            measurementId: "G-EP0YBD164K"
+            // ▼▼▼ ВСТАВЬТЕ ВАШИ КЛЮЧИ FIREBASE СЮДА ▼▼▼
+            apiKey: "AIza...",
+            authDomain: "YOUR-PROJECT.firebaseapp.com",
+            projectId: "YOUR-PROJECT-ID",
+            storageBucket: "YOUR-PROJECT.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+            // ▲▲▲ КОНЕЦ СЕКЦИИ КЛЮЧЕЙ ▲▲▲
         };
 
 
         /**
          * 2. Вставьте сюда ваши наборы слов.
+         * Добавьте `hintImage: "ссылка..."` для карточек с подсказками.
          */
         const wordSets = [
             {
                 id: "a1_nouns_1",
                 name: "Существительные A1 (Часть 1)",
                 cards: [
-                    { id: "der_Tisch", front: "стол", back: "der Tisch" },
-                    { id: "die_Frau", front: "женщина", back: "die Frau" },
-                    { id: "das_Buch", front: "книга", back: "das Buch" },
+                    { 
+                        id: "der_Tisch", 
+                        front: "стол", 
+                        back: "der Tisch",
+                        hintImage: "https://v5.airtableusercontent.com/..." // <-- ПРИМЕР: ВАША ССЫЛКА ИЗ AIRTABLE
+                    },
+                    { 
+                        id: "die_Frau", 
+                        front: "женщина", 
+                        back: "die Frau"
+                        // <-- Здесь нет hintImage, кнопка не появится
+                    },
+                    { id: "das_Buch", front: "книга", back: "das Buch", hintImage: "https://airtable.com/appoL6oj1BMZQJXnN/tblYR2NzHSJ0bsGKE/viwnilh834eNtC4xo/recVShgg4t6QgzoDz/fldGrO4dtMBm4djgK/att3RvbBe1WW4LNoc?blocks=hide" },
                     { id: "der_Mann", front: "мужчина", back: "der Mann" },
                     { id: "die_Stadt", front: "город", back: "die Stadt" }
                 ]
@@ -200,9 +235,6 @@
             isPracticeMode: false,
             isAdvancing: false, // Защита от двойных кликов
 
-            /**
-             * 1. Инициализация всего приложения
-             */
             async init() {
                 try {
                     firebase.initializeApp(firebaseConfig);
@@ -210,7 +242,6 @@
                     Telegram.WebApp.ready();
                     
                     if (!Telegram.WebApp.initDataUnsafe || !Telegram.WebApp.initDataUnsafe.user) {
-                        // Режим отладки в браузере
                         console.warn("Не удалось получить данные Telegram. Запуск в режиме отладки.");
                         this.userId = "test_user_123"; 
                     } else {
@@ -227,9 +258,6 @@
                 }
             },
 
-            /**
-             * 2. Загрузка прогресса пользователя из Firebase
-             */
             async loadProgress() {
                 this.showScreen('loading-screen');
                 const progressRef = this.db.collection('userProgress').doc(this.userId);
@@ -238,15 +266,11 @@
                 if (doc.exists) {
                     this.userProgress = doc.data().cards || {};
                 } else {
-                    // Создаем запись для нового пользователя
                     this.userProgress = {};
                     await this.saveProgress();
                 }
             },
 
-            /**
-             * 3. Отрисовка главного меню
-             */
             renderMainMenu() {
                 const setListDiv = document.getElementById('set-list');
                 setListDiv.innerHTML = '';
@@ -263,7 +287,6 @@
                         }
                     });
 
-                    // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Создаем блок для набора слов ---
                     const setContainer = document.createElement('div');
                     setContainer.className = "w-full p-4 bg-white rounded-lg shadow-md";
                     
@@ -293,21 +316,15 @@
                 });
             },
             
-            /**
-             * 4. Запуск сессии повторения
-             */
             startSession(setId, mode) {
                 const set = wordSets.find(s => s.id === setId);
                 if (!set) return;
 
-                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Устанавливаем режим сессии ---
                 this.isPracticeMode = (mode === 'practice');
                 
                 if (this.isPracticeMode) {
-                    // Режим "Практика": берем все карточки из набора
-                    this.sessionCards = set.cards.map(card => ({...card})); // Копируем карточки
+                    this.sessionCards = set.cards.map(card => ({...card})); 
                 } else {
-                    // Режим "Повторение": берем только "созревшие" и новые
                     const today = this.getTodayDateString();
                     this.sessionCards = set.cards.filter(card => {
                         const progress = this.userProgress[card.id];
@@ -320,7 +337,6 @@
                     return;
                 }
                 
-                // Перемешиваем карточки для сессии
                 this.sessionCards.sort(() => Math.random() - 0.5);
                 this.currentCardIndex = 0;
                 
@@ -328,9 +344,6 @@
                 this.showNextCard();
             },
 
-            /**
-             * 5. Показ следующей карточки
-             */
             showNextCard() {
                 if (this.currentCardIndex >= this.sessionCards.length) {
                     this.showScreen('finish-screen');
@@ -339,46 +352,40 @@
                 
                 const cardEl = document.getElementById('card');
                 
-                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Исправляем "мерцание" ---
-                // 1. Мгновенно переворачиваем карточку "лицом" вверх
+                // Исправляем "мерцание"
                 cardEl.classList.remove('is-flipped');
-                
-                // 2. Добавляем анимацию появления
                 cardEl.classList.add('slide-in');
                 setTimeout(() => cardEl.classList.remove('slide-in'), 400);
 
-                // Обновляем прогресс-бар
                 const percent = ((this.currentCardIndex + 1) / this.sessionCards.length) * 100;
                 document.getElementById('progress-bar').style.width = `${percent}%`;
 
-                // Возвращаем кнопки в исходное состояние
                 document.getElementById('controls-show').classList.remove('hidden');
                 document.getElementById('controls-rate').classList.add('hidden');
 
-                // Заполняем текстом
                 const card = this.sessionCards[this.currentCardIndex];
                 document.getElementById('card-front-text').textContent = card.front;
                 document.getElementById('card-back-text').textContent = card.back;
+                
+                // --- НОВАЯ ЛОГИКА: Показываем или прячем кнопку подсказки ---
+                const hintButton = document.getElementById('hint-button');
+                if (card.hintImage) {
+                    hintButton.classList.remove('hidden');
+                } else {
+                    hintButton.classList.add('hidden');
+                }
             },
             
-            /**
-             * 6. Показ ответа (переворот карточки)
-             */
             showAnswer() {
                 document.getElementById('card').classList.add('is-flipped');
                 document.getElementById('controls-show').classList.add('hidden');
                 document.getElementById('controls-rate').classList.remove('hidden');
             },
 
-            /**
-             * 7. Обработка ответа пользователя (Алгоритм)
-             */
             async handleAnswer(knewIt) {
-                if (this.isAdvancing) return; // Защита от двойных кликов
+                if (this.isAdvancing) return; 
                 this.isAdvancing = true;
 
-                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Проверяем режим "Практика" ---
-                // Если это режим "Практика", мы не сохраняем прогресс.
                 if (!this.isPracticeMode) {
                     const card = this.sessionCards[this.currentCardIndex];
                     let progress = this.userProgress[card.id] || { box: 0 };
@@ -399,27 +406,18 @@
                     }
                     
                     this.userProgress[card.id] = progress;
-                    
-                    // Асинхронно сохраняем прогресс
                     this.saveProgress();
                 }
                 
-                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Плавный переход ---
-                // 1. Запускаем анимацию "ухода"
                 document.getElementById('card').classList.add('slide-out');
-
-                // 2. Ждем, пока анимация ухода закончится (400ms)
                 setTimeout(() => {
-                    document.getElementById('card').classList.remove('slide-out'); // Убираем класс ухода
-                    this.currentCardIndex++; // Переходим к следующей
-                    this.isAdvancing = false; // Снимаем защиту
-                    this.showNextCard(); // Показываем следующую карточку
-                }, 400); // Эта задержка должна совпадать с CSS-анимацией
+                    document.getElementById('card').classList.remove('slide-out'); 
+                    this.currentCardIndex++; 
+                    this.isAdvancing = false; 
+                    this.showNextCard(); 
+                }, 400); 
             },
             
-            /**
-             * 8. Сохранение прогресса в Firebase
-             */
             async saveProgress() {
                 try {
                     const progressRef = this.db.collection('userProgress').doc(this.userId);
@@ -427,10 +425,41 @@
                     console.log('Прогресс сохранен в Firebase');
                 } catch (error) {
                     console.error('Ошибка сохранения прогресса:', error);
-                    // Не показываем alert, чтобы не мешать пользователю
                 }
             },
 
+            // --- НОВЫЕ ФУНКЦИИ ДЛЯ ПОДСКАЗКИ ---
+            showHint() {
+                const card = this.sessionCards[this.currentCardIndex];
+                if (!card || !card.hintImage) return;
+
+                const modal = document.getElementById('hint-modal');
+                const modalContent = document.getElementById('hint-modal-content');
+                const img = document.getElementById('hint-image');
+                
+                img.src = card.hintImage; // Устанавливаем картинку
+                
+                modal.classList.remove('hidden');
+                // Запускаем анимацию появления
+                setTimeout(() => {
+                    modal.classList.add('opacity-100');
+                    modalContent.classList.add('scale-100');
+                }, 10);
+            },
+
+            closeHintModal() {
+                const modal = document.getElementById('hint-modal');
+                const modalContent = document.getElementById('hint-modal-content');
+                
+                // Запускаем анимацию исчезновения
+                modal.classList.remove('opacity-100');
+                modalContent.classList.remove('scale-100');
+                
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300); // Ждем 300ms (длительность transition)
+            },
+            
             // --- Вспомогательные функции ---
             
             showScreen(screenId) {
@@ -440,7 +469,6 @@
                 document.getElementById(screenId).classList.remove('hidden');
                 
                 if (screenId === 'main-menu-screen') {
-                    // Обновляем меню, чтобы видеть актуальный счетчик
                     this.renderMainMenu();
                 }
             },
@@ -469,5 +497,7 @@
     </script>
 </body>
 </html>
+
+
 
 
