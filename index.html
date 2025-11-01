@@ -66,6 +66,14 @@
         .modal.is-open .modal-content {
             transform: scale(1);
         }
+
+        /* === НОВЫЙ СТИЛЬ ДЛЯ ЗАБЛОКИРОВАННОЙ КНОПКИ === */
+        .button-locked {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #6b7280; /* gray-500 */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
     </style>
 </head>
 
@@ -156,7 +164,7 @@
         </div>
     </div>
 
-    <!-- === НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА НАПРАВЛЕНИЯ === -->
+    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА НАПРАВЛЕНИЯ -->
     <div id="direction-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="App.closeDirectionModal()">
         <div id="direction-modal-content" class="modal-content bg-white p-6 rounded-lg shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
             <h3 class="text-lg font-semibold mb-4 text-center">Выберите направление</h3>
@@ -173,7 +181,6 @@
             </div>
         </div>
     </div>
-    <!-- === КОНЕЦ МОДАЛЬНОГО ОКНА === -->
 
 
     <!-- "МАГИЯ" (JavaScript) -->
@@ -196,37 +203,31 @@
         const wordSets = [
             {
                 id: "a1_nouns_1",
-                name: "Существительные A1 (Часть 1)",
+                name: "Существительные A1 (Часть 1)", // <- Уровень 1 (бесплатный)
                 cards: [
-                    { 
-                        id: "der_Tisch", 
-                        front: "стол", 
-                        back: "der Tisch",
-                        hintImage: "images/tisch.jpg" 
-                    },
-                    { 
-                        id: "die_Frau", 
-                        front: "женщина", 
-                        back: "die Frau"
-                    },
-                    { 
-                        id: "das_Buch", 
-                        front: "книга", 
-                        back: "das Buch",
-                        hintImage: "images/buch.png" 
-                    },
+                    { id: "graben", front: "копать", back: "graben - grub - gegraben", hintImage: "images/graben.jpg" },
+                    { id: "die_Frau", front: "женщина", back: "die Frau" },
+                    { id: "das_Buch", front: "книга", back: "das Buch", hintImage: "images/buch.png" },
                     { id: "der_Mann", front: "мужчина", back: "der Mann" },
                     { id: "die_Stadt", front: "город", back: "die Stadt" }
                 ]
             },
             {
                 id: "a1_verbs_1",
-                name: "Глаголы A1 (Часть 1)",
+                name: "Глаголы A1 (Часть 1)", // <- Уровень 2 (платный)
                 cards: [
                     { id: "gehen", front: "идти", back: "gehen" },
                     { id: "sehen", front: "видеть", back: "sehen" },
                     { id: "sprechen", front: "говорить", back: "sprechen" },
                     { id: "kommen", front: "приходить", back: "kommen" }
+                ]
+            },
+            {
+                id: "a1_nouns_2",
+                name: "Существительные A1 (Часть 2)", // <- Уровень 3 (платный)
+                cards: [
+                    { id: "das_Auto", front: "машина", back: "das Auto" },
+                    { id: "das_Haus", front: "дом", back: "das Haus" }
                 ]
             }
         ];
@@ -248,13 +249,14 @@
             db: null,
             userId: null,
             userProgress: {}, 
+            unlockedLevel: 1, // --- НОВОЕ: Уровень доступа пользователя ---
             sessionCards: [], 
             currentCardIndex: 0,
             isPracticeMode: false,
             isAdvancing: false,
-            currentDirection: 'ru-de', // --- НОВОЕ: Направление по умолчанию ---
-            tempSetId: null, // --- НОВОЕ: Временное хранилище для выбора ---
-            tempMode: null,  // --- НОВОЕ: Временное хранилище для выбора ---
+            currentDirection: 'ru-de', 
+            tempSetId: null, 
+            tempMode: null,  
 
             async init() {
                 try {
@@ -286,9 +288,13 @@
                 
                 if (doc.exists) {
                     this.userProgress = doc.data().cards || {};
+                    // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Загружаем уровень доступа ---
+                    this.unlockedLevel = doc.data().unlockedLevel || 1; // По умолчанию 1
                 } else {
+                    // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Устанавливаем уровень 1 для новичков ---
                     this.userProgress = {};
-                    await this.saveProgress();
+                    this.unlockedLevel = 1;
+                    await this.saveProgress(); // Сохраняем начальное состояние
                 }
             },
 
@@ -297,67 +303,93 @@
                 setListDiv.innerHTML = '';
                 const today = this.getTodayDateString();
 
-                wordSets.forEach(set => {
+                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Проверяем доступ ---
+                wordSets.forEach((set, index) => {
+                    const setLevel = index + 1; // Уровень сета = его порядковый номер
+                    const isUnlocked = setLevel <= this.unlockedLevel;
+
                     let dueCount = 0;
-                    set.cards.forEach(card => {
-                        const progress = this.userProgress[card.id];
-                        if (!progress) {
-                            dueCount++; 
-                        } else if (progress.nextReview && progress.nextReview <= today) {
-                            dueCount++; 
-                        }
-                    });
+                    if (isUnlocked) { // Считаем карточки только для открытых сетов
+                        set.cards.forEach(card => {
+                            const progress = this.userProgress[card.id];
+                            if (!progress) {
+                                dueCount++; 
+                            } else if (progress.nextReview && progress.nextReview <= today) {
+                                dueCount++; 
+                            }
+                        });
+                    }
 
                     const setContainer = document.createElement('div');
                     setContainer.className = "w-full p-4 bg-white rounded-lg shadow-md";
                     
-                    // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Кнопки теперь вызывают promptForDirection ---
+                    let buttonsHtml = '';
+                    if (isUnlocked) {
+                        // Если сет открыт, показываем обычные кнопки
+                        buttonsHtml = `
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-lg text-sm hover:bg-blue-600" 
+                                        onclick="App.promptForDirection('${set.id}', 'review')">
+                                    Повторить (${dueCount})
+                                </button>
+                                <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-lg text-sm hover:bg-gray-300" 
+                                        onclick="App.promptForDirection('${set.id}', 'practice')">
+                                    Практика (Все)
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        // Если сет заблокирован, показываем кнопку "Открыть"
+                        buttonsHtml = `
+                            <button class="w-full py-2 px-3 button-locked" 
+                                    onclick="App.showPaymentInfo(${setLevel})">
+                                🔒 Открыть доступ
+                            </button>
+                        `;
+                    }
+
                     setContainer.innerHTML = `
                         <div class="flex justify-between items-center mb-3">
                             <div>
                                 <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
                                 <span class="block text-sm text-gray-500">${set.cards.length} слов</span>
                             </div>
-                            ${dueCount > 0 ? 
-                                `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">${dueCount} к повтору</span>` :
-                                `<span class="text-green-500 font-semibold">✓</span>`
+                            ${isUnlocked ? 
+                                (dueCount > 0 ? 
+                                    `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">${dueCount} к повтору</span>` :
+                                    `<span class="text-green-500 font-semibold">✓</span>`) :
+                                '' // Не показываем счетчик для заблокированных
                             }
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-lg text-sm hover:bg-blue-600" 
-                                    onclick="App.promptForDirection('${set.id}', 'review')">
-                                Повторить (${dueCount})
-                            </button>
-                            <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-lg text-sm hover:bg-gray-300" 
-                                    onclick="App.promptForDirection('${set.id}', 'practice')">
-                                Практика (Все)
-                            </button>
-                        </div>
+                        ${buttonsHtml}
                     `;
                     setListDiv.appendChild(setContainer);
                 });
             },
             
-            // --- НОВАЯ ФУНКЦИЯ: Показать окно выбора направления ---
+            // --- НОВАЯ ФУНКЦИЯ: Показывает сообщение об оплате ---
+            showPaymentInfo(setLevel) {
+                alert(`Для доступа к Cету ${setLevel}, пожалуйста, свяжитесь с нами в чате для оплаты.`);
+                // Здесь можно добавить код для закрытия Mini App
+                // Telegram.WebApp.close();
+            },
+
             promptForDirection(setId, mode) {
                 this.tempSetId = setId;
                 this.tempMode = mode;
                 this.openModal('direction-modal');
             },
 
-            // --- НОВАЯ ФУНКЦИЯ: Закрыть окно выбора направления ---
             closeDirectionModal() {
                 this.closeModal('direction-modal');
             },
 
-            // --- НОВАЯ ФУНКЦИЯ: Запускает сессию после выбора направления ---
             startSessionWithDirection(direction) {
-                this.currentDirection = direction; // Сохраняем направление
+                this.currentDirection = direction;
                 this.closeDirectionModal();
-                this.startSession(this.tempSetId, this.tempMode); // Запускаем сессию с сохраненными параметрами
+                this.startSession(this.tempSetId, this.tempMode);
             },
             
-            // --- ИЗМЕНЕНИЕ ЗДЕСЬ: startSession больше не принимает 'direction' ---
             startSession(setId, mode) {
                 const set = wordSets.find(s => s.id === setId);
                 if (!set) return;
@@ -406,7 +438,6 @@
 
                 const card = this.sessionCards[this.currentCardIndex];
                 
-                // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Устанавливаем front/back в зависимости от направления ---
                 if (this.currentDirection === 'ru-de') {
                     document.getElementById('card-front-text').textContent = card.front;
                     document.getElementById('card-back-text').textContent = card.back;
@@ -453,7 +484,7 @@
                     }
                     
                     this.userProgress[card.id] = progress;
-                    this.saveProgress();
+                    this.saveProgress(); // Сохраняем только карточки
                 }
                 
                 document.getElementById('card').classList.add('slide-out');
@@ -468,14 +499,17 @@
             async saveProgress() {
                 try {
                     const progressRef = this.db.collection('userProgress').doc(this.userId);
-                    await progressRef.set({ cards: this.userProgress });
+                    // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Сохраняем и карточки, и уровень доступа ---
+                    await progressRef.set({ 
+                        cards: this.userProgress,
+                        unlockedLevel: this.unlockedLevel 
+                    }, { merge: true }); // merge: true важно, чтобы не затереть одно другим
                     console.log('Прогресс сохранен в Firebase');
                 } catch (error) {
                     console.error('Ошибка сохранения прогресса:', error);
                 }
             },
 
-            // --- НОВЫЕ ОБЩИЕ ФУНКЦИИ ДЛЯ МОДАЛЬНЫХ ОКОН ---
             openModal(modalId) {
                 const modal = document.getElementById(modalId);
                 const modalContent = document.getElementById(`${modalId}-content`);
@@ -545,6 +579,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
