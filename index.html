@@ -223,7 +223,7 @@
             <div class="space-y-4">
                 <img id="association-image" src="" alt="Картинка-ассоциация" 
                      class="w-full h-auto rounded-xl object-contain max-h-48 shadow-lg"
-                     onerror="this.onerror=null; this.src='https://placehold.co/400x150/FCA5A5/FFFFFF?text=Нет+Изображения';">
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x150/38A169/ffffff?text=Нет+Изображения';">
                 
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <p class="text-3xl font-extrabold text-blue-600" id="detail-german-word"></p>
@@ -670,26 +670,38 @@
                 });
             },
             
-            // НОВАЯ ФУНКЦИЯ: Поле поиска для Базы Ассоциаций
+            // НОВАЯ ФУНКЦИЯ: Поле поиска для Базы Ассоциаций - ИЗМЕНЕНО!
             renderAssociationSearchControl() {
                 const filterControls = document.getElementById('filter-controls');
+                // Изменяем элемент управления, чтобы использовать кнопку для запуска поиска
                 filterControls.innerHTML = `
-                    <div class="relative">
-                        <input type="text" id="association-search-input" 
-                               oninput="App.updateAssociationSearch(this.value)"
-                               value="${this.currentAssociationSearch}"
-                               placeholder="Искать по русскому или немецкому слову..."
-                               class="w-full p-3 pl-10 border border-gray-300 rounded-xl shadow-sm focus:ring-purple-500 focus:border-purple-500 transition duration-150">
-                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <div class="flex space-x-2">
+                        <!-- Поле ввода. Событие oninput убрано, чтобы не закрывать клавиатуру -->
+                        <div class="relative flex-grow">
+                            <input type="text" id="association-search-input-field" 
+                                   value="${this.currentAssociationSearch}"
+                                   placeholder="Искать по русскому или немецкому слову..."
+                                   class="w-full p-3 pl-10 border border-gray-300 rounded-xl shadow-sm focus:ring-purple-500 focus:border-purple-500 transition duration-150">
+                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        
+                        <!-- Кнопка "Искать" -->
+                        <button onclick="App.executeAssociationSearch()"
+                                class="flex-shrink-0 py-3 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition duration-150">
+                            Искать
+                        </button>
                     </div>
                 `;
             },
             
-            // НОВАЯ ФУНКЦИЯ: Обновление поиска
-            updateAssociationSearch(value) {
-                this.currentAssociationSearch = value;
-                // Не используем debounce для простоты, но в реальном приложении это было бы полезно
-                this.renderAssociationBaseScreen(); 
+            // НОВАЯ ФУНКЦИЯ: Запуск поиска по нажатию кнопки
+            executeAssociationSearch() {
+                const searchInput = document.getElementById('association-search-input-field');
+                if (searchInput) {
+                    this.currentAssociationSearch = searchInput.value;
+                }
+                // Запускаем рендеринг с новым поисковым запросом
+                this.renderAssociationBaseScreen();
             },
             
             // НОВАЯ ФУНКЦИЯ: Логика фильтрации
@@ -1014,7 +1026,6 @@
     </script>
 </body>
 </html>
-
 
 
 
