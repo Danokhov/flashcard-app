@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Интервальное повторение</title>
+    <!-- Подключаем Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключаем API Telegram -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Подключаем Firebase (Базу данных) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        /* Стили для анимации переворота карточки */
+        .card { perspective: 1000px; }
+        .card-inner {
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .card.is-flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            top: 0; left: 0;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        
+        /* Стили для анимации "ухода" и "появления" карточки */
+        @keyframes slide-left {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(-100%); opacity: 0; }
+        }
+        @keyframes slide-in-right {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .card.slide-out {
+            animation: slide-left 0.4s ease forwards;
+        }
+        .card.slide-in {
+            animation: slide-in-right 0.4s ease;
+        }
+
+        /* Стили для модальных окон */
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+            transform: scale(0.95);
+        }
+        .modal.is-open {
+            opacity: 1;
+        }
+        .modal.is-open .modal-content {
+            transform: scale(1);
+        }
+
+        /* Стиль для заблокированной кнопки */
+        .button-locked {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #6b7280; /* gray-500 */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        /* Новый стиль для кнопки Базы Ассоциаций */
+        .association-button {
+            background-image: linear-gradient(to right, #6D28D9 0%, #8B5CF6 100%);
+            transition: all 0.3s ease;
+        }
+        .association-button:hover {
+            box-shadow: 0 10px 15px -3px rgba(109, 40, 217, 0.5), 0 4px 6px -2px rgba(109, 40, 217, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-100 font-sans p-4">
+
+    <!-- Основной контейнер приложения -->
+    <div id="app" class="max-w-md mx-auto">
+        
+        <!-- 1. Экран Загрузки (виден по умолчанию) -->
+        <div id="loading-screen" class="text-center py-20">
+            <p class="text-gray-500">Загрузка данных...</p>
+        </div>
+
+        <!-- 2. ГЛАВНОЕ МЕНЮ (Home Screen) -->
+        <div id="home-screen" class="hidden">
+            <h1 class="text-2xl font-bold text-center mb-8 text-gray-800">Главное меню</h1>
+            <div class="space-y-4">
+                <!-- Основные разделы -->
+                <button onclick="App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150">
+                    <span>📚 Все наборы слов</span>
+                    <span>&rarr;</span>
+                </button>
+                <button onclick="App.renderAllStoriesScreen()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150">
+                    <span>📖 Все истории</span>
+                    <span>&rarr;</span>
+                </button>
+                <button onclick="App.renderWeeklySelections()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150">
+                    <span>📅 Подборки по неделям</span>
+                    <span>&rarr;</span>
+                </button>
+                
+                <!-- НОВЫЙ РАЗДЕЛ: База Ассоциаций -->
+                <div class="pt-4 border-t border-gray-200">
+                    <button onclick="App.renderAssociationBaseScreen()" class="association-button w-full py-4 px-5 text-white rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center">
+                        <span>🧠 База Ассоциаций</span>
+                        <span>&rarr;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 3. ЭКРАН СПИСКА (для недель, сетов, историй или ассоциаций) -->
+        <div id="list-screen" class="hidden">
+            <h1 id="list-title" class="text-2xl font-bold text-center mb-6 text-gray-800"></h1>
+            
+            <!-- Кнопка "Назад" -->
+            <div id="back-button-container" class="mb-4"></div>
+            
+            <!-- Динамические фильтры/поиск -->
+            <div id="filter-controls" class="mb-4 space-y-3">
+                <!-- Фильтры или поиск будут вставлены здесь -->
+            </div>
+            
+            <!-- Список содержимого -->
+            <div id="content-list" class="space-y-4">
+                <!-- Сюда будут вставлены наборы, недели, истории или карточки ассоциаций -->
+            </div>
+        </div>
+
+        <!-- 4. Экран Повторения (Study Screen) -->
+        <div id="study-screen" class="hidden">
+            <!-- Прогресс-бар -->
+            <div class="bg-gray-200 rounded-full h-2.5 mb-4">
+                <div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            
+            <!-- Карточка -->
+            <div id="card" class="card h-64 w-full mb-4">
+                <div id="card-inner" class="card-inner h-full w-full" onclick="App.showAnswer()">
+                    <!-- Передняя сторона -->
+                    <div id="card-front" class="card-front flex items-center justify-center p-6 bg-white rounded-xl shadow-lg text-center">
+                        <div id="card-front-text" class="text-2xl font-semibold"></div>
+                    </div>
+                    <!-- Задняя сторона -->
+                    <div id="card-back" class="card-back flex items-center justify-center p-6 bg-blue-100 rounded-xl shadow-lg text-center">
+                        <div id="card-back-text" class="text-2xl font-semibold"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопки управления -->
+            <div id="controls-show" class="text-center space-y-3">
+                <button onclick="App.showAnswer()" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150">
+                    Показать ответ
+                </button>
+                <button id="hint-button" onclick="App.showHint()" class="w-full py-2 px-4 bg-yellow-400 text-yellow-900 font-semibold rounded-xl shadow-md hover:bg-yellow-500 transition duration-150 hidden">
+                    💡 Показать подсказку
+                </button>
+            </div>
+            
+            <div id="controls-rate" class="hidden grid grid-cols-2 gap-4">
+                <button onclick="App.handleAnswer(false)" class="py-3 px-4 bg-red-500 text-white font-bold rounded-xl shadow-md hover:bg-red-600 transition duration-150">
+                    Не помню ❌
+                </button>
+                <button onclick="App.handleAnswer(true)" class="py-3 px-4 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition duration-150">
+                    Помню ✅
+                </button>
+            </div>
+             <!-- Кнопка "Назад в меню" во время сессии -->
+            <div class="text-center mt-4">
+                <button onclick="App.renderHomeScreen()" class="text-gray-500 hover:text-gray-700">
+                    &larr; Назад в Главное меню
+                </button>
+            </div>
+        </div>
+        
+        <!-- 5. Экран Завершения (Finish Screen) -->
+         <div id="finish-screen" class="hidden text-center py-20">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Сессия завершена!</h2>
+            <p id="finish-screen-text" class="text-gray-600 mb-6">Вы прошли все карточки в этой сессии.</p>
+            <button onclick="App.renderHomeScreen()" class="py-3 px-6 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600">
+                В меню
+            </button>
+        </div>
+
+    </div>
+
+    <!-- МОДАЛЬНЫЕ ОКНА -->
+
+    <!-- Модальное окно для Подсказки -->
+    <div id="hint-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="App.closeHintModal()">
+        <div id="hint-modal-content" class="modal-content bg-white p-4 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 class="text-lg font-semibold mb-3">Подсказка:</h3>
+            <img id="hint-image" src="" alt="Подсказка" class="w-full h-auto rounded-md object-contain max-h-64" onerror="this.onerror=null; this.src='https://placehold.co/400x150/FCA5A5/FFFFFF?text=Нет+Изображения';">
+            <button onclick="App.closeHintModal()" class="w-full mt-4 py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300">
+                Закрыть
+            </button>
+        </div>
+    </div>
+    
+    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО для Деталей Ассоциации -->
+    <div id="association-detail-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="App.closeAssociationDetailModal()">
+        <!-- ИСПРАВЛЕНО: ID изменен для соответствия паттерну closeModal -->
+        <div id="association-detail-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-md w-full" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Карточка Ассоциации</h3>
+            
+            <div class="space-y-4">
+                <img id="association-image" src="" alt="Картинка-ассоциация" 
+                     class="w-full h-auto rounded-xl object-contain max-h-48 shadow-lg"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x150/38A169/ffffff?text=Нет+Изображения';">
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="text-3xl font-extrabold text-blue-600" id="detail-german-word"></p>
+                    <p class="text-xl text-gray-700 mt-1" id="detail-russian-word"></p>
+                    <p class="text-sm font-mono text-red-500 mt-2" id="detail-transcription"></p>
+                </div>
+            </div>
+            
+            <button onclick="App.closeAssociationDetailModal()" class="w-full mt-6 py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600">
+                Закрыть
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Модальное окно для Выбора направления -->
+    <div id="direction-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="App.closeDirectionModal()">
+        <div id="direction-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 class="text-lg font-semibold mb-4 text-center">Выберите направление</h3>
+            <div class="space-y-3">
+                <button onclick="App.startSessionWithDirection('ru-de')" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600">
+                    Русский → Немецкий
+                </button>
+                <button onclick="App.startSessionWithDirection('de-ru')" class="w-full py-3 px-4 bg-purple-500 text-white font-bold rounded-xl shadow-md hover:bg-purple-600">
+                    Немецкий → Русский
+                </button>
+                <button onclick="App.closeDirectionModal()" class="w-full mt-2 py-2 px-4 text-gray-600 font-semibold rounded-xl hover:bg-gray-100">
+                    Отмена
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- "МАГИЯ" (JavaScript) -->
+    <script>
+        
+        // ==========================================================
+        // ШАГ 1: НАСТРОЙКА ПРИЛОЖЕНИЯ И ДАННЫХ
+        // ==========================================================
+
+        const firebaseConfig = {
+            // ... (Конфигурация Firebase) ...
+        };
+
+        const repetitionIntervals = {
+            1: 1,  // 1 день
+            2: 3,  // 3 дня
+            3: 7,  // 7 дней
+            4: 14, // 2 недели
+            5: 30, // 1 месяц
+            6: 90  // 3 месяца
+        };
+
+        /**
+         * Данные наборов слов
+         */
+        const wordSets = [
+            // Неделя 1
+            { id: "a1_nouns_1", week: 1, theme: "Существительные", name: "Сущ. A1 (Часть 1)", cards: [
+                { id: "der_Tisch", front: "стол", back: "der Tisch", hintImage: "https://placehold.co/150x100/505050/ffffff?text=Стол" },
+                { id: "die_Frau", front: "женщина", back: "die Frau" }
+            ]},
+            { id: "a1_verbs_1", week: 1, theme: "Глаголы", name: "Глаголы A1 (Часть 1)", cards: [
+                { id: "gehen", front: "идти", back: "gehen" },
+                { id: "sehen", front: "видеть", back: "sehen" }
+            ]},
+            // Неделя 2
+            { id: "a1_nouns_2", week: 2, theme: "Существительные", name: "Сущ. A1 (Часть 2)", cards: [
+                { id: "das_Auto", front: "машина", back: "das Auto" },
+                { id: "das_Haus", front: "дом", back: "das Haus" }
+            ]},
+            { id: "a1_verbs_2", week: 2, theme: "Глаголы", name: "Глаголы A1 (Часть 2)", cards: [
+                { id: "sprechen", front: "говорить", back: "sprechen" },
+                { id: "kommen", front: "приходить", back: "kommen" }
+            ]},
+            // Неделя 3 (Пока заблокирована для новых пользователей)
+            { id: "a1_nouns_3", week: 3, theme: "Существительные", name: "Сущ. A1 (Часть 3)", cards: [
+                { id: "der_Mann", front: "мужчина", back: "der Mann" },
+                { id: "die_Stadt", front: "город", back: "die Stadt" }
+            ]},
+            { id: "a1_adj_1", week: 3, theme: "Прилагательные", name: "Прил. A1 (Часть 1)", cards: [
+                { id: "gut", front: "хороший", back: "gut" },
+                { id: "schlecht", front: "плохой", back: "schlecht" }
+            ]},
+        ];
+
+        /**
+         * Данные историй
+         */
+        const stories = [
+            { id: "story_1", title: "Берлинская стена: История и значение", level: "B1", link: "https://de.wikipedia.org/wiki/Berliner_Mauer" },
+            { id: "story_2", title: "Рецепт: Апфельштрудель (простое чтение)", level: "A2", link: "https://de.wikipedia.org/wiki/Apfelstrudel" },
+            { id: "story_3", title: "Введение в немецкие артикли", level: "A1", link: "https://de.wikipedia.org/wiki/Artikel_(Grammatik)" },
+            { id: "story_4", title: "Обсуждение изменения климата (сложная лексика)", level: "B2", link: "https://de.wikipedia.org/wiki/Klimawandel" },
+        ];
+        
+        /**
+         * НОВЫЕ ДАННЫЕ: База Ассоциаций
+         */
+        const associationCards = [
+            { id: "haus", german: "das Haus", russian: "дом", transcription: "haʊs", imageUrl: "https://placehold.co/400x150/38A169/ffffff?text=Дом" },
+            { id: "hund", german: "der Hund", russian: "собака", transcription: "hʊnt", imageUrl: "https://placehold.co/400x150/9F7AEA/ffffff?text=Собака" },
+            { id: "essen", german: "essen", russian: "есть (кушать)", transcription: "ɛsn", imageUrl: "https://placehold.co/400x150/ED8936/ffffff?text=Кушать" },
+            { id: "rot", german: "rot", russian: "красный", transcription: "roːt", imageUrl: "https://placehold.co/400x150/F56565/ffffff?text=Красный" },
+            { id: "wasser", german: "das Wasser", russian: "вода", transcription: "ˈvasɐ", imageUrl: "https://placehold.co/400x150/3498DB/ffffff?text=Вода" },
+            { id: "lernen", german: "lernen", russian: "учить", transcription: "ˈlɛʁnən", imageUrl: "https://placehold.co/400x150/34495E/ffffff?text=Учить" },
+        ];
+
+        // Вспомогательные массивы для фильтров
+        const allThemes = Array.from(new Set(wordSets.map(s => s.theme)));
+        const allWeeks = Array.from(new Set(wordSets.map(s => s.week))).sort((a, b) => a - b);
+        const allLevels = Array.from(new Set(stories.map(s => s.level))).sort();
+
+        // ==========================================================
+        // КОНЕЦ НАСТРОЙКИ
+        // ==========================================================
+
+        const App = {
+            db: null,
+            userId: null,
+            userProgress: {}, 
+            unlockedWeek: 1, 
+            sessionCards: [], 
+            currentCardIndex: 0,
+            isPracticeMode: false,
+            isAdvancing: false,
+            currentDirection: 'ru-de', 
+            tempSetId: null, 
+            tempMode: null,
+            
+            // Состояние фильтров
+            currentWeekFilter: 'All', 
+            currentThemeFilter: 'All', 
+            currentLevelFilter: 'All', 
+            
+            // НОВОЕ СОСТОЯНИЕ: Поиск для Базы Ассоциаций
+            currentAssociationSearch: '',
+
+            async init() {
+                try {
+                    // Глобальные переменные для Firestore (Обязательно для использования в Canvas)
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+                    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                    
+                    if (Object.keys(firebaseConfig).length > 0) {
+                        firebase.initializeApp(firebaseConfig);
+                        this.db = firebase.firestore();
+                    } else {
+                         // Fallback for non-Firebase environment (or if keys are missing)
+                        console.warn("Firebase configuration not found. Running in local mode.");
+                    }
+                    
+                    Telegram.WebApp.ready();
+                    
+                    if (!Telegram.WebApp.initDataUnsafe || !Telegram.WebApp.initDataUnsafe.user) {
+                        console.warn("Не удалось получить данные Telegram. Запуск в режиме отладки.");
+                        this.userId = "test_user_123"; 
+                    } else {
+                        this.userId = Telegram.WebApp.initDataUnsafe.user.id.toString();
+                    }
+                    
+                    if (this.db) {
+                        await this.loadProgress();
+                    }
+                    
+                    this.renderHomeScreen();
+
+                } catch (error) {
+                    this.showError(`Ошибка инициализации: ${error.message}`);
+                    console.error(error);
+                }
+            },
+
+            async loadProgress() {
+                this.showScreen('loading-screen');
+                if (!this.db) return; 
+
+                const progressRef = this.db.collection('userProgress').doc(this.userId);
+                try {
+                    const doc = await progressRef.get();
+                    if (doc.exists) {
+                        this.userProgress = doc.data().cards || {};
+                        this.unlockedWeek = doc.data().unlockedWeek || 1; 
+                    } else {
+                        this.userProgress = {};
+                        this.unlockedWeek = 1; 
+                        await this.saveProgress(); 
+                    }
+                } catch (error) {
+                    console.error("Error loading progress:", error);
+                    this.showError(`Ошибка загрузки прогресса: ${error.message}`);
+                }
+            },
+
+            // ==========================================================
+            // ФУНКЦИИ НАВИГАЦИИ И МЕНЮ
+            // ==========================================================
+            
+            renderHomeScreen() {
+                this.showScreen('home-screen');
+            },
+
+            renderWeeklySelections() {
+                document.getElementById('list-title').innerText = '📅 Подборки по неделям';
+                this.renderBackButton('home-screen');
+                document.getElementById('filter-controls').innerHTML = '';
+
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '';
+                
+                allWeeks.forEach(i => {
+                    const isUnlocked = i <= this.unlockedWeek;
+                    const weekSets = wordSets.filter(s => s.week === i);
+                    
+                    const button = document.createElement('button');
+                    button.className = `w-full text-left p-4 rounded-xl shadow-md flex justify-between items-center transition duration-150 ${isUnlocked ? 'bg-white hover:bg-gray-50' : 'button-locked'}`;
+                    
+                    if (isUnlocked) {
+                        button.onclick = () => this.renderWeekContent(i);
+                    } else {
+                        // Используем кастомный модал или простой console.log/UI-сообщение вместо alert()
+                        console.log(`Неделя ${i} пока закрыта.`);
+                    }
+
+                    button.innerHTML = `
+                        <div>
+                            <span class="font-semibold text-lg ${isUnlocked ? 'text-gray-800' : 'text-gray-500'}">Неделя ${i}</span>
+                            <span class="block text-sm text-gray-500">${weekSets.length} набора</span>
+                        </div>
+                        ${!isUnlocked ? '<span>🔒</span>' : '<span>&rarr;</span>'}
+                    `;
+                    contentListDiv.appendChild(button);
+                });
+                
+                this.showScreen('list-screen');
+            },
+            
+            renderWeekContent(weekNum) {
+                document.getElementById('list-title').innerText = `Неделя ${weekNum}`;
+                this.renderBackButton('weekly-selections'); 
+                document.getElementById('filter-controls').innerHTML = '';
+
+                const setsForWeek = wordSets.filter(set => set.week === weekNum);
+                this.renderSetCards(setsForWeek);
+                
+                this.showScreen('list-screen');
+            },
+
+
+            renderAllSetsScreen() {
+                document.getElementById('list-title').innerText = '📚 Все наборы слов';
+                this.renderBackButton('home-screen');
+                
+                this.renderSetFilterControls();
+                
+                const filteredSets = wordSets.filter(set => {
+                    const weekMatch = this.currentWeekFilter === 'All' || set.week.toString() === this.currentWeekFilter;
+                    const themeMatch = this.currentThemeFilter === 'All' || set.theme === this.currentThemeFilter;
+                    const unlockedMatch = set.week <= this.unlockedWeek; 
+                    return weekMatch && themeMatch && unlockedMatch;
+                });
+                
+                this.renderSetCards(filteredSets);
+                this.showScreen('list-screen');
+            },
+
+            renderAllStoriesScreen() {
+                document.getElementById('list-title').innerText = '📖 Все истории';
+                this.renderBackButton('home-screen');
+                
+                this.renderStoryFilterControls();
+                
+                const filteredStories = stories.filter(story => {
+                    return this.currentLevelFilter === 'All' || story.level === this.currentLevelFilter;
+                });
+                
+                this.renderStoryCards(filteredStories);
+                this.showScreen('list-screen');
+            },
+            
+            // НОВАЯ ФУНКЦИЯ: ЭКРАН БАЗЫ АССОЦИАЦИЙ
+            renderAssociationBaseScreen() {
+                document.getElementById('list-title').innerText = '🧠 База Ассоциаций';
+                this.renderBackButton('home-screen');
+                
+                // Рендерим поле поиска
+                this.renderAssociationSearchControl();
+                
+                // Фильтруем карточки
+                const filteredCards = this.getFilteredAssociationCards();
+                
+                this.renderAssociationCards(filteredCards);
+                this.showScreen('list-screen');
+            },
+            
+            // ==========================================================
+            // ФУНКЦИИ РЕНДЕРИНГА ФИЛЬТРОВ И КАРТОЧЕК
+            // ==========================================================
+
+            renderBackButton(target) {
+                const backBtnContainer = document.getElementById('back-button-container');
+                let targetFunction;
+                
+                if (target === 'home-screen') {
+                    targetFunction = 'App.renderHomeScreen()';
+                } else if (target === 'weekly-selections') {
+                    targetFunction = 'App.renderWeeklySelections()';
+                }
+
+                backBtnContainer.innerHTML = `
+                    <button onclick="${targetFunction}" class="text-blue-500 hover:text-blue-700 font-semibold flex items-center">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Назад
+                    </button>
+                `;
+            },
+            
+            renderSetFilterControls() {
+                const filterControls = document.getElementById('filter-controls');
+                filterControls.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Фильтр по Неделе -->
+                        <select id="week-filter" onchange="App.updateSetFilter('week', this.value)" 
+                                class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="All">Все Недели</option>
+                            ${allWeeks.map(w => `<option value="${w}" ${this.currentWeekFilter === w.toString() ? 'selected' : ''}>Неделя ${w}</option>`).join('')}
+                        </select>
+                        
+                        <!-- Фильтр по Теме -->
+                        <select id="theme-filter" onchange="App.updateSetFilter('theme', this.value)" 
+                                class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="All">Все Темы</option>
+                            ${allThemes.map(t => `<option value="${t}" ${this.currentThemeFilter === t ? 'selected' : ''}>${t}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+            },
+            
+            updateSetFilter(filterType, value) {
+                if (filterType === 'week') {
+                    this.currentWeekFilter = value;
+                } else if (filterType === 'theme') {
+                    this.currentThemeFilter = value;
+                }
+                this.renderAllSetsScreen();
+            },
+
+            renderStoryFilterControls() {
+                const filterControls = document.getElementById('filter-controls');
+                filterControls.innerHTML = `
+                    <div class="flex flex-wrap gap-2">
+                        <!-- Фильтр по Уровню -->
+                        <button onclick="App.updateStoryFilter('All')" class="py-2 px-4 rounded-full text-sm font-medium transition duration-150 ${this.currentLevelFilter === 'All' ? 'bg-blue-500 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}">Все</button>
+                        ${allLevels.map(l => `
+                            <button onclick="App.updateStoryFilter('${l}')" class="py-2 px-4 rounded-full text-sm font-medium transition duration-150 ${this.currentLevelFilter === l ? 'bg-blue-500 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}">
+                                ${l}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            },
+            
+            updateStoryFilter(value) {
+                this.currentLevelFilter = value;
+                this.renderAllStoriesScreen();
+            },
+            
+            renderSetCards(setsToRender) {
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '';
+                const today = this.getTodayDateString();
+
+                if (setsToRender.length === 0) {
+                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет наборов, удовлетворяющих условиям фильтрации.</p>';
+                    return;
+                }
+
+                setsToRender.forEach(set => {
+                    let dueCount = 0;
+                    set.cards.forEach(card => {
+                        const progress = this.userProgress[card.id];
+                        if (!progress) {
+                            dueCount++; 
+                        } else if (progress.nextReview && progress.nextReview <= today) {
+                            dueCount++; 
+                        }
+                    });
+
+                    const setContainer = document.createElement('div');
+                    setContainer.className = "w-full p-4 bg-white rounded-xl shadow-md";
+                    
+                    setContainer.innerHTML = `
+                        <div class="flex justify-between items-center mb-3">
+                            <div>
+                                <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
+                                <span class="block text-sm text-gray-500">Неделя ${set.week} | ${set.cards.length} слов</span>
+                            </div>
+                            ${dueCount > 0 ? 
+                                `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">${dueCount} к повтору</span>` :
+                                `<span class="text-green-500 font-semibold">✓</span>`
+                            }
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
+                                    onclick="App.promptForDirection('${set.id}', 'review')">
+                                Повторить (${dueCount})
+                            </button>
+                            <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
+                                    onclick="App.promptForDirection('${set.id}', 'practice')">
+                                Практика (Все)
+                            </button>
+                        </div>
+                    `;
+                    contentListDiv.appendChild(setContainer);
+                });
+            },
+
+            renderStoryCards(storiesToRender) {
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '';
+
+                if (storiesToRender.length === 0) {
+                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет историй, удовлетворяющих условиям фильтрации.</p>';
+                    return;
+                }
+
+                storiesToRender.forEach(story => {
+                    const storyContainer = document.createElement('div');
+                    storyContainer.className = "w-full p-4 bg-white rounded-xl shadow-md flex justify-between items-center";
+                    
+                    storyContainer.innerHTML = `
+                        <div>
+                            <span class="font-semibold text-gray-800 text-lg">${story.title}</span>
+                            <span class="block text-sm font-bold mt-1 text-purple-600">Уровень: ${story.level}</span>
+                        </div>
+                        <a href="${story.link}" target="_blank" class="py-2 px-4 bg-green-500 text-white font-semibold rounded-xl text-sm hover:bg-green-600 transition duration-150 shadow-md flex items-center">
+                            Читать 
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4m-4-2l-7 7m7-7h-4M16 6l3.5 3.5"></path></svg>
+                        </a>
+                    `;
+                    contentListDiv.appendChild(storyContainer);
+                });
+            },
+            
+            // НОВАЯ ФУНКЦИЯ: Поле поиска для Базы Ассоциаций - ИЗМЕНЕНО!
+            renderAssociationSearchControl() {
+                const filterControls = document.getElementById('filter-controls');
+                // Изменяем элемент управления, чтобы использовать кнопку для запуска поиска
+                filterControls.innerHTML = `
+                    <div class="flex space-x-2">
+                        <!-- Поле ввода. Событие oninput убрано, чтобы не закрывать клавиатуру -->
+                        <div class="relative flex-grow">
+                            <input type="text" id="association-search-input-field" 
+                                   value="${this.currentAssociationSearch}"
+                                   placeholder="Искать по русскому или немецкому слову..."
+                                   class="w-full p-3 pl-10 border border-gray-300 rounded-xl shadow-sm focus:ring-purple-500 focus:border-purple-500 transition duration-150">
+                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        
+                        <!-- Кнопка "Искать" -->
+                        <button onclick="App.executeAssociationSearch()"
+                                class="flex-shrink-0 py-3 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition duration-150">
+                            Искать
+                        </button>
+                    </div>
+                `;
+            },
+            
+            // НОВАЯ ФУНКЦИЯ: Запуск поиска по нажатию кнопки
+            executeAssociationSearch() {
+                const searchInput = document.getElementById('association-search-input-field');
+                if (searchInput) {
+                    this.currentAssociationSearch = searchInput.value;
+                }
+                // Запускаем рендеринг с новым поисковым запросом
+                this.renderAssociationBaseScreen();
+            },
+            
+            // НОВАЯ ФУНКЦИЯ: Логика фильтрации
+            getFilteredAssociationCards() {
+                const search = this.currentAssociationSearch.toLowerCase().trim();
+                if (!search) return associationCards;
+                
+                return associationCards.filter(card => 
+                    card.german.toLowerCase().includes(search) || 
+                    card.russian.toLowerCase().includes(search)
+                );
+            },
+
+            // НОВАЯ ФУНКЦИЯ: Рендеринг карточек-ассоциаций
+            renderAssociationCards(cardsToRender) {
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '';
+
+                if (cardsToRender.length === 0) {
+                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет карточек, соответствующих поиску.</p>';
+                    return;
+                }
+                
+                cardsToRender.forEach(card => {
+                    const cardEl = document.createElement('button');
+                    cardEl.className = "w-full text-left p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 border-l-4 border-purple-500 flex justify-between items-center";
+                    cardEl.onclick = () => this.showAssociationDetailModal(card);
+                    
+                    cardEl.innerHTML = `
+                        <div>
+                            <span class="font-bold text-xl text-gray-800">${card.german}</span>
+                            <span class="block text-md text-gray-600">${card.russian}</span>
+                        </div>
+                        <span class="text-lg text-purple-600">&rarr;</span>
+                    `;
+                    contentListDiv.appendChild(cardEl);
+                });
+            },
+            
+            // НОВАЯ ФУНКЦИЯ: Показать детальное модальное окно ассоциации
+            showAssociationDetailModal(card) {
+                document.getElementById('association-image').src = card.imageUrl;
+                document.getElementById('detail-german-word').textContent = card.german;
+                document.getElementById('detail-russian-word').textContent = card.russian;
+                document.getElementById('detail-transcription').textContent = `/${card.transcription}/`;
+                this.openModal('association-detail-modal');
+            },
+
+            // НОВАЯ ФУНКЦИЯ: Закрыть детальное модальное окно ассоциации
+            closeAssociationDetailModal() {
+                this.closeModal('association-detail-modal');
+            },
+
+
+            // ==========================================================
+            // ЛОГИКА СЕССИИ ПОВТОРЕНИЯ
+            // ==========================================================
+
+            promptForDirection(setId, mode) {
+                this.tempSetId = setId;
+                this.tempMode = mode;
+                this.openModal('direction-modal');
+            },
+
+            closeDirectionModal() {
+                this.closeModal('direction-modal');
+            },
+
+            startSessionWithDirection(direction) {
+                this.currentDirection = direction;
+                this.closeDirectionModal();
+                this.startSession(this.tempSetId, this.tempMode);
+            },
+            
+            startSession(setId, mode) {
+                const set = wordSets.find(s => s.id === setId);
+                if (!set) return;
+
+                this.isPracticeMode = (mode === 'practice');
+                
+                if (this.isPracticeMode) {
+                    this.sessionCards = set.cards.map(card => ({...card})); 
+                } else {
+                    const today = this.getTodayDateString();
+                    this.sessionCards = set.cards.filter(card => {
+                        const progress = this.userProgress[card.id];
+                        return !progress || (progress.nextReview && progress.nextReview <= today);
+                    });
+                }
+                
+                if (this.sessionCards.length === 0) {
+                    // Используем console.log вместо alert
+                    console.log(this.isPracticeMode ? 'В этом наборе нет карточек.' : 'Для этого набора нет карточек к повторению на сегодня!');
+                    return;
+                }
+                
+                this.sessionCards.sort(() => Math.random() - 0.5);
+                this.currentCardIndex = 0;
+                
+                this.showScreen('study-screen');
+                this.showNextCard();
+            },
+
+            showNextCard() {
+                if (this.currentCardIndex >= this.sessionCards.length) {
+                    this.showScreen('finish-screen');
+                    return;
+                }
+                
+                const cardEl = document.getElementById('card');
+                
+                cardEl.classList.remove('is-flipped');
+                cardEl.classList.add('slide-in');
+                setTimeout(() => cardEl.classList.remove('slide-in'), 400);
+
+                const totalCards = this.sessionCards.length;
+                const currentCount = this.currentCardIndex + 1;
+                const percent = (currentCount / totalCards) * 100;
+                document.getElementById('progress-bar').style.width = `${percent}%`;
+
+                document.getElementById('controls-show').classList.remove('hidden');
+                document.getElementById('controls-rate').classList.add('hidden');
+
+                const card = this.sessionCards[this.currentCardIndex];
+                
+                const speakerIconSvg = `
+                    <svg class="w-6 h-6 text-blue-500 hover:text-blue-700 inline-block ml-2 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 6v12a1 1 0 01-1.707.707L5.586 15z"></path>
+                    </svg>
+                `;
+                
+                const germanHtml = `
+                    <div class="flex items-center justify-center gap-2">
+                        <span>${card.back}</span>
+                        <span onclick="App.speakGerman('${card.back}', event)">
+                            ${speakerIconSvg}
+                        </span>
+                    </div>
+                `;
+
+                if (this.currentDirection === 'ru-de') {
+                    document.getElementById('card-front-text').textContent = card.front;
+                    document.getElementById('card-back-text').innerHTML = germanHtml;
+                } else {
+                    document.getElementById('card-front-text').innerHTML = germanHtml;
+                    document.getElementById('card-back-text').textContent = card.front;
+                }
+                
+                const hintButton = document.getElementById('hint-button');
+                if (card.hintImage) {
+                    hintButton.classList.remove('hidden');
+                } else {
+                    hintButton.classList.add('hidden');
+                }
+            },
+            
+            showAnswer() {
+                document.getElementById('card').classList.add('is-flipped');
+                document.getElementById('controls-show').classList.add('hidden');
+                document.getElementById('controls-rate').classList.remove('hidden');
+            },
+
+            async handleAnswer(knewIt) {
+                if (this.isAdvancing) return; 
+                this.isAdvancing = true;
+
+                if (!this.isPracticeMode) {
+                    const card = this.sessionCards[this.currentCardIndex];
+                    let progress = this.userProgress[card.id] || { box: 0 };
+
+                    if (knewIt) {
+                        progress.box = Math.min(6, (progress.box || 0) + 1);
+                    } else {
+                        progress.box = 1;
+                    }
+                    
+                    const interval = repetitionIntervals[progress.box];
+                    progress.nextReview = this.getFutureDateString(interval);
+                    
+                    this.userProgress[card.id] = progress;
+                    if (this.db) {
+                        this.saveProgress(); 
+                    }
+                }
+                
+                document.getElementById('card').classList.add('slide-out');
+                setTimeout(() => {
+                    document.getElementById('card').classList.remove('slide-out'); 
+                    this.currentCardIndex++; 
+                    this.isAdvancing = false; 
+                    this.showNextCard(); 
+                }, 400); 
+            },
+            
+            async saveProgress() {
+                if (!this.db) return; 
+
+                try {
+                    const progressRef = this.db.collection('userProgress').doc(this.userId);
+                    await progressRef.set({ 
+                        cards: this.userProgress,
+                        unlockedWeek: this.unlockedWeek 
+                    }, { merge: true });
+                    console.log('Прогресс сохранен в Firebase');
+                } catch (error) {
+                    console.error('Ошибка сохранения прогресса:', error);
+                }
+            },
+            
+            speakGerman(textToSpeak, event) {
+                if (event) {
+                    event.stopPropagation(); 
+                }
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                    utterance.lang = 'de-DE'; 
+                    const voices = window.speechSynthesis.getVoices().filter(v => v.lang.includes('de-'));
+                    if (voices.length > 0) {
+                        // Поиск предпочтительного голоса
+                        utterance.voice = voices.find(v => v.name.includes('Anna')) || voices.find(v => v.name.includes('Google')) || voices[0];
+                    }
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    // Используем console.log вместо alert
+                    console.log('Ваш браузер не поддерживает синтез речи.');
+                }
+            },
+
+            // ==========================================================
+            // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ И УТИЛИТЫ
+            // ==========================================================
+
+            openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
+                
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.add('is-open', 'opacity-100');
+                        if (modalContent) {
+                            modalContent.classList.add('is-open');
+                        }
+                    }, 10);
+                }
+            },
+            
+            // ИСПРАВЛЕННАЯ ФУНКЦИЯ closeModal с проверкой на null
+            closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                // Проверяем оба потенциальных ID
+                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
+                
+                if (modal) {
+                    modal.classList.remove('is-open', 'opacity-100');
+                    
+                    // БЕЗОПАСНАЯ ПРОВЕРКА: предотвращает TypeError: Cannot read properties of null (reading 'classList')
+                    if (modalContent) {
+                        modalContent.classList.remove('is-open');
+                    }
+                    
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                    }, 300);
+                }
+                // Если modal не найден (null), функция просто завершается без ошибки.
+            },
+            
+            showHint() {
+                const card = this.sessionCards[this.currentCardIndex];
+                if (!card || !card.hintImage) return;
+                const img = document.getElementById('hint-image');
+                img.src = card.hintImage; 
+                this.openModal('hint-modal');
+            },
+
+            closeHintModal() {
+                this.closeModal('hint-modal');
+            },
+            
+            showScreen(screenId) {
+                ['loading-screen', 'home-screen', 'list-screen', 'study-screen', 'finish-screen'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden');
+                });
+                const screen = document.getElementById(screenId);
+                if (screen) {
+                    screen.classList.remove('hidden');
+                }
+            },
+            
+            showError(message) {
+                this.showScreen('loading-screen');
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.innerHTML = `<p class="text-red-500 font-semibold">${message}</p>`;
+                }
+            },
+            
+            getTodayDateString() {
+                return new Date().toISOString().split('T')[0];
+            },
+
+            getFutureDateString(daysToAdd) {
+                const date = new Date();
+                date.setDate(date.getDate() + daysToAdd);
+                return date.toISOString().split('T')[0];
+            }
+        };
+        
+        window.addEventListener('load', () => {
+            // Предзагрузка голосов для TTS
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices(); 
+                if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+                }
+            }
+            App.init();
+        });
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
