@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>История Недели 1: Артикли (A1)</title>
+    <!-- Подключаем Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключаем API Telegram (для открытия внешних ссылок) -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <style>
+        /* Контейнер 16:9 для видео */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        /* Стиль для анимации появления модального окна */
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+            transform: scale(0.95);
+        }
+        .modal.is-open {
+            opacity: 1;
+        }
+        .modal.is-open .modal-content {
+            transform: scale(1);
+        }
+        /* Стиль для кнопки ответа */
+        .quiz-option {
+            transition: all 0.15s ease;
+        }
+        .quiz-option:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .quiz-correct {
+            background-color: #10B981 !important; /* green-500 */
+            color: white !important;
+            border-color: #059669 !important;
+        }
+        .quiz-incorrect {
+            background-color: #EF4444 !important; /* red-500 */
+            color: white !important;
+            border-color: #DC2626 !important;
+        }
+        /* Убедимся, что модальное окно с транскрипцией имеет прокрутку */
+        #transcript-text-content {
+            max-height: 40vh; /* Ограничиваем высоту для мобильных устройств */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-100 font-sans p-4">
+
+    <!-- Основной контейнер страницы -->
+    <div id="app" class="max-w-md mx-auto">
+        
+        <!-- Заголовок страницы (История недели) -->
+        <h1 id="story-title" class="text-2xl font-bold text-gray-800 mb-4 text-center">Введение в немецкие артикли (A1)</h1>
+        
+        <div class="space-y-6">
+
+            <!-- Видео 16:9 -->
+            <div class="video-container">
+                <iframe id="story-video-embed" 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&controls=1&showinfo=0&rel=0" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen></iframe>
+            </div>
+
+            <!-- Блок "Кнопки действий" -->
+            <div class="space-y-4">
+                
+                <!-- Кнопка Транскрипция/PDF -->
+                <button onclick="window.App.openTranscriptModal('Введение в немецкие артикли (A1)', 'https://www.africau.edu/images/default/sample.pdf')" 
+                   class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150">
+                    <span>📄 Транскрипция (PDF)</span>
+                    <span>&rarr;</span>
+                </button>
+                
+                <!-- Кнопка Квиз/Упражнения -->
+                <button onclick="window.App.startStoryQuiz()"
+                        class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-lg text-left text-lg font-bold hover:bg-indigo-600 transition duration-150 flex justify-between items-center">
+                    <span>✅ Упражнения (Квиз по тексту)</span>
+                    <span>&rarr;</span>
+                </button>
+            </div>
+            
+            <!-- Кнопка "На главную" -->
+            <div class="text-center pt-4">
+                 <button onclick="window.App.closeWebApp()" class="text-gray-500 hover:text-gray-700 font-semibold">
+                    &larr; Назад к Подборкам Недели
+                </button>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- МОДАЛЬНОЕ ОКНО 1: для отображения внешней ссылки (Link Modal) -->
+    <div id="link-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('link-modal')">
+        <div id="link-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 id="modal-title" class="text-lg font-semibold mb-3 text-gray-800">Переход по ссылке</h3>
+            <div class="bg-gray-100 p-3 rounded-lg">
+                 <p class="text-gray-700 text-sm mb-2">Для перехода к полной версии откройте ссылку:</p>
+                 <a id="modal-link" href="#" target="_blank" class="text-blue-600 break-all hover:underline font-semibold text-sm"></a>
+            </div>
+            <button onclick="window.App.closeModal('link-modal')" class="w-full mt-4 py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300">
+                Закрыть
+            </button>
+        </div>
+    </div>
+    
+    <!-- МОДАЛЬНОЕ ОКНО 2: для КВИЗА (Quiz Modal) -->
+    <div id="quiz-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('quiz-modal')">
+        <div id="quiz-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-bold mb-4 text-gray-800 text-center">Квиз по Истории</h3>
+            
+            <!-- Индикатор прогресса (STATIC HEADER) -->
+            <div class="text-sm text-gray-500 mb-4 text-center">
+                <span id="quiz-progress">Вопрос 1 из 5</span>
+            </div>
+            
+            <!-- СКРОЛЛИРУЕМАЯ ОБЛАСТЬ (Core Content) -->
+            <div id="quiz-scroll-area" class="max-h-[65vh] overflow-y-auto pr-2">
+
+                <!-- Вопрос (Отображается только во время активного квиза) -->
+                <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+                    <p id="quiz-question" class="text-lg font-semibold text-gray-800"></p>
+                </div>
+                
+                <!-- Опции ответа / Пояснения -->
+                <div id="quiz-options" class="space-y-3">
+                    <!-- Кнопки/Пояснения будут вставлены JS -->
+                </div>
+                
+                <!-- Поле обратной связи -->
+                <p id="quiz-feedback" class="mt-4 text-center font-bold"></p>
+                
+            </div>
+            <!-- КОНЕЦ СКРОЛЛИРУЕМОЙ ОБЛАСТИ -->
+
+            <!-- Кнопки управления (STATIC FOOTER) -->
+            <button id="quiz-next-button" onclick="window.App.nextQuizQuestion()" 
+                    class="w-full mt-6 py-3 px-4 bg-gray-300 text-gray-700 font-bold rounded-xl shadow-md transition duration-150 cursor-not-allowed" disabled>
+                Следующий вопрос
+            </button>
+            
+            <!-- Кнопки завершения (STATIC FOOTER) -->
+            <div id="quiz-end-controls" class="space-y-3 mt-6 hidden">
+                <button id="quiz-retry-button" onclick="window.App.startStoryQuiz()" 
+                        class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150">
+                    Пройти ещё раз
+                </button>
+                <button id="quiz-show-answers-button" onclick="window.App.showCorrectAnswers()" 
+                        class="w-full py-3 px-4 bg-yellow-500 text-yellow-900 font-bold rounded-xl shadow-md hover:bg-yellow-600 transition duration-150">
+                    Показать правильные ответы
+                </button>
+                <button id="quiz-finish-button" onclick="window.App.closeModal('quiz-modal')" 
+                        class="w-full py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition duration-150">
+                    Завершить
+                </button>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- МОДАЛЬНОЕ ОКНО 3: для ТРАНСКРИПЦИИ (Transcript Modal) -->
+    <div id="transcript-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('transcript-modal')">
+        <div id="transcript-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-lg w-full" onclick="event.stopPropagation()">
+            <h3 id="transcript-title" class="text-xl font-bold mb-4 text-gray-800 text-center">Транскрипция</h3>
+            
+            <div id="transcript-text-content" class="bg-gray-50 p-4 rounded-lg mb-6 text-gray-700 text-base border border-gray-200">
+                <!-- Текст транскрипции будет здесь -->
+            </div>
+            
+            <a id="transcript-download-link" href="#" target="_blank" 
+               class="w-full py-3 px-4 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition duration-150 flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Скачать PDF
+            </a>
+            
+            <button onclick="window.App.closeModal('transcript-modal')" 
+                    class="w-full mt-4 py-3 px-4 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300">
+                Закрыть
+            </button>
+        </div>
+    </div>
+
+
+    <!-- "МАГИЯ" (JavaScript) -->
+    <script>
+        window.App = {
+            
+            // ============ QUIZ DATA ============
+            currentQuiz: [
+                {
+                    question: "По сюжету видео, какой артикль чаще всего используется для обозначения 'стола'?",
+                    type: "multiple",
+                    userAnswerIndex: null, 
+                    options: [
+                        { text: "Der", correct: true, rationale: "Артикль 'Der' используется для существительных мужского рода, к которым относится 'Tisch'." },
+                        { text: "Die", correct: false, rationale: "Артикль 'Die' предназначен для женского рода и множественного числа." },
+                        { text: "Das", correct: false, rationale: "Артикль 'Das' используется для существительных среднего рода." },
+                    ]
+                },
+                {
+                    question: "Верно ли, что артикль 'Die' используется только для существительных женского рода?",
+                    type: "richtig-falsch",
+                    userAnswerIndex: null,
+                    options: [
+                        { text: "Richtig (Верно)", correct: false, rationale: "Это неверно, 'Die' также используется для всех существительных во множественном числе, независимо от их основного рода." },
+                        { text: "Falsch (Неверно)", correct: true, rationale: "Это неверно, 'Die' используется не только для женского рода, но и для существительных во множественном числе." }
+                    ]
+                },
+                {
+                    question: "Выберите, какой артикль имеет существительное 'Haus'?",
+                    type: "multiple",
+                    userAnswerIndex: null,
+                    options: [
+                        { text: "Der", correct: false, rationale: "Это мужской артикль." },
+                        { text: "Die", correct: false, rationale: "Это женский артикль." },
+                        { text: "Das", correct: true, rationale: "Существительное 'Haus' (дом) относится к среднему роду, поэтому используется 'Das'." },
+                        { text: "Kein Artikel (Без артикля)", correct: false, rationale: "Существительное 'Haus' не является именем собственным и требует артикля." }
+                    ]
+                },
+                {
+                    question: "Если вы видите в видео слово с артиклем 'Der', это обязательно означает, что существительное мужского рода.",
+                    type: "richtig-falsch",
+                    userAnswerIndex: null,
+                    options: [
+                        { text: "Richtig (Верно)", correct: true, rationale: "В единственном числе артикль 'Der' всегда указывает на мужской род." },
+                        { text: "Falsch (Неверно)", correct: false, rationale: "В единственном числе 'Der' всегда указывает на мужской род." }
+                    ]
+                },
+                {
+                    question: "Какая из следующих фраз на немецком означает 'моя женщина'?",
+                    type: "multiple",
+                    userAnswerIndex: null,
+                    options: [
+                        { text: "Meine Tisch", correct: false, rationale: "'Tisch' (стол) имеет артикль 'der', поэтому должно быть 'Mein Tisch' (без окончания 'e')." },
+                        { text: "Meine Frau", correct: true, rationale: "'Frau' (женщина) имеет артикль 'die', поэтому притяжательное местоимение получает окончание 'e' ('Meine')." },
+                        { text: "Mein Haus", correct: false, rationale: "'Haus' (дом) имеет артикль 'das', поэтому притяжательное местоимение не получает окончания 'e'." },
+                    ]
+                },
+            ],
+            currentQuizIndex: 0,
+            quizActive: false,
+            quizScore: 0, 
+            quizFinished: false,
+            
+            // ============ TRANSCRIPT DATA (MOCK) ============
+            mockTranscriptText: `
+                Herzlich willkommen zu Lektion 1! Heute sprechen wir über die deutschen Artikel.
+                
+                Es gibt drei Hauptartikel: Der, Die, und Das.
+                
+                Der (мужской род): zum Beispiel, der Tisch (стол). Der Tisch ist braun.
+                
+                Die (женский род): zum Beispiel, die Frau (женщина). Die Frau ist schön.
+                
+                Das (средний род): zum Beispiel, das Haus (дом). Das Haus ist groß.
+                
+                Aber Achtung! 'Die' ist auch der Artikel für alle Plural-Nomen (множественное число): die Tische, die Frauen, die Häuser.
+                
+                Es gibt keine einfache Regel, um das Geschlecht eines Nomens zu bestimmen. Man muss es einfach lernen!
+            `,
+            // ===================================
+            
+            init() {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.ready();
+                }
+            },
+            
+            // ============ TRANSCRIPT LOGIC ============
+            
+            openTranscriptModal(title, pdfUrl) {
+                document.getElementById('transcript-title').textContent = `Транскрипция: ${title}`;
+                document.getElementById('transcript-text-content').textContent = this.mockTranscriptText.trim();
+                
+                const downloadLink = document.getElementById('transcript-download-link');
+                downloadLink.href = pdfUrl;
+                
+                this.openModal('transcript-modal');
+            },
+            
+            // ============ QUIZ LOGIC ============
+            
+            /**
+             * Инициализирует и открывает модальное окно квиза.
+             */
+            startStoryQuiz() {
+                this.currentQuizIndex = 0;
+                this.quizScore = 0;
+                this.quizFinished = false;
+                this.quizActive = true;
+                
+                // Сброс ответов пользователя
+                this.currentQuiz.forEach(q => q.userAnswerIndex = null); 
+
+                document.getElementById('quiz-end-controls').classList.add('hidden');
+                document.getElementById('quiz-next-button').classList.remove('hidden');
+
+                this.renderQuizQuestion();
+                this.openModal('quiz-modal');
+            },
+            
+            /**
+             * Отображает текущий вопрос квиза.
+             */
+            renderQuizQuestion() {
+                if (this.currentQuizIndex >= this.currentQuiz.length) {
+                    this.finishQuiz();
+                    return;
+                }
+                
+                // Восстанавливаем стандартную структуру квиза (если были показаны ответы)
+                const scrollArea = document.getElementById('quiz-scroll-area');
+                scrollArea.innerHTML = `
+                    <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+                        <p id="quiz-question" class="text-lg font-semibold text-gray-800"></p>
+                    </div>
+                    <div id="quiz-options" class="space-y-3"></div>
+                    <p id="quiz-feedback" class="mt-4 text-center font-bold"></p>
+                `;
+                
+                // Убедимся, что вопрос виден
+                document.getElementById('question-box').classList.remove('hidden'); 
+                document.getElementById('quiz-options').classList.remove('hidden'); 
+                document.getElementById('quiz-feedback').classList.remove('hidden'); 
+
+                
+                const questionData = this.currentQuiz[this.currentQuizIndex];
+                const totalQuestions = this.currentQuiz.length;
+                
+                document.getElementById('quiz-progress').textContent = `Вопрос ${this.currentQuizIndex + 1} из ${totalQuestions}`;
+                document.getElementById('quiz-question').textContent = questionData.question;
+                document.getElementById('quiz-feedback').textContent = '';
+                
+                const nextButton = document.getElementById('quiz-next-button');
+                nextButton.textContent = 'Следующий вопрос';
+                nextButton.classList.replace('bg-blue-500', 'bg-gray-300');
+                nextButton.classList.add('cursor-not-allowed');
+                nextButton.disabled = true;
+
+                const optionsContainer = document.getElementById('quiz-options');
+                optionsContainer.innerHTML = ''; // Очищаем старые опции
+                
+                questionData.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option.text;
+                    button.className = 'quiz-option w-full py-3 px-4 bg-white text-gray-800 font-semibold rounded-xl border border-gray-300 shadow-sm hover:bg-indigo-100 transition duration-150';
+                    button.onclick = () => this.handleQuizAnswer(index);
+                    optionsContainer.appendChild(button);
+                });
+            },
+            
+            /**
+             * Обрабатывает выбор ответа пользователем.
+             */
+            handleQuizAnswer(selectedIndex) {
+                if (!this.quizActive) return; 
+                this.quizActive = false;
+                
+                const questionData = this.currentQuiz[this.currentQuizIndex];
+                const selectedOption = questionData.options[selectedIndex];
+                
+                // Сохраняем выбор пользователя и проверяем ответ
+                questionData.userAnswerIndex = selectedIndex; 
+                
+                const optionsContainer = document.getElementById('quiz-options');
+                const buttons = optionsContainer.querySelectorAll('button');
+                const feedbackEl = document.getElementById('quiz-feedback');
+                
+                // Обновляем счет, если ответ правильный
+                if (selectedOption.correct) {
+                    this.quizScore++;
+                    feedbackEl.textContent = "Верно! ✅";
+                    feedbackEl.classList.remove('text-red-500');
+                    feedbackEl.classList.add('text-green-600');
+                } else {
+                    feedbackEl.textContent = "Неверно. Попробуйте ещё раз изучить видео! ❌";
+                    feedbackEl.classList.remove('text-green-600');
+                    feedbackEl.classList.add('text-red-500');
+                }
+                
+                // Визуальная обратная связь
+                buttons.forEach((button, index) => {
+                    button.disabled = true;
+                    button.classList.remove('hover:bg-indigo-100');
+                    
+                    if (questionData.options[index].correct) {
+                        button.classList.add('quiz-correct');
+                    } else if (index === selectedIndex) {
+                        button.classList.add('quiz-incorrect');
+                    }
+                });
+
+                // Активируем кнопку "Далее"
+                const nextButton = document.getElementById('quiz-next-button');
+                const isLastQuestion = this.currentQuizIndex === this.currentQuiz.length - 1;
+                
+                nextButton.textContent = isLastQuestion ? 'Завершить квиз' : 'Следующий вопрос';
+                nextButton.classList.replace('bg-gray-300', 'bg-blue-500');
+                nextButton.classList.remove('cursor-not-allowed');
+                nextButton.disabled = false;
+            },
+            
+            /**
+             * Переходит к следующему вопросу или завершает квиз.
+             */
+            nextQuizQuestion() {
+                this.currentQuizIndex++;
+                if (this.currentQuizIndex < this.currentQuiz.length) {
+                    this.quizActive = true;
+                    this.renderQuizQuestion();
+                } else {
+                    this.finishQuiz();
+                }
+            },
+            
+            /**
+             * Показывает экран завершения с результатом и тремя кнопками.
+             */
+            finishQuiz() {
+                this.quizFinished = true;
+                this.quizActive = false;
+                
+                const maxScore = this.currentQuiz.length;
+                const scorePercentage = (this.quizScore / maxScore) * 100;
+                
+                document.getElementById('quiz-progress').textContent = 'Квиз завершен!';
+                
+                // Используем скролл-область для отображения краткого резюме
+                const scrollArea = document.getElementById('quiz-scroll-area');
+                scrollArea.innerHTML = '';
+                scrollArea.innerHTML = `
+                    <div class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+                        <span class="text-xl font-extrabold text-indigo-700 block mb-2 text-center">Ваш результат:</span>
+                        <span class="text-3xl font-extrabold text-blue-600 block text-center">${this.quizScore} из ${maxScore}</span>
+                        <span class="text-lg text-gray-600 block mt-1 text-center">(${(scorePercentage).toFixed(0)}%)</span>
+                    </div>
+                    <p class="text-center text-gray-500">Выберите действие ниже.</p>
+                `;
+                
+                document.getElementById('quiz-next-button').classList.add('hidden');
+                document.getElementById('quiz-end-controls').classList.remove('hidden');
+            },
+
+            /**
+             * Показывает правильные ответы и пояснения.
+             */
+            showCorrectAnswers() {
+                this.quizActive = false;
+                
+                document.getElementById('quiz-next-button').classList.add('hidden'); 
+                document.getElementById('quiz-end-controls').classList.add('hidden'); // Скрыть кнопки действий
+
+                document.getElementById('quiz-progress').textContent = 'Обзор квиза:';
+                
+                const scrollArea = document.getElementById('quiz-scroll-area');
+                scrollArea.innerHTML = ''; // Очищаем всю область для нового контента (обзора)
+
+                // Добавляем заголовок/результаты в скролл-область
+                scrollArea.innerHTML += `
+                    <div class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+                        <p class="text-xl font-extrabold text-indigo-700 block mb-2 text-center">Ваш результат:</p>
+                        <p class="text-3xl font-extrabold text-blue-600 block text-center">${this.quizScore} из ${this.currentQuiz.length}</p>
+                        <p class="text-lg text-gray-600 block mt-1 text-center">(${(this.quizScore / this.currentQuiz.length * 100).toFixed(0)}%)</p>
+                    </div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Правильные ответы и пояснения:</h4>
+                `;
+                
+                this.currentQuiz.forEach((q, qIndex) => {
+                    const questionEl = document.createElement('div');
+                    questionEl.className = 'p-3 rounded-xl shadow-md border mb-4 bg-white';
+                    
+                    const isCorrect = q.options.some((opt, i) => opt.correct && i === q.userAnswerIndex);
+                    
+                    questionEl.innerHTML = `
+                        <p class="font-bold text-md mb-2 text-gray-800 border-b pb-1">
+                            ${qIndex + 1}. ${q.question} 
+                            <span class="float-right font-extrabold ${isCorrect ? 'text-green-600' : 'text-red-600'}">
+                                ${isCorrect ? '✅' : '❌'}
+                            </span>
+                        </p>
+                        <div class="space-y-2 pt-2">
+                            ${q.options.map((opt, optIndex) => {
+                                let classes = 'p-2 rounded-md text-sm transition duration-100 border ';
+                                let icon = '';
+
+                                if (opt.correct) {
+                                    classes += 'bg-green-100 border-green-400 font-bold';
+                                    icon = '✅ Правильно: ';
+                                } else if (optIndex === q.userAnswerIndex) {
+                                     classes += 'bg-red-100 border-red-400 line-through';
+                                     icon = '❌ Ваш ответ: ';
+                                } else {
+                                    classes += 'bg-gray-50 border-gray-200 text-gray-600';
+                                }
+                                
+                                return `
+                                    <div class="${classes}">
+                                        <p class="font-semibold">${opt.text}</p>
+                                        <p class="text-xs text-gray-700 mt-0.5">${icon}${opt.rationale}</p>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                    scrollArea.appendChild(questionEl);
+                });
+
+                // Кнопка для возврата к результатам
+                const returnButton = document.createElement('button');
+                returnButton.textContent = 'Вернуться к результатам';
+                returnButton.className = 'w-full mt-4 py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition duration-150';
+                returnButton.onclick = () => this.finishQuiz();
+                scrollArea.appendChild(returnButton);
+            },
+
+            // ============ UTILITY LOGIC (Open Links, Modals, etc.) ============
+            
+            /**
+             * Открывает внешнюю ссылку или отображает ее в модальном окне.
+             */
+            openExternalLink(title, url) {
+                if (!url || !url.startsWith('http')) {
+                    alert('Ошибка: Ссылка недействительна.');
+                    return;
+                }
+                
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+                    window.Telegram.WebApp.openLink(url);
+                } else {
+                    document.getElementById('modal-title').textContent = title;
+                    const linkEl = document.getElementById('modal-link');
+                    linkEl.href = url;
+                    linkEl.textContent = url;
+                    
+                    this.openModal('link-modal');
+                    
+                    window.open(url, '_blank');
+                }
+            },
+            
+            /**
+             * Закрывает Telegram Web App.
+             */
+            closeWebApp() {
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) {
+                    window.Telegram.WebApp.close();
+                } else {
+                    // Эмуляция закрытия в браузере
+                    alert('Эмуляция: закрытие приложения и возврат в основное меню.');
+                    // Перенаправление на главную страницу, если это не Telegram
+                    window.location.href = 'index.html'; 
+                }
+            },
+
+            /**
+             * Открывает модальное окно с анимацией.
+             */
+            openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
+                
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.add('is-open', 'opacity-100');
+                        if (modalContent) {
+                            modalContent.classList.add('is-open');
+                        }
+                    }, 10);
+                }
+            },
+            
+            /**
+             * Закрывает модальное окно с анимацией.
+             */
+            closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
+                
+                if (modal) {
+                    modal.classList.remove('is-open', 'opacity-100');
+                    if (modalContent) {
+                        modalContent.classList.remove('is-open');
+                    }
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                    }, 300);
+                }
+            }
+        };
+        
+        window.addEventListener('load', () => {
+            window.App.init();
+        });
+    </script>
+</body>
+</html>
