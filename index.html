@@ -312,6 +312,26 @@
             5: 30, // 1 месяц
             6: 90  // 3 месяца
         };
+        
+        /**
+         * Утилита для получения базового URL (корневой папки приложения)
+         * Важно для Netlify/GitHub Pages, где TWA может некорректно обрабатывать относительные пути.
+         */
+        function getBaseUrl() {
+            // window.location.origin: 'https://[your-site-name].netlify.app' (без конечного слэша)
+            // window.location.pathname: '/subfolder/index.html'
+            const path = window.location.pathname.split('/');
+            // Удаляем имя файла (index.html)
+            path.pop(); 
+            // Получаем путь к папке (например, '/subfolder/')
+            const folderPath = path.join('/') + (path.length > 1 ? '/' : ''); 
+            
+            // Собираем полный базовый URL: 'https://[your-site-name].netlify.app/subfolder/'
+            const base = window.location.origin + folderPath;
+            
+            // Убираем конечный слэш, если это корень, или оставляем, если есть путь
+            return base.endsWith('/') ? base : base + '/';
+        }
 
         /**
          * Данные наборов слов
@@ -336,14 +356,14 @@
 
         /**
          * Карта контента для каждой недели. 
-         * Это связывает неделю с конкретными ID наборов, видео и ссылками.
+         * Теперь ссылки на внешние страницы (storyLink, dialoguesLink) формируются с помощью getBaseUrl()
          */
         const WEEKLY_CONTENT_MAP = {
             1: {
                 assignment: "Добро пожаловать в Неделю 1! Ваша задача: выучить все новые существительные и их артикли. Просмотрите видео-ассоциацию перед началом повторения.",
                 associationVideo: "https://www.youtube.com/embed/jNQXAC9IVRw?autoplay=0&controls=1&showinfo=0&rel=0",
                 associationTitle: "Ассоциации для запоминания существительных A1",
-                storyLink: "text1.html", // ВАША ВНЕШНЯЯ ССЫЛКА НА СТРАНИЦУ ИСТОРИИ
+                storyLink: getBaseUrl() + "text1.html", // ИС-ПРАВ-ЛЕ-НО: Используем абсолютный путь
                 wordSetId: "a1_nouns_1",
                 dialoguesLink: "https://your-domain.com/dialogs/week1",
             },
