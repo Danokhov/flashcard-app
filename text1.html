@@ -27,41 +27,50 @@
         /* Стиль для кнопки ответа */
         .quiz-option {
             transition: all 0.15s ease;
-            /* Добавим более четкий фокус для доступности */
             outline: none; 
         }
         .quiz-option:hover {
-            transform: translateY(-2px); /* Усилим эффект подъема */
+            transform: translateY(-2px); 
             box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.1);
         }
-        .quiz-correct {
+        /* Новый стиль для ВЫБРАННОГО ответа (до проверки) */
+        .quiz-selected {
+            background-color: #A5B4FC !important; /* blue-300 */
+            color: #1E3A8A !important; /* blue-900 */
+            border-color: #6366F1 !important;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3) !important;
+        }
+
+        /* Стиль для окончательной проверки (зеленый/красный) */
+        .quiz-correct-final {
             background-color: #10B981 !important; /* green-500 */
             color: white !important;
             border-color: #059669 !important;
             box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3) !important;
         }
-        .quiz-incorrect {
+        .quiz-incorrect-final {
             background-color: #EF4444 !important; /* red-500 */
             color: white !important;
             border-color: #DC2626 !important;
             box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important;
         }
+
         /* Стиль для IFRAME, отображающего PDF */
         #pdf-viewer-iframe {
-            min-height: 50vh; /* Ограничиваем высоту для мобильных устройств */
+            min-height: 50vh; 
             width: 100%;
             display: block;
         }
 
         /* Улучшенный стиль для неактивной кнопки */
         .next-button-disabled {
-             background-color: #D1D5DB !important; /* gray-300 */
-             color: #6B7280 !important; /* gray-500 */
+             background-color: #D1D5DB !important; 
+             color: #6B7280 !important; 
              cursor: not-allowed;
              box-shadow: none !important;
         }
         .next-button-active {
-            background: linear-gradient(to right, #4F46E5, #6366F1) !important; /* gradient from indigo-600 to indigo-500 */
+            background: linear-gradient(to right, #4F46E5, #6366F1) !important; 
             color: white !important;
             box-shadow: 0 4px 10px -2px rgba(79, 70, 229, 0.5);
             transition: all 0.2s ease;
@@ -72,16 +81,16 @@
         }
         /* Улучшенный стиль для области вопроса в квизе */
         #question-box {
-            border-left: 5px solid #6366F1; /* indigo-500 border on the left */
+            border-left: 5px solid #6366F1; 
         }
 
         /* --- СТИЛИ ДЛЯ ЗАЩИТЫ ОТ КОПИРОВАНИЯ --- */
         .no-copy {
-            -webkit-user-select: none; /* Safari */
-            -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* IE10+/Edge */
-            user-select: none; /* Standard */
-            cursor: default; /* Курсор по умолчанию */
+            -webkit-user-select: none; 
+            -moz-user-select: none; 
+            -ms-user-select: none; 
+            user-select: none; 
+            cursor: default; 
         }
         /* -------------------------------------- */
     </style>
@@ -97,10 +106,10 @@
         
         <div class="space-y-6">
 
-            <!-- 1. ИЗОБРАЖЕНИЕ -->
+            <!-- 1. ИЗОБРАЖЕНИЕ - Использован формат 'thumbnail' для более надежной загрузки -->
             <div class="rounded-xl shadow-xl overflow-hidden">
                 <img id="story-image" 
-                     src="https://drive.google.com/uc?export=download&id=1jGTxdELTiNfcvi2nTLg2Ns8DrvGh4mef" 
+                     src="https://drive.google.com/uc?id=1jGTxdELTiNfcvi2nTLg2Ns8DrvGh4mef&export=download" 
                      alt="Иллюстрация к уроку по немецким артиклям"
                      class="w-full h-auto object-cover" />
             </div>
@@ -109,8 +118,8 @@
             <div class="p-4 bg-white rounded-xl shadow-lg border border-gray-200">
                 <p class="text-sm font-semibold text-gray-700 mb-2">Основная аудиозапись:</p>
                 <audio id="story-audio-player" controls class="w-full">
-                    <!-- Обновленная ссылка на аудиофайл Google Drive -->
-                    <source src="https://drive.google.com/uc?export=download&id=1JKxHqXiZWelfxZfTGEX49ph-8LVUwoA8" type="audio/mpeg">
+                    <!-- АУДИО: Использован ID в формате media=view, что часто более надежно для потокового воспроизведения -->
+                    <source src="https://drive.google.com/uc?id=1JKxHqXiZWelfxZfTGEX49ph-8LVUwoA8&export=media" type="audio/mpeg">
                     Ваш браузер не поддерживает аудио элемент.
                 </audio>
             </div>
@@ -145,6 +154,7 @@
             
             <!-- Кнопка "На главную" -->
             <div class="text-center pt-4">
+                 <!-- Кнопка теперь только вызывает закрытие приложения без консольных логов в случае Telegram Web App -->
                  <button onclick="window.App.closeWebApp()" class="text-gray-500 hover:text-indigo-600 font-semibold transition duration-150">
                     &larr; Назад к Подборкам Недели
                 </button>
@@ -191,8 +201,8 @@
                     <!-- Кнопки/Пояснения будут вставлены JS -->
                 </div>
                 
-                <!-- Поле обратной связи - Увеличил шрифт для заметности -->
-                <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold"></p> 
+                <!-- Поле обратной связи - Увеличил шрифт для заметности, СКРЫВАЕМ его, так как обратная связь теперь только в конце -->
+                <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold hidden"></p> 
                 
             </div>
             <!-- КОНЕЦ СКРОЛЛИРУЕМОЙ ОБЛАСТИ -->
@@ -308,10 +318,6 @@
             quizScore: 0, 
             quizFinished: false,
             
-            // ============ PDF/TEXT DATA (MOCK) ============
-            // УДАЛЕНЫ mockTranscriptText и mockAnalysisText
-            // ===================================
-
             /**
              * Предотвращает выделение, копирование текста и некоторые горячие клавиши.
              * ВАЖНО: это меры сдерживания, а не абсолютная защита.
@@ -404,9 +410,6 @@
                 }
 
                 // Устанавливаем src для iframe
-                // ВАЖНО: Если даже этот формат не работает, нужно использовать Google Docs Viewer Service:
-                // embedUrl = `https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
-                // Но начнем с самого простого, Preview.
                 iframe.src = embedUrl; 
                 
                 // -------------------------------------------------------------------
@@ -423,13 +426,16 @@
                 this.currentQuizIndex = 0;
                 this.quizScore = 0;
                 this.quizFinished = false;
-                this.quizActive = true;
+                // quizActive теперь означает, что пользователь может выбирать ответ (пока не перейдет к след. вопросу)
+                this.quizActive = true; 
                 
                 // Сброс ответов пользователя
                 this.currentQuiz.forEach(q => q.userAnswerIndex = null); 
 
                 document.getElementById('quiz-end-controls').classList.add('hidden');
                 document.getElementById('quiz-next-button').classList.remove('hidden');
+                // Скрываем поле обратной связи на каждом вопросе
+                document.getElementById('quiz-feedback').classList.add('hidden'); 
 
                 this.renderQuizQuestion();
                 this.openModal('quiz-modal');
@@ -451,25 +457,25 @@
                         <p id="quiz-question" class="text-xl font-bold text-gray-800"></p>
                     </div>
                     <div id="quiz-options" class="space-y-3"></div>
-                    <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold"></p>
+                    <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold hidden"></p> 
                 `;
+                
+                this.quizActive = true; // Сбрасываем активность для нового вопроса
                 
                 // Убедимся, что вопрос виден
                 document.getElementById('question-box').classList.remove('hidden'); 
                 document.getElementById('quiz-options').classList.remove('hidden'); 
-                document.getElementById('quiz-feedback').classList.remove('hidden'); 
-
                 
                 const questionData = this.currentQuiz[this.currentQuizIndex];
                 const totalQuestions = this.currentQuiz.length;
                 
                 document.getElementById('quiz-progress').textContent = `Вопрос ${this.currentQuizIndex + 1} из ${totalQuestions}`;
                 document.getElementById('quiz-question').textContent = questionData.question;
-                document.getElementById('quiz-feedback').textContent = '';
                 
                 const nextButton = document.getElementById('quiz-next-button');
                 nextButton.textContent = 'Следующий вопрос';
-                // Сброс классов кнопки до неактивного состояния
+                
+                // Кнопка "Далее" неактивна, пока не выбран ответ
                 nextButton.classList.remove('next-button-active');
                 nextButton.classList.add('next-button-disabled');
                 nextButton.disabled = true;
@@ -483,59 +489,48 @@
                     // Обновленный класс кнопки ответа
                     button.className = 'quiz-option w-full py-3 px-4 bg-white text-gray-800 font-semibold rounded-xl border border-gray-300 shadow-md hover:bg-indigo-100 transition duration-150';
                     button.onclick = () => this.handleQuizAnswer(index);
+                    
+                    // Если ответ уже был выбран (при возврате), подсвечиваем его
+                    if (index === questionData.userAnswerIndex) {
+                        button.classList.add('quiz-selected');
+                        // Если ответ уже выбран, активируем кнопку "Далее"
+                        nextButton.classList.remove('next-button-disabled');
+                        nextButton.classList.add('next-button-active');
+                        nextButton.disabled = false;
+                    }
+                    
                     optionsContainer.appendChild(button);
                 });
             },
             
             /**
-             * Обрабатывает выбор ответа пользователем.
+             * Обрабатывает выбор ответа пользователем (без немедленной проверки).
              */
             handleQuizAnswer(selectedIndex) {
                 if (!this.quizActive) return; 
-                this.quizActive = false;
                 
                 const questionData = this.currentQuiz[this.currentQuizIndex];
-                const selectedOption = questionData.options[selectedIndex];
                 
-                // Сохраняем выбор пользователя и проверяем ответ
+                // 1. Сохраняем выбор пользователя
                 questionData.userAnswerIndex = selectedIndex; 
                 
                 const optionsContainer = document.getElementById('quiz-options');
                 const buttons = optionsContainer.querySelectorAll('button');
-                const feedbackEl = document.getElementById('quiz-feedback');
                 
-                // Обновляем счет, если ответ правильный
-                if (selectedOption.correct) {
-                    this.quizScore++;
-                    feedbackEl.textContent = "Верно! ✅";
-                    feedbackEl.classList.remove('text-red-600');
-                    feedbackEl.classList.add('text-green-600');
-                } else {
-                    feedbackEl.textContent = "Неверно. Попробуйте ещё раз изучить видео! ❌";
-                    feedbackEl.classList.remove('text-green-600');
-                    feedbackEl.classList.add('text-red-600');
-                }
-                
-                // Визуальная обратная связь
+                // 2. Визуальная обратная связь: подсвечиваем только выбранный ответ
                 buttons.forEach((button, index) => {
-                    button.disabled = true;
-                    button.classList.remove('hover:bg-indigo-100');
+                    button.classList.remove('quiz-selected');
                     
-                    if (questionData.options[index].correct) {
-                        button.classList.add('quiz-correct');
-                        button.classList.remove('border-gray-300');
-                    } else if (index === selectedIndex) {
-                        button.classList.add('quiz-incorrect');
-                        button.classList.remove('border-gray-300');
+                    if (index === selectedIndex) {
+                        button.classList.add('quiz-selected');
                     }
                 });
 
-                // Активируем кнопку "Далее"
+                // 3. Активируем кнопку "Далее"
                 const nextButton = document.getElementById('quiz-next-button');
                 const isLastQuestion = this.currentQuizIndex === this.currentQuiz.length - 1;
                 
                 nextButton.textContent = isLastQuestion ? 'Завершить квиз' : 'Следующий вопрос';
-                // Активация кнопки: замена неактивного класса на активный
                 nextButton.classList.remove('next-button-disabled');
                 nextButton.classList.add('next-button-active');
                 nextButton.disabled = false;
@@ -545,13 +540,28 @@
              * Переходит к следующему вопросу или завершает квиз.
              */
             nextQuizQuestion() {
-                this.currentQuizIndex++;
-                if (this.currentQuizIndex < this.currentQuiz.length) {
-                    this.quizActive = true;
-                    this.renderQuizQuestion();
-                } else {
+                // Если мы находимся на последнем вопросе, то перед завершением нужно подсчитать счет.
+                if (this.currentQuizIndex === this.currentQuiz.length - 1) {
+                    this.calculateScore(); // Подсчет очков перед завершением
                     this.finishQuiz();
+                    return;
                 }
+                
+                this.currentQuizIndex++;
+                this.renderQuizQuestion();
+            },
+            
+            /**
+             * Подсчитывает финальный счет.
+             */
+            calculateScore() {
+                this.quizScore = 0;
+                this.currentQuiz.forEach(q => {
+                    const selectedIndex = q.userAnswerIndex;
+                    if (selectedIndex !== null && q.options[selectedIndex].correct) {
+                        this.quizScore++;
+                    }
+                });
             },
             
             /**
@@ -561,6 +571,7 @@
                 this.quizFinished = true;
                 this.quizActive = false;
                 
+                // Счет уже подсчитан в calculateScore()
                 const maxScore = this.currentQuiz.length;
                 const scorePercentage = (this.quizScore / maxScore) * 100;
                 
@@ -624,16 +635,29 @@
                                 let classes = 'p-3 rounded-lg text-sm transition duration-100 border ';
                                 let icon = '';
 
+                                // Финальная проверка: правильный ответ (зеленый)
                                 if (opt.correct) {
-                                    classes += 'bg-green-100 border-green-400 font-bold';
+                                    classes += 'quiz-correct-final border-green-400 font-bold';
                                     icon = '✅ Правильно: ';
-                                } else if (optIndex === q.userAnswerIndex) {
-                                     classes += 'bg-red-100 border-red-400 font-semibold';
+                                } 
+                                // Финальная проверка: неправильный, но выбранный ответ (красный)
+                                else if (optIndex === q.userAnswerIndex) {
+                                     classes += 'quiz-incorrect-final border-red-400 font-semibold';
                                      icon = '❌ Ваш ответ: ';
-                                } else {
+                                } 
+                                // Неправильный и невыбранный ответ (серый)
+                                else {
                                     classes += 'bg-gray-50 border-gray-200 text-gray-600';
                                 }
                                 
+                                // Убираем/добавляем классы, если это правильный/неправильный ответ, который был выбран
+                                if(opt.correct || optIndex === q.userAnswerIndex) {
+                                     classes = classes.replace('bg-white', ''); // Убираем белый фон
+                                     classes = classes.replace('text-gray-800', 'text-white'); // Цвет текста
+                                } else {
+                                     classes = classes.replace('font-semibold', 'font-normal');
+                                }
+
                                 return `
                                     <div class="${classes}">
                                         <p class="font-semibold">${opt.text}</p>
@@ -683,15 +707,16 @@
             
             /**
              * Закрывает Telegram Web App.
+             * Эта функция должна использоваться для возврата на главный экран.
              */
             closeWebApp() {
                 if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) {
+                    // Используем штатную функцию закрытия Telegram Web App, чтобы вернуться к главному боту/списку.
                     window.Telegram.WebApp.close();
                 } else {
-                    // Эмуляция закрытия в браузере
-                    console.log('Эмуляция: закрытие приложения и возврат в основное меню.');
-                    // Для имитации возврата, можно показать сообщение или перенаправить.
-                    // window.location.href = 'index.html'; 
+                    // Если это просто браузер/Canvas, ничего не делаем или эмулируем.
+                    console.log('Эмуляция: закрытие приложения для возврата в главное меню.');
+                    // window.history.back(); // Можно попробовать, но не надежно
                 }
             },
 
