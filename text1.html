@@ -381,7 +381,7 @@
              * Открывает модальное окно для скачивания PDF и показывает сам PDF.
              * @param {string} mainTitle - Основной заголовок (напр., 'Транскрипция').
              * @param {string} subTitle - Подзаголовок (напр., 'Введение в немецкие артикли').
-             * @param {string} pdfUrl - Ссылка на PDF-файл.
+             * @param {string} pdfUrl - Ссылка на PDF-файл (в формате download).
              */
             openPDFModal(mainTitle, subTitle, pdfUrl) {
                 document.getElementById('transcript-title').textContent = `${mainTitle}: ${subTitle}`;
@@ -390,8 +390,26 @@
                 downloadLink.href = pdfUrl;
 
                 const iframe = document.getElementById('pdf-viewer-iframe');
-                // Устанавливаем src для iframe, чтобы отобразить PDF
-                iframe.src = pdfUrl; 
+                
+                // --- ЛОГИКА ДЛЯ БОЛЕЕ СТАБИЛЬНОГО ОТОБРАЖЕНИЯ PDF С GOOGLE DRIVE ---
+                
+                // 1. Извлекаем ID файла из URL (формат '...id=FILE_ID' в Google Drive Download URL)
+                const idMatch = pdfUrl.match(/id=([a-zA-Z0-9_-]+)/);
+                let embedUrl = pdfUrl; 
+
+                if (idMatch && idMatch[1]) {
+                    const fileId = idMatch[1];
+                    // Используем формат 'preview', который более стабилен для встраивания в iframe
+                    embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                }
+
+                // Устанавливаем src для iframe
+                // ВАЖНО: Если даже этот формат не работает, нужно использовать Google Docs Viewer Service:
+                // embedUrl = `https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+                // Но начнем с самого простого, Preview.
+                iframe.src = embedUrl; 
+                
+                // -------------------------------------------------------------------
                 
                 this.openModal('transcript-modal');
             },
