@@ -1,13 +1,13 @@
 [
     {
-        "word": "die Straße",
-        "translation": "улица",
-        "image": "https://placehold.co/300x200/505050/FFFFFF?text=Strasse"
+        "word": "die Beschwerde",
+        "translation": "жалоба, недомогание",
+        "image": "images/beschwerden.png"
     },
     {
-        "word": "der Bahnhof",
-        "translation": "вокзал",
-        "image": "https://placehold.co/300x200/F97316/FFFFFF?text=Bahnhof"
+        "word": "brennen",
+        "translation": "гореть, жечь",
+        "image": "images/brennen.jpg"
     },
     {
         "word": "das Geschäft",
