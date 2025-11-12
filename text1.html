@@ -38,6 +38,7 @@
             width: 100%;
             height: auto;
             display: block;
+            /* УБРАЛИ z-index с картинки */
         }
 
         /* Стиль для нового плеера */
@@ -59,13 +60,13 @@
         }
 
 
-        /* АГРЕССИВНОЕ СКРЫТИЕ АККОРДЕОНА */
+        /* АККОРДЕОН: Скрыт (hidden класс от Tailwind будет обеспечивать display: none) */
         .accordion-content {
+            /* Эти стили отвечают ТОЛЬКО за анимацию, когда класс hidden снят */
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out, opacity 0.4s ease-in-out;
             opacity: 0;
-            /* Устанавливаем padding явно в 0 */
             padding: 0 !important; 
             visibility: hidden; 
         }
@@ -95,7 +96,8 @@
                 <img id="story-image" 
                      src="Woche1_text.png" 
                      alt="Иллюстрация к уроку по немецким артиклям"
-                     class="w-full h-auto object-cover" />
+                     class="w-full h-auto object-cover" 
+                     onclick="event.preventDefault(); event.stopPropagation();" /> <!-- Защита от перехвата клика/тапа -->
 
                 <!-- Аудиоплеер (скрыт) -->
                 <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
@@ -135,21 +137,52 @@
                         <span><span class="mr-3 text-green-500">📖</span>Транскрипция</span>
                         <span id="transcript-arrow">&darr;</span>
                     </button>
-                    <div id="transcript-content" class="accordion-content bg-gray-50 border-t border-gray-200">
-                        <!-- Контент аккордеона -->
-                        <p class="mb-4 font-bold text-gray-800">История: Встреча в Берлине</p>
-                        <p class="mb-3">**Maria:** Guten Tag, Herr Schmidt! Wie geht es Ihnen?</p>
-                        <p class="mb-3">**Herr Schmidt:** Guten Tag, Frau Müller. Danke, gut. Und Ihnen?</p>
-                        <p class="mb-3">**Maria:** Auch gut. Sehen Sie, **der Tisch** dort? Er ist neu.</p>
-                        <p class="mb-3">**Herr Schmidt:** Ja, **der Tisch** is sehr schön. Und **die Frau** dort, is das **die Frau** von Herrn Wagner?</p>
-                        <p class="mb-3">**Maria:** Nein, das is **das Mädchen** (средний род!). **Das Mädchen** arbeitet hier.</p>
-                        <p class="mb-3">**Herr Schmidt:** Ah, verstehe. Und **das Auto** vor der Tür, ist es **das Auto** von Ihrem Chef?</p>
-                        <p>**Maria:** Ja, **das Auto** gehört ihm. Es ist ein schnelles Auto!</p>
-                        <p class="mt-4 border-t pt-2 text-sm text-gray-500">
-                            *Ключевые моменты:* В диалоге использованы три основных артикля: **der** (Tisch), **die** (Frau), **das** (Mädchen, Auto).
-                            Также показано, что существительные во множественном числе всегда используют артикль **die**.
-                        </p>
-                    </div>
+                    <!-- ДОБАВЛЕН КЛАСС hidden ДЛЯ ГАРАНТИРОВАННОГО СКРЫТИЯ TAILWIND -->
+                    <div id="transcript-content" class="accordion-content bg-gray-50 border-t border-gray-200 hidden">
+    <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p>
+
+    <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt.</p>
+    <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
+    <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
+    <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
+    <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
+    <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
+    <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
+    <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
+    <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
+    <p class="mb-3">Die Mitarbeiterin hört ihm aufmerksam zu, als er seine Beschwerden beschreibt.</p>
+    <p class="mb-3">„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie Schmerzen haben, bekommen Sie natürlich schnell einen Termin.“</p>
+    <p class="mb-3">Am Nachmittag sitzt Thomas im Wartezimmer.</p>
+    <p class="mb-3">Es ist stickig, und er beginnt wieder zu schwitzen.</p>
+    <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, und jemand stöhnt leise vor Schmerzen.</p>
+    <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Magen brennt stärker, und ihm wird schwindlig.</p>
+    <p class="mb-3">Endlich ruft die Arzthelferin: „Herr Berger, bitte!“</p>
+    <p class="mb-3">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:</p>
+    <p class="mb-3">„Was fehlt Ihnen?“</p>
+    <p class="mb-3">Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach fühlt und nachts leidet.</p>
+    <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab und erklärt:</p>
+    <p class="mb-3">„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
+    <p class="mb-3">Dann fügt er hinzu:</p>
+    <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
+    <p class="mb-3">Thomas fragt:</p>
+    <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
+    <p class="mb-3">Dr. Keller antwortet:</p>
+    <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
+    <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
+    <p class="mb-3">Dann fragt er:</p>
+    <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
+    <p class="mb-3">Thomas antwortet:</p>
+    <p class="mb-3">„Ja, bitte – für drei Tage.“</p>
+    <p class="mb-3">Dr. Keller notiert es und lächelt:</p>
+    <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
+    <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
+    <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.“</p>
+    <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
+    <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen.</p>
+    <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und ausgeruht.</p>
+    <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
+</div>
+
                 </div>
                 
                 <!-- Кнопка 2: РАЗБОР ТЕКСТА (АККОРДЕОН + СКАЧИВАНИЕ) -->
@@ -159,7 +192,8 @@
                         <span><span class="mr-3 text-blue-500">📝</span>Разбор текста</span>
                         <span id="analysis-arrow">&darr;</span>
                     </button>
-                    <div id="analysis-content" class="accordion-content bg-gray-50 border-t border-gray-200">
+                    <!-- ДОБАВЛЕН КЛАСС hidden ДЛЯ ГАРАНТИРОВАННОГО СКРЫТИЯ TAILWIND -->
+                    <div id="analysis-content" class="accordion-content bg-gray-50 border-t border-gray-200 hidden"> 
                         <!-- Контент аккордеона -->
                         <p class="mb-4 font-bold text-gray-800">Грамматический обзор: Артикли</p>
                         <p class="mb-3">**1. Мужской род (Der):** Используется для большинства существительных мужского пола и для слов, оканчивающихся на **-er** (например, **der Lehrer**). **В диалоге:** **der Tisch** (стол) и **der Bahnhof** (вокзал).</p>
@@ -318,16 +352,18 @@
                 this.audioPlayer.onended = () => this.updatePlayButton(false);
                 
                 // --- ИНИЦИАЛИЗАЦИЯ АККОРДЕОНА: Скрываем контент по умолчанию ---
-                // Принудительно закрываем аккордеоны, чтобы CSS-переход сработал
                 const transcriptContent = document.getElementById('transcript-content');
                 const analysisContent = document.getElementById('analysis-content');
                 
+                // Изначально аккордеоны должны быть гарантированно скрыты
                 if (transcriptContent) {
                     transcriptContent.classList.remove('is-open');
+                    transcriptContent.classList.add('hidden'); // ЖЕСТКОЕ СКРЫТИЕ
                     document.getElementById('transcript-arrow').innerHTML = '&darr;'; 
                 }
                 if (analysisContent) {
                     analysisContent.classList.remove('is-open');
+                    analysisContent.classList.add('hidden'); // ЖЕСТКОЕ СКРЫТИЕ
                     document.getElementById('analysis-arrow').innerHTML = '&darr;'; 
                 }
                 // --- КОНЕЦ ИНИЦИАЛИЗАЦИИ АККОРДЕОНА ---
@@ -392,10 +428,23 @@
                 const isOpen = content.classList.contains('is-open');
 
                 if (isOpen) {
+                    // Закрытие
                     content.classList.remove('is-open');
                     arrow.innerHTML = '&darr;'; // Стрелка вниз
+                    
+                    // Добавляем hidden после завершения анимации
+                    setTimeout(() => {
+                        content.classList.add('hidden');
+                    }, 400); // 400ms - время CSS-перехода
+                    
                 } else {
-                    content.classList.add('is-open');
+                    // Открытие
+                    content.classList.remove('hidden'); // Снимаем жесткое скрытие
+                    // Даем 10мс на применение display: block, затем запускаем анимацию
+                    setTimeout(() => {
+                        content.classList.add('is-open');
+                    }, 10);
+                    
                     arrow.innerHTML = '&uarr;'; // Стрелка вверх
                 }
             },
