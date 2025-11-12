@@ -43,6 +43,7 @@
         }
 
         /* --- СТИЛИ ДЛЯ ЗАЩИТЫ ОТ КОПИРОВАНИЯ --- */
+        /* Оставлено только CSS-правило, которое менее интрузивно */
         .no-copy {
             -webkit-user-select: none; 
             -moz-user-select: none; 
@@ -102,16 +103,16 @@
         <div class="space-y-6">
 
             <!-- 1. ИЗОБРАЖЕНИЕ и АУДИО (Объединенный блок) -->
-            <div id="audio-visual-block" class="rounded-xl shadow-xl overflow-hidden relative image-audio-container" 
-                 onclick="window.App.toggleAudioPlayback()">
+            <!-- Удалили onclick с div. Теперь клик только на кнопке Play/Pause -->
+            <div id="audio-visual-block" class="rounded-xl shadow-xl overflow-hidden relative image-audio-container">
                 
                 <img id="story-image" 
                      src="Woche1_text.png" 
                      alt="Иллюстрация к уроку"
                      class="w-full h-auto object-cover" />
 
-                <!-- Кнопка Play/Pause -->
-                <div id="play-pause-button" class="play-button">
+                <!-- Кнопка Play/Pause. Добавили event.stopPropagation() для стабильности -->
+                <div id="play-pause-button" class="play-button" onclick="event.stopPropagation(); window.App.toggleAudioPlayback()">
                      <!-- SVG Иконка Play -->
                     <svg id="play-icon" class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
                      <!-- SVG Иконка Pause (скрыта по умолчанию) -->
@@ -151,7 +152,7 @@
                         <p>Herzlich willkommen zu Lektion eins, liebe Studenten! Heute tauchen wir tief in die Welt der deutschen Artikel ein: Der, Die und Das.</p>
                         
                         <p class="font-bold text-base mt-4">Мужской род (Der) и женский род (Die)</p>
-                        <p>Das ist der große Tisch. Er steht im hellen Zimmer. Für Substantive männlichen Geschlechts verwenden wir **der**. Beispiele: der Hund, der Stuhl, der Mann. Beachten Sie, dass der Artikel keinen logischen Bezug zum Geschlecht haben muss.</p>
+                        <p>Das ist der große Tisch. Er steht im hellen Zimmer. Für Substantive männlichen Geschlechts verwenden wir **der**. Beispiele: der Hund, der Stuhl, der Mann. Beachten Sie, что der Artikel keinen logischen Bezug zum Geschlecht haben muss.</p>
 
                         <p>Und hier ist die nette Frau. Sie trinkt den Kaffee. **Die** verwenden wir für weibliche Substantive im Singular. Dies ist также der Artikel для всех существительных во множественном числе (Plural), независимо от их исходного рода. **Achtung!** Die Katze, Die Häuser, Die Tische.</p>
 
@@ -325,23 +326,21 @@
             
             /**
              * Предотвращает выделение, копирование текста и некоторые горячие клавиши.
+             * Уменьшили агрессивность, оставив только блокировку копирования/вырезания.
              */
             addCopyProtectionListeners() {
                 const protectionMessage = "Копирование контента запрещено.";
-                document.addEventListener('contextmenu', (e) => { e.preventDefault(); console.log(protectionMessage); });
+                
+                // Блокировка контекстного меню и keydown УДАЛЕНА для улучшения отзывчивости на мобильных.
+
                 document.addEventListener('copy', (e) => { 
                     e.preventDefault(); 
                     if (e.clipboardData) e.clipboardData.setData('text/plain', 'Защищенный контент.');
                     console.log(protectionMessage); 
                 });
                 document.addEventListener('cut', (e) => { e.preventDefault(); console.log(protectionMessage); });
-                document.addEventListener('keydown', (e) => {
-                    const key = e.key.toUpperCase();
-                    if (e.key === 'F12' || e.keyCode === 123 || (e.ctrlKey && key === 'U') || (e.ctrlKey && e.shiftKey && (key === 'I' || key === 'J'))) {
-                        e.preventDefault();
-                        console.warn("Попытка открыть инструменты разработчика заблокирована.");
-                    }
-                });
+                
+                // CSS-класс .no-copy на body остается для базовой блокировки выделения текста.
             },
             
             init() {
@@ -419,13 +418,14 @@
                     });
                     
                     // Открываем целевой
+                    // Устанавливаем max-height = scrollHeight для начальной анимации
                     content.style.maxHeight = content.scrollHeight + "px"; 
                     content.classList.add('is-open');
                     if (arrow) arrow.classList.add('rotate-180');
                     
-                    // Устанавливаем большое значение для max-height после добавления класса is-open
+                    // Устанавливаем очень большое значение для последующего скролла
                     setTimeout(() => {
-                         content.style.maxHeight = "1000vh"; // Устанавливаем большое значение для скролла
+                         content.style.maxHeight = "1000vh"; 
                     }, 10); 
                 }
             },
