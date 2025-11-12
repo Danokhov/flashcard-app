@@ -202,9 +202,20 @@
             
             <p id="external-link-url-display" class="mt-4 text-sm text-gray-500 break-all px-4"></p>
         </div>
+        
+        <!-- 6. ЭКРАН ПРОСМОТРА СТРАНИЦЫ (для загрузки внутреннего HTML-контента, как text1.html) -->
+        <div id="content-viewer-screen" class="hidden">
+            <div id="content-viewer-back-button-container" class="mb-4"></div>
+            <h2 id="content-viewer-title" class="text-xl font-bold text-gray-800 mb-4 text-center"></h2>
+            <!-- Тут нужно добавить отступы для прокрутки, если контент длинный -->
+            <div id="content-viewer-body" class="p-4 bg-white rounded-xl shadow-lg text-gray-700">
+                <!-- Сюда будет загружен контент text1.html -->
+                <p class="text-center text-gray-500">Загрузка контента...</p>
+            </div>
+        </div>
 
 
-        <!-- 6. Экран Повторения (Study Screen) -->
+        <!-- 7. Экран Повторения (Study Screen) -->
         <div id="study-screen" class="hidden">
             <!-- Прогресс-бар -->
             <div class="bg-gray-200 rounded-full h-2.5 mb-4">
@@ -251,7 +262,7 @@
             </div>
         </div>
         
-        <!-- 7. Экран Завершения (Finish Screen) -->
+        <!-- 8. Экран Завершения (Finish Screen) -->
          <div id="finish-screen" class="hidden text-center py-20">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">Сессия завершена!</h2>
             <p id="finish-screen-text" class="text-gray-600 mb-6">Вы прошли все карточки в этой сессии.</p>
@@ -363,7 +374,7 @@
                 assignment: "Добро пожаловать в Неделю 1! Ваша задача: выучить все новые существительные и их артикли. Просмотрите видео-ассоциацию перед началом повторения.",
                 associationVideo: "https://www.youtube.com/embed/jNQXAC9IVRw?autoplay=0&controls=1&showinfo=0&rel=0",
                 associationTitle: "Ассоциации для запоминания существительных A1",
-                storyLink: getBaseUrl() + "text1.html", // ИС-ПРАВ-ЛЕ-НО: Используем абсолютный путь
+                storyLink: getBaseUrl() + "text1.html", // Ссылка на внутренний HTML-файл
                 wordSetId: "a1_nouns_1",
                 dialoguesLink: "https://your-domain.com/dialogs/week1",
             },
@@ -623,11 +634,11 @@
                     `window.App.renderVideoContentScreen('${weekData.associationTitle.replace(/'/g, "\\'")}', '${weekData.associationVideo}', null, 'week-content', ${weekNum})`
                 );
 
-                // 3. История недели (ВНЕШНЯЯ ССЫЛКА)
+                // 3. История недели (ЗАГРУЗКА ВНУТРИ ПРИЛОЖЕНИЯ - ИЗМЕНЕНО)
                 this.renderMenuCard(contentListDiv, 
                     `📖 История недели`, 
-                    `Видео + квиз`,
-                    `window.App.renderExternalLinkScreen('📖 История недели ${weekNum}', '${weekData.storyLink}', 'week-content', ${weekNum})` 
+                    `Видео + квиз (внутри TWA)`,
+                    `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${weekData.storyLink}', 'week-content', ${weekNum})` 
                 );
 
                 // 4. Слова на неделю (Сразу модальное окно повторения)
@@ -699,6 +710,43 @@
                     window.Telegram.WebApp.openLink(url);
                 }
             },
+            
+            /**
+             * НОВАЯ ФУНКЦИЯ: Рендерит экран для отображения содержимого (например, Истории недели),
+             * загружая его динамически с помощью fetch.
+             */
+            async renderStoryScreen(title, url, fromScreen, fromParam) {
+                this.returnContext = { screen: fromScreen, param: fromParam };
+                document.getElementById('content-viewer-title').textContent = title;
+                const contentBody = document.getElementById('content-viewer-body');
+                contentBody.innerHTML = '<p class="text-center text-gray-500">Загрузка контента...</p>';
+
+                this.renderBackButton(fromScreen, fromParam, 'content-viewer-screen');
+                this.showScreen('content-viewer-screen');
+                
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const htmlText = await response.text();
+                    
+                    // Используем DOMParser для безопасного извлечения только контента
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlText, 'text/html');
+                    
+                    // Извлекаем содержимое <body>. Предполагается, что в text1.html
+                    // находится только чистый HTML-контент (текст, картинки), а не
+                    // полноценное приложение с JS/CSS, чтобы избежать конфликтов.
+                    const bodyContent = doc.body.innerHTML; 
+
+                    contentBody.innerHTML = bodyContent;
+
+                } catch (error) {
+                    contentBody.innerHTML = `<p class="text-red-500 text-center">Не удалось загрузить историю. Ошибка: ${error.message}</p><p class="text-sm text-gray-500 text-center mt-2">Попробуйте открыть ссылку: ${url}</p>`;
+                    console.error("Error fetching story content:", error);
+                }
+            },
 
 
             renderAllSetsScreen() {
@@ -726,6 +774,7 @@
             renderBackButton(target, param = null, screenOverride = null) {
                 const containerId = (screenOverride === 'video-content-screen') ? 'video-back-button-container' : 
                                     (screenOverride === 'external-link-screen') ? 'external-link-back-button-container' : 
+                                    (screenOverride === 'content-viewer-screen') ? 'content-viewer-back-button-container' : // НОВОЕ
                                     'back-button-container';
                 const backBtnContainer = document.getElementById(containerId);
                 
@@ -839,6 +888,7 @@
                     window.Telegram.WebApp.openLink(url);
                 } else {
                     // Если это не Telegram, открываем модальное окно с ссылкой
+                    // (Эта часть не используется для внутренних ссылок, но сохранена для внешних)
                     document.getElementById('link-modal-title').textContent = title;
                     const linkEl = document.getElementById('link-modal-link');
                     linkEl.href = url;
@@ -1054,7 +1104,7 @@
             
             showScreen(screenId) {
                 this.currentScreenId = screenId;
-                ['loading-screen', 'home-screen', 'list-screen', 'study-screen', 'finish-screen', 'video-content-screen', 'external-link-screen'].forEach(id => {
+                ['loading-screen', 'home-screen', 'list-screen', 'study-screen', 'finish-screen', 'video-content-screen', 'external-link-screen', 'content-viewer-screen'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) el.classList.add('hidden');
                 });
