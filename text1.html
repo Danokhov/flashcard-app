@@ -29,53 +29,35 @@
         /* СТИЛИ ДЛЯ АУДИО/КАРТИНКИ И АККОРДЕОНОВ */
         /* ------------------------------------------- */
 
-        /* Контейнер для изображения и кнопки Play */
+        /* Контейнер для изображения */
         .story-visual-container {
             position: relative;
-            cursor: pointer;
             transition: transform 0.2s;
         }
-        .story-visual-container:hover {
-            transform: scale(1.01);
-        }
-        
-        /* ИЗОБРАЖЕНИЕ: УДАЛЯЕМ Z-INDEX, полагаемся на позицию кнопки */
         .story-visual-container img {
             width: 100%;
             height: auto;
             display: block;
         }
 
-
-        /* Стили для кнопки Play */
-        #play-pause-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: rgba(99, 102, 241, 0.9); 
-            backdrop-filter: blur(5px);
+        /* Стиль для нового плеера */
+        .audio-controls {
+            background-color: #4F46E5; /* Индиго */
+            border-radius: 0.5rem;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 0.75rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.2s, transform 0.2s;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            z-index: 10; /* ГАРАНТИЯ ВИДИМОСТИ */
-            border: 3px solid white; 
         }
-        #play-pause-button:hover {
-            background-color: rgba(79, 70, 229, 1.0);
-            transform: translate(-50%, -50%) scale(1.05);
+        #audio-play-button {
+            transition: opacity 0.2s;
         }
-        .play-icon, .pause-icon {
-            color: white;
-            width: 40px;
-            height: 40px;
+        #audio-play-button:hover {
+            opacity: 0.8;
         }
-        .play-icon { margin-left: 5px; } 
+
 
         /* АГРЕССИВНОЕ СКРЫТИЕ АККОРДЕОНА */
         .accordion-content {
@@ -107,30 +89,34 @@
         
         <div class="space-y-6">
 
-            <!-- 1. ИЗОБРАЖЕНИЕ И КНОПКА PLAY -->
-            <div class="story-visual-container rounded-xl shadow-xl overflow-hidden" 
-                 onclick="window.App.toggleAudioPlay()">
+            <!-- 1. ИЗОБРАЖЕНИЕ -->
+            <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
                 
                 <img id="story-image" 
                      src="Woche1_text.png" 
                      alt="Иллюстрация к уроку по немецким артиклям"
                      class="w-full h-auto object-cover" />
 
-                <!-- Аудиоплеер (скрыт, управляется кнопкой) -->
+                <!-- Аудиоплеер (скрыт) -->
                 <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
-                
-                <!-- Кнопка Play/Pause -->
-                <button id="play-pause-button" class="z-10" onclick="window.App.toggleAudioPlay(event)">
-                    <svg id="play-icon" class="play-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            </div>
+            
+            <!-- 2. НОВЫЙ БЛОК ПЛЕЕРА ПОД КАРТИНКОЙ -->
+            <div class="audio-controls" onclick="window.App.toggleAudioPlay()">
+                <button id="audio-play-button" class="flex items-center space-x-2">
+                    <!-- Иконка Play -->
+                    <svg id="play-icon" class="play-icon w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z" clip-rule="evenodd"></path>
                     </svg>
-                    <svg id="pause-icon" class="pause-icon hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Иконка Pause (скрыта по умолчанию) -->
+                    <svg id="pause-icon" class="pause-icon hidden w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                     </svg>
+                    <span id="audio-status" class="text-lg font-bold">Слушать историю</span>
                 </button>
             </div>
             
-            <!-- 2. БЛОК "Кнопки действий" -->
+            <!-- 3. БЛОК "Кнопки действий" -->
             <div class="space-y-4">
                 
                 <!-- Кнопка Упражнения (Квиз) - ОСТАЕТСЯ В МОДАЛЬНОМ ОКНЕ -->
@@ -150,6 +136,7 @@
                         <span id="transcript-arrow">&darr;</span>
                     </button>
                     <div id="transcript-content" class="accordion-content bg-gray-50 border-t border-gray-200">
+                        <!-- Контент аккордеона -->
                         <p class="mb-4 font-bold text-gray-800">История: Встреча в Берлине</p>
                         <p class="mb-3">**Maria:** Guten Tag, Herr Schmidt! Wie geht es Ihnen?</p>
                         <p class="mb-3">**Herr Schmidt:** Guten Tag, Frau Müller. Danke, gut. Und Ihnen?</p>
@@ -158,7 +145,6 @@
                         <p class="mb-3">**Maria:** Nein, das is **das Mädchen** (средний род!). **Das Mädchen** arbeitet hier.</p>
                         <p class="mb-3">**Herr Schmidt:** Ah, verstehe. Und **das Auto** vor der Tür, ist es **das Auto** von Ihrem Chef?</p>
                         <p>**Maria:** Ja, **das Auto** gehört ihm. Es ist ein schnelles Auto!</p>
-                        <!-- Добавлен полный текст, чтобы было, что сворачивать/разворачивать -->
                         <p class="mt-4 border-t pt-2 text-sm text-gray-500">
                             *Ключевые моменты:* В диалоге использованы три основных артикля: **der** (Tisch), **die** (Frau), **das** (Mädchen, Auto).
                             Также показано, что существительные во множественном числе всегда используют артикль **die**.
@@ -174,6 +160,7 @@
                         <span id="analysis-arrow">&darr;</span>
                     </button>
                     <div id="analysis-content" class="accordion-content bg-gray-50 border-t border-gray-200">
+                        <!-- Контент аккордеона -->
                         <p class="mb-4 font-bold text-gray-800">Грамматический обзор: Артикли</p>
                         <p class="mb-3">**1. Мужской род (Der):** Используется для большинства существительных мужского пола и для слов, оканчивающихся на **-er** (например, **der Lehrer**). **В диалоге:** **der Tisch** (стол) и **der Bahnhof** (вокзал).</p>
                         <p class="mb-3">**2. Женский род (Die):** Используется для существительных женского пола и для слов, оканчивающихся на **-ung, -heit, -keit, -schaft** (например, **die Übung**). **В диалоге:** **die Frau** (женщина) и **die Straße** (улица).</p>
@@ -369,20 +356,23 @@
             },
 
             /**
-             * Обновляет иконку Play/Pause.
+             * Обновляет иконку Play/Pause и статус.
              * @param {boolean} isPlaying - true, если аудио играет, false в противном случае.
              */
             updatePlayButton(isPlaying) {
                 const playIcon = document.getElementById('play-icon');
                 const pauseIcon = document.getElementById('pause-icon');
+                const statusText = document.getElementById('audio-status');
                 
-                if (playIcon && pauseIcon) {
+                if (playIcon && pauseIcon && statusText) {
                     if (isPlaying) {
                         playIcon.classList.add('hidden');
                         pauseIcon.classList.remove('hidden');
+                        statusText.textContent = 'Нажмите, чтобы остановить...';
                     } else {
                         playIcon.classList.remove('hidden');
                         pauseIcon.classList.add('hidden');
+                        statusText.textContent = 'Слушать историю';
                     }
                 }
             },
