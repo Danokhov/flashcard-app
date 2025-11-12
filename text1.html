@@ -10,73 +10,22 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <style>
-        /* Стиль для анимации появления модального окна */
-        .modal {
-            transition: opacity 0.3s ease;
-        }
-        .modal-content {
-            transition: transform 0.3s ease;
-            transform: scale(0.95);
-        }
-        .modal.is-open {
-            opacity: 1;
-        }
-        .modal.is-open .modal-content {
-            transform: scale(1);
-        }
-        /* Стиль для кнопки ответа */
-        .quiz-option {
-            transition: all 0.15s ease;
-            outline: none; 
-        }
-        .quiz-option:hover {
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.1);
-        }
-        /* Новый стиль для ВЫБРАННОГО ответа (до проверки) */
-        .quiz-selected {
-            background-color: #A5B4FC !important; /* blue-300 */
-            color: #1E3A8A !important; /* blue-900 */
-            border-color: #6366F1 !important;
-            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3) !important;
-        }
-
-        /* Стиль для окончательной проверки (зеленый/красный) */
-        .quiz-correct-final {
-            background-color: #10B981 !important; /* green-500 */
-            color: white !important;
-            border-color: #059669 !important;
-            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3) !important;
-        }
-        .quiz-incorrect-final {
-            background-color: #EF4444 !important; /* red-500 */
-            color: white !important;
-            border-color: #DC2626 !important;
-            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important;
-        }
+        /* Стили для модальных окон (без изменений) */
+        .modal { transition: opacity 0.3s ease; }
+        .modal-content { transition: transform 0.3s ease; transform: scale(0.95); }
+        .modal.is-open { opacity: 1; }
+        .modal.is-open .modal-content { transform: scale(1); }
         
-        /* Улучшенный стиль для неактивной кнопки */
-        .next-button-disabled {
-             background-color: #D1D5DB !important; 
-             color: #6B7280 !important; 
-             cursor: not-allowed;
-             box-shadow: none !important;
-        }
-        .next-button-active {
-            background: linear-gradient(to right, #4F46E5, #6366F1) !important; 
-            color: white !important;
-            box-shadow: 0 4px 10px -2px rgba(79, 70, 229, 0.5);
-            transition: all 0.2s ease;
-        }
-        .next-button-active:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-        
-        /* Улучшенный стиль для области вопроса в квизе */
-        #question-box {
-            border-left: 5px solid #6366F1; 
-        }
+        /* Стили для квиза (без изменений) */
+        .quiz-option { transition: all 0.15s ease; outline: none; }
+        .quiz-option:hover { transform: translateY(-2px); box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.1); }
+        .quiz-selected { background-color: #A5B4FC !important; color: #1E3A8A !important; border-color: #6366F1 !important; box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3) !important; }
+        .quiz-correct-final { background-color: #10B981 !important; color: white !important; border-color: #059669 !important; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3) !important; }
+        .quiz-incorrect-final { background-color: #EF4444 !important; color: white !important; border-color: #DC2626 !important; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important; }
+        .next-button-disabled { background-color: #D1D5DB !important; color: #6B7280 !important; cursor: not-allowed; box-shadow: none !important; }
+        .next-button-active { background: linear-gradient(to right, #4F46E5, #6366F1) !important; color: white !important; box-shadow: 0 4px 10px -2px rgba(79, 70, 229, 0.5); transition: all 0.2s ease; }
+        .next-button-active:hover { opacity: 0.9; transform: translateY(-1px); }
+        #question-box { border-left: 5px solid #6366F1; }
 
         /* ------------------------------------------- */
         /* СТИЛИ ДЛЯ АУДИО/КАРТИНКИ И АККОРДЕОНОВ */
@@ -92,9 +41,12 @@
             transform: scale(1.01);
         }
         
-        /* ГАРАНТИРУЕМ, ЧТО КНОПКА PLAY НЕ ПЕРЕКРЫТА ИЗОБРАЖЕНИЕМ */
+        /* ИЗОБРАЖЕНИЕ: Позиционируем статично */
         .story-visual-container img {
-            z-index: 5; /* Изображение ниже кнопки (кнопка z-index: 10) */
+            z-index: 5; 
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
 
@@ -107,45 +59,38 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background-color: rgba(99, 102, 241, 0.8); /* Более яркий синий фон */
+            background-color: rgba(99, 102, 241, 0.9); /* Повышаем непрозрачность */
             backdrop-filter: blur(5px);
             display: flex;
             align-items: center;
             justify-content: center;
             transition: background-color 0.2s, transform 0.2s;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            z-index: 10; /* ГАРАНТИРУЕМ, ЧТО КНОПКА ВСЕГДА ПОВЕРХ */
+            z-index: 10; 
         }
         #play-pause-button:hover {
-            background-color: rgba(79, 70, 229, 0.9);
+            background-color: rgba(79, 70, 229, 1.0);
             transform: translate(-50%, -50%) scale(1.05);
         }
-        .play-icon {
-            color: white;
-            width: 40px;
-            height: 40px;
-            /* Сдвиг для центровки треугольника */
-            margin-left: 5px; 
-        }
-        .pause-icon {
+        .play-icon, .pause-icon {
             color: white;
             width: 40px;
             height: 40px;
         }
+        .play-icon { margin-left: 5px; } 
 
         /* Стили для аккордеона */
         .accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-in-out;
+            transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
             opacity: 0;
-            padding: 0 1rem;
-            /* Скрываем элемент-пустышку, когда он свернут */
+            padding: 0 1rem; /* Изначально минимальный padding, чтобы не было видно контента */
             visibility: hidden; 
         }
         .accordion-content.is-open {
-            max-height: 3000px; /* Достаточно большое значение для раскрытия */
-            padding: 1rem;
+            max-height: 3000px; 
+            padding: 1rem; /* Добавляем padding при открытии */
             opacity: 1;
             visibility: visible;
         }
