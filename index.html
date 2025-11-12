@@ -513,6 +513,10 @@
                          this.userId = "web_user_" + Math.random().toString(36).substring(7);
                     }
 
+                    // --- NEW: DISABLE MOBILE ZOOM ---
+                    this.disableZoom();
+                    // ---------------------------------
+
                     if (this.db) {
                         await this.loadProgress();
                     } else {
@@ -524,6 +528,34 @@
                     console.error(error);
                 }
             },
+
+            // ==================== NEW FUNCTION ====================
+            /**
+             * Предотвращает зумирование страницы на мобильных устройствах (TWA).
+             */
+            disableZoom() {
+                const disablePinchToZoom = (e) => {
+                    if (e.touches.length > 1) {
+                        e.preventDefault();
+                    }
+                };
+                
+                const disableDoubleTapZoom = (e) => {
+                    e.preventDefault();
+                };
+
+                // Отключаем pinch-to-zoom
+                document.addEventListener('touchstart', disablePinchToZoom, { passive: false });
+                
+                // Отключаем двойное нажатие для зумирования (не работает для всех элементов, но помогает)
+                document.addEventListener('dblclick', disableDoubleTapZoom, { passive: false });
+                
+                // Дополнительно блокируем зумирование через CSS-свойство 'touch-action' на body, если оно не установлено
+                if (!document.body.style.touchAction) {
+                    document.body.style.touchAction = 'manipulation'; 
+                }
+            },
+            // ======================================================
 
             async loadProgress() {
                 this.showScreen('loading-screen');
@@ -686,21 +718,16 @@
                 const contentListDiv = document.getElementById('content-list');
                 contentListDiv.innerHTML = '';
                 
-                // 1. Задание на неделю
-                this.renderMenuCard(contentListDiv, 
-                    `📜 Задание на неделю`, 
-                    `Цели и план`,
-                    `window.App.renderVideoContentScreen('📜 Задание на неделю ${weekNum}', null, '${weekData.assignment.replace(/'/g, "\\'")}', 'week-content', ${weekNum})` 
-                );
-
-                // 2. Ассоциации на неделю (Видео)
+                // --- ПУНКТ "ЗАДАНИЕ НА НЕДЕЛЮ" УДАЛЕН ---
+                
+                // 1. Ассоциации на неделю (Видео)
                 this.renderMenuCard(contentListDiv, 
                     `🧠 Видео ассоциации`, 
                     weekData.associationTitle,
                     `window.App.renderVideoContentScreen('${weekData.associationTitle.replace(/'/g, "\\'")}', '${weekData.associationVideo}', null, 'week-content', ${weekNum})`
                 );
                 
-                 // 3. Карусель ассоциаций (НОВАЯ ПОЗИЦИЯ)
+                 // 2. Карусель ассоциаций
                 this.renderMenuCard(contentListDiv, 
                     `🖼️ Карусель ассоциаций`, 
                     `Визуальное изучение слов`,
@@ -709,14 +736,14 @@
                 );
 
 
-                // 4. История недели (ВНУТРЕННИЙ HTML)
+                // 3. История недели (ВНУТРЕННИЙ HTML)
                 this.renderMenuCard(contentListDiv, 
                     `📖 История недели`, 
                     `Видео + квиз`,
                     `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${weekData.storyLink}', 'week-content', ${weekNum})` 
                 );
 
-                // 5. Слова на неделю (Сразу модальное окно повторения)
+                // 4. Слова на неделю (Сразу модальное окно повторения)
                 this.renderMenuCard(contentListDiv, 
                     `📚 Слова на неделю`, 
                     `Повторение ${WORD_SETS.find(s => s.id === weekData.wordSetId)?.cards.length || 0} слов`,
@@ -724,7 +751,7 @@
                     'bg-green-100 hover:bg-green-200'
                 );
                 
-                // 6. Полезные фразы / Диалоги на тему (ВНЕШНЯЯ ССЫЛКА)
+                // 5. Полезные фразы / Диалоги на тему (ВНЕШНЯЯ ССЫЛКА)
                 this.renderMenuCard(contentListDiv, 
                     `🗣️ Полезные фразы / Диалоги на тему`, 
                     `Внешняя ссылка`,
