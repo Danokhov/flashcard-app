@@ -3,7 +3,7 @@
         "id": "animals",
         "title": "Животные (Animals)",
         "filepath": "carousel_animals.json",
-        "wordCount": 10
+        "wordCount": 3
     },
     {
         "id": "city",
@@ -17,5 +17,4 @@
         "filepath": "carousel_food.json",
         "wordCount": 12
     }
-    // Здесь можно добавить еще 37+ объектов
 ]
