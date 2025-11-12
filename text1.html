@@ -91,6 +91,12 @@
         .story-visual-container:hover {
             transform: scale(1.01);
         }
+        
+        /* ГАРАНТИРУЕМ, ЧТО КНОПКА PLAY НЕ ПЕРЕКРЫТА ИЗОБРАЖЕНИЕМ */
+        .story-visual-container img {
+            z-index: 5; /* Изображение ниже кнопки (кнопка z-index: 10) */
+        }
+
 
         /* Стили для кнопки Play */
         #play-pause-button {
@@ -101,16 +107,17 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(99, 102, 241, 0.8); /* Более яркий синий фон */
             backdrop-filter: blur(5px);
             display: flex;
             align-items: center;
             justify-content: center;
             transition: background-color 0.2s, transform 0.2s;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 10; /* ГАРАНТИРУЕМ, ЧТО КНОПКА ВСЕГДА ПОВЕРХ */
         }
         #play-pause-button:hover {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(79, 70, 229, 0.9);
             transform: translate(-50%, -50%) scale(1.05);
         }
         .play-icon {
@@ -133,11 +140,14 @@
             transition: max-height 0.4s ease-in-out;
             opacity: 0;
             padding: 0 1rem;
+            /* Скрываем элемент-пустышку, когда он свернут */
+            visibility: hidden; 
         }
         .accordion-content.is-open {
             max-height: 3000px; /* Достаточно большое значение для раскрытия */
             padding: 1rem;
             opacity: 1;
+            visibility: visible;
         }
     </style>
 </head>
@@ -199,8 +209,8 @@
                         <p class="mb-3">**Maria:** Guten Tag, Herr Schmidt! Wie geht es Ihnen?</p>
                         <p class="mb-3">**Herr Schmidt:** Guten Tag, Frau Müller. Danke, gut. Und Ihnen?</p>
                         <p class="mb-3">**Maria:** Auch gut. Sehen Sie, **der Tisch** dort? Er ist neu.</p>
-                        <p class="mb-3">**Herr Schmidt:** Ja, **der Tisch** ist sehr schön. Und **die Frau** dort, ist das **die Frau** von Herrn Wagner?</p>
-                        <p class="mb-3">**Maria:** Nein, das ist **das Mädchen** (средний род!). **Das Mädchen** arbeitet hier.</p>
+                        <p class="mb-3">**Herr Schmidt:** Ja, **der Tisch** is sehr schön. Und **die Frau** dort, is das **die Frau** von Herrn Wagner?</p>
+                        <p class="mb-3">**Maria:** Nein, das is **das Mädchen** (средний род!). **Das Mädchen** arbeitet hier.</p>
                         <p class="mb-3">**Herr Schmidt:** Ah, verstehe. Und **das Auto** vor der Tür, ist es **das Auto** von Ihrem Chef?</p>
                         <p>**Maria:** Ja, **das Auto** gehört ihm. Es ist ein schnelles Auto!</p>
                         <!-- Добавлен полный текст, чтобы было, что сворачивать/разворачивать -->
@@ -374,6 +384,11 @@
                 this.audioPlayer.onplay = () => this.updatePlayButton(true);
                 this.audioPlayer.onpause = () => this.updatePlayButton(false);
                 this.audioPlayer.onended = () => this.updatePlayButton(false);
+                
+                // --- ИНИЦИАЛИЗАЦИЯ АККОРДЕОНА: Скрываем контент по умолчанию ---
+                document.getElementById('transcript-content').classList.remove('is-open');
+                document.getElementById('analysis-content').classList.remove('is-open');
+                // --- КОНЕЦ ИНИЦИАЛИЗАЦИИ АККОРДЕОНА ---
             },
             
             // ============ AUDIO/VIDEO LOGIC ============
@@ -425,10 +440,9 @@
              */
             toggleAccordion(contentId) {
                 const content = document.getElementById(contentId);
-                const button = document.getElementById(contentId.replace('-content', '-button'));
                 const arrow = document.getElementById(contentId.replace('-content', '-arrow'));
 
-                if (!content || !button || !arrow) return;
+                if (!content || !arrow) return;
 
                 const isOpen = content.classList.contains('is-open');
 
