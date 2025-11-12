@@ -1,0 +1,77 @@
+[
+    {
+        "word": "die Straße",
+        "translation": "улица",
+        "image": "https://placehold.co/300x200/505050/FFFFFF?text=Strasse"
+    },
+    {
+        "word": "der Bahnhof",
+        "translation": "вокзал",
+        "image": "https://placehold.co/300x200/F97316/FFFFFF?text=Bahnhof"
+    },
+    {
+        "word": "das Geschäft",
+        "translation": "магазин",
+        "image": "https://placehold.co/300x200/22C55E/FFFFFF?text=Geschaeft"
+    },
+    {
+        "word": "der Park",
+        "translation": "парк",
+        "image": "https://placehold.co/300x200/059669/FFFFFF?text=Park"
+    },
+    {
+        "word": "die Brücke",
+        "translation": "мост",
+        "image": "https://placehold.co/300x200/4F46E5/FFFFFF?text=Bruecke"
+    },
+    {
+        "word": "das Rathaus",
+        "translation": "мэрия, ратуша",
+        "image": "https://placehold.co/300x200/3B82F6/FFFFFF?text=Rathaus"
+    },
+    {
+        "word": "die Kirche",
+        "translation": "церковь",
+        "image": "https://placehold.co/300x200/A855F7/FFFFFF?text=Kirche"
+    },
+    {
+        "word": "der Supermarkt",
+        "translation": "супермаркет",
+        "image": "https://placehold.co/300x200/EC4899/FFFFFF?text=Supermarkt"
+    },
+    {
+        "word": "das Krankenhaus",
+        "translation": "больница",
+        "image": "https://placehold.co/300x200/F97316/FFFFFF?text=Krankenhaus"
+    },
+    {
+        "word": "die Apotheke",
+        "translation": "аптека",
+        "image": "https://placehold.co/300x200/10B981/FFFFFF?text=Apotheke"
+    },
+    {
+        "word": "das Museum",
+        "translation": "музей",
+        "image": "https://placehold.co/300x200/6B7280/FFFFFF?text=Museum"
+    },
+    {
+        "word": "der Platz",
+        "translation": "площадь",
+        "image": "https://placehold.co/300x200/EF4444/FFFFFF?text=Platz"
+    },
+    {
+        "word": "die Haltestelle",
+        "translation": "остановка",
+        "image": "https://placehold.co/300x200/374151/FFFFFF?text=Haltestelle"
+    },
+    {
+        "word": "das Café",
+        "translation": "кафе",
+        "image": "https://placehold.co/300x200/FBBF24/FFFFFF?text=Cafe"
+    },
+    {
+        "word": "der Flughafen",
+        "translation": "аэропорт",
+        "image": "https://placehold.co/300x200/6366F1/FFFFFF?text=Flughafen"
+    }
+]

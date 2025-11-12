@@ -1,0 +1,21 @@
+[
+    {
+        "id": "animals",
+        "title": "Животные (Animals)",
+        "filepath": "carousel_animals.json",
+        "wordCount": 10
+    },
+    {
+        "id": "city",
+        "title": "Город (City)",
+        "filepath": "carousel_city.json",
+        "wordCount": 15
+    },
+    {
+        "id": "food",
+        "title": "Еда и Напитки (Food and Drinks)",
+        "filepath": "carousel_food.json",
+        "wordCount": 12
+    }
+    // Здесь можно добавить еще 37+ объектов
+]
