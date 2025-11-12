@@ -10,23 +10,6 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <style>
-        /* Контейнер 16:9 для видео */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            height: 0;
-            overflow: hidden;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
         /* Стиль для анимации появления модального окна */
         .modal {
             transition: opacity 0.3s ease;
@@ -44,70 +27,125 @@
         /* Стиль для кнопки ответа */
         .quiz-option {
             transition: all 0.15s ease;
+            /* Добавим более четкий фокус для доступности */
+            outline: none; 
         }
         .quiz-option:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px); /* Усилим эффект подъема */
+            box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.1);
         }
         .quiz-correct {
             background-color: #10B981 !important; /* green-500 */
             color: white !important;
             border-color: #059669 !important;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3) !important;
         }
         .quiz-incorrect {
             background-color: #EF4444 !important; /* red-500 */
             color: white !important;
             border-color: #DC2626 !important;
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important;
         }
-        /* Убедимся, что модальное окно с транскрипцией имеет прокрутку */
-        #transcript-text-content {
-            max-height: 40vh; /* Ограничиваем высоту для мобильных устройств */
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+        /* Стиль для IFRAME, отображающего PDF */
+        #pdf-viewer-iframe {
+            min-height: 50vh; /* Ограничиваем высоту для мобильных устройств */
+            width: 100%;
+            display: block;
         }
+
+        /* Улучшенный стиль для неактивной кнопки */
+        .next-button-disabled {
+             background-color: #D1D5DB !important; /* gray-300 */
+             color: #6B7280 !important; /* gray-500 */
+             cursor: not-allowed;
+             box-shadow: none !important;
+        }
+        .next-button-active {
+            background: linear-gradient(to right, #4F46E5, #6366F1) !important; /* gradient from indigo-600 to indigo-500 */
+            color: white !important;
+            box-shadow: 0 4px 10px -2px rgba(79, 70, 229, 0.5);
+            transition: all 0.2s ease;
+        }
+        .next-button-active:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        /* Улучшенный стиль для области вопроса в квизе */
+        #question-box {
+            border-left: 5px solid #6366F1; /* indigo-500 border on the left */
+        }
+
+        /* --- СТИЛИ ДЛЯ ЗАЩИТЫ ОТ КОПИРОВАНИЯ --- */
+        .no-copy {
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+            cursor: default; /* Курсор по умолчанию */
+        }
+        /* -------------------------------------- */
     </style>
 </head>
 
-<body class="min-h-screen bg-gray-100 font-sans p-4">
+<body class="min-h-screen bg-gray-100 font-sans p-4 no-copy">
 
     <!-- Основной контейнер страницы -->
     <div id="app" class="max-w-md mx-auto">
         
         <!-- Заголовок страницы (История недели) -->
-        <h1 id="story-title" class="text-2xl font-bold text-gray-800 mb-4 text-center">Введение в немецкие артикли (A1)</h1>
+        <h1 id="story-title" class="text-2xl font-extrabold text-gray-900 mb-6 text-center">Введение в немецкие артикли (A1)</h1>
         
         <div class="space-y-6">
 
-            <!-- Видео 16:9 -->
-            <div class="video-container">
-                <iframe id="story-video-embed" 
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&controls=1&showinfo=0&rel=0" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen></iframe>
+            <!-- 1. ИЗОБРАЖЕНИЕ -->
+            <div class="rounded-xl shadow-xl overflow-hidden">
+                <img id="story-image" 
+                     src="https://drive.google.com/uc?export=download&id=1jGTxdELTiNfcvi2nTLg2Ns8DrvGh4mef" 
+                     alt="Иллюстрация к уроку по немецким артиклям"
+                     class="w-full h-auto object-cover" />
             </div>
 
-            <!-- Блок "Кнопки действий" -->
+            <!-- 2. АУДИО ПЛЕЕР -->
+            <div class="p-4 bg-white rounded-xl shadow-lg border border-gray-200">
+                <p class="text-sm font-semibold text-gray-700 mb-2">Основная аудиозапись:</p>
+                <audio id="story-audio-player" controls class="w-full">
+                    <!-- Обновленная ссылка на аудиофайл Google Drive -->
+                    <source src="https://drive.google.com/uc?export=download&id=1JKxHqXiZWelfxZfTGEX49ph-8LVUwoA8" type="audio/mpeg">
+                    Ваш браузер не поддерживает аудио элемент.
+                </audio>
+            </div>
+            
+            <!-- 3. БЛОК "Кнопки действий" (КВИЗ, ТРАНСКРИПТ, РАЗБОР) -->
             <div class="space-y-4">
                 
-                <!-- Кнопка Транскрипция/PDF -->
-                <button onclick="window.App.openTranscriptModal('Введение в немецкие артикли (A1)', 'https://www.africau.edu/images/default/sample.pdf')" 
-                   class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150">
-                    <span>📄 Транскрипция (PDF)</span>
-                    <span>&rarr;</span>
+                <!-- Кнопка Транскрипция/PDF (ПЕРВЫЙ ДОКУМЕНТ) -->
+                <button onclick="window.App.openPDFModal('Транскрипция', 'Введение в немецкие артикли (A1)', 'https://drive.google.com/uc?export=download&id=1sLt6qdDm9BU3pmBRx1ZSfEJdbdFY8R6a')" 
+                   class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition duration-150 border border-gray-200">
+                    <span><span class="mr-3 text-green-500">📖</span>Транскрипция (PDF)</span>
+                    <span class="text-gray-400">&rarr;</span>
+                </button>
+                
+                <!-- Кнопка Разбор текста/PDF (ВТОРОЙ ДОКУМЕНТ) -->
+                <!-- Эта ссылка осталась заглушкой, так как вы не предоставили URL для 'Разбор текста' -->
+                <button onclick="window.App.openPDFModal('Разбор текста', 'Разбор основных конструкций', 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')" 
+                   class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition duration-150 border border-gray-200">
+                    <span><span class="mr-3 text-blue-500">📝</span>Разбор текста (PDF)</span>
+                    <span class="text-gray-400">&rarr;</span>
                 </button>
                 
                 <!-- Кнопка Квиз/Упражнения -->
                 <button onclick="window.App.startStoryQuiz()"
-                        class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-lg text-left text-lg font-bold hover:bg-indigo-600 transition duration-150 flex justify-between items-center">
-                    <span>✅ Упражнения (Квиз по тексту)</span>
+                        class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
+                                hover:bg-indigo-600 transition duration-150 flex justify-between items-center 
+                                bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl">
+                    <span><span class="mr-3 text-yellow-300">🧠</span> Упражнения (Квиз)</span>
                     <span>&rarr;</span>
                 </button>
             </div>
             
             <!-- Кнопка "На главную" -->
             <div class="text-center pt-4">
-                 <button onclick="window.App.closeWebApp()" class="text-gray-500 hover:text-gray-700 font-semibold">
+                 <button onclick="window.App.closeWebApp()" class="text-gray-500 hover:text-indigo-600 font-semibold transition duration-150">
                     &larr; Назад к Подборкам Недели
                 </button>
             </div>
@@ -116,10 +154,10 @@
     </div>
     
     <!-- МОДАЛЬНОЕ ОКНО 1: для отображения внешней ссылки (Link Modal) -->
-    <div id="link-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('link-modal')">
+    <div id="link-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('link-modal')" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div id="link-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
             <h3 id="modal-title" class="text-lg font-semibold mb-3 text-gray-800">Переход по ссылке</h3>
-            <div class="bg-gray-100 p-3 rounded-lg">
+            <div class="bg-gray-100 p-3 rounded-lg border border-gray-200">
                  <p class="text-gray-700 text-sm mb-2">Для перехода к полной версии откройте ссылку:</p>
                  <a id="modal-link" href="#" target="_blank" class="text-blue-600 break-all hover:underline font-semibold text-sm"></a>
             </div>
@@ -130,9 +168,9 @@
     </div>
     
     <!-- МОДАЛЬНОЕ ОКНО 2: для КВИЗА (Quiz Modal) -->
-    <div id="quiz-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('quiz-modal')">
+    <div id="quiz-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('quiz-modal')" role="dialog" aria-modal="true" aria-labelledby="quiz-modal-title">
         <div id="quiz-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
-            <h3 class="text-xl font-bold mb-4 text-gray-800 text-center">Квиз по Истории</h3>
+            <h3 id="quiz-modal-title" class="text-xl font-bold mb-4 text-gray-800 text-center border-b pb-2">Квиз по Истории</h3>
             
             <!-- Индикатор прогресса (STATIC HEADER) -->
             <div class="text-sm text-gray-500 mb-4 text-center">
@@ -144,7 +182,8 @@
 
                 <!-- Вопрос (Отображается только во время активного квиза) -->
                 <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
-                    <p id="quiz-question" class="text-lg font-semibold text-gray-800"></p>
+                    <!-- Увеличил шрифт вопроса для лучшей читаемости -->
+                    <p id="quiz-question" class="text-xl font-bold text-gray-800"></p> 
                 </div>
                 
                 <!-- Опции ответа / Пояснения -->
@@ -152,15 +191,15 @@
                     <!-- Кнопки/Пояснения будут вставлены JS -->
                 </div>
                 
-                <!-- Поле обратной связи -->
-                <p id="quiz-feedback" class="mt-4 text-center font-bold"></p>
+                <!-- Поле обратной связи - Увеличил шрифт для заметности -->
+                <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold"></p> 
                 
             </div>
             <!-- КОНЕЦ СКРОЛЛИРУЕМОЙ ОБЛАСТИ -->
 
             <!-- Кнопки управления (STATIC FOOTER) -->
             <button id="quiz-next-button" onclick="window.App.nextQuizQuestion()" 
-                    class="w-full mt-6 py-3 px-4 bg-gray-300 text-gray-700 font-bold rounded-xl shadow-md transition duration-150 cursor-not-allowed" disabled>
+                    class="w-full mt-6 py-3 px-4 font-bold rounded-xl shadow-md transition duration-150 next-button-disabled" disabled>
                 Следующий вопрос
             </button>
             
@@ -183,17 +222,20 @@
         </div>
     </div>
     
-    <!-- МОДАЛЬНОЕ ОКНО 3: для ТРАНСКРИПЦИИ (Transcript Modal) -->
-    <div id="transcript-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('transcript-modal')">
+    <!-- МОДАЛЬНОЕ ОКНО 3: для ТРАНСКРИПЦИИ/РАЗБОРА (Transcript/Analysis Modal) -->
+    <div id="transcript-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('transcript-modal')" role="dialog" aria-modal="true" aria-labelledby="transcript-title">
         <div id="transcript-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-lg w-full" onclick="event.stopPropagation()">
-            <h3 id="transcript-title" class="text-xl font-bold mb-4 text-gray-800 text-center">Транскрипция</h3>
+            <!-- Заголовок будет динамически меняться -->
+            <h3 id="transcript-title" class="text-xl font-bold mb-4 text-gray-800 text-center border-b pb-2">Документ</h3>
             
-            <div id="transcript-text-content" class="bg-gray-50 p-4 rounded-lg mb-6 text-gray-700 text-base border border-gray-200">
-                <!-- Текст транскрипции будет здесь -->
+            <!-- НОВАЯ ОБЛАСТЬ: PDF VIEWER IFRAME -->
+            <div id="pdf-viewer-container" class="bg-gray-100 rounded-lg mb-6 border border-gray-300 overflow-hidden shadow-inner">
+                 <iframe id="pdf-viewer-iframe" style="width: 100%; height: 50vh;" frameborder="0"></iframe>
             </div>
             
+            <!-- Кнопка Скачать -->
             <a id="transcript-download-link" href="#" target="_blank" 
-               class="w-full py-3 px-4 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition duration-150 flex items-center justify-center">
+               class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition duration-150 flex items-center justify-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 Скачать PDF
             </a>
@@ -263,42 +305,93 @@
                 },
             ],
             currentQuizIndex: 0,
-            quizActive: false,
             quizScore: 0, 
             quizFinished: false,
             
-            // ============ TRANSCRIPT DATA (MOCK) ============
-            mockTranscriptText: `
-                Herzlich willkommen zu Lektion 1! Heute sprechen wir über die deutschen Artikel.
-                
-                Es gibt drei Hauptartikel: Der, Die, und Das.
-                
-                Der (мужской род): zum Beispiel, der Tisch (стол). Der Tisch ist braun.
-                
-                Die (женский род): zum Beispiel, die Frau (женщина). Die Frau ist schön.
-                
-                Das (средний род): zum Beispiel, das Haus (дом). Das Haus ist groß.
-                
-                Aber Achtung! 'Die' ist auch der Artikel für alle Plural-Nomen (множественное число): die Tische, die Frauen, die Häuser.
-                
-                Es gibt keine einfache Regel, um das Geschlecht eines Nomens zu bestimmen. Man muss es einfach lernen!
-            `,
+            // ============ PDF/TEXT DATA (MOCK) ============
+            // УДАЛЕНЫ mockTranscriptText и mockAnalysisText
             // ===================================
+
+            /**
+             * Предотвращает выделение, копирование текста и некоторые горячие клавиши.
+             * ВАЖНО: это меры сдерживания, а не абсолютная защита.
+             */
+            addCopyProtectionListeners() {
+                const protectionMessage = "Копирование контента запрещено.";
+
+                // 1. Блокируем контекстное меню (правый клик)
+                document.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    console.log(protectionMessage);
+                });
+
+                // 2. Блокируем копирование и вырезание
+                document.addEventListener('copy', (e) => {
+                    e.preventDefault();
+                    console.log(protectionMessage);
+                    // Очистка буфера обмена или замена скопированного текста
+                    if (e.clipboardData) {
+                        e.clipboardData.setData('text/plain', 'Защищенный контент.');
+                    }
+                });
+
+                document.addEventListener('cut', (e) => {
+                    e.preventDefault();
+                    console.log(protectionMessage);
+                });
+
+                // 3. Блокируем горячие клавиши для DevTools и просмотра исходного кода
+                document.addEventListener('keydown', (e) => {
+                    const key = e.key.toUpperCase();
+                    
+                    // F12 key check (DevTools)
+                    if (e.key === 'F12' || e.keyCode === 123) {
+                        e.preventDefault();
+                        console.warn("Попытка открыть инструменты разработчика заблокирована.");
+                        return;
+                    }
+                    
+                    // Ctrl+U (View Source)
+                    if (e.ctrlKey && key === 'U') {
+                        e.preventDefault();
+                        console.warn("Просмотр исходного кода заблокирован.");
+                        return;
+                    }
+                    
+                    // Ctrl+Shift+I or Ctrl+Shift+J (Windows/Linux DevTools)
+                    if (e.ctrlKey && e.shiftKey && (key === 'I' || key === 'J')) {
+                        e.preventDefault();
+                        console.warn("Попытка открыть инструменты разработчика заблокирована.");
+                        return;
+                    }
+                });
+            },
             
             init() {
                 if (window.Telegram && window.Telegram.WebApp) {
                     window.Telegram.WebApp.ready();
                 }
+                // Инициализируем защиту от копирования при загрузке приложения
+                this.addCopyProtectionListeners(); 
             },
             
-            // ============ TRANSCRIPT LOGIC ============
+            // ============ PDF MODAL LOGIC (для Транскрипции и Разбора) ============
             
-            openTranscriptModal(title, pdfUrl) {
-                document.getElementById('transcript-title').textContent = `Транскрипция: ${title}`;
-                document.getElementById('transcript-text-content').textContent = this.mockTranscriptText.trim();
+            /**
+             * Открывает модальное окно для скачивания PDF и показывает сам PDF.
+             * @param {string} mainTitle - Основной заголовок (напр., 'Транскрипция').
+             * @param {string} subTitle - Подзаголовок (напр., 'Введение в немецкие артикли').
+             * @param {string} pdfUrl - Ссылка на PDF-файл.
+             */
+            openPDFModal(mainTitle, subTitle, pdfUrl) {
+                document.getElementById('transcript-title').textContent = `${mainTitle}: ${subTitle}`;
                 
                 const downloadLink = document.getElementById('transcript-download-link');
                 downloadLink.href = pdfUrl;
+
+                const iframe = document.getElementById('pdf-viewer-iframe');
+                // Устанавливаем src для iframe, чтобы отобразить PDF
+                iframe.src = pdfUrl; 
                 
                 this.openModal('transcript-modal');
             },
@@ -337,10 +430,10 @@
                 const scrollArea = document.getElementById('quiz-scroll-area');
                 scrollArea.innerHTML = `
                     <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
-                        <p id="quiz-question" class="text-lg font-semibold text-gray-800"></p>
+                        <p id="quiz-question" class="text-xl font-bold text-gray-800"></p>
                     </div>
                     <div id="quiz-options" class="space-y-3"></div>
-                    <p id="quiz-feedback" class="mt-4 text-center font-bold"></p>
+                    <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold"></p>
                 `;
                 
                 // Убедимся, что вопрос виден
@@ -358,8 +451,9 @@
                 
                 const nextButton = document.getElementById('quiz-next-button');
                 nextButton.textContent = 'Следующий вопрос';
-                nextButton.classList.replace('bg-blue-500', 'bg-gray-300');
-                nextButton.classList.add('cursor-not-allowed');
+                // Сброс классов кнопки до неактивного состояния
+                nextButton.classList.remove('next-button-active');
+                nextButton.classList.add('next-button-disabled');
                 nextButton.disabled = true;
 
                 const optionsContainer = document.getElementById('quiz-options');
@@ -368,7 +462,8 @@
                 questionData.options.forEach((option, index) => {
                     const button = document.createElement('button');
                     button.textContent = option.text;
-                    button.className = 'quiz-option w-full py-3 px-4 bg-white text-gray-800 font-semibold rounded-xl border border-gray-300 shadow-sm hover:bg-indigo-100 transition duration-150';
+                    // Обновленный класс кнопки ответа
+                    button.className = 'quiz-option w-full py-3 px-4 bg-white text-gray-800 font-semibold rounded-xl border border-gray-300 shadow-md hover:bg-indigo-100 transition duration-150';
                     button.onclick = () => this.handleQuizAnswer(index);
                     optionsContainer.appendChild(button);
                 });
@@ -395,12 +490,12 @@
                 if (selectedOption.correct) {
                     this.quizScore++;
                     feedbackEl.textContent = "Верно! ✅";
-                    feedbackEl.classList.remove('text-red-500');
+                    feedbackEl.classList.remove('text-red-600');
                     feedbackEl.classList.add('text-green-600');
                 } else {
                     feedbackEl.textContent = "Неверно. Попробуйте ещё раз изучить видео! ❌";
                     feedbackEl.classList.remove('text-green-600');
-                    feedbackEl.classList.add('text-red-500');
+                    feedbackEl.classList.add('text-red-600');
                 }
                 
                 // Визуальная обратная связь
@@ -410,8 +505,10 @@
                     
                     if (questionData.options[index].correct) {
                         button.classList.add('quiz-correct');
+                        button.classList.remove('border-gray-300');
                     } else if (index === selectedIndex) {
                         button.classList.add('quiz-incorrect');
+                        button.classList.remove('border-gray-300');
                     }
                 });
 
@@ -420,8 +517,9 @@
                 const isLastQuestion = this.currentQuizIndex === this.currentQuiz.length - 1;
                 
                 nextButton.textContent = isLastQuestion ? 'Завершить квиз' : 'Следующий вопрос';
-                nextButton.classList.replace('bg-gray-300', 'bg-blue-500');
-                nextButton.classList.remove('cursor-not-allowed');
+                // Активация кнопки: замена неактивного класса на активный
+                nextButton.classList.remove('next-button-disabled');
+                nextButton.classList.add('next-button-active');
                 nextButton.disabled = false;
             },
             
@@ -454,12 +552,12 @@
                 const scrollArea = document.getElementById('quiz-scroll-area');
                 scrollArea.innerHTML = '';
                 scrollArea.innerHTML = `
-                    <div class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+                    <div class="bg-white p-6 rounded-xl mb-4 shadow-lg border border-indigo-200">
                         <span class="text-xl font-extrabold text-indigo-700 block mb-2 text-center">Ваш результат:</span>
-                        <span class="text-3xl font-extrabold text-blue-600 block text-center">${this.quizScore} из ${maxScore}</span>
+                        <span class="text-5xl font-extrabold text-indigo-600 block text-center">${this.quizScore} / ${maxScore}</span>
                         <span class="text-lg text-gray-600 block mt-1 text-center">(${(scorePercentage).toFixed(0)}%)</span>
                     </div>
-                    <p class="text-center text-gray-500">Выберите действие ниже.</p>
+                    <p class="text-center text-gray-500 font-semibold">Готовы пройти еще раз или просмотреть ответы?</p>
                 `;
                 
                 document.getElementById('quiz-next-button').classList.add('hidden');
@@ -482,7 +580,7 @@
 
                 // Добавляем заголовок/результаты в скролл-область
                 scrollArea.innerHTML += `
-                    <div class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+                    <div class="bg-indigo-50 p-4 rounded-xl mb-4 shadow-inner border border-indigo-200">
                         <p class="text-xl font-extrabold text-indigo-700 block mb-2 text-center">Ваш результат:</p>
                         <p class="text-3xl font-extrabold text-blue-600 block text-center">${this.quizScore} из ${this.currentQuiz.length}</p>
                         <p class="text-lg text-gray-600 block mt-1 text-center">(${(this.quizScore / this.currentQuiz.length * 100).toFixed(0)}%)</p>
@@ -492,27 +590,27 @@
                 
                 this.currentQuiz.forEach((q, qIndex) => {
                     const questionEl = document.createElement('div');
-                    questionEl.className = 'p-3 rounded-xl shadow-md border mb-4 bg-white';
+                    questionEl.className = 'p-4 rounded-xl shadow-lg border mb-4 bg-white';
                     
                     const isCorrect = q.options.some((opt, i) => opt.correct && i === q.userAnswerIndex);
                     
                     questionEl.innerHTML = `
-                        <p class="font-bold text-md mb-2 text-gray-800 border-b pb-1">
+                        <p class="font-bold text-lg mb-3 text-gray-800 border-b pb-2">
                             ${qIndex + 1}. ${q.question} 
-                            <span class="float-right font-extrabold ${isCorrect ? 'text-green-600' : 'text-red-600'}">
+                            <span class="float-right font-extrabold text-2xl ${isCorrect ? 'text-green-600' : 'text-red-600'}">
                                 ${isCorrect ? '✅' : '❌'}
                             </span>
                         </p>
-                        <div class="space-y-2 pt-2">
+                        <div class="space-y-3 pt-2">
                             ${q.options.map((opt, optIndex) => {
-                                let classes = 'p-2 rounded-md text-sm transition duration-100 border ';
+                                let classes = 'p-3 rounded-lg text-sm transition duration-100 border ';
                                 let icon = '';
 
                                 if (opt.correct) {
                                     classes += 'bg-green-100 border-green-400 font-bold';
                                     icon = '✅ Правильно: ';
                                 } else if (optIndex === q.userAnswerIndex) {
-                                     classes += 'bg-red-100 border-red-400 line-through';
+                                     classes += 'bg-red-100 border-red-400 font-semibold';
                                      icon = '❌ Ваш ответ: ';
                                 } else {
                                     classes += 'bg-gray-50 border-gray-200 text-gray-600';
@@ -521,7 +619,7 @@
                                 return `
                                     <div class="${classes}">
                                         <p class="font-semibold">${opt.text}</p>
-                                        <p class="text-xs text-gray-700 mt-0.5">${icon}${opt.rationale}</p>
+                                        <p class="text-xs text-gray-700 mt-0.5"><span class="font-bold">${icon}</span>${opt.rationale}</p>
                                     </div>
                                 `;
                             }).join('')}
@@ -545,7 +643,8 @@
              */
             openExternalLink(title, url) {
                 if (!url || !url.startsWith('http')) {
-                    alert('Ошибка: Ссылка недействительна.');
+                    // Используем консоль вместо alert для избежания блокировки в iFrame
+                    console.error('Ошибка: Ссылка недействительна.');
                     return;
                 }
                 
@@ -559,7 +658,8 @@
                     
                     this.openModal('link-modal');
                     
-                    window.open(url, '_blank');
+                    // Попытка открыть ссылку в новой вкладке в браузере (вне Telegram)
+                    // window.open(url, '_blank'); 
                 }
             },
             
@@ -571,9 +671,9 @@
                     window.Telegram.WebApp.close();
                 } else {
                     // Эмуляция закрытия в браузере
-                    alert('Эмуляция: закрытие приложения и возврат в основное меню.');
-                    // Перенаправление на главную страницу, если это не Telegram
-                    window.location.href = 'index.html'; 
+                    console.log('Эмуляция: закрытие приложения и возврат в основное меню.');
+                    // Для имитации возврата, можно показать сообщение или перенаправить.
+                    // window.location.href = 'index.html'; 
                 }
             },
 
@@ -582,7 +682,8 @@
              */
             openModal(modalId) {
                 const modal = document.getElementById(modalId);
-                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
+                // Используем общий селектор для контента модального окна
+                const modalContent = document.querySelector(`#${modalId} .modal-content`); 
                 
                 if (modal) {
                     modal.classList.remove('hidden');
@@ -600,7 +701,8 @@
              */
             closeModal(modalId) {
                 const modal = document.getElementById(modalId);
-                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
+                // Используем общий селектор для контента модального окна
+                const modalContent = document.querySelector(`#${modalId} .modal-content`); 
                 
                 if (modal) {
                     modal.classList.remove('is-open', 'opacity-100');
