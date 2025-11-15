@@ -378,10 +378,46 @@
 <script type="module">
         // Импортируем необходимые модули Firebase (v9+)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        // Примечание: В реальной среде Canvas, возможно, потребуются дополнительные импорты Auth
-        // Здесь используется только Firestore, но для аутентификации в Firestore нужен userId
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        
+        // ==========================================================
+        // !!! ВАШИ НАСТРОЙКИ FIREBASE !!!
+        // ЗАМЕНИТЕ ЭТИ ЗАГЛУШКИ НА ВАШИ РЕАЛЬНЫЕ ДАННЫЕ
+        // ==========================================================
+        
+        // 1. ВАШ ОБЪЕКТ КОНФИГУРАЦИИ
+        // Если у вас нет глобальных переменных Canvas, вы должны использовать свою:
+        const MY_FIREBASE_CONFIG = {
+             apiKey: "YAIzaSyCy2yssfY8BSzS2S88Fa0lH-PwAwWb7A_o", // <-- ЗАМЕНИТЬ
+  authDomain: "mnemo-deu.firebaseapp.com",
+  projectId: "mnemo-deu",
+  storageBucket: "mnemo-deu.firebasestorage.app",
+  messagingSenderId: "619445160765",
+  appId: "1:619445160765:web:74191d562884f18e3a5354"
+        };
+        
+        // 2. ВАШ ID ПРИЛОЖЕНИЯ (используется для пути к документу, если у вас своя структура)
+        const MY_APP_ID = "YOUR_APP_ID_HERE"; // <-- ЗАМЕНИТЬ (Может быть любым ID, если вы не используете структуру Canvas)
 
+        // 3. Имя вашей коллекции/путь: Если вы не используете путь Canvas (artifacts/{appId}/users/{userId}/progress/data),
+        //    Укажите здесь имя вашей коллекции, например: 'user_progress'
+        const MY_COLLECTION_NAME = "YOUR_COLLECTION_NAME_HERE"; // <-- ЗАМЕНИТЬ (например: 'user_progress')
+
+        // Используем Telegram ID как ID пользователя, т.к. мы отказываемся от Auth Canvas
+        const MY_USER_ID_SOURCE = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe?.user?.id?.toString()) 
+                                ? window.Telegram.WebApp.initDataUnsafe.user.id.toString()
+                                : "fallback_web_user_" + Math.random().toString(36).substring(7);
+
+        // ==========================================================
+        // КОНЕЦ ВАШИХ НАСТРОЕК
+        // ==========================================================
+
+        // Переменные для инициализации теперь используют ваши настройки
+        const firebaseConfig = MY_FIREBASE_CONFIG;
+        const appId = MY_APP_ID; 
+        const initialAuthToken = null; // Отключаем Auth Canvas
+        
         // ==========================================================
         // 1. КОНФИГУРАЦИЯ И ДАННЫЕ (Conceptual Data Module)
         // ==========================================================
@@ -492,14 +528,15 @@
 
         window.App = {
             db: null,
+            auth: null, // Добавляем экземпляр Auth
             userId: null,
+            isAuthReady: false, // Флаг готовности аутентификации
             userProgress: {}, 
             
             // ПОЛЯ ДЛЯ ПОДПИСКИ И АКТИВАЦИИ
             isSubscriber: false, 
             activationDate: null, 
-            selectedWeek: 0, // 0 - Пробный урок; 1..N - Выбранная неделя
-            // КОНЕЦ НОВЫХ ПОЛЕЙ
+            selectedWeek: 0, 
             
             unlockedWeek: 1, 
             sessionCards: [], 
@@ -524,28 +561,38 @@
             currentCarouselIndex: 0,
             carouselReturnContext: { screen: 'home-screen', param: null },
 
+            /**
+             * ВАЖНО: Определяет путь к документу в Firestore, используя ВАШУ КОЛЛЕКЦИЮ И ID
+             */
+            getUserDocRef() {
+                 if (!this.db || !this.userId) return null;
+                 // Использование ВАШЕЙ КОЛЛЕКЦИИ (MY_COLLECTION_NAME) и Telegram ID (this.userId)
+                 return doc(this.db, MY_COLLECTION_NAME, this.userId);
+                 
+                 // Если бы вы использовали структуру Canvas, это выглядело бы так:
+                 // return doc(this.db, 'artifacts', appId, 'users', this.userId, 'progress', 'data');
+            },
+
 
             async init() {
                 try {
-                    // Инициализация Firebase (обязательная часть для Canvas)
-                    const firebaseConfigStr = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-                    const firebaseConfig = JSON.parse(firebaseConfigStr);
-
-                    if (Object.keys(firebaseConfig).length > 0) {
+                    // Инициализация Firebase с ВАШЕЙ конфигурацией
+                    if (Object.keys(firebaseConfig).length > 0 && firebaseConfig.apiKey !== "YOUR_FIREBASE_CONFIG_HERE") {
                         const app = initializeApp(firebaseConfig);
                         this.db = getFirestore(app);
+                        
+                        // Получаем Telegram ID или Fallback ID
+                        this.userId = MY_USER_ID_SOURCE;
+                        this.isAuthReady = true;
+                        
+                        // В этом режиме мы НЕ используем Firebase Auth, поэтому аутентификация не требуется.
+                        // Нам нужно, чтобы правила безопасности Firebase разрешали запись на основе Document ID.
+                        // (Правила должны быть настроены на вашей стороне)
+
                     } else {
-                         console.warn("Firebase configuration not found. Running in local mode.");
-                    }
-                    
-                    // Идентификация пользователя (Telegram или Web)
-                    if (window.Telegram && window.Telegram.WebApp) {
-                         window.Telegram.WebApp.ready();
-                         // В реальном приложении Canvas будет использоваться Firebase Auth и __initial_auth_token
-                         // Здесь используется заглушка, т.к. auth не импортирован
-                         this.userId = Telegram.WebApp.initDataUnsafe?.user?.id?.toString() || "test_user_123";
-                    } else {
-                         this.userId = "web_user_" + Math.random().toString(36).substring(7);
+                         console.error("Firebase configuration not found or not set. Progress will not be saved.");
+                         this.isAuthReady = false;
+                         this.userId = MY_USER_ID_SOURCE; // Все равно используем Telegram ID для локальной симуляции
                     }
 
                     // Добавляем защиту от зумирования
@@ -554,19 +601,19 @@
                     // Загружаем метаданные карусели заранее, чтобы они были доступны для рендеринга меню
                     await this.loadCarouselMetadata(); 
 
-                    if (this.db) {
+                    if (this.isAuthReady) {
                         await this.loadProgress();
                     } else {
-                        // В локальном режиме эмулируем, что пользователь не подписан, но открыт пробный урок
+                        // В локальном режиме
                         this.isSubscriber = false; 
-                        this.selectedWeek = 0; // 0 - Пробный урок
+                        this.selectedWeek = 0; 
                         this.unlockedWeek = this.getMaxAvailableWeek(); 
                         this.renderHomeScreen();
                     }
 
 
                 } catch (error) {
-                    this.showError(`Ошибка инициализации: ${error.message}`);
+                    this.showError(`Ошибка инициализации/аутентификации: ${error.message}`);
                     console.error(error);
                 }
             },
@@ -596,13 +643,15 @@
 
             async loadProgress() {
                 this.showScreen('loading-screen');
-                if (!this.db) return; 
+                if (!this.isAuthReady) return; 
 
                 try {
-                    // Примечание: Для реального использования в Canvas путь должен быть:
-                    // doc(this.db, 'artifacts', __app_id, 'users', this.userId, 'progress', 'data')
-                    // Здесь используется упрощенный путь 'userProgress'
-                    const docRef = doc(this.db, 'userProgress', this.userId); 
+                    const docRef = this.getUserDocRef();
+                    if (!docRef) {
+                        console.error("Не удалось получить ссылку на документ Firestore.");
+                        return;
+                    }
+
                     const docSnap = await getDoc(docRef);
 
                     if (docSnap.exists()) {
@@ -618,11 +667,12 @@
                         this.unlockedWeek = this.getMaxAvailableWeek(); 
 
                     } else {
-                        // Новый пользователь - пробный урок
+                        // Новый пользователь - инициализация
                         this.userProgress = {};
                         this.isSubscriber = false;
-                        this.selectedWeek = 0; // 0 - Пробный урок
-                        this.unlockedWeek = 1; // Пробный урок (Неделя 1) доступен
+                        this.selectedWeek = 0; 
+                        this.unlockedWeek = 1; 
+                        // Сохраняем начальное состояние, чтобы создать документ
                         await this.saveProgress(); 
                     }
                 } catch (error) {
@@ -633,11 +683,15 @@
             },
             
             async saveProgress() {
-                if (!this.db) return; 
+                if (!this.isAuthReady) return; 
 
                 try {
-                    // Примечание: Упрощенный путь
-                    const docRef = doc(this.db, 'userProgress', this.userId);
+                    const docRef = this.getUserDocRef();
+                    if (!docRef) {
+                        console.error("Не удалось получить ссылку на документ Firestore.");
+                        return;
+                    }
+                    
                     await setDoc(docRef, { 
                         cards: this.userProgress,
                         isSubscriber: this.isSubscriber,
@@ -1589,8 +1643,10 @@
                     progress.nextReview = this.getFutureDateString(interval);
                     
                     this.userProgress[card.id] = progress;
-                    if (this.db) {
+                    if (this.isAuthReady) { // Проверяем готовность перед сохранением
                         this.saveProgress(); 
+                    } else {
+                         console.warn("Прогресс не сохранен: Firebase не инициализирован.");
                     }
                 }
                 
