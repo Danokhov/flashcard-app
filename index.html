@@ -973,12 +973,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 // >>> ИСПРАВЛЕНИЕ: Если пользователь не подписчик и текущая неделя - Неделя 1, 
                 // и она еще не выбрана (selectedWeek === 0), сохраняем ее как выбранную.
-                const isTrialLessonClicked = !this.isSubscriber && weekNum === 1 && this.selectedWeek === 0;
-                if (isTrialLessonClicked) {
-                    this.selectedWeek = 1;
+               // const isTrialLessonClicked = !this.isSubscriber && weekNum === 1 && this.selectedWeek === 0;
+                // if (isTrialLessonClicked) {
+                   // this.selectedWeek = 1;
                     // Сохраняем прогресс, чтобы при следующем входе отображалась активная подборка, а не кнопка Пробного урока.
-                    this.saveProgress(); 
-                }
+                   // this.saveProgress(); 
+                //}
                 
                 // 1. Определение контекста возврата
                 // Если Неподписчик И активна Неделя 1 (Пробный урок), то возвращаемся на Главный экран.
