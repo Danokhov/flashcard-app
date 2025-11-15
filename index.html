@@ -1029,10 +1029,14 @@ renderHomeScreen() {
             /**
              * Загружает и отображает HTML-контент (например, text1.html) внутри SPA.
              */
+  /**
+             * Загружает и отображает HTML-контент (например, text1.html) внутри SPA.
+             */
             async renderStoryScreen(title, url, fromScreen, fromParam) {
                 this.returnContext = { screen: fromScreen, param: fromParam };
                 
                 document.getElementById('content-viewer-title').textContent = title;
+                // !!! ГАРАНТИРУЕМ РЕНДЕРИНГ КНОПКИ НАЗАД РОДИТЕЛЬСКИМ ПРИЛОЖЕНИЕМ !!!
                 this.renderBackButton(fromScreen, fromParam, 'content-viewer-screen');
                 
                 const contentBody = document.getElementById('content-viewer-body');
@@ -1041,26 +1045,21 @@ renderHomeScreen() {
                 this.showScreen('content-viewer-screen');
 
                 try {
+                    // ... (Остальная логика загрузки и вставки HTML-контента)
+                    
                     const response = await fetch(url);
                     if (!response.ok) throw new Error('Network response was not ok');
                     let htmlContent = await response.text();
                     
-                    // 1. Изолируем и чистим HTML
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(htmlContent, 'text/html');
-                    
-                    // Извлекаем чистый контент из <body>
                     const innerContent = doc.body ? doc.body.innerHTML : htmlContent;
                     
-                    // 2. Вставляем HTML
                     contentBody.innerHTML = innerContent;
                     
-                    // 3. Выполняем скрипты
                     const scripts = doc.querySelectorAll('script');
                     scripts.forEach(script => {
-                        // Клонируем и вставляем скрипт, чтобы он выполнился
                         const newScript = document.createElement('script');
-                        // Копируем атрибуты
                         script.getAttributeNames().forEach(attr => {
                             newScript.setAttribute(attr, script.getAttribute(attr));
                         });
@@ -1069,13 +1068,9 @@ renderHomeScreen() {
                         } else {
                             newScript.textContent = script.textContent;
                         }
-                        // Добавляем новый скрипт в конец body, чтобы он выполнился
                         contentBody.appendChild(newScript);
                     });
                     
-                    // 4. После выполнения всех скриптов (включая init в text1.html), 
-                    // нужно убедиться, что все ссылки (Tailwind) применены.
-                    // Проверяем наличие storyApp.init и запускаем его
                     const storyApp = window.App; 
                     if (storyApp && typeof storyApp.init === 'function' && contentBody.contains(storyApp.audioPlayer)) {
                          storyApp.init();
@@ -1087,7 +1082,6 @@ renderHomeScreen() {
                     console.error('Error loading story content:', error);
                 }
             },
-
 
             renderAllSetsScreen() {
                 // (Логика отображения "Все наборы слов" - не изменена)
