@@ -366,7 +366,7 @@
 
 
     <!-- "МАГИЯ" (JavaScript) -->
-    <script type="module">
+<script type="module">
         // Импортируем необходимые модули Firebase (v9+)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
@@ -420,10 +420,16 @@
                 { id: "der_Mann", front: "мужчина", back: "der Mann" },
                 { id: "die_Stadt", front: "город", back: "die Stadt" }
             ]},
+            // Неделя 4 (Новый набор)
+            { id: "a1_verbs_1", week: 4, name: "Глаголы A1 (Часть 1)", cards: [
+                { id: "machen", front: "делать", back: "machen" },
+                { id: "gehen", front: "идти", back: "gehen" }
+            ]},
         ];
 
         /**
          * Карта контента для каждой недели. 
+         * Добавлено поле 'description' для модального окна "Подробнее".
          */
         const WEEKLY_CONTENT_MAP = {
             1: {
@@ -432,7 +438,8 @@
                 storyLink: "text1.html", // Относительный путь для загрузки внутри SPA
                 wordSetId: "a1_nouns_1",
                 dialoguesLink: "https://your-domain.com/dialogs/week1",
-                carouselId: "animals" // Добавлена связь с каруселью "animals" для недели 1
+                carouselId: "animals", 
+                description: "В этой подборке вы начнете изучение базовых существительных уровня А1, освоите артикли и получите видео-ассоциации для быстрого запоминания."
             },
             2: {
                 associationVideo: "https://www.youtube.com/embed/2-nFz1WJ3vM?autoplay=0&controls=1&showinfo=0&rel=0",
@@ -440,7 +447,8 @@
                 storyLink: "https://your-domain.com/story/week2",
                 wordSetId: "a1_nouns_2",
                 dialoguesLink: "https://your-domain.com/dialogs/week2",
-                carouselId: "city" // Связь с каруселью "city" для недели 2 (для примера)
+                carouselId: "city", 
+                description: "Фокусируемся на существительных среднего рода (Das) и разбираем основные конструкции для описания дома и города."
             },
             3: {
                 associationVideo: "https://www.youtube.com/embed/M0TfQvX5X1o?autoplay=0&controls=1&showinfo=0&rel=0",
@@ -448,7 +456,17 @@
                 storyLink: "https://your-domain.com/story/week3",
                 wordSetId: "a1_nouns_3",
                 dialoguesLink: "https://your-domain.com/dialogs/week3",
-                carouselId: "food" // Связь с каруселью "food" для недели 3 (для примера)
+                carouselId: "food", 
+                description: "Продолжаем расширять словарный запас А1, изучая слова, связанные с людьми и местами. Доступно после 2-й недели подписки."
+            },
+            4: {
+                associationVideo: "https://www.youtube.com/embed/example4?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для глаголов A1",
+                storyLink: "https://your-domain.com/story/week4",
+                wordSetId: "a1_verbs_1", 
+                dialoguesLink: "https://your-domain.com/dialogs/week4",
+                carouselId: "verbs",
+                description: "Изучение первых 10 важных глаголов уровня A1, их спряжения и использования в простых предложениях."
             },
         };
 
@@ -663,48 +681,51 @@
                 const mainBlock = document.getElementById('main-content-block');
                 mainBlock.innerHTML = '';
                 
-                // 1. Отображение: Пробный урок ИЛИ Активная неделя/Уроки по неделям
-                if (!this.isSubscriber) {
-                    // 1.1. Пробный урок (Неделя 1)
+                // 1. ДИНАМИЧЕСКИЙ БЛОК: Пробный урок ИЛИ Активная неделя
+                // selectedWeek = 0, если не подписчик и не выбрал неделю
+                if (!this.isSubscriber && this.selectedWeek === 0) { 
+                    // 1.1. Пробный урок
+                    // Изменено: теперь ведет на внешний файл trial.html
                     mainBlock.innerHTML += `
-                        <button onclick="window.App.renderTrialLesson()" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
+                        <button onclick="window.App.renderExternalLinkScreen('🚀 Пробный урок', '${getBaseUrl() + 'trial.html'}', 'home-screen')" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
                             <span>🚀 Пробный урок</span>
                             <span>Начать &rarr;</span>
                         </button>
                     `;
                     
                 } else {
-                    // 1.2. Активная неделя (или последняя выбранная)
+                    // 1.2. Активная неделя (или последняя выбранная, даже если Пробный)
                     const activeWeek = this.selectedWeek;
-                    const weekData = WEEKLY_CONTENT_MAP[activeWeek];
+                    const weekTitle = activeWeek === 1 && !this.isSubscriber 
+                                    ? 'Пробный урок (Неделя 1)' 
+                                    : `Неделя ${activeWeek}`;
                     
-                    if (activeWeek >= 1 && activeWeek <= this.unlockedWeek) {
+                    if (activeWeek >= 1 && activeWeek <= ALL_WEEKS.length) {
                         // Активная неделя на Главном экране
                         mainBlock.innerHTML += `
                             <button onclick="window.App.renderWeekContent(${activeWeek})" class="active-week-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
-                                <span>📅 Активная неделя: Неделя ${activeWeek}</span>
+                                <span>📅 Активная подборка: ${weekTitle}</span>
                                 <span>Продолжить &rarr;</span>
                             </button>
                         `;
                     }
-                    
-                    // 1.3. Кнопка "Все подборки" (которая ведет к выбору недели)
-                    mainBlock.innerHTML += `
-                        <button onclick="window.App.renderWeeklySelections()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4 border border-gray-200">
-                            <span>📚 Все подборки по неделям</span>
-                            <span>&rarr;</span>
-                        </button>
-                    `;
                 }
+                
+                // 2. Кнопка "Подборки по неделям" (Замена "Все наборы слов")
+                mainBlock.innerHTML += `
+                    <button onclick="window.App.renderWeeklySelections()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4 border border-gray-200">
+                        <span>📚 Подборки за неделю</span>
+                        <span>&rarr;</span>
+                    </button>
+                `;
 
-                // 3. Раздел: Все наборы слов (Перенесен ниже)
+                // 3. Раздел: Все наборы слов (Оставлен для возможности прямого перехода к отдельным наборам)
                 mainBlock.innerHTML += `
                     <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4">
                         <span>📚 Все наборы слов</span>
                         <span>&rarr;</span>
                     </button>
                 `;
-
 
                 this.renderDueTodaySection();
             },
@@ -762,16 +783,12 @@
                 }
             },
 
-            renderTrialLesson() {
-                // Пробный урок - это Неделя 1
-                this.selectedWeek = 1;
-                this.renderWeekContent(1); 
-            },
+            // УДАЛЕНА функция renderTrialLesson, теперь логика в renderHomeScreen
 
 
             renderWeeklySelections() {
                 this.returnContext = { screen: 'home-screen', param: null };
-                document.getElementById('list-title').innerText = '📅 Все подборки по неделям';
+                document.getElementById('list-title').innerText = '📚 Подборки за неделю';
                 this.renderBackButton('home-screen');
                 document.getElementById('filter-controls').innerHTML = '';
 
@@ -784,13 +801,12 @@
                 ALL_WEEKS.forEach(i => {
                     const isSubscriber = this.isSubscriber;
                     const maxAvailableWeek = this.unlockedWeek;
-                    const isCurrentSelected = i === this.selectedWeek && isSubscriber;
-                    // Неподписчику доступна только Неделя 1
-                    const isAvailable = isSubscriber ? (i <= maxAvailableWeek) : (i === 1); 
+                    const isCurrentSelected = i === this.selectedWeek; // Проверяем выбранную неделю
+                    const isAvailable = isSubscriber ? (i <= maxAvailableWeek) : (i === 1); // Неподписчику доступна только Неделя 1
+                    const weekData = WEEKLY_CONTENT_MAP[i];
                     
-                    let buttonClass = 'bg-white hover:bg-gray-50';
                     let statusText = 'Доступно';
-                    let arrow = '&rarr;';
+                    let buttonClass = 'bg-white hover:bg-gray-50';
 
                     if (!isAvailable) {
                         buttonClass = 'button-locked';
@@ -806,40 +822,57 @@
                             
                             statusText = `🔒 Доступно через ${daysLeft} дн.`;
                         }
-                        arrow = '';
                     } else if (i === 1 && !isSubscriber) {
-                        buttonClass = 'bg-green-100 hover:bg-green-200 border-2 border-green-500';
+                        buttonClass = 'bg-green-100 border-2 border-green-500';
                         statusText = 'Пробный урок';
                     } else if (isCurrentSelected) {
-                        buttonClass = 'bg-yellow-100 hover:bg-yellow-200 border-2 border-yellow-500';
+                        buttonClass = 'bg-yellow-100 border-2 border-yellow-500';
                         statusText = 'Активно';
                     }
 
-                    const button = document.createElement('button');
-                    button.className = `w-full text-left p-4 rounded-xl shadow-md flex justify-between items-center transition duration-150 ${buttonClass}`;
-                    
-                    button.onclick = () => {
-                        if (isAvailable) {
-                            this.selectedWeek = i; // Выбираем эту неделю
-                            this.saveProgress();
-                            this.renderWeekContent(i);
-                        } else {
-                             // Выводим сообщение о блокировке в консоль
-                            console.log(`Неделя ${i} заблокирована. ${statusText}`);
-                        }
-                    };
-
-                    button.innerHTML = `
-                        <div>
-                            <span class="font-semibold text-lg ${!isAvailable ? 'text-gray-500' : 'text-gray-800'}">Неделя ${i}</span>
-                            <span class="block text-sm ${!isAvailable ? 'text-orange-600' : 'text-gray-500'}">${statusText}</span>
+                    const weekContainer = document.createElement('div');
+                    weekContainer.className = `w-full p-4 rounded-xl shadow-md ${buttonClass}`;
+                    weekContainer.innerHTML = `
+                        <div class="flex justify-between items-center mb-3">
+                            <div>
+                                <span class="font-bold text-lg ${!isAvailable ? 'text-gray-500' : 'text-gray-800'}">Неделя ${i}</span>
+                                <span class="block text-sm ${!isAvailable ? 'text-orange-600' : 'text-gray-500'}">${statusText}</span>
+                            </div>
                         </div>
-                        <span>${arrow}</span>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="window.App.showWeekDetails(${i}, '${weekData.description.replace(/'/g, "\\'")}')" 
+                                    class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150">
+                                Подробнее
+                            </button>
+                            <button id="week-learn-${i}" 
+                                    class="w-full py-2 px-3 text-white font-semibold rounded-xl text-sm transition duration-150 ${isAvailable ? 'bg-blue-500 hover:bg-blue-600' : 'button-locked'}"
+                                    onclick="${isAvailable ? `window.App.selectAndRenderWeek(${i})` : 'void(0)'}">
+                                Учить
+                            </button>
+                        </div>
                     `;
-                    contentListDiv.appendChild(button);
+                    contentListDiv.appendChild(weekContainer);
                 });
                 
                 this.showScreen('list-screen');
+            },
+            
+            /**
+             * [НОВАЯ ФУНКЦИЯ] Открывает модальное окно с описанием недели.
+             */
+            showWeekDetails(weekNum, description) {
+                document.getElementById('week-details-title').textContent = `Неделя ${weekNum}`;
+                document.getElementById('week-details-body').textContent = description;
+                this.openModal('week-details-modal');
+            },
+
+            /**
+             * [НОВАЯ ФУНКЦИЯ] Выбирает неделю как активную, сохраняет и переходит к ее контенту.
+             */
+            async selectAndRenderWeek(weekNum) {
+                this.selectedWeek = weekNum;
+                await this.saveProgress();
+                this.renderWeekContent(weekNum);
             },
             
             /**
@@ -867,6 +900,7 @@
                 // Находим метаданные карусели для этой недели, если они уже загружены
                 const carouselSet = this.carouselSetsMetadata.find(set => set.id === weekData.carouselId);
                 
+                // Изменено: Возвращаемся к списку подборок
                 this.returnContext = { screen: 'weekly-selections', param: null };
                 document.getElementById('list-title').innerText = `Контент Недели ${weekNum}`;
                 this.renderBackButton('weekly-selections'); 
@@ -899,11 +933,20 @@
                     );
                 }
 
-                // 3. История недели (ВНУТРЕННЯЯ ЗАГРУЗКА text1.html)
+                // 3. История недели (ВНУТРЕННЯЯ ЗАГРУЗКА text1.html ТОЛЬКО ДЛЯ НЕДЕЛИ 1)
+                let storyAction;
+                if (weekNum === 1 && weekData.storyLink === 'text1.html') {
+                    // Специальный случай для Недели 1: загружаем text1.html внутри SPA
+                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${getBaseUrl() + 'text1.html'}', 'week-content', ${weekNum})`; 
+                } else {
+                    // Остальные недели - внешняя ссылка или обычный внутренний контент
+                    storyAction = `window.App.renderExternalLinkScreen('📖 История недели ${weekNum}', '${weekData.storyLink}', 'week-content', ${weekNum})`; 
+                }
+                
                 this.renderMenuCard(contentListDiv, 
                     `📖 История недели`, 
                     `Видео + квиз`,
-                    `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${getBaseUrl() + weekData.storyLink}', 'week-content', ${weekNum})` 
+                    storyAction 
                 );
 
                 // 4. Слова на неделю (Сразу модальное окно повторения)
@@ -986,7 +1029,6 @@
 
             /**
              * Загружает и отображает HTML-контент (например, text1.html) внутри SPA.
-             * ЭТОТ ФУНКЦИЯ БЫЛА ИСПРАВЛЕНА ДЛЯ ПРИНУДИТЕЛЬНОГО ВЫПОЛНЕНИЯ СКРИПТОВ.
              */
             async renderStoryScreen(title, url, fromScreen, fromParam) {
                 this.returnContext = { screen: fromScreen, param: fromParam };
@@ -1128,7 +1170,6 @@
                 const filterControls = document.getElementById('filter-controls');
                 filterControls.innerHTML = `
                     <div class="grid grid-cols-2 gap-3">
-                        <!-- Фильтр по Неделе -->
                         <select id="week-filter" onchange="window.App.updateSetFilter('week', this.value)" 
                                 class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             <option value="All">Все Недели</option>
@@ -1599,5 +1640,14 @@
         });
 
     </script>
+<div id="week-details-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('week-details-modal')">
+        <div id="week-details-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 id="week-details-title" class="text-xl font-bold mb-3 text-center text-gray-800"></h3>
+            <p id="week-details-body" class="text-gray-700 mb-5"></p>
+            <button onclick="window.App.closeModal('week-details-modal')" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600">
+                Понятно
+            </button>
+        </div>
+    </div>
 </body>
 </html>
