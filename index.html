@@ -212,7 +212,9 @@
 
         <!-- 6. ЭКРАН ПРОСМОТРА СТРАНИЦЫ (для загрузки внутреннего HTML-контента, как text1.html) -->
         <div id="content-viewer-screen" class="hidden">
+            <!-- КОНТЕЙНЕР ДЛЯ КНОПКИ НАЗАД (ОБЯЗАТЕЛЕН) -->
             <div id="content-viewer-back-button-container" class="mb-4"></div>
+            
             <h2 id="content-viewer-title" class="text-xl font-bold text-gray-800 mb-4 text-center"></h2>
             <!-- Тут будет загружаться контент text1.html -->
             <div id="content-viewer-body" class="p-4 bg-gray-100 rounded-xl">
@@ -902,6 +904,7 @@ renderHomeScreen() {
                 // Изменено: Возвращаемся к списку подборок
                 this.returnContext = { screen: 'weekly-selections', param: null };
                 document.getElementById('list-title').innerText = `Контент Недели ${weekNum}`;
+                // Кнопка "Назад" ведет к списку недель
                 this.renderBackButton('weekly-selections'); 
                 document.getElementById('filter-controls').innerHTML = '';
 
@@ -936,6 +939,7 @@ renderHomeScreen() {
                 let storyAction;
                 if (weekNum === 1 && weekData.storyLink === 'text1.html') {
                     // Специальный случай для Недели 1: загружаем text1.html внутри SPA
+                    // Контекст возврата: 'week-content' (Контент Недели)
                     storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${getBaseUrl() + 'text1.html'}', 'week-content', ${weekNum})`; 
                 } else {
                     // Остальные недели - внешняя ссылка или обычный внутренний контент
@@ -1000,7 +1004,8 @@ renderHomeScreen() {
                     extraTextDiv.style.display = 'none';
                 }
                 
-                this.renderBackButton(fromScreen, fromParam, 'video-content-screen');
+                // Кнопка назад ведет на Контент Недели
+                this.renderBackButton('week-content', fromParam, 'video-content-screen');
                 this.showScreen('video-content-screen');
             },
             
@@ -1017,7 +1022,8 @@ renderHomeScreen() {
                 button.href = url;
                 urlDisplay.textContent = url;
                 
-                this.renderBackButton(fromScreen, fromParam, 'external-link-screen');
+                // Кнопка назад ведет на Контент Недели
+                this.renderBackButton('week-content', fromParam, 'external-link-screen');
                 this.showScreen('external-link-screen');
 
                 // Пытаемся открыть ссылку сразу, если это Telegram Web App
@@ -1029,15 +1035,14 @@ renderHomeScreen() {
             /**
              * Загружает и отображает HTML-контент (например, text1.html) внутри SPA.
              */
-  /**
-             * Загружает и отображает HTML-контент (например, text1.html) внутри SPA.
-             */
             async renderStoryScreen(title, url, fromScreen, fromParam) {
                 this.returnContext = { screen: fromScreen, param: fromParam };
                 
                 document.getElementById('content-viewer-title').textContent = title;
-                // !!! ГАРАНТИРУЕМ РЕНДЕРИНГ КНОПКИ НАЗАД РОДИТЕЛЬСКИМ ПРИЛОЖЕНИЕМ !!!
-                this.renderBackButton(fromScreen, fromParam, 'content-viewer-screen');
+                
+                // !!! ИСПРАВЛЕНИЕ: ГАРАНТИРУЕМ РЕНДЕРИНГ КНОПКИ НАЗАД !!!
+                // Кнопка назад ведет на Контент Недели
+                this.renderBackButton('week-content', fromParam, 'content-viewer-screen');
                 
                 const contentBody = document.getElementById('content-viewer-body');
                 contentBody.innerHTML = '<p class="text-center text-gray-500 py-10">Загрузка контента...</p>';
@@ -1045,18 +1050,21 @@ renderHomeScreen() {
                 this.showScreen('content-viewer-screen');
 
                 try {
-                    // ... (Остальная логика загрузки и вставки HTML-контента)
-                    
                     const response = await fetch(url);
                     if (!response.ok) throw new Error('Network response was not ok');
                     let htmlContent = await response.text();
                     
+                    // 1. Изолируем и чистим HTML
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(htmlContent, 'text/html');
+                    
+                    // Извлекаем чистый контент из <body>
                     const innerContent = doc.body ? doc.body.innerHTML : htmlContent;
                     
+                    // 2. Вставляем HTML
                     contentBody.innerHTML = innerContent;
                     
+                    // 3. Выполняем скрипты
                     const scripts = doc.querySelectorAll('script');
                     scripts.forEach(script => {
                         const newScript = document.createElement('script');
@@ -1068,9 +1076,11 @@ renderHomeScreen() {
                         } else {
                             newScript.textContent = script.textContent;
                         }
+                        // Добавляем новый скрипт в конец body, чтобы он выполнился
                         contentBody.appendChild(newScript);
                     });
                     
+                    // 4. Запускаем встроенный init, если он есть
                     const storyApp = window.App; 
                     if (storyApp && typeof storyApp.init === 'function' && contentBody.contains(storyApp.audioPlayer)) {
                          storyApp.init();
@@ -1132,28 +1142,36 @@ renderHomeScreen() {
                 if (!backBtnContainer) return; 
 
                 let targetFunction;
-                
+                let buttonText; // Добавляем текст для кнопки
+
+                // Логика навигации
                 switch (target) {
                     case 'home-screen':
                         targetFunction = 'window.App.renderHomeScreen()';
+                        buttonText = 'Назад в Главное меню';
                         break;
                     case 'weekly-selections':
                         targetFunction = 'window.App.renderWeeklySelections()';
+                        buttonText = 'Назад к Подборкам Недели';
                         break;
                     case 'week-content':
+                        // Возврат из подраздела (История, Видео) в Контент Недели
                         targetFunction = `window.App.renderWeekContent(${param})`; 
+                        buttonText = '← К Контенту Недели';
                         break;
                     case 'carousel-list':
-                        targetFunction = `window.App.renderCarouselListScreen('week-content', ${this.selectedWeek})`; // Возврат к списку недели
+                        targetFunction = `window.App.renderCarouselListScreen('week-content', ${this.selectedWeek})`; 
+                        buttonText = '← К Списку Каруселей';
                         break;
                     default:
                         targetFunction = 'window.App.renderHomeScreen()';
+                        buttonText = 'Назад в Главное меню';
                 }
 
                 backBtnContainer.innerHTML = `
                     <button onclick="${targetFunction}" class="text-blue-500 hover:text-blue-700 font-semibold flex items-center">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                        Назад
+                        ${buttonText}
                     </button>
                 `;
             },
@@ -1289,6 +1307,7 @@ renderHomeScreen() {
             async startCarouselSession(setId, setTitle, filepath, fromScreen, fromParam) {
                 // Контекст для кнопки "Назад" в самой карусели
                 if (fromScreen && fromParam !== undefined) {
+                    // ИСПРАВЛЕНИЕ: Если пришли с Контента Недели, возвращаемся туда
                     this.carouselReturnContext = { screen: fromScreen, param: fromParam };
                 } else {
                     // Если вызывается со страницы списка, возвращаемся к списку
