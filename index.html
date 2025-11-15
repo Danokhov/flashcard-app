@@ -137,14 +137,10 @@
 
                 <!-- ДИНАМИЧЕСКИЙ БЛОК: Пробный урок ИЛИ Активная неделя/Уроки по неделям -->
                 <div id="main-content-block">
-                    <!-- Заполняется JS -->
+                    <!-- Заполняется JS (включает Пробный, Подборки за неделю и Все наборы слов) -->
                 </div>
                 
-                <!-- 3. Раздел: Все наборы слов -->
-                <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150">
-                    <span>📚 Все наборы слов</span>
-                    <span>&rarr;</span>
-                </button>
+                <!-- 3. Раздел: Все наборы слов (УДАЛЕН из статического HTML, чтобы не дублировать) -->
                 
                 <!-- НОВАЯ СЕКЦИЯ: Горящие повторения -->
                 <div id="due-today-section" class="hidden pt-6 mt-4 border-t border-gray-200">
@@ -687,9 +683,9 @@ renderHomeScreen() {
                 // selectedWeek = 0, если не подписчик и не выбрал неделю
                 if (!this.isSubscriber && this.selectedWeek === 0) { 
                     // 1.1. Пробный урок
-                    // ИСПРАВЛЕНО: Добавляем параметр 0 для fromParam, чтобы навигация работала корректно
+                    // ИСПРАВЛЕНО: Ведем сразу на Контент Недели 1
                     mainBlock.innerHTML += `
-                        <button onclick="window.App.renderStoryScreen('🚀 Пробный урок', '${getBaseUrl() + 'trial.html'}', 'home-screen', 0)" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
+                        <button onclick="window.App.renderWeekContent(1)" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
                             <span>🚀 Пробный урок</span>
                             <span>Начать &rarr;</span>
                         </button>
@@ -721,14 +717,17 @@ renderHomeScreen() {
                     </button>
                 `;
 
-                // 3. Раздел: Все наборы слов
+                // 3. Раздел: Все наборы слов (Перемещен из статического HTML в JS, чтобы избежать дублирования)
                 mainBlock.innerHTML += `
                     <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4">
                         <span>📚 Все наборы слов</span>
                         <span>&rarr;</span>
                     </button>
                 `;
-
+                
+                // --- ЛИШНЯЯ КНОПКА УДАЛЕНА ИЗ ГЛАВНОГО HTML ---
+                
+                
                 this.renderDueTodaySection();
             },
             /**
@@ -903,8 +902,14 @@ renderHomeScreen() {
                 
                 // Изменено: Возвращаемся к списку подборок
                 this.returnContext = { screen: 'weekly-selections', param: null };
-                document.getElementById('list-title').innerText = `Контент Недели ${weekNum}`;
-                // Кнопка "Назад" ведет к списку недель
+                
+                // ИСПРАВЛЕНО: Устанавливаем специальный заголовок для Пробного урока (Неделя 1)
+                if (weekNum === 1 && !this.isSubscriber) {
+                    document.getElementById('list-title').innerText = `🚀 Контент Пробного урока`;
+                } else {
+                    document.getElementById('list-title').innerText = `📚 Контент Недели ${weekNum}`;
+                }
+
                 this.renderBackButton('weekly-selections'); 
                 document.getElementById('filter-controls').innerHTML = '';
 
@@ -1041,8 +1046,6 @@ renderHomeScreen() {
                 document.getElementById('content-viewer-title').textContent = title;
                 
                 // !!! ИСПРАВЛЕНИЕ: Используем fromScreen и fromParam для корректного возврата !!!
-                // Теперь, если пришли с 'week-content', возвращаемся в 'week-content'.
-                // Если пришли с 'home-screen', возвращаемся в 'home-screen'.
                 this.renderBackButton(fromScreen, fromParam, 'content-viewer-screen');
                 
                 const contentBody = document.getElementById('content-viewer-body');
@@ -1082,8 +1085,9 @@ renderHomeScreen() {
                     });
                     
                     // 4. Запускаем встроенный init, если он есть
-                    const storyApp = window.App; 
-                    if (storyApp && typeof storyApp.init === 'function' && contentBody.contains(storyApp.audioPlayer)) {
+                    // Обратите внимание: StoryApp - это локальное имя для скрипта text1.html
+                    const storyApp = window.StoryApp; 
+                    if (storyApp && typeof storyApp.init === 'function') {
                          storyApp.init();
                     }
 
