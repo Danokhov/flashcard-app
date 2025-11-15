@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Пробный Урок</title>
+    <title>История Недели 1: Артикли (A1)</title>
+    <!-- Подключаем Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключаем API Telegram (для закрытия WebApp) -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <style>
@@ -15,309 +17,793 @@
         .modal.is-open .modal-content { transform: scale(1); }
         .quiz-option { transition: all 0.15s ease; outline: none; }
         .quiz-option:hover { transform: translateY(-2px); box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.1); }
-        .quiz-selected { background-color: #A5B4FC !important; color: #1E3A8A !important; border-color: #6366F1 !important; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.5); }
-        .quiz-correct { background-color: #D1FAE5 !important; color: #065F46 !important; border-color: #34D399 !important; }
-        .quiz-wrong { background-color: #FEE2E2 !important; color: #991B1B !important; border-color: #F87171 !important; }
+        .quiz-selected { background-color: #A5B4FC !important; color: #1E3A8A !important; border-color: #6366F1 !important; box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3) !important; }
+        .quiz-correct-final { background-color: #10B981 !important; color: white !important; border-color: #059669 !important; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3) !important; }
+        .quiz-incorrect-final { background-color: #EF4444 !important; color: white !important; border-color: #DC2626 !important; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important; }
+        .next-button-disabled { background-color: #D1D5DB !important; color: #6B7280 !important; cursor: not-allowed; box-shadow: none !important; }
+        .next-button-active { background: linear-gradient(to right, #4F46E5, #6366F1) !important; color: white !important; box-shadow: 0 4px 10px -2px rgba(79, 70, 229, 0.5); transition: all 0.2s ease; }
+        .next-button-active:hover { opacity: 0.9; transform: translateY(-1px); }
+        #question-box { border-left: 5px solid #6366F1; }
 
         /* ------------------------------------------- */
         /* СТИЛИ ДЛЯ АУДИО/КАРТИНКИ И АККОРДЕОНОВ */
         /* ------------------------------------------- */
-        .accordion-header {
-            cursor: pointer;
-            transition: background-color 0.2s;
+
+        /* Контейнер для изображения */
+        .story-visual-container {
+            position: relative;
+            transition: transform 0.2s;
         }
+        .story-visual-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Стиль для нового плеера */
+        .audio-controls {
+            background-color: #4F46E5; /* Индиго */
+            border-radius: 0.5rem;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #audio-play-button {
+            transition: opacity 0.2s;
+        }
+        #audio-play-button:hover {
+            opacity: 0.8;
+        }
+
+
+        /* АККОРДЕОН: Скрыт (hidden класс от Tailwind будет обеспечивать display: none) */
         .accordion-content {
+            /* Эти стили отвечают ТОЛЬКО за анимацию, когда класс hidden снят */
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; 
             opacity: 0;
-            visibility: hidden;
-            padding: 0 1rem; /* Изначально без паддинга */
+            visibility: hidden; 
         }
-        /* При открытии устанавливаем padding обратно и включаем скролл */
+/* При открытии устанавливаем padding обратно и включаем скролл */
         .accordion-content.is-open {
             /* УВЕЛИЧЕНА МАКСИМАЛЬНАЯ ВЫСОТА ДЛЯ УДОБНОЙ ПРОКРУТКИ */
-            max-height: 90vh; /* ИЗМЕНЕНО с 80vh на 90vh */
+            /* ИЗМЕНЕНО с 80vh на 90vh для большей гарантии */
+            max-height: 90vh; 
             opacity: 1;
             visibility: visible;
             overflow-y: auto; /* ВКЛЮЧАЕМ СКРОЛЛ ВНУТРИ БЛОКА */
-            padding: 1rem; /* Возвращаем паддинг при открытии */
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
 
+<body class="min-h-screen bg-gray-100 font-sans p-4">
+
+    <!-- Основной контейнер страницы -->
     <div id="app" class="max-w-md mx-auto">
-        
-        <div class="mb-4">
-            <button onclick="window.App.notifyParentToReturn('week-content')" class="text-gray-500 hover:text-indigo-600 font-semibold flex items-center transition duration-150">
+  <div class="mb-4">
+            <button onclick="window.App.notifyParentToReturn()" class="text-gray-500 hover:text-indigo-600 font-semibold flex items-center transition duration-150">
                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                ← К Контенту Недели
+                Назад в Главное меню
             </button>
         </div>
+        
+        <h1 id="story-title" class="text-2xl font-extrabold text-gray-900 mb-6 text-center">...</h1>      
+        <!-- Заголовок страницы (История недели) -->
+        <h1 id="story-title" class="text-2xl font-extrabold text-gray-900 mb-6 text-center">Введение в немецкие артикли (A1)</h1>
+        
+        <div class="space-y-6">
 
-        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <!-- 1. ИЗОБРАЖЕНИЕ -->
+            <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
+                
+                <img id="story-image" 
+                     src="Woche1_text.png" 
+                     alt="Иллюстрация к уроку по немецким артиклям"
+                     class="w-full h-auto object-cover" 
+                     onclick="event.preventDefault(); event.stopPropagation();" /> <!-- Защита от перехвата клика/тапа -->
 
-            <div id="audio-player" class="mb-6">
-                <audio id="story-audio" controls class="w-full">
-                    <source src="https://example.com/audio/story_week1.mp3" type="audio/mp3">
-                    Ваш браузер не поддерживает аудиоэлемент.
-                </audio>
+                <!-- Аудиоплеер (скрыт) -->
+                <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
             </div>
             
-            <div class="mb-6 rounded-lg overflow-hidden shadow-md">
-                <img id="story-image" src="https://placehold.co/600x300/FEE2E2/991B1B?text=Иллюстрация+к+Истории" alt="Иллюстрация к истории" class="w-full h-auto">
-            </div>
-
-            <div id="story-content" class="space-y-4 text-gray-700">
-                <p><strong>Die Familie Müller geht in die Stadt.</strong> Herr Müller hat eine Tasche. Die Tasche ist groß. Frau Müller hat eine Blume. Die Blume ist rot. Das Kind hat ein Spielzeug. Das Spielzeug ist klein.</p>
-                <p>Der Hund läuft schnell. Er sieht einen Baum. Der Baum ist hoch. Die Sonne scheint. Das Wetter ist schön. Sie kaufen Brot und Käse.</p>
-                <p>Am Abend sehen sie den Film. Es ist ein guter Film. Die Familie ist glücklich. Sie lernen neue Wörter: der Baum, die Tasche, das Kind, das Spielzeug.</p>
-                <p class="text-sm italic mt-4 text-gray-500">Diese Kurzgeschichte знакомит вас с базовыми артиклями A1.</p>
-            </div>
-
-            <hr class="my-6 border-gray-200">
-
-            <div id="accordion-transcript" class="mb-4 border border-gray-200 rounded-lg overflow-hidden">
-                <div id="transcript-header" class="accordion-header p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center text-gray-800 font-semibold" onclick="window.App.toggleAccordion('transcript')">
-                    <span>Транскрипт (Немецкий)</span>
-                    <span id="transcript-icon" class="text-lg">▼</span>
-                </div>
-                <div id="transcript-content" class="accordion-content">
-                    <div class="space-y-3 text-sm">
-                        <p><strong>Die Familie Müller geht in die Stadt.</strong> Herr Müller hat eine Tasche. Die Tasche ist groß. Frau Müller hat eine Blume. Die Blume ist rot. Das Kind hat ein Spielzeug. Das Spielzeug ist klein.</p>
-                        <p>Der Hund läuft schnell. Er sieht einen Baum. Der Baum ist hoch. Die Sonne scheint. Das Wetter ist schön. Sie kaufen Brot und Käse.</p>
-                        <p>Am Abend sehen sie den Film. Es ist ein guter Film. Die Familie ist glücklich. Sie lernen neue Wörter: der Baum, die Tasche, das Kind, das Spielzeug.</p>
-                        <p>Дополнительный длинный текст для тестирования прокрутки: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        <p>Ещё больше текста для проверки прокрутки. Curabitur pretium, libero et accumsan commodo, nisi nisi consectetur purus, in scelerisque leo lorem vel erat. Donec vitae nunc sit amet felis bibendum facilisis. Nam facilisis, sapien eu fermentum tristique, elit erat fermentum erat, vel facilisis nisi nisl vitae ligula. Fusce tincidunt, quam vitae posuere tincidunt, eros velit lacinia ipsum, non consectetur arcu mi eu nulla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-                        <p>И последний блок, чтобы точно проверить, что скроллбар появился. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="accordion-analysis" class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
-                <div id="analysis-header" class="accordion-header p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center text-gray-800 font-semibold" onclick="window.App.toggleAccordion('analysis')">
-                    <span>Разбор слов и артиклей</span>
-                    <span id="analysis-icon" class="text-lg">▼</span>
-                </div>
-                <div id="analysis-content" class="accordion-content">
-                    <div class="space-y-3 text-sm">
-                        <p><strong>Der</strong> Baum (мужской род) — дерево. Запомните: большинство слов, связанных с природой (кроме цветов), имеют артикль 'Der'.</p>
-                        <p><strong>Die</strong> Tasche (женский род) — сумка. Большинство слов, заканчивающихся на -e, имеют артикль 'Die'.</p>
-                        <p><strong>Das</strong> Kind (средний род) — ребенок. Исключение, которое нужно запомнить.</p>
-                        <p>Дополнительный текст для проверки скролла: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="my-6 border-gray-200">
-
-            <div id="quiz-section">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">Мини-Квиз: Артикли</h2>
-                <div id="quiz-container" class="space-y-4">
-                    </div>
-                <button id="submit-quiz-button" onclick="window.App.submitQuiz()" class="w-full py-3 mt-6 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition duration-150 hidden">
-                    Проверить ответы
+            <!-- 2. НОВЫЙ БЛОК ПЛЕЕРА ПОД КАРТИНКОЙ -->
+            <div class="audio-controls" onclick="window.App.toggleAudioPlay()">
+                <button id="audio-play-button" class="flex items-center space-x-2">
+                    <!-- Иконка Play -->
+                    <svg id="play-icon" class="play-icon w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z" clip-rule="evenodd"></path>
+                    </svg>
+                    <!-- Иконка Pause (скрыта по умолчанию) -->
+                    <svg id="pause-icon" class="pause-icon hidden w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span id="audio-status" class="text-lg font-bold">Слушать историю</span>
                 </button>
             </div>
+            
+            <!-- 3. БЛОК "АККОРДЕОНЫ" -->
+            <div class="space-y-4">
+                
+                <!-- Кнопка 1: ТРАНСКРИПЦИЯ (АККОРДЕОН) -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <button id="transcript-button" onclick="window.App.toggleAccordion('transcript-content')" 
+                       class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition duration-150">
+                        <span><span class="mr-3 text-green-500">📖</span>Транскрипция</span>
+                        <span id="transcript-arrow">&darr;</span>
+                    </button>
+                    <!-- ДОБАВЛЕН p-4 И hidden ВНУТРИ DIV -->
+                    <div id="transcript-content" class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4"> 
+                        <!-- ВАШ ТЕКСТ ИЗ ФАЙЛА - С ОТСТУПАМИ -->
+                        <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p>
 
-            <div class="text-center pt-8">
-                <button onclick="window.App.notifyParentToReturn('week-content')" class="text-gray-500 hover:text-indigo-600 font-semibold transition duration-150">
-                    &larr; Назад к Контенту Недели
+                        <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt.</p>
+                        <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
+                        <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
+                        <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
+                        <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
+                        <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
+                        <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
+                        <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
+                        <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
+                        <p class="mb-3">Die Mitarbeiterin hört ihm aufmerksam zu, als er seine Beschwerden beschreibt.</p>
+                        <p class="mb-3">„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie Schmerzen haben, bekommen Sie natürlich schnell einen Termin.“</p>
+                        <p class="mb-3">Am Nachmittag sitzt Thomas im Wartezimmer.</p>
+                        <p class="mb-3">Es ist stickig, und er beginnt wieder zu schwitzen.</p>
+                        <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, и jemand stöhnt leise vor Schmerzen.</p>
+                        <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Magen brennt stärker, und ihm wird schwindlig.</p>
+                        <p class="mb-3">Endlich ruft die Arzthelferin: „Herr Berger, bitte!“</p>
+                        <p class="mb-3">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:</p>
+                        <p class="mb-3">„Was fehlt Ihnen?“</p>
+                        <p class="mb-3">Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach fühlt und nachts leidet.</p>
+                        <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab und erklärt:</p>
+                        <p class="mb-3">„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
+                        <p class="mb-3">Dann fügt er hinzu:</p>
+                        <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
+                        <p class="mb-3">Thomas fragt:</p>
+                        <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
+                        <p class="mb-3">Dr. Keller antwortet:</p>
+                        <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
+                        <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
+                        <p class="mb-3">Dann fragt er:</p>
+                        <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
+                        <p class="mb-3">Thomas antwortet:</p>
+                        <p class="mb-3">„Ja, bitte – für drei Tage.“</p>
+                        <p class="mb-3">Dr. Keller notiert es und lächelt:</p>
+                        <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
+                        <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
+                        <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.“</p>
+                        <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
+                        <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen.</p>
+                        <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und ausgeruht.</p>
+                        <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
+                    </div>
+                </div>
+                
+                <!-- Кнопка 2: РАЗБОР ТЕКСТА (АККОРДЕОН + СКАЧИВАНИЕ) -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <button id="analysis-button" onclick="window.App.toggleAccordion('analysis-content')" 
+                       class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition duration-150">
+                        <span><span class="mr-3 text-blue-500">📝</span>Разбор текста</span>
+                        <span id="analysis-arrow">&darr;</span>
+                    </button>
+                    <!-- ДОБАВЛЕН p-4 И hidden ВНУТРИ DIV -->
+                    <div id="analysis-content" class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4"> 
+                        <!-- ВАШ ТЕКСТ ИЗ ФАЙЛА - С ОТСТУПАМИ -->
+                        <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p>
+
+                        <!-- Детальный разбор текста -->
+                        <p class="mb-3 font-semibold text-gray-700">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt. 
+                        Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
+                        <p class="mb-3">Когда Томас просыпается в понедельник утром, он сразу понимает, что что-то не так. 
+                        Он весь в поту, у него болит голова, затекла спина и болит желудок.</p>
+                        <ul class="list-disc list-inside mb-6 text-gray-600 ml-4">
+                            <li>etwas stimmt nicht – что-то не так</li>
+                            <li>Mir tut der Kopf weh – у меня болит голова</li>
+                            <li>Schmerzen im Magen haben – болит желудок</li>
+                        </ul>
+
+                        <p class="mb-3 font-semibold text-gray-700">Außerdem fühlt er sich müde und schwach. 
+                        Seine Frau schaut ihn besorgt an: „Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
+                        <p class="mb-3">Кроме того, он чувствует себя усталым и слабым. 
+                        Жена смотрит на него с тревогой: «Томас, ты выглядишь совсем плохо. Я волнуюсь. Тебе лучше бы сходить к врачу.»</p>
+                        <ul class="list-disc list-inside mb-6 text-gray-600 ml-4">
+                            <li>sich müde / schwach fühlen – чувствовать себя усталым / слабым</li>
+                            <li>sich Sorgen machen – волноваться</li>
+                            <li>du solltest lieber ... – тебе лучше бы ...</li>
+                        </ul>
+                        
+                        <!-- (Сокращено для краткости - в полной версии весь ваш текст) -->
+
+                        <p class="mb-3 font-semibold text-gray-700">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn: „Was fehlt Ihnen?“ 
+                        Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach fühlt и nachts leidet.</p>
+                        <p class="mb-3">Доктор Келлер, доброжелательный терапевт, приветствует его: «Что у вас болит?» 
+                        Томас рассказывает, что два дня почти не может есть, чувствует себя слабым и плохо спит по ночам.</p>
+                        <ul class="list-disc list-inside mb-6 text-gray-600 ml-4">
+                            <li>Was fehlt Ihnen? – что у вас болит?</li>
+                            <li>sich schwach fühlen – чувствовать себя слабым</li>
+                            <li>seit zwei Tagen – уже два дня</li>
+                        </ul>
+                        
+                        <p class="mt-6 pt-4 border-t border-gray-300">
+                           <span class="font-bold text-lg text-indigo-700">Полный разбор</span>
+                        </p>
+                        
+                        <p class="mb-3 font-semibold text-gray-700">Der Arzt misst den Blutdruck, hört den Körper ab und erklärt: 
+                        „Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. 
+                        Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. 
+                        Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
+                        <p class="mb-3">Врач измеряет давление, слушает тело и объясняет: 
+                        «У вас, вероятно, воспаление желудка. Я выпишу вам сильные антибиотики. 
+                        Вы должны принимать их регулярно — три раза в день после еды. 
+                        Вот рецепт, чтобы вы могли получить лекарства в аптеке.»</p>
+                        <ul class="list-disc list-inside mb-6 text-gray-600 ml-4">
+                            <li>den Blutdruck messen – измерять давление</li>
+                            <li>Medikamente verschreiben – выписать лекарства</li>
+                            <li>Tabletten einnehmen – принимать таблетки</li>
+                        </ul>
+
+                        <p class="mb-3 font-semibold text-gray-700">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, 
+                        damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
+                        <p class="mb-3">«Принимайте антибиотики всегда после еды, чтобы желудок их лучше переносил. 
+                        И вам следует остаться дома минимум на три дня и отдохнуть.»</p>
+                        <ul class="list-disc list-inside mb-6 text-gray-600 ml-4">
+                            <li>nach dem Essen einnehmen – принимать после еды</li>
+                            <li>sich ausruhen – отдыхать</li>
+                            <li>zu Hause bleiben – оставаться дома</li>
+                        </ul>
+
+                        <p class="mb-3 font-semibold text-gray-700">„Wie lange soll ich die Tabletten nehmen?“ – „Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“ 
+                        „Vermeiden Sie Kaffee und Alkohol.“</p>
+                        <p class="mb-3">«Как долго мне принимать таблетки?» — «Пять дней, тогда вам станет значительно лучше.» 
+                        «Избегайте кофе и алкоголя.»</p>
+                        <ul class="list-disc list-inside mb-6 text-gray-600 ml-4">
+                            <li>Wie lange soll ich ...? – как долго мне нужно ...?</li>
+                            <li>es geht jemandem besser – кому-то становится лучше</li>
+                            <li>Kaffee und Alkohol vermeiden – избегать кофе и алкоголя</li>
+                        </ul>
+
+                        <p class="mb-3 font-semibold text-gray-700">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett: 
+                        „Ich werde dich gut pflegen, bis es dir besser geht.“</p>
+                        <p class="mb-3">Дома жена помогает ему открыть окно, приносит чай и суп к кровати: 
+                        «Я буду хорошо заботиться о тебе, пока тебе не станет лучше.»</p>
+                        <ul class="list-disc list-inside mb-6 text-gray-600 ml-4">
+                            <li>jemanden pflegen – ухаживать за кем-то</li>
+                            <li>ans Bett bringen – принести к кровати</li>
+                            <li>es geht dir besser – тебе лучше</li>
+                        </ul>
+
+                        <p class="mb-3 font-semibold text-gray-700">Nach zwei Tagen geht es ihm schon besser. 
+                        Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen. 
+                        Am dritten Tag fühlt sich Thomas stark und ausgeruht. 
+                        Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
+                        <p class="mb-3">Через два дня ему уже лучше. 
+                        Боли почти прошли, жжение в желудке исчезло, и он снова может спать. 
+                        На третий день Томас чувствует себя сильным и отдохнувшим. 
+                        Он решает на следующее утро снова пойти на работу, радуясь, что всё оказалось не страшно и лекарства подействовали.</p>
+                        <ul class="list-disc list-inside mb-6 text-gray-600 ml-4">
+                            <li>es geht mir besser – мне лучше</li>
+                            <li>wieder schlafen können – снова уметь спать</li>
+                            <li>zur Arbeit gehen – идти на работу</li>
+                        </ul>
+                        
+
+                        <!-- Кнопка Скачать Разбор -->
+                        <div class="mt-6 pt-4 border-t border-gray-300">
+                            <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank" 
+                               class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition duration-150 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Скачать Разбор (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- 4. КНОПКА УПРАЖНЕНИЯ (КВИЗ) - НОВАЯ ПОЗИЦИЯ: В САМОМ НИЗУ -->
+            <button onclick="window.App.startStoryQuiz()"
+                    class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
+                            hover:bg-indigo-600 transition duration-150 flex justify-between items-center 
+                            bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl mt-6">
+                <span><span class="mr-3 text-yellow-300">🧠</span> Упражнения (Квиз)</span>
+                <span>&rarr;</span>
+            </button>
+
+
+            <!-- Кнопка "На главную" -->
+            <div class="text-center pt-4">
+                 <button onclick="window.App.notifyParentToReturn()" class="text-gray-500 hover:text-indigo-600 font-semibold transition duration-150">
+                    &larr; Назад к Подборкам Недели
                 </button>
             </div>
 
         </div>
     </div>
     
-    <div id="result-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('result-modal')">
-        <div id="result-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full transform scale-95" onclick="event.stopPropagation()">
-            <h3 id="result-title" class="text-2xl font-bold mb-3 text-center text-gray-800"></h3>
-            <p id="result-body" class="text-gray-700 mb-5 text-center"></p>
-            <button onclick="window.App.closeModal('result-modal')" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600">
-                Продолжить
+    <!-- МОДАЛЬНОЕ ОКНО: для КВИЗА (Quiz Modal) -->
+    <div id="quiz-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('quiz-modal')" role="dialog" aria-modal="true" aria-labelledby="quiz-modal-title">
+        <div id="quiz-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 id="quiz-modal-title" class="text-xl font-bold mb-4 text-gray-800 text-center border-b pb-2">Квиз по Истории</h3>
+            
+            <!-- Индикатор прогресса (STATIC HEADER) -->
+            <div class="text-sm text-gray-500 mb-4 text-center">
+                <span id="quiz-progress">Вопрос 1 из 5</span>
+            </div>
+            
+            <!-- СКРОЛЛИРУЕМАЯ ОБЛАСТЬ (Core Content) -->
+            <div id="quiz-scroll-area" class="max-h-[65vh] overflow-y-auto pr-2">
+
+                <!-- Вопрос -->
+                <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+                    <p id="quiz-question" class="text-xl font-bold text-gray-800"></p> 
+                </div>
+                
+                <!-- Опции ответа / Пояснения -->
+                <div id="quiz-options" class="space-y-3">
+                    <!-- Кнопки/Пояснения будут вставлены JS -->
+                </div>
+                
+                <!-- Поле обратной связи - СКРЫТО -->
+                <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold hidden"></p> 
+                
+            </div>
+            <!-- КОНЕЦ СКРОЛЛИРУЕМОЙ ОБЛАСТИ -->
+
+            <!-- Кнопки управления (STATIC FOOTER) -->
+            <button id="quiz-next-button" onclick="window.App.nextQuizQuestion()" 
+                    class="w-full mt-6 py-3 px-4 font-bold rounded-xl shadow-md transition duration-150 next-button-disabled" disabled>
+                Следующий вопрос
             </button>
+            
+            <!-- Кнопки завершения (STATIC FOOTER) -->
+            <div id="quiz-end-controls" class="space-y-3 mt-6 hidden">
+                <button id="quiz-retry-button" onclick="window.App.startStoryQuiz()" 
+                        class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150">
+                    Пройти ещё раз
+                </button>
+                <button id="quiz-show-answers-button" onclick="window.App.showCorrectAnswers()" 
+                        class="w-full py-3 px-4 bg-yellow-500 text-yellow-900 font-bold rounded-xl shadow-md hover:bg-yellow-600 transition duration-150">
+                    Показать правильные ответы
+                </button>
+                <button id="quiz-finish-button" onclick="window.App.closeModal('quiz-modal')" 
+                        class="w-full py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition duration-150">
+                    Завершить
+                </button>
+            </div>
+            
         </div>
     </div>
 
+    <!-- "МАГИЯ" (JavaScript) -->
     <script>
-        const QUIZ_DATA = [
-            { question: "Какой артикль у слова 'Tisch' (стол)?", answer: "Der", options: ["Der", "Die", "Das"], correctMessage: "Верно! Der Tisch.", wrongMessage: "Неверно. Правильный артикль Der." },
-            { question: "Какой артикль у слова 'Blume' (цветок)?", answer: "Die", options: ["Der", "Die", "Das"], correctMessage: "Верно! Die Blume.", wrongMessage: "Неверно. Правильный артикль Die." },
-            { question: "Какой артикль у слова 'Kind' (ребенок)?", answer: "Das", options: ["Der", "Die", "Das"], correctMessage: "Верно! Das Kind.", wrongMessage: "Неверно. Правильный артикль Das." }
-        ];
-
         window.App = {
-            quizAnswers: {}, 
             
+            // ============ QUIZ DATA ============
+            currentQuiz: [
+                {
+                    question: "По сюжету видео, какой артикль чаще всего используется для обозначения 'стола'?",
+                    type: "multiple",
+                    userAnswerIndex: null, 
+                    options: [
+                        { text: "Der", correct: true, rationale: "Артикль 'Der' используется для существительных мужского рода, к которым относится 'Tisch'." },
+                        { text: "Die", correct: false, rationale: "Артикль 'Die' предназначен для женского рода и множественного числа." },
+                        { text: "Das", correct: false, rationale: "Артикль 'Das' используется для существительных среднего рода." },
+                    ]
+                },
+                {
+                    question: "Верно ли, что артикль 'Die' используется только для существительных женского рода?",
+                    type: "richtig-falsch",
+                    userAnswerIndex: null,
+                    options: [
+                        { text: "Richtig (Верно)", correct: false, rationale: "Это неверно, 'Die' также используется для всех существительных во множественном числе, независимо от их основного рода." },
+                        { text: "Falsch (Неверно)", correct: true, rationale: "Это неверно, 'Die' используется не только для женского рода, но и для существительных во множественном числе." }
+                    ]
+                },
+                {
+                    question: "Выберите, какой артикль имеет существительное 'Haus'?",
+                    type: "multiple",
+                    userAnswerIndex: null,
+                    options: [
+                        { text: "Der", correct: false, rationale: "Это мужской артикль." },
+                        { text: "Die", correct: false, rationale: "Это женский артикль." },
+                        { text: "Das", correct: true, rationale: "Существительное 'Haus' (дом) относится к среднему роду, поэтому используется 'Das'." },
+                        { text: "Kein Artikel (Без артикля)", correct: false, rationale: "Существительное 'Haus' не является именем собственным и требует артикля." }
+                    ]
+                },
+                {
+                    question: "Если вы видите в видео слово с артиклем 'Der', это обязательно означает, что существительное мужского рода.",
+                    type: "richtig-falsch",
+                    userAnswerIndex: null,
+                    options: [
+                        { text: "Richtig (Верно)", correct: true, rationale: "В единственном числе артикль 'Der' всегда указывает на мужской род." },
+                        { text: "Falsch (Неверно)", correct: false, rationale: "В единственном числе 'Der' всегда указывает на мужской род." }
+                    ]
+                },
+                {
+                    question: "Какая из следующих фраз на немецком означает 'моя женщина'?",
+                    type: "multiple",
+                    userAnswerIndex: null,
+                    options: [
+                        { text: "Meine Tisch", correct: false, rationale: "'Tisch' (стол) имеет артикль 'der', поэтому должно быть 'Mein Tisch' (без окончания 'e')." },
+                        { text: "Meine Frau", correct: true, rationale: "'Frau' (женщина) имеет артикль 'die', поэтому притяжательное местоимение получает окончание 'e' ('Meine')." },
+                        { text: "Mein Haus", correct: false, rationale: "'Haus' (дом) имеет артикль 'das', поэтому притяжательное местоимение не получает окончания 'e'." },
+                    ]
+                },
+            ],
+            currentQuizIndex: 0,
+            quizScore: 0, 
+            quizFinished: false,
+            quizActive: false,
+            
+            audioPlayer: null, 
+
             init() {
-                this.renderQuiz();
-                this.initAudioPlayback();
-                this.checkSubmitButtonVisibility();
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.ready();
+                }
+                this.audioPlayer = document.getElementById('story-audio-player');
+                // Добавляем слушатель для управления кнопками Play/Pause
+                this.audioPlayer.onplay = () => this.updatePlayButton(true);
+                this.audioPlayer.onpause = () => this.updatePlayButton(false);
+                this.audioPlayer.onended = () => this.updatePlayButton(false);
                 
-                // Присваиваем id, чтобы родительский скрипт мог проверить, что этот контент загружен
-                document.body.setAttribute('data-app-loaded', 'true');
+                // --- ИНИЦИАЛИЗАЦИЯ АККОРДЕОНА: Скрываем контент по умолчанию ---
+                const transcriptContent = document.getElementById('transcript-content');
+                const analysisContent = document.getElementById('analysis-content');
+                
+                // Изначально аккордеоны должны быть гарантированно скрыты
+                if (transcriptContent) {
+                    transcriptContent.classList.remove('is-open');
+                    transcriptContent.classList.add('hidden'); // ЖЕСТКОЕ СКРЫТИЕ
+                    document.getElementById('transcript-arrow').innerHTML = '&darr;'; 
+                }
+                if (analysisContent) {
+                    analysisContent.classList.remove('is-open');
+                    analysisContent.classList.add('hidden'); // ЖЕСТКОЕ СКРЫТИЕ
+                    document.getElementById('analysis-arrow').innerHTML = '&darr;'; 
+                }
+                // --- КОНЕЦ ИНИЦИАЛИЗАЦИИ АККОРДЕОНА ---
             },
             
-            initAudioPlayback() {
-                const audio = document.getElementById('story-audio');
-                if (audio) {
-                    audio.onplay = () => {
-                        // При запуске аудио скрываем все аккордеоны
-                        this.closeAllAccordions();
-                    };
+            // ============ AUDIO/VIDEO LOGIC ============
+            
+            /**
+             * Переключает воспроизведение аудио и обновляет кнопку.
+             * @param {Event} event - Событие клика (опционально, для остановки всплытия).
+             */
+            toggleAudioPlay(event) {
+                if (event) {
+                    event.stopPropagation(); // Предотвращаем клик по родительскому контейнеру
+                }
+                if (!this.audioPlayer) return;
+
+                if (this.audioPlayer.paused) {
+                    this.audioPlayer.play().catch(error => {
+                        console.error("Ошибка воспроизведения аудио:", error);
+                        // Опционально: показать сообщение пользователю, что воспроизведение не удалось
+                    });
+                } else {
+                    this.audioPlayer.pause();
+                }
+            },
+
+            /**
+             * Обновляет иконку Play/Pause и статус.
+             * @param {boolean} isPlaying - true, если аудио играет, false в противном случае.
+             */
+            updatePlayButton(isPlaying) {
+                const playIcon = document.getElementById('play-icon');
+                const pauseIcon = document.getElementById('pause-icon');
+                const statusText = document.getElementById('audio-status');
+                
+                if (playIcon && pauseIcon && statusText) {
+                    if (isPlaying) {
+                        playIcon.classList.add('hidden');
+                        pauseIcon.classList.remove('hidden');
+                        statusText.textContent = 'Нажмите, чтобы остановить...';
+                    } else {
+                        playIcon.classList.remove('hidden');
+                        pauseIcon.classList.add('hidden');
+                        statusText.textContent = 'Слушать историю';
+                    }
+                }
+            },
+
+            // ============ ACCORDION LOGIC ============
+
+            /**
+             * Переключает видимость аккордеона.
+             * @param {string} contentId - ID элемента с контентом ('transcript-content' или 'analysis-content').
+             */
+            toggleAccordion(contentId) {
+                const content = document.getElementById(contentId);
+                const arrow = document.getElementById(contentId.replace('-content', '-arrow'));
+
+                if (!content || !arrow) return;
+
+                const isOpen = content.classList.contains('is-open');
+
+                if (isOpen) {
+                    // Закрытие
+                    content.classList.remove('is-open');
+                    arrow.innerHTML = '&darr;'; // Стрелка вниз
+                    
+                    // Добавляем hidden после завершения анимации
+                    setTimeout(() => {
+                        content.classList.add('hidden');
+                    }, 400); // 400ms - время CSS-перехода
+                    
+                } else {
+                    // Открытие
+                    content.classList.remove('hidden'); // Снимаем жесткое скрытие
+                    // Даем 10мс на применение display: block, затем запускаем анимацию
+                    setTimeout(() => {
+                        content.classList.add('is-open');
+                    }, 10);
+                    
+                    arrow.innerHTML = '&uarr;'; // Стрелка вверх
                 }
             },
             
-            renderQuiz() {
-                const container = document.getElementById('quiz-container');
-                container.innerHTML = '';
+            // ============ QUIZ LOGIC ============
+            
+            /**
+             * Инициализирует и открывает модальное окно квиза.
+             */
+            startStoryQuiz() {
+                this.currentQuizIndex = 0;
+                this.quizScore = 0;
+                this.quizFinished = false;
+                this.quizActive = true; 
                 
-                QUIZ_DATA.forEach((q, index) => {
-                    const questionEl = document.createElement('div');
-                    questionEl.className = 'bg-gray-50 p-4 rounded-xl shadow-sm border border-gray-200';
-                    questionEl.innerHTML = `
-                        <p class="font-semibold text-gray-700 mb-3">${index + 1}. ${q.question}</p>
-                        <div id="options-${index}" class="grid grid-cols-3 gap-2">
-                            ${q.options.map(option => `
-                                <button onclick="window.App.selectOption(${index}, '${option.replace(/'/g, "\\'")}')" 
-                                        class="quiz-option py-2 px-3 border border-indigo-300 rounded-lg text-sm text-center bg-white text-indigo-700 font-medium hover:bg-indigo-50">
-                                    ${option}
-                                </button>
-                            `).join('')}
-                        </div>
-                        <p id="feedback-${index}" class="text-sm mt-3 font-medium hidden"></p>
-                    `;
-                    container.appendChild(questionEl);
+                // Сброс ответов пользователя
+                this.currentQuiz.forEach(q => q.userAnswerIndex = null); 
+
+                document.getElementById('quiz-end-controls').classList.add('hidden');
+                document.getElementById('quiz-next-button').classList.remove('hidden');
+
+                this.renderQuizQuestion();
+                this.openModal('quiz-modal');
+            },
+            
+            /**
+             * Отображает текущий вопрос квиза.
+             */
+            renderQuizQuestion() {
+                if (this.currentQuizIndex >= this.currentQuiz.length) {
+                    this.finishQuiz();
+                    return;
+                }
+                
+                // Восстанавливаем стандартную структуру квиза
+                const scrollArea = document.getElementById('quiz-scroll-area');
+                scrollArea.innerHTML = `
+                    <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+                        <p id="quiz-question" class="text-xl font-bold text-gray-800"></p>
+                    </div>
+                    <div id="quiz-options" class="space-y-3"></div>
+                `;
+                
+                this.quizActive = true;
+                
+                const questionData = this.currentQuiz[this.currentQuizIndex];
+                const totalQuestions = this.currentQuiz.length;
+                
+                document.getElementById('quiz-progress').textContent = `Вопрос ${this.currentQuizIndex + 1} из ${totalQuestions}`;
+                document.getElementById('quiz-question').textContent = questionData.question;
+                
+                const nextButton = document.getElementById('quiz-next-button');
+                nextButton.textContent = (this.currentQuizIndex === totalQuestions - 1) ? 'Завершить квиз' : 'Следующий вопрос';
+                
+                // Кнопка "Далее" неактивна, пока не выбран ответ
+                nextButton.classList.remove('next-button-active');
+                nextButton.classList.add('next-button-disabled');
+                nextButton.disabled = true;
+
+                const optionsContainer = document.getElementById('quiz-options');
+                optionsContainer.innerHTML = ''; 
+                
+                questionData.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option.text;
+                    button.className = 'quiz-option w-full py-3 px-4 bg-white text-gray-800 font-semibold rounded-xl border border-gray-300 shadow-md hover:bg-indigo-100 transition duration-150';
+                    button.onclick = () => this.handleQuizAnswer(index);
+                    
+                    if (index === questionData.userAnswerIndex) {
+                        button.classList.add('quiz-selected');
+                        nextButton.classList.remove('next-button-disabled');
+                        nextButton.classList.add('next-button-active');
+                        nextButton.disabled = false;
+                    }
+                    
+                    optionsContainer.appendChild(button);
                 });
             },
             
-            selectOption(qIndex, selectedValue) {
-                this.quizAnswers[qIndex] = selectedValue;
-                const optionContainer = document.getElementById(`options-${qIndex}`);
-                const options = optionContainer.querySelectorAll('button');
+            /**
+             * Обрабатывает выбор ответа пользователем.
+             */
+            handleQuizAnswer(selectedIndex) {
+                if (!this.quizActive) return; 
                 
-                options.forEach(button => {
+                const questionData = this.currentQuiz[this.currentQuizIndex];
+                questionData.userAnswerIndex = selectedIndex; 
+                
+                const optionsContainer = document.getElementById('quiz-options');
+                const buttons = optionsContainer.querySelectorAll('button');
+                
+                // Визуальная обратная связь: подсвечиваем только выбранный ответ
+                buttons.forEach((button, index) => {
                     button.classList.remove('quiz-selected');
-                    if (button.textContent.trim() === selectedValue.trim()) {
+                    if (index === selectedIndex) {
                         button.classList.add('quiz-selected');
                     }
                 });
-                
-                this.checkSubmitButtonVisibility();
-            },
-            
-            checkSubmitButtonVisibility() {
-                const allAnswered = QUIZ_DATA.every((_, index) => this.quizAnswers.hasOwnProperty(index));
-                const submitButton = document.getElementById('submit-quiz-button');
-                
-                if (allAnswered) {
-                    submitButton.classList.remove('hidden');
-                } else {
-                    submitButton.classList.add('hidden');
-                }
-            },
-            
-            submitQuiz() {
-                let correctCount = 0;
-                
-                QUIZ_DATA.forEach((q, index) => {
-                    const isCorrect = this.quizAnswers[index] === q.answer;
-                    const optionContainer = document.getElementById(`options-${index}`);
-                    const feedbackEl = document.getElementById(`feedback-${index}`);
-                    
-                    optionContainer.querySelectorAll('button').forEach(button => {
-                        button.disabled = true; // Блокируем кнопки после проверки
-                        
-                        // Удаляем стили выбора
-                        button.classList.remove('quiz-selected'); 
-                        
-                        // Применяем стили результата
-                        if (button.textContent.trim() === q.answer.trim()) {
-                            button.classList.add('quiz-correct');
-                        } else if (button.textContent.trim() === this.quizAnswers[index].trim()) {
-                            button.classList.add('quiz-wrong');
-                        }
-                    });
 
-                    // Показываем фидбек
-                    feedbackEl.textContent = isCorrect ? q.correctMessage : `${q.wrongMessage} Правильный ответ: ${q.answer}`;
-                    feedbackEl.classList.remove('hidden', isCorrect ? 'text-red-600' : 'text-green-600');
-                    feedbackEl.classList.add(isCorrect ? 'text-green-600' : 'text-red-600');
-
-                    if (isCorrect) {
-                        correctCount++;
-                    }
-                });
-
-                document.getElementById('submit-quiz-button').classList.add('hidden');
-                this.showResultModal(correctCount);
-            },
-            
-            showResultModal(correctCount) {
-                const total = QUIZ_DATA.length;
-                const title = correctCount === total ? "Поздравляем! 🎉" : "Хороший результат!";
-                const body = `Вы ответили правильно на ${correctCount} из ${total} вопросов.`;
+                // Активируем кнопку "Далее"
+                const nextButton = document.getElementById('quiz-next-button');
+                const isLastQuestion = this.currentQuizIndex === this.currentQuiz.length - 1;
                 
-                document.getElementById('result-title').textContent = title;
-                document.getElementById('result-body').textContent = body;
-                this.openModal('result-modal');
+                nextButton.textContent = isLastQuestion ? 'Завершить квиз' : 'Следующий вопрос';
+                nextButton.classList.remove('next-button-disabled');
+                nextButton.classList.add('next-button-active');
+                nextButton.disabled = false;
             },
-            
-            toggleAccordion(type) {
-                const content = document.getElementById(`${type}-content`);
-                const icon = document.getElementById(`${type}-icon`);
-                
-                // Проверяем, был ли открыт этот аккордеон
-                const wasOpen = content.classList.contains('is-open');
-                
-                // Закрываем все аккордеоны
-                this.closeAllAccordions();
-
-                // Если аккордеон был закрыт, открываем его
-                if (!wasOpen) {
-                    content.classList.add('is-open');
-                    icon.textContent = '▲';
-                }
-            },
-            
-            closeAllAccordions() {
-                ['transcript', 'analysis'].forEach(type => {
-                    const content = document.getElementById(`${type}-content`);
-                    const icon = document.getElementById(`${type}-icon`);
-                    if (content) {
-                        content.classList.remove('is-open');
-                    }
-                    if (icon) {
-                         icon.textContent = '▼';
-                    }
-                });
-            },
-            
-            // ============ UTILITY LOGIC (Open Links, Modals, etc.) ============
             
             /**
-             * Сообщает родительскому окну (index.html), что нужно вернуться на указанный экран.
-             * @param {string} targetScreen - Экран для возврата ('home-screen', 'weekly-selections', 'week-content').
+             * Переходит к следующему вопросу или завершает квиз.
              */
-            notifyParentToReturn(targetScreen) {
-                if (window.parent && window.parent.App) {
-                    if (targetScreen === 'week-content' && typeof window.parent.App.renderWeekContent === 'function') {
-                        // Возврат к Контенту Недели (Неделя берется из контекста родителя)
-                        const weekNum = window.parent.App.selectedWeek || 1;
-                        window.parent.App.renderWeekContent(weekNum);
-                    } else if (targetScreen === 'weekly-selections' && typeof window.parent.App.renderWeeklySelections === 'function') {
-                        // Возврат к списку недель
-                        window.parent.App.renderWeeklySelections();
-                    } else if (typeof window.parent.App.renderHomeScreen === 'function') {
-                        // Возврат на Главный экран (по умолчанию)
-                        window.parent.App.renderHomeScreen();
+            nextQuizQuestion() {
+                if (this.currentQuizIndex === this.currentQuiz.length - 1) {
+                    this.calculateScore();
+                    this.finishQuiz();
+                    return;
+                }
+                
+                this.currentQuizIndex++;
+                this.renderQuizQuestion();
+            },
+            
+            /**
+             * Подсчитывает финальный счет.
+             */
+            calculateScore() {
+                this.quizScore = 0;
+                this.currentQuiz.forEach(q => {
+                    const selectedIndex = q.userAnswerIndex;
+                    if (selectedIndex !== null && q.options[selectedIndex].correct) {
+                        this.quizScore++;
                     }
+                });
+            },
+            
+            /**
+             * Показывает экран завершения с результатом и тремя кнопками.
+             */
+            finishQuiz() {
+                this.quizFinished = true;
+                this.quizActive = false;
+                
+                const maxScore = this.currentQuiz.length;
+                const scorePercentage = (this.quizScore / maxScore) * 100;
+                
+                document.getElementById('quiz-progress').textContent = 'Квиз завершен!';
+                
+                const scrollArea = document.getElementById('quiz-scroll-area');
+                scrollArea.innerHTML = '';
+                scrollArea.innerHTML = `
+                    <div class="bg-white p-6 rounded-xl mb-4 shadow-lg border border-indigo-200">
+                        <span class="text-xl font-extrabold text-indigo-700 block mb-2 text-center">Ваш результат:</span>
+                        <span class="text-5xl font-extrabold text-indigo-600 block text-center">${this.quizScore} / ${maxScore}</span>
+                        <span class="text-lg text-gray-600 block mt-1 text-center">(${(scorePercentage).toFixed(0)}%)</span>
+                    </div>
+                    <p class="text-center text-gray-500 font-semibold">Готовы пройти ещё раз или просмотреть ответы?</p>
+                `;
+                
+                document.getElementById('quiz-next-button').classList.add('hidden');
+                document.getElementById('quiz-end-controls').classList.remove('hidden');
+            },
+
+            /**
+             * Показывает правильные ответы и пояснения.
+             */
+            showCorrectAnswers() {
+                this.quizActive = false;
+                
+                document.getElementById('quiz-next-button').classList.add('hidden'); 
+                document.getElementById('quiz-end-controls').classList.add('hidden');
+
+                document.getElementById('quiz-progress').textContent = 'Обзор квиза:';
+                
+                const scrollArea = document.getElementById('quiz-scroll-area');
+                scrollArea.innerHTML = ''; 
+
+                scrollArea.innerHTML += `
+                    <div class="bg-indigo-50 p-4 rounded-xl mb-4 shadow-inner border border-indigo-200">
+                        <p class="text-xl font-extrabold text-indigo-700 block mb-2 text-center">Ваш результат:</p>
+                        <p class="text-3xl font-extrabold text-blue-600 block text-center">${this.quizScore} из ${this.currentQuiz.length}</p>
+                        <p class="text-lg text-gray-600 block mt-1 text-center">(${(this.quizScore / this.currentQuiz.length * 100).toFixed(0)}%)</p>
+                    </div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Правильные ответы и пояснения:</h4>
+                `;
+                
+                this.currentQuiz.forEach((q, qIndex) => {
+                    const questionEl = document.createElement('div');
+                    questionEl.className = 'p-4 rounded-xl shadow-lg border mb-4 bg-white';
+                    
+                    const isCorrect = q.options.some((opt, i) => opt.correct && i === q.userAnswerIndex);
+                    
+                    questionEl.innerHTML = `
+                        <p class="font-bold text-lg mb-3 text-gray-800 border-b pb-2">
+                            ${qIndex + 1}. ${q.question} 
+                            <span class="float-right font-extrabold text-2xl ${isCorrect ? 'text-green-600' : 'text-red-600'}">
+                                ${isCorrect ? '✅' : '❌'}
+                            </span>
+                        </p>
+                        <div class="space-y-3 pt-2">
+                            ${q.options.map((opt, optIndex) => {
+                                let classes = 'p-3 rounded-lg text-sm transition duration-100 border ';
+                                let icon = '';
+
+                                if (opt.correct) {
+                                    classes += 'quiz-correct-final border-green-400 font-bold';
+                                    icon = '✅ Правильно: ';
+                                } 
+                                else if (optIndex === q.userAnswerIndex) {
+                                     classes += 'quiz-incorrect-final border-red-400 font-semibold';
+                                     icon = '❌ Ваш ответ: ';
+                                } 
+                                else {
+                                    classes += 'bg-gray-50 border-gray-200 text-gray-600';
+                                }
+                                
+                                // Корректировка классов для правильного отображения цвета
+                                if(opt.correct || optIndex === q.userAnswerIndex) {
+                                     classes = classes.replace('bg-white', '');
+                                     classes = classes.replace('text-gray-800', 'text-white'); 
+                                } else {
+                                     classes = classes.replace('font-semibold', 'font-normal');
+                                }
+
+                                return `
+                                    <div class="${classes}">
+                                        <p class="font-semibold">${opt.text}</p>
+                                        <p class="text-xs text-gray-700 mt-0.5"><span class="font-bold">${icon}</span>${opt.rationale}</p>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                    scrollArea.appendChild(questionEl);
+                });
+
+                const returnButton = document.createElement('button');
+                returnButton.textContent = 'Вернуться к результатам';
+                returnButton.className = 'w-full mt-4 py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition duration-150';
+                returnButton.onclick = () => this.finishQuiz();
+                scrollArea.appendChild(returnButton);
+            },
+
+// ============ UTILITY LOGIC (Open Links, Modals, etc.) ============
+            
+            /**
+             * Сообщает родительскому окну (index.html), что нужно вернуться на Главный экран.
+             */
+            notifyParentToReturn() {
+                // Если мы находимся во встроенном iframe
+                if (window.parent && window.parent.App && typeof window.parent.App.renderHomeScreen === 'function') {
+                    // Вызываем функцию родителя напрямую (если возможно)
+                    window.parent.App.renderHomeScreen();
                 } else if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) {
-                    // Если не во фрейме, закрываем (для прямой отладки)
+                    // Если не во фрейме, но в Telegram, закрываем (старое поведение)
                     window.Telegram.WebApp.close();
                 } else {
-                    console.log(`Эмуляция: возвращение на экран ${targetScreen}.`);
+                    // Эмуляция для отладки
+                    console.log('Эмуляция: возвращение на главный экран.');
                 }
             },
 
