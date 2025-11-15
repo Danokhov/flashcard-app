@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // "userProgress" - коллекция с прогрессом пользователей
+    match /userProgress/{userId} {
+      // Пользователь может читать и писать (создавать, обновлять)
+      // ТОЛЬКО свой собственный документ.
+      // Мы пока не используем Firebase Auth, поэтому временно
+      // разрешаем запись, если пользователь просто пытается записать данные.
+      // В идеале, здесь нужна проверка Telegram ID.
+      // Но для старта этого достаточно:
+      allow read, write: if request.auth == null; // Временно разрешаем всем
+      // TODO: Заменить на `request.auth.uid == userId` после настройки аутентификации
+    }
+  }
+}
