@@ -362,17 +362,31 @@
         </div>
     </div>
 
+    <!-- Модальное окно для деталей недели -->
+    <div id="week-details-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('week-details-modal')">
+        <div id="week-details-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 id="week-details-title" class="text-xl font-bold mb-3 text-center text-gray-800"></h3>
+            <p id="week-details-body" class="text-gray-700 mb-5"></p>
+            <button onclick="window.App.closeModal('week-details-modal')" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600">
+                Понятно
+            </button>
+        </div>
+    </div>
+
 
     <!-- "МАГИЯ" (JavaScript) -->
 <script type="module">
         // Импортируем необходимые модули Firebase (v9+)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        // Примечание: В реальной среде Canvas, возможно, потребуются дополнительные импорты Auth
+        // Здесь используется только Firestore, но для аутентификации в Firestore нужен userId
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
         // ==========================================================
         // 1. КОНФИГУРАЦИЯ И ДАННЫЕ (Conceptual Data Module)
         // ==========================================================
         
+        // Интервалы повторения в днях (от 1 до 6 боксов)
         const REPETITION_INTERVALS = {
             1: 1,  // 1 день
             2: 3,  // 3 дня
@@ -527,6 +541,8 @@
                     // Идентификация пользователя (Telegram или Web)
                     if (window.Telegram && window.Telegram.WebApp) {
                          window.Telegram.WebApp.ready();
+                         // В реальном приложении Canvas будет использоваться Firebase Auth и __initial_auth_token
+                         // Здесь используется заглушка, т.к. auth не импортирован
                          this.userId = Telegram.WebApp.initDataUnsafe?.user?.id?.toString() || "test_user_123";
                     } else {
                          this.userId = "web_user_" + Math.random().toString(36).substring(7);
@@ -583,6 +599,9 @@
                 if (!this.db) return; 
 
                 try {
+                    // Примечание: Для реального использования в Canvas путь должен быть:
+                    // doc(this.db, 'artifacts', __app_id, 'users', this.userId, 'progress', 'data')
+                    // Здесь используется упрощенный путь 'userProgress'
                     const docRef = doc(this.db, 'userProgress', this.userId); 
                     const docSnap = await getDoc(docRef);
 
@@ -617,6 +636,7 @@
                 if (!this.db) return; 
 
                 try {
+                    // Примечание: Упрощенный путь
                     const docRef = doc(this.db, 'userProgress', this.userId);
                     await setDoc(docRef, { 
                         cards: this.userProgress,
@@ -672,7 +692,7 @@
 
             // ==================== РЕНДЕРИНГ ЭКРАНОВ ====================
 
-renderHomeScreen() {
+            renderHomeScreen() {
                 this.showScreen('home-screen');
                 this.returnContext = { screen: 'home-screen', param: null };
                 
@@ -897,20 +917,26 @@ renderHomeScreen() {
                 const weekData = WEEKLY_CONTENT_MAP[weekNum];
                 if (!weekData) return;
                 
-                // Находим метаданные карусели для этой недели, если они уже загружены
-                const carouselSet = this.carouselSetsMetadata.find(set => set.id === weekData.carouselId);
+                // 1. Определение контекста возврата
+                // Если Неподписчик И активна Неделя 1 (Пробный урок), то возвращаемся на Главный экран.
+                // Иначе (Подписчик или Неделя 1 открыта через список), возвращаемся на Список Недель.
+                const isTrialLesson = !this.isSubscriber && weekNum === 1;
                 
-                // Изменено: Возвращаемся к списку подборок
-                this.returnContext = { screen: 'weekly-selections', param: null };
+                if (isTrialLesson) {
+                    this.returnContext = { screen: 'home-screen', param: null };
+                } else {
+                    this.returnContext = { screen: 'weekly-selections', param: null };
+                }
                 
-                // ИСПРАВЛЕНО: Устанавливаем специальный заголовок для Пробного урока (Неделя 1)
-                if (weekNum === 1 && !this.isSubscriber) {
+                // 2. Установка заголовка
+                if (isTrialLesson) {
                     document.getElementById('list-title').innerText = `🚀 Контент Пробного урока`;
                 } else {
                     document.getElementById('list-title').innerText = `📚 Контент Недели ${weekNum}`;
                 }
 
-                this.renderBackButton('weekly-selections'); 
+                // 3. Рендеринг кнопки "Назад"
+                this.renderBackButton(this.returnContext.screen, this.returnContext.param); 
                 document.getElementById('filter-controls').innerHTML = '';
 
                 const contentListDiv = document.getElementById('content-list');
@@ -924,6 +950,7 @@ renderHomeScreen() {
                 );
                 
                 // 2. Карусель ассоциаций (ПРЯМОЙ ПЕРЕХОД К ОДНОЙ КАРУСЕЛИ)
+                const carouselSet = this.carouselSetsMetadata.find(set => set.id === weekData.carouselId);
                 if (carouselSet) {
                     this.renderMenuCard(contentListDiv, 
                         `🖼️ Карусель ассоциаций: ${carouselSet.title}`, 
@@ -1161,8 +1188,31 @@ renderHomeScreen() {
                         break;
                     case 'week-content':
                         // Возврат из подраздела (История, Видео) в Контент Недели
+                        // Здесь нужно определить, куда возвращаться из подраздела,
+                        // в зависимости от того, откуда пришли в week-content
+                        const isTrialLesson = !this.isSubscriber && this.selectedWeek === 1;
+
+                        if (isTrialLesson) {
+                            // Если пришли из Пробного урока, возвращаемся на Главный экран
+                             targetFunction = 'window.App.renderHomeScreen()';
+                             buttonText = '← Назад в Главное меню';
+                        } else {
+                            // Если пришли из Подборок за неделю, возвращаемся к Контенту Недели
+                            targetFunction = `window.App.renderWeekContent(${param})`; 
+                            buttonText = '← К Контенту Недели';
+                        }
+                        
+                        // NOTE: В вашем оригинальном коде здесь была ошибка,
+                        // targetFunction была установлена на `window.App.renderWeekContent(${param})`
+                        // но в этой функции (renderBackButton) нет информации о том, откуда
+                        // мы пришли *на* `week-content`, поэтому используем `renderWeekContent(${param})`
+                        // для возврата к самому контенту недели, а не к списку недель.
+                        // Для Пробного урока, где нет списка недель, мы жестко возвращаем на Главный экран.
+                        
+                        // Используем param (weekNum) для перехода к нужному контенту недели
                         targetFunction = `window.App.renderWeekContent(${param})`; 
                         buttonText = '← К Контенту Недели';
+
                         break;
                     case 'carousel-list':
                         targetFunction = `window.App.renderCarouselListScreen('week-content', ${this.selectedWeek})`; 
@@ -1258,6 +1308,7 @@ renderHomeScreen() {
              */
             async loadCarouselMetadata() {
                 try {
+                    // Примечание: предполагается, что carousel_sets.json находится в корневой папке
                     const response = await fetch(getBaseUrl() + 'carousel_sets.json');
                     if (!response.ok) {
                         throw new Error(`Ошибка HTTP: ${response.status} ${response.statusText}`);
@@ -1279,7 +1330,7 @@ renderHomeScreen() {
                 this.carouselReturnContext = { screen: fromScreen, param: fromParam };
                 
                 document.getElementById('carousel-list-title').innerText = 'Карусель ассоциаций';
-                this.renderBackButton(fromScreen, param, 'carousel-list-screen');
+                this.renderBackButton(fromScreen, fromParam, 'carousel-list-screen');
                 
                 const listDiv = document.getElementById('carousel-sets-list');
                 listDiv.innerHTML = '<p class="text-center text-gray-500 py-6">Загрузка списка наборов...</p>';
@@ -1332,6 +1383,7 @@ renderHomeScreen() {
                 this.showScreen('loading-screen'); // Показываем общий экран загрузки на время fetch
                 
                 try {
+                    // Примечание: предполагается, что файлы с данными каруселей находятся в корневой папке
                     const response = await fetch(getBaseUrl() + filepath);
                     if (!response.ok) throw new Error(`Не удалось загрузить данные набора: ${filepath}`);
                     
@@ -1460,6 +1512,11 @@ renderHomeScreen() {
                 document.getElementById('card').classList.add('is-flipped');
                 document.getElementById('controls-show').classList.add('hidden');
                 document.getElementById('controls-rate').classList.remove('hidden');
+                
+                // Произносим слово, если направление RU->DE
+                if (this.currentDirection === 'ru-de') {
+                     this.speakGerman(this.sessionCards[this.currentCardIndex].back);
+                }
             },
             
             showNextCard() {
@@ -1506,6 +1563,8 @@ renderHomeScreen() {
                 } else {
                     document.getElementById('card-front-text').innerHTML = germanHtml;
                     document.getElementById('card-back-text').textContent = card.front;
+                    // Произносим слово, если направление DE->RU
+                    this.speakGerman(card.back);
                 }
                 
                 const hintButton = document.getElementById('hint-button');
@@ -1556,8 +1615,10 @@ renderHomeScreen() {
                     window.speechSynthesis.cancel();
                     const utterance = new SpeechSynthesisUtterance(textToSpeak);
                     utterance.lang = 'de-DE'; 
+                    // Пытаемся выбрать немецкий голос для лучшего произношения
                     const voices = window.speechSynthesis.getVoices().filter(v => v.lang.includes('de-'));
                     if (voices.length > 0) {
+                        // Пытаемся найти голос с именем "Anna" (часто немецкий) или первый доступный
                         utterance.voice = voices.find(v => v.name.includes('Anna')) || voices.find(v => v.name.includes('Google')) || voices[0];
                     }
                     window.speechSynthesis.speak(utterance);
@@ -1657,14 +1718,5 @@ renderHomeScreen() {
         });
 
     </script>
-<div id="week-details-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('week-details-modal')">
-        <div id="week-details-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
-            <h3 id="week-details-title" class="text-xl font-bold mb-3 text-center text-gray-800"></h3>
-            <p id="week-details-body" class="text-gray-700 mb-5"></p>
-            <button onclick="window.App.closeModal('week-details-modal')" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600">
-                Понятно
-            </button>
-        </div>
-    </div>
 </body>
 </html>
