@@ -163,10 +163,12 @@ window.App = {
         }
     },
 
-    openWeek(week) {
+    async openWeek(week) {
         if (week === 1) {
             if (this.db) {
-                setDoc(doc(this.db, 'users', this.userId), { hasVisitedWeek1: true }, { merge: true });
+                await setDoc(doc(this.db, 'users', this.userId), { hasVisitedWeek1: true }, { merge: true });
+                this.unlockedWeek = Math.max(this.unlockedWeek, 1);
+                this.renderHomeScreen(); // ← мгновенное обновление меню
             }
             location.href = 'Text1.html';
         } else if (week <= this.unlockedWeek) {
@@ -174,6 +176,40 @@ window.App = {
         } else {
             this.showLockedModal();
         }
+    },
+
+    renderAllSetsScreen() {
+        document.getElementById('list-title').textContent = 'Все наборы слов';
+        this.renderBackButton('renderHomeScreen()');
+        const list = document.getElementById('content-list');
+        list.innerHTML = '<p class="text-center py-8 text-gray-500">Загрузка наборов...</p>';
+
+        (async () => {
+            for (const set of this.carouselSets) {
+                if (!set.cards) {
+                    try {
+                        const res = await fetch(set.filepath);
+                        set.cards = await res.json();
+                    } catch (e) { console.error(e); continue; }
+                }
+
+                const div = document.createElement('div');
+                div.className = "bg-white rounded-2xl shadow-lg p-6 flex justify-between items-center mb-4";
+                div.innerHTML = `
+                    <div>
+                        <div class="font-bold text-xl">${set.title}</div>
+                        <div class="text-gray-600">${set.cards.length} слов</div>
+                    </div>
+                    <button onclick="window.App.startSession('${set.id}', 'practice')" 
+                            class="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg">
+                        Учить
+                    </button>
+                `;
+                list.appendChild(div);
+            }
+            list.firstChild.remove(); // Удаляем "Загрузка..."
+        })();
+        this.showScreen('list-screen');
     },
 
     async startSession(setId, mode) {
@@ -191,7 +227,7 @@ window.App = {
         });
 
         if (cards.length === 0) {
-            alert(mode === 'practice' ? 'Нет слов в этом наборе' : 'Сегодня нет слов к повторению');
+            alert(mode === 'practice' ? 'Нет слов' : 'Сегодня нет повторений');
             return;
         }
 
