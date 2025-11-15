@@ -4,26 +4,31 @@ import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.
 const REPETITION_INTERVALS = { 1: 1, 2: 3, 3: 7, 4: 14, 5: 30, 6: 90 };
 
 window.App = {
-    db: null, userId: null, userProgress: {}, carouselSets: [], hasCompletedTrial: false,
+    db: null,
+    userId: null,
+    userProgress: {},
+    carouselSets: [],
+    unlockedWeek: 0,
+    hasCompletedTrial: false,
+    sessionCards: [],
+    currentCardIndex: 0,
+    isPracticeMode: false,
+    currentHintImage: null,  // ← для подсказки
 
     async init() {
         const cfg = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        if (Object.keys(cfg).length) { const app = initializeApp(cfg); this.db = getFirestore(app); }
+        if (Object.keys(cfg).length) {
+            const app = initializeApp(cfg);
+            this.db = getFirestore(app);
+        }
 
         this.userId = Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "test_" + Date.now();
         await this.loadCarouselSets();
-        if (this.db) await this.loadProgress();
+        if (this.db) await this.loadUserData();
         this.renderHomeScreen();
     },
 
-    async loadCarouselSets() {
-        try {
-            const res = await fetch('carousel_sets.json');
-            this.carouselSets = await res.json();
-        } catch (e) { console.error("Не удалось загрузить carousel_sets.json", e); }
-    },
-
-    async loadProgress() {
+    async loadUserData() {
         try {
             const ref = doc(this.db, 'users', this.userId);
             const snap = await getDoc(ref);
@@ -31,6 +36,10 @@ window.App = {
                 const d = snap.data();
                 this.hasCompletedTrial = d.hasCompletedTrial || false;
                 this.userProgress = d.cards || {};
+                if (d.isPaid && d.paidAt) {
+                    const days = Math.floor((Date.now() - d.paidAt.toDate()) / 86400000);
+                    this.unlockedWeek = Math.min(52, Math.floor(days / 7) + 1);
+                }
             }
         } catch (e) { console.error(e); }
         this.renderDueToday();
@@ -45,23 +54,24 @@ window.App = {
         }, { merge: true });
     },
 
+    async loadCarouselSets() {
+        try {
+            const res = await fetch('carousel_sets.json');
+            this.carouselSets = await res.json();
+        } catch (e) { console.error("Не загрузился carousel_sets.json", e); }
+    },
+
     renderHomeScreen() {
         this.showScreen('home-screen');
         const block = document.getElementById('main-content-block');
         block.innerHTML = '';
 
         if (!this.hasCompletedTrial) {
-            const btn = document.createElement('button');
-            btn.onclick = () => window.location.href = 'trial.html';
-            btn.className = "w-full py-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-3xl shadow-2xl text-3xl font-bold";
-            btn.innerHTML = `Пробный урок<br><span class="text-xl opacity-90">Бесплатно!</span>`;
-            block.appendChild(btn);
-        } else if (!this.hasCompletedTrial) {
-            const btn = document.createElement('button');
-            btn.onclick = () => Telegram.WebApp.openLink('https://t.me/твой_бот_оплаты');
-            btn.className = "w-full py-8 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl shadow-2xl text-3xl font-bold";
-            btn.innerHTML = `Открыть весь курс<br><span class="text-xl">30+ недель</span>`;
-            block.appendChild(btn);
+            block.innerHTML = `<button onclick="location.href='trial.html'" class="w-full py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-3xl shadow-2xl text-3xl font-bold">Пробный урок<br><span class="text-xl opacity-90">Бесплатно!</span></button>`;
+        } else if (this.unlockedWeek === 0) {
+            block.innerHTML = `<button onclick="Telegram.WebApp.openLink('https://t.me/твой_бот_оплаты')" class="w-full py-12 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl shadow-2xl text-3xl font-bold">Открыть весь курс<br><span class="text-xl">52 недели • Новые каждую неделю</span></button>`;
+        } else {
+            block.innerHTML = `<button onclick="window.App.renderWeeklySelections()" class="w-full py-12 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl shadow-2xl text-3xl font-bold">Продолжить<br><span class="text-5xl font-black">Неделя ${this.unlockedWeek}</span></button>`;
         }
         this.renderDueToday();
     },
@@ -73,8 +83,8 @@ window.App = {
         this.carouselSets.forEach(set => {
             if (!set.cards) return;
             const dueCount = set.cards.filter(c => {
-                const p = this.userProgress[c.id];
-                return p && p.nextReview && p.nextReview <= today;
+                const p = this.userProgress[c.word + c.translation];
+                return p?.nextReview && p.nextReview <= today;
             }).length;
             if (dueCount > 0) due.push({ set, dueCount });
         });
@@ -87,40 +97,58 @@ window.App = {
         due.forEach(item => {
             const div = document.createElement('div');
             div.className = "bg-white rounded-xl shadow p-4 flex justify-between items-center";
-            div.innerHTML = `<span class="font-semibold">${item.set.title}</span><span class="text-red-600">${item.dueCount} к повторению</span>`;
+            div.innerHTML = `<span class="font-bold">${item.set.title}</span><span class="text-red-600 font-bold">${item.dueCount} к повторению</span>`;
             div.onclick = () => this.startSession(item.set.id, 'repeat');
             list.appendChild(div);
         });
     },
 
-    async renderAllSetsScreen() {
-        document.getElementById('list-title').textContent = 'Все наборы слов';
-        this.renderBackButton('home-screen');
-        const list = document.getElementById('content-list');
+    renderWeeklySelections() {
+        this.showScreen('weekly-screen');
+        this.renderBackButton('renderHomeScreen()');
+        const list = document.getElementById('weekly-list');
         list.innerHTML = '';
+        for (let w = 1; w <= 8; w++) {
+            const unlocked = w <= this.unlockedWeek;
+            list.innerHTML += `
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4">Неделя ${w}</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="alert('Скоро будет подробный разбор')" class="py-4 bg-gray-200 rounded-xl font-bold">Подробнее</button>
+                        <button ${unlocked ? `onclick="window.App.openWeek(${w})"` : `onclick="window.App.showLockedModal()"`}
+                                class="py-4 rounded-xl font-bold ${unlocked ? 'bg-green-500 text-white' : 'bg-gray-400 text-gray-700'}">
+                            ${unlocked ? 'Учить' : 'Заблокировано'}
+                        </button>
+                    </div>
+                </div>`;
+        }
+    },
 
-        for (const set of this.carouselSets) {
+    renderAllSetsScreen() {
+        document.getElementById('list-title').textContent = 'Все наборы слов';
+        this.renderBackButton('renderHomeScreen()');
+        const list = document.getElementById('content-list');
+        list.innerHTML = '<p class="text-center py-8 text-gray-500">Загрузка наборов...</p>';
+
+        this.carouselSets.forEach(async set => {
             if (!set.cards) {
-                try {
-                    const res = await fetch(set.filepath);
-                    set.cards = await res.json();
-                } catch (e) { console.error(e); continue; }
+                const res = await fetch(set.filepath);
+                set.cards = await res.json();
             }
-
             const div = document.createElement('div');
-            div.className = "bg-white rounded-2xl shadow-lg p-6 flex justify-between items-center";
+            div.className = "bg-white rounded-2xl shadow-lg p-6 flex justify-between items-center mb-4";
             div.innerHTML = `
                 <div>
                     <div class="font-bold text-xl">${set.title}</div>
-                    <div class="text-gray-600">${set.wordCount} слов</div>
+                    <div class="text-gray-600">${set.wordCount || set.cards.length} слов</div>
                 </div>
                 <button onclick="window.App.startSession('${set.id}', 'practice')" 
-                        class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold">
+                        class="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg">
                     Учить
                 </button>
             `;
             list.appendChild(div);
-        }
+        });
         this.showScreen('list-screen');
     },
 
@@ -131,18 +159,19 @@ window.App = {
             set.cards = await res.json();
         }
 
-        let sessionCards = mode === 'practice' ? [...set.cards] : set.cards.filter(c => {
-            const p = this.userProgress[c.id];
+        let cards = mode === 'practice' ? set.cards : set.cards.filter(c => {
+            const key = c.word + c.translation;
+            const p = this.userProgress[key];
             const today = new Date().toISOString().split('T')[0];
-            return p && p.nextReview && p.nextReview <= today;
+            return p?.nextReview && p.nextReview <= today;
         });
 
-        if (sessionCards.length === 0) {
-            alert(mode === 'practice' ? 'Нет слов в наборе' : 'Нет слов к повторению сегодня');
+        if (cards.length === 0) {
+            alert(mode === 'practice' ? 'Нет слов в этом наборе' : 'Сегодня нет слов к повторению');
             return;
         }
 
-        this.sessionCards = sessionCards.map(c => ({...c}));
+        this.sessionCards = cards.map(c => ({...c}));
         this.sessionCards.sort(() => Math.random() - 0.5);
         this.currentCardIndex = 0;
         this.isPracticeMode = mode === 'practice';
@@ -155,18 +184,33 @@ window.App = {
             this.showScreen('finish-screen');
             return;
         }
+
         const card = this.sessionCards[this.currentCardIndex];
         const progress = (this.currentCardIndex + 1) / this.sessionCards.length * 100;
         document.getElementById('progress-bar').style.width = `${progress}%`;
-        document.getElementById('card').classList.remove('is-flipped');
+
+        // Сброс состояния
+        document.getElementById('card-inner').classList.remove('is-flipped');
         document.getElementById('controls-show').classList.remove('hidden');
         document.getElementById('controls-rate').classList.add('hidden');
-        document.getElementById('card-front').textContent = card.front;
-        document.getElementById('card-back').textContent = card.back;
+
+        // Заполняем карточку
+        document.getElementById('card-front-text').textContent = card.word;
+        document.getElementById('card-back-text').textContent = card.translation;
+
+        // Подсказка
+        const hintBtn = document.querySelector('.hint-btn');
+        if (card.image) {
+            hintBtn.classList.remove('hidden');
+            this.currentHintImage = card.image;
+        } else {
+            hintBtn.classList.add('hidden');
+            this.currentHintImage = null;
+        }
     },
 
     showAnswer() {
-        document.getElementById('card').classList.add('is-flipped');
+        document.getElementById('card-inner').classList.add('is-flipped');
         document.getElementById('controls-show').classList.add('hidden');
         document.getElementById('controls-rate').classList.remove('hidden');
     },
@@ -174,21 +218,27 @@ window.App = {
     async handleAnswer(knewIt) {
         if (!this.isPracticeMode) {
             const card = this.sessionCards[this.currentCardIndex];
-            let p = this.userProgress[card.id] || { box: 0 };
+            const key = card.word + card.translation;
+            let p = this.userProgress[key] || { box: 0 };
             p.box = knewIt ? Math.min(6, p.box + 1) : 1;
             const days = REPETITION_INTERVALS[p.box];
             p.nextReview = new Date(Date.now() + days * 86400000).toISOString().split('T')[0];
-            this.userProgress[card.id] = p;
+            this.userProgress[key] = p;
             await this.saveProgress();
         }
         this.currentCardIndex++;
         this.showNextCard();
     },
 
+    showHint() {
+        if (!this.currentHintImage) return;
+        document.getElementById('hint-image').src = this.currentHintImage;
+        this.openModal('hint-modal');
+    },
+
     renderBackButton(target) {
         document.getElementById('back-button-container').innerHTML = 
-            `<button onclick="window.App.${target === 'home-screen' ? 'renderHomeScreen()' : 'renderAllSetsScreen()'}" 
-                     class="text-blue-600 font-bold mb-4">← Назад</button>`;
+            `<button onclick="window.App.${target}" class="text-blue-600 font-bold mb-4">← Назад</button>`;
     },
 
     showScreen(id) {
@@ -196,8 +246,19 @@ window.App = {
         document.getElementById(id).classList.remove('hidden');
     },
 
-    openModal(id) { document.getElementById(id).classList.remove('hidden'); },
-    closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+    openModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('is-open'), 10);
+    },
+
+    closeModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.remove('is-open');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    },
+
+    showLockedModal() { this.openModal('locked-modal'); }
 };
 
 window.addEventListener('load', () => window.App.init());
