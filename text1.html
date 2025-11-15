@@ -4,648 +4,765 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>История Недели 1: Артикли (A1)</title>
-    <!-- Tailwind -->
+    <!-- Подключаем Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключаем API Telegram (для закрытия WebApp) -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
+    
     <style>
+        /* (Стили квиза и модальных окон не меняются) */
         .modal { transition: opacity 0.3s ease; }
         .modal-content { transition: transform 0.3s ease; transform: scale(0.95); }
         .modal.is-open { opacity: 1; }
         .modal.is-open .modal-content { transform: scale(1); }
-
         .quiz-option { transition: all 0.15s ease; outline: none; }
-        .quiz-option:hover { transform: translateY(-2px); box-shadow: 0 6px 10px -2px rgba(0,0,0,0.1); }
-        .quiz-selected { background-color:#A5B4FC!important;color:#1E3A8A!important;border-color:#6366F1!important;box-shadow:0 4px 6px -1px rgba(99,102,241,0.3)!important; }
-        .next-button-disabled { background-color:#D1D5DB!important;color:#6B7280!important;cursor:not-allowed;box-shadow:none!important; }
-        .next-button-active { background:linear-gradient(to right,#4F46E5,#6366F1)!important;color:#fff!important;box-shadow:0 4px 10px -2px rgba(79,70,229,0.5);transition:all 0.2s ease; }
-        .next-button-active:hover { opacity:.9;transform:translateY(-1px); }
-        #question-box { border-left:5px solid #6366F1; }
+        .quiz-option:hover { transform: translateY(-2px); box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.1); }
+        .quiz-selected { background-color: #A5B4FC !important; color: #1E3A8A !important; border-color: #6366F1 !important; box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3) !important; }
+        .quiz-correct-final { background-color: #10B981 !important; color: white !important; border-color: #059669 !important; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3) !important; }
+        .quiz-incorrect-final { background-color: #EF4444 !important; color: white !important; border-color: #DC2626 !important; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important; }
+        .next-button-disabled { background-color: #D1D5DB !important; color: #6B7280 !important; cursor: not-allowed; box-shadow: none !important; }
+        .next-button-active { background: linear-gradient(to right, #4F46E5, #6366F1) !important; color: white !important; box-shadow: 0 4px 10px -2px rgba(79, 70, 229, 0.5); transition: all 0.2s ease; }
+        .next-button-active:hover { opacity: 0.9; transform: translateY(-1px); }
+        #question-box { border-left: 5px solid #6366F1; }
 
-        .story-visual-container img { width:100%;height:auto;display:block; }
+        /* ------------------------------------------- */
+        /* СТИЛИ ДЛЯ АУДИО/КАРТИНКИ И АККОРДЕОНОВ */
+        /* ------------------------------------------- */
 
-        /* STICKY-панель аудио */
-        .sticky-audio-wrapper {
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            padding-top: 0.5rem;
-            padding-bottom: 0.75rem;
-            background: linear-gradient(to bottom, #F3F4F6 90%, rgba(243,244,246,0));
+        /* Контейнер для изображения */
+        .story-visual-container {
+            position: relative;
+            transition: transform 0.2s;
+        }
+        .story-visual-container img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
-        .audio-card {
-            box-shadow: 0 6px 16px rgba(15,23,42,0.18);
+        /* Стиль для нового плеера */
+        .audio-controls {
+            background-color: #4F46E5; /* Индиго */
+            border-radius: 0.5rem;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #audio-play-button {
+            transition: opacity 0.2s;
+        }
+        #audio-play-button:hover {
+            opacity: 0.8;
         }
 
-        .audio-main-button { transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease; }
-        .audio-main-button:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(37,99,235,0.55); opacity: .95; }
-
-        /* Аккордеоны */
+        /* АККОРДЕОН: Скрыт (hidden класс от Tailwind будет обеспечивать display: none) */
         .accordion-content {
-            max-height:0;
-            overflow:hidden;
-            transition:max-height 0.4s ease-in-out,opacity 0.4s ease-in-out;
-            opacity:0;
-            visibility:hidden;
-        }
-        .accordion-content.is-open {
-            max-height:90vh;
-            opacity:1;
-            visibility:visible;
-            overflow-y:auto;
+            /* Эти стили отвечают ТОЛЬКО за анимацию, когда класс hidden снят */
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; 
+            opacity: 0;
+            visibility: hidden; 
         }
 
-        /* Слайдеры (минимальный кастом) */
-        input[type="range"] {
-            width:100%;
-            cursor:pointer;
+        /* При открытии устанавливаем padding обратно и включаем скролл */
+        .accordion-content.is-open {
+            /* УВЕЛИЧЕНА МАКСИМАЛЬНАЯ ВЫСОТА ДЛЯ УДОБНОЙ ПРОКРУТКИ */
+            max-height: 90vh; 
+            opacity: 1;
+            visibility: visible;
+            overflow-y: auto; /* ВКЛЮЧАЕМ СКРОЛЛ ВНУТРИ БЛОКА */
         }
+
+        /* --- НОВЫЕ СТИЛИ ДЛЯ ФИКСАЦИИ ПАНЕЛИ --- */
+        /* Общая высота фиксированной панели (Заголовок + Аудиопанель). 
+           Используем 8.75rem (~140px) для отступа, чтобы очистить фиксированную область.
+        */
+        .content-padding {
+            padding-top: 8.75rem; 
+        }
+        
     </style>
 </head>
 
-<body class="min-h-screen bg-gray-100 font-sans p-4">
-<div id="app" class="max-w-md mx-auto space-y-6">
+<!-- Добавляем класс content-padding, чтобы контент не скрывался под фиксированной панелью -->
+<body class="min-h-screen bg-gray-100 font-sans content-padding">
 
-    <!-- Картинка -->
-    <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
-        <img src="Woche1_text.png"
-             alt="Иллюстрация к истории"
-             onclick="event.preventDefault();event.stopPropagation();">
-        <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
-    </div>
+    <!-- 2. ФИКСИРОВАННЫЙ БЛОК: ЗАГОЛОВОК + АУДИО УПРАВЛЕНИЕ -->
+    <!-- Фиксирует все элементы в верхней части экрана -->
+    <div class="fixed inset-x-0 top-0 z-50 bg-white shadow-xl border-b border-gray-200">
+        <div class="max-w-md mx-auto px-4">
+            
+            <!-- 2a. ИМИТАЦИЯ ЗАГОЛОВКА И КНОПКИ НАЗАД (Header) - h-14 -->
+            <!-- ЭТОТ БЛОК НА САМОМ ВЕРХУ -->
+            <div class="flex items-center justify-between h-14 w-full">
+                <!-- Mock: Кнопка Назад (слева) -->
+                <button aria-label="Назад" class="text-gray-600 hover:text-gray-900 transition p-2 -ml-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                
+                <!-- Mock: Заголовок -->
+                <h1 class="text-lg font-bold text-gray-800 truncate">История Недели 1: Артикли (A1)</h1>
 
-    <!-- STICKY-АУДИОПАНЕЛЬ -->
-    <div class="sticky-audio-wrapper">
-        <div class="audio-card bg-white rounded-2xl px-4 py-4 flex flex-col gap-4 border border-gray-200">
-            <div class="flex items-center justify-center">
-                <button id="audio-main-button"
-                        class="audio-main-button rounded-full bg-blue-600 text-white px-7 py-2.5 flex items-center gap-2">
-                    <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z"
-                              clip-rule="evenodd"></path>
-                    </svg>
-                    <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z"
-                              clip-rule="evenodd"></path>
-                    </svg>
-                    <span id="audio-status" class="font-semibold text-base">Play</span>
+                <!-- Mock: Кнопка Лайк (справа) -->
+                <button aria-label="Нравится" class="text-gray-400 hover:text-red-500 transition p-2 -mr-2">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
                 </button>
             </div>
 
-            <!-- Прогресс -->
-            <div class="flex flex-col gap-1">
-                <input id="audio-progress" type="range" min="0" max="100" value="0">
-                <div class="flex justify-between text-xs text-gray-500">
-                    <span id="audio-current-time">0:00</span>
-                    <span id="audio-duration">0:00</span>
-                </div>
-            </div>
-
-            <!-- Скорость -->
-            <div class="flex flex-col gap-1">
-                <div class="flex justify-between text-xs text-gray-500">
-                    <span>langsam</span>
-                    <span>schnell</span>
-                </div>
-                <input id="audio-speed" type="range" min="0.6" max="1.4" step="0.05" value="1">
-                <div class="text-center text-xs text-gray-500">
-                    Geschwindigkeit: <span id="audio-speed-label">1.00x</span>
+            <!-- 2b. АУДИО УПРАВЛЕНИЕ (Audio Controls) -->
+            <!-- ЭТОТ БЛОК ИДЕТ СРАЗУ ПОД ЗАГОЛОВКОМ И ОСТАЕТСЯ ФИКСИРОВАННЫМ -->
+            <div class="pb-4"> <!-- Добавляем небольшой отступ снизу фиксированного блока -->
+                <div class="audio-controls" onclick="window.StoryApp.toggleAudioPlay()">
+                    <button id="audio-play-button" class="flex items-center space-x-2">
+                        <!-- Иконка Play -->
+                        <svg id="play-icon" class="play-icon w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z" clip-rule="evenodd"></path>
+                        </svg>
+                        <!-- Иконка Pause (скрыта по умолчанию) -->
+                        <svg id="pause-icon" class="pause-icon hidden w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span id="audio-status" class="text-lg font-bold">Слушать историю</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Основной контейнер страницы. Использует px-4 для горизонтальных отступов. -->
+    <div id="app" class="max-w-md mx-auto px-4"> 
+        
+        <div class="space-y-6">
 
-    <!-- АККОРДЕОНЫ -->
-    <div class="space-y-4">
+            <!-- 1. ИЗОБРАЖЕНИЕ -->
+            <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
+                
+                <img id="story-image" 
+                     src="Woche1_text.png" 
+                     alt="Иллюстрация к уроку по немецким артиклям"
+                     class="w-full h-auto object-cover" 
+                     onclick="event.preventDefault(); event.stopPropagation();" /> <!-- Защита от перехвата клика/тапа -->
 
-        <!-- ТРАНСКРИПЦИЯ -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-            <button id="transcript-button"
-                    onclick="window.StoryApp.toggleAccordion('transcript-content')"
-                    class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
-                <span><span class="mr-3 text-green-500">📖</span>Транскрипция</span>
-                <span id="transcript-arrow">&darr;</span>
-            </button>
-            <div id="transcript-content"
-                 class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4">
-                <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p>
-                <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt.</p>
-                <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
-                <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
-                <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
-                <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
-                <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
-                <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
-                <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
-                <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
-                <p class="mb-3">Die Mitarbeiterin hört ihm aufmerksam zu, als er seine Beschwerden beschreibt.</p>
-                <p class="mb-3">„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie Schmerzen haben, bekommen Sie natürlich schnell einen Termin.“</p>
-                <p class="mb-3">Am Nachmittag sitzt Thomas im Wartezimmer.</p>
-                <p class="mb-3">Es ist stickig, und er beginnt wieder zu schwitzen.</p>
-                <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, und jemand stöhnt leise vor Schmerzen.</p>
-                <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Magen brennt stärker, und ihm wird schwindlig.</p>
-                <p class="mb-3">Endlich ruft die Arzthelferin: „Herr Berger, bitte!“</p>
-                <p class="mb-3">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:</p>
-                <p class="mb-3">„Was fehlt Ihnen?“</p>
-                <p class="mb-3">Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach fühlt und nachts leidet.</p>
-                <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab und erklärt:</p>
-                <p class="mb-3">„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
-                <p class="mb-3">Dann fügt er hinzu:</p>
-                <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
-                <p class="mb-3">Thomas fragt:</p>
-                <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
-                <p class="mb-3">Dr. Keller antwortet:</p>
-                <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
-                <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
-                <p class="mb-3">Dann fragt er:</p>
-                <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
-                <p class="mb-3">Thomas antwortet:</p>
-                <p class="mb-3">„Ja, bitte – für drei Tage.“</p>
-                <p class="mb-3">Dr. Keller notiert es und lächelt:</p>
-                <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
-                <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
-                <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.“</p>
-                <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
-                <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen.</p>
-                <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und ausgeruht.</p>
-                <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
+                <!-- Аудиоплеер (скрыт) -->
+                <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
             </div>
-        </div>
+            
+            <!-- 3. БЛОК "АККОРДЕОНЫ" -->
+            <div class="space-y-4">
+                
+                <!-- Кнопка 1: ТРАНСКРИПЦИЯ (АККОРДЕОН) -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <!-- !!! ИЗМЕНЕНИЕ: onlick теперь вызывает StoryApp !!! -->
+                    <button id="transcript-button" onclick="window.StoryApp.toggleAccordion('transcript-content')" 
+                       class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition duration-150">
+                        <span><span class="mr-3 text-green-500">📖</span>Транскрипция</span>
+                        <span id="transcript-arrow">&darr;</span>
+                    </button>
+                    <!-- ДОБАВЛЕН p-4 И hidden ВНУТРИ DIV -->
+                    <div id="transcript-content" class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4"> 
+                        <!-- ВАШ ТЕКСТ ИЗ ФАЙЛА - С ОТСТУПАМИ -->
+                        <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p>
 
-        <!-- РАЗБОР (карусель) -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-            <button id="analysis-button"
-                    onclick="window.StoryApp.toggleAccordion('analysis-content')"
-                    class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
-                <span><span class="mr-3 text-blue-500">📝</span>Разбор текста</span>
-                <span id="analysis-arrow">&darr;</span>
-            </button>
-            <div id="analysis-content"
-                 class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4">
-
-                <div id="analysis-carousel" class="space-y-4">
-                    <div id="analysis-slide" class="space-y-3"></div>
-
-                    <div class="flex items-center justify-between mt-4">
-                        <button onclick="window.StoryApp.prevAnalysisSlide()"
-                                class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
-                            ← Назад
-                        </button>
-
-                        <span id="analysis-progress"
-                              class="text-xs text-gray-500 mx-2 flex-1 text-center">
-                            1 / 1
-                        </span>
-
-                        <button onclick="window.StoryApp.nextAnalysisSlide()"
-                                class="py-2 px-4 bg-indigo-500 text-white rounded-lg text-sm font-semibold hover:bg-indigo-600 transition">
-                            Вперёд →
-                        </button>
+                        <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt.</p>
+                        <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
+                        <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
+                        <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
+                        <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
+                        <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
+                        <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
+                        <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
+                        <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
+                        <p class="mb-3">Die Mitarbeiterin hört ihm aufmerksam zu, als er seine Beschwerden beschreibt.</p>
+                        <p class="mb-3">„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie Schmerzen haben, bekommen Sie natürlich schnell einen Termin.“</p>
+                        <p class="mb-3">Am Nachmittag sitzt Thomas im Wartezimmer.</p>
+                        <p class="mb-3">Es ist stickig, и er beginnt wieder zu schwitzen.</p>
+                        <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, и jemand stöhnt leise vor Schmerzen.</p>
+                        <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Magen brennt stärker, and ihm wird schwindlig.</p>
+                        <p class="mb-3">Endlich ruft die Arzthelferin: „Herr Berger, bitte!“</p>
+                        <p class="mb-3">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:</p>
+                        <p class="mb-3">„Was fehlt Ihnen?“</p>
+                        <p class="mb-3">Thomas erzählt, что он с двух дней почти не может есть, чувствует себя слабым и страдает по ночам.</p>
+                        <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab and erklärt:</p>
+                        <p class="mb-3">„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
+                        <p class="mb-3">Dann fügt er hinzu:</p>
+                        <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
+                        <p class="mb-3">Thomas fragt:</p>
+                        <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
+                        <p class="mb-3">Dr. Keller antwortet:</p>
+                        <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
+                        <p class="mb-3">„Die Antibiotika wirken schnell, но Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
+                        <p class="mb-3">Dann fragт он:</p>
+                        <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
+                        <p class="mb-3">Thomas antwortet:</p>
+                        <p class="mb-3">„Ja, bitte – für drei Tage.“</p>
+                        <p class="mb-3">Dr. Keller notiert es и lächelt:</p>
+                        <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
+                        <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
+                        <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.“</p>
+                        <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
+                        <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, and er kann wieder schlafen.</p>
+                        <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und ausgeruht.</p>
+                        <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war and die Medikamente gut wirken.</p>
                     </div>
                 </div>
+                
+                <!-- Кнопка 2: РАЗБОР ТЕКСТА (АККОРДЕОН + СКАЧИВАНИЕ) -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <!-- !!! ИЗМЕНЕНИЕ: onlick теперь вызывает StoryApp !!! -->
+                    <button id="analysis-button" onclick="window.StoryApp.toggleAccordion('analysis-content')" 
+                       class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition duration-150">
+                        <span><span class="mr-3 text-blue-500">📝</span>Разбор текста</span>
+                        <span id="analysis-arrow">&darr;</span>
+                    </button>
+                    <!-- ДОБАВЛЕН p-4 И hidden ВНУТРИ DIV -->
+                    <div id="analysis-content" class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4"> 
 
-                <div class="mt-6 pt-4 border-t border-gray-300">
-                    <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-                       target="_blank"
-                       class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                        Скачать разбор (PDF)
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <!-- КАРУСЕЛЬ РАЗБОРА -->
+                        <div id="analysis-carousel" class="space-y-4">
+                            <!-- СЮДА JS БУДЕТ ПОДСТАВЛЯТЬ ТЕКУЩИЙ СЛАЙД -->
+                            <div id="analysis-slide" class="space-y-3"></div>
 
-    <!-- Кнопка квиза -->
-    <button onclick="window.StoryApp.startStoryQuiz()"
-            class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
-                   hover:bg-indigo-600 transition flex justify-between items-center 
-                   bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl mt-4">
-        <span><span class="mr-3 text-yellow-300">🧠</span>Упражнения (Квиз)</span>
-        <span>&rarr;</span>
-    </button>
-</div>
+                            <!-- КНОПКИ НАВИГАЦИИ -->
+                            <div class="flex items-center justify-between mt-4">
+                                <button onclick="window.StoryApp.prevAnalysisSlide()"
+                                        class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
+                                    ← Назад
+                                </button>
 
-<!-- Модалка квиза (как у тебя было) -->
-<div id="quiz-modal"
-     class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0"
-     onclick="window.StoryApp.closeModal('quiz-modal')" role="dialog" aria-modal="true">
-    <div id="quiz-modal-content"
-         class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full"
-         onclick="event.stopPropagation()">
-        <h3 id="quiz-modal-title"
-            class="text-xl font-bold mb-4 text-gray-800 text-center border-b pb-2">Квиз по истории</h3>
+                                <span id="analysis-progress" class="text-xs text-gray-500 mx-2 flex-1 text-center">
+                                    1 / 1
+                                </span>
 
-        <div class="text-sm text-gray-500 mb-4 text-center">
-            <span id="quiz-progress">Вопрос 1 из 3</span>
-        </div>
+                                <button onclick="window.StoryApp.nextAnalysisSlide()"
+                                        class="py-2 px-4 bg-indigo-500 text-white rounded-lg text-sm font-semibold hover:bg-indigo-600 transition">
+                                    Вперёд →
+                                </button>
+                            </div>
+                        </div>
 
-        <div id="quiz-scroll-area" class="max-h-[65vh] overflow-y-auto pr-2">
-            <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
-                <p id="quiz-question" class="text-xl font-bold text-gray-800"></p>
-            </div>
-            <div id="quiz-options" class="space-y-3"></div>
-            <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold hidden"></p>
-        </div>
+                        <!-- КНОПКА "СКАЧАТЬ РАЗБОР" ОСТАЁТСЯ ВНИЗУ -->
+                        <div class="mt-6 pt-4 border-t border-gray-300">
+                            <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank" 
+                            class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition duration-150 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Скачать Разбор (PDF)
+                            </a>
+                        </div>
+                    </div>
 
-        <button id="quiz-next-button"
-                onclick="window.StoryApp.nextQuizQuestion()"
-                class="w-full mt-6 py-3 px-4 font-bold rounded-xl shadow-md transition next-button-disabled"
-                disabled>
-            Следующий вопрос
-        </button>
-
-        <div id="quiz-end-controls" class="space-y-3 mt-6 hidden">
+            
+            <!-- 4. КНОПКА УПРАЖНЕНИЯ (КВИЗ) - НОВАЯ ПОЗИЦИЯ: В САМОМ НИЗУ -->
+            <!-- !!! ИЗМЕНЕНИЕ: onlick теперь вызывает StoryApp !!! -->
             <button onclick="window.StoryApp.startStoryQuiz()"
-                    class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition">
-                Пройти ещё раз
+                    class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
+                            hover:bg-indigo-600 transition duration-150 flex justify-between items-center 
+                            bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl mt-6">
+                <span><span class="mr-3 text-yellow-300">🧠</span> Упражнения (Квиз)</span>
+                <span>&rarr;</span>
             </button>
-            <button onclick="window.StoryApp.showCorrectAnswers()"
-                    class="w-full py-3 px-4 bg-yellow-500 text-yellow-900 font-bold rounded-xl shadow-md hover:bg-yellow-600 transition">
-                Показать правильные ответы
-            </button>
-            <button onclick="window.StoryApp.closeModal('quiz-modal')"
-                    class="w-full py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition">
-                Завершить
-            </button>
+
+
         </div>
     </div>
-</div>
+    
+    <!-- МОДАЛЬНОЕ ОКНО: для КВИЗА (Quiz Modal) -->
+    <div id="quiz-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.StoryApp.closeModal('quiz-modal')" role="dialog" aria-modal="true" aria-labelledby="quiz-modal-title">
+        <div id="quiz-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 id="quiz-modal-title" class="text-xl font-bold mb-4 text-gray-800 text-center border-b pb-2">Квиз по Истории</h3>
+            
+            <!-- Индикатор прогресса (STATIC HEADER) -->
+            <div class="text-sm text-gray-500 mb-4 text-center">
+                <span id="quiz-progress">Вопрос 1 из 5</span>
+            </div>
+            
+            <!-- СКРОЛЛИРУЕМАЯ ОБЛАСТЬ (Core Content) -->
+            <div id="quiz-scroll-area" class="max-h-[65vh] overflow-y-auto pr-2">
 
+                <!-- Вопрос -->
+                <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+                    <p id="quiz-question" class="text-xl font-bold text-gray-800"></p> 
+                </div>
+                
+                <!-- Опции ответа / Пояснения -->
+                <div id="quiz-options" class="space-y-3">
+                    <!-- Кнопки/Пояснения будут вставлены JS -->
+                </div>
+                
+                <!-- Поле обратной связи - СКРЫТО -->
+                <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold hidden"></p> 
+                
+            </div>
+            <!-- КОНЕЦ СКРОЛЛИРУЕМОЙ ОБЛАСТИ -->
+
+            <!-- Кнопки управления (STATIC FOOTER) -->
+            <button id="quiz-next-button" onclick="window.StoryApp.nextQuizQuestion()" 
+                    class="w-full mt-6 py-3 px-4 font-bold rounded-xl shadow-md transition duration-150 next-button-disabled" disabled>
+                Следующий вопрос
+            </button>
+            
+            <!-- Кнопки завершения (STATIC FOOTER) -->
+            <div id="quiz-end-controls" class="space-y-3 mt-6 hidden">
+                <button id="quiz-retry-button" onclick="window.StoryApp.startStoryQuiz()" 
+                        class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150">
+                    Пройти ещё раз
+                </button>
+                <button id="quiz-show-answers-button" onclick="window.StoryApp.showCorrectAnswers()" 
+                        class="w-full py-3 px-4 bg-yellow-500 text-yellow-900 font-bold rounded-xl shadow-md hover:bg-yellow-600 transition duration-150">
+                    Показать правильные ответы
+                </button>
+                <button id="quiz-finish-button" onclick="window.StoryApp.closeModal('quiz-modal')" 
+                        class="w-full py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition duration-150">
+                    Завершить
+                </button>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- "МАГИЯ" (JavaScript) -->
 <script>
-const QUIZ_DATA = [
-    {
-        question: "Что чувствует Томас утром?",
-        answer: "Ему плохо: жар, боль, слабость",
-        options: ["Он полон энергии","Ему плохо: жар, боль, слабость","Он просто немного голоден"]
-    },
-    {
-        question: "Что советует жена Томасу?",
-        answer: "Пойти к врачу",
-        options: ["Пойти на работу","Выпить кофе","Пойти к врачу"]
-    },
-    {
-        question: "Что говорит врач насчёт антибиотиков?",
-        answer: "Принимать регулярно после еды несколько дней",
-        options: ["Пить только при боли","Принимать регулярно после еды несколько дней","Принимать только перед сном"]
-    }
-];
+    // ========= ДАННЫЕ ДЛЯ КВИЗА =========
+    const QUIZ_DATA = [
+        {
+            question: "Что чувствует Томас утром?",
+            answer: "Ему плохо: жар, боль, слабость",
+            options: [
+                "Он полон энергии",
+                "Ему плохо: жар, боль, слабость",
+                "Он просто немного голоден"
+            ],
+            correctMessage: "Верно! В тексте перечислены сразу несколько симптомов.",
+            wrongMessage: "Не совсем. В начале истории описано, что ему действительно сильно плохо."
+        },
+        {
+            question: "Что советует жена Томасу?",
+            answer: "Пойти к врачу",
+            options: [
+                "Пойти на работу",
+                "Выпить кофе",
+                "Пойти к врачу"
+            ],
+            correctMessage: "Да! Жена говорит, что здоровье важнее и он должен пойти к врачу.",
+            wrongMessage: "Нет. Она настаивает, что ему нужно к врачу."
+        },
+        {
+            question: "Что говорит врач насчёт антибиотиков?",
+            answer: "Принимать регулярно после еды несколько дней",
+            options: [
+                "Пить только при боли",
+                "Принимать регулярно после еды несколько дней",
+                "Принимать только перед сном"
+            ],
+            correctMessage: "Правильно! Врач подчёркивает регулярность и приём после еды.",
+            wrongMessage: "Нет. Врач даёт чёткие инструкции: регулярно, после еды, несколько дней."
+        }
+    ];
 
-const ANALYSIS_SLIDES = [
-    {
-        title:"Начало истории",
-        original:"Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt. Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.",
-        translation:"Когда Томас просыпается в понедельник утром, он сразу понимает, что что-то не так. Он весь в поту, у него болит голова, затекла спина и болит желудок.",
-        notes:[
-            "etwas stimmt nicht – что-то не так",
-            "Mir tut der Kopf weh – у меня болит голова",
-            "Schmerzen im Magen haben – болит желудок"
-        ]
-    },
-    {
-        title:"Жена советует врача",
-        original:"Außerdem fühlt er sich müde und schwach. Seine Frau schaut ihn besorgt an: „Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“",
-        translation:"Кроме того, он чувствует себя усталым и слабым. Жена смотрит на него с тревогой: «Томас, ты выглядишь совсем плохо. Я волнуюсь. Тебе лучше бы сходить к врачу».",
-        notes:[
-            "sich müde / schwach fühlen – чувствовать себя усталым / слабым",
-            "sich Sorgen machen – волноваться",
-            "du solltest lieber ... – тебе лучше бы ..."
-        ]
-    },
-    {
-        title:"Диагноз и лекарства",
-        original:"„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen.“",
-        translation:"«У вас, вероятно, воспаление желудка. Я выпишу вам сильные антибиотики. Вы должны принимать их регулярно — три раза в день после еды».",
-        notes:[
-            "eine Magenentzündung – воспаление желудка",
-            "Medikamente verschreiben – выписать лекарства",
-            "Tabletten einnehmen – принимать таблетки"
-        ]
-    }
-];
+    // ========= ДАННЫЕ ДЛЯ КАРУСЕЛИ РАЗБОРА =========
+    const ANALYSIS_SLIDES = [
+        {
+            title: "Начало истории",
+            original: "Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt. Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.",
+            translation: "Когда Томас просыпается в понедельник утром, он сразу понимает, что что-то не так. Он весь в поту, у него болит голова, затекла спина и болит желудок.",
+            notes: [
+                "etwas stimmt nicht – что-то не так",
+                "Mir tut der Kopf weh – у меня болит голова",
+                "Schmerzen im Magen haben – болит желудок"
+            ]
+        },
+        {
+            title: "Жена советует врача",
+            original: "Außerdem fühlt er sich müde und schwach. Seine Frau schaut ihn besorgt an: „Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“",
+            translation: "Кроме того, он чувствует себя усталым и слабым. Жена смотрит на него с тревогой: «Томас, ты выглядишь совсем плохо. Я волнуюсь. Тебе лучше бы сходить к врачу».",
+            notes: [
+                "sich müde / schwach fühlen – чувствовать себя усталым / слабым",
+                "sich Sorgen machen – волноваться",
+                "du solltest lieber ... – тебе лучше бы ..."
+            ]
+        },
+        {
+            title: "Диагноз и лекарства",
+            original: "„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen.“",
+            translation: "«У вас, вероятно, воспаление желудка. Я выпишу вам сильные антибиотики. Вы должны принимать их регулярно — три раза в день после еды».",
+            notes: [
+                "eine Magenentzündung – воспаление желудка",
+                "Medikamente verschreiben – выписать лекарства",
+                "Tabletten einnehmen – принимать таблетки"
+            ]
+        }
 
-window.StoryApp = {
-    quizData:QUIZ_DATA,
-    currentIndex:0,
-    userAnswers:[],
-    analysisSlides:ANALYSIS_SLIDES,
-    currentAnalysisIndex:0,
+        // 👉 По этому же шаблону можешь добавить остальные абзацы разбора
+    ];
 
-    init(){
-        this.initAudioPlayback();
-        this.initAnalysisCarousel();
-        document.body.setAttribute("data-app-loaded","true");
-    },
+    // ЛОКАЛЬНОЕ ПРИЛОЖЕНИЕ ДЛЯ СТРАНИЦЫ ИСТОРИИ
+    window.StoryApp = {
+        // квиз
+        quizData: QUIZ_DATA,
+        currentIndex: 0,
+        userAnswers: [],
 
-    /* AUDIO */
-    initAudioPlayback(){
-        const audio = document.getElementById('story-audio-player');
-        const playBtn = document.getElementById('audio-main-button');
-        const progress = document.getElementById('audio-progress');
-        const speed = document.getElementById('audio-speed');
-        const speedLabel = document.getElementById('audio-speed-label');
-        const curTimeEl = document.getElementById('audio-current-time');
-        const durEl = document.getElementById('audio-duration');
+        // карусель разбора
+        analysisSlides: ANALYSIS_SLIDES,
+        currentAnalysisIndex: 0,
 
-        if(!audio) return;
+        init() {
+            this.initAudioPlayback();
+            this.initAnalysisCarousel();
+            document.body.setAttribute("data-app-loaded", "true");
+        },
 
-        if(playBtn){
-            playBtn.addEventListener('click',(e)=>{
-                e.stopPropagation();
-                this.toggleAudioPlay();
+        // ======= АУДИО =======
+        initAudioPlayback() {
+            const audio = document.getElementById('story-audio-player');
+            if (!audio) return;
+
+            audio.onplay = () => {
+                this.closeAllAccordions();
+                this.updateAudioUi(true);
+            };
+
+            audio.onpause = () => {
+                this.updateAudioUi(false);
+            };
+
+            audio.onended = () => {
+                this.updateAudioUi(false);
+            };
+        },
+
+        toggleAudioPlay() {
+            const audio = document.getElementById('story-audio-player');
+            if (!audio) return;
+
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        },
+
+        updateAudioUi(isPlaying) {
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+            const status = document.getElementById('audio-status');
+
+            if (!playIcon || !pauseIcon || !status) return;
+
+            if (isPlaying) {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                status.textContent = 'Остановить аудио';
+            } else {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                status.textContent = 'Слушать историю';
+            }
+        },
+
+        // ======= АККОРДЕОНЫ =======
+        toggleAccordion(contentId) {
+            const content = document.getElementById(contentId);
+            const arrow = document.getElementById(contentId.replace('-content', '-arrow'));
+
+            if (!content || !arrow) return;
+
+            const isOpen = content.classList.contains('is-open');
+
+            if (isOpen) {
+                content.classList.remove('is-open');
+                arrow.innerHTML = '&darr;';
+                setTimeout(() => {
+                    content.classList.add('hidden');
+                }, 400);
+            } else {
+                content.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.add('is-open');
+                }, 10);
+                arrow.innerHTML = '&uarr;';
+            }
+        },
+
+        closeAllAccordions() {
+            const ids = ['transcript', 'analysis'];
+            ids.forEach(type => {
+                const content = document.getElementById(`${type}-content`);
+                const arrow = document.getElementById(`${type}-arrow`);
+                if (content) {
+                    content.classList.remove('is-open');
+                    content.classList.add('hidden');
+                }
+                if (arrow) {
+                    arrow.innerHTML = '&darr;';
+                }
             });
-        }
+        },
 
-        audio.addEventListener('loadedmetadata',()=>{
-            if(durEl && isFinite(audio.duration)){
-                durEl.textContent = this.formatTime(audio.duration);
+        // ======= КАРУСЕЛЬ РАЗБОРА =======
+        initAnalysisCarousel() {
+            const slideContainer = document.getElementById('analysis-slide');
+            if (!slideContainer || !this.analysisSlides.length) return;
+            this.currentAnalysisIndex = 0;
+            this.renderAnalysisSlide();
+        },
+
+        renderAnalysisSlide() {
+            const slideContainer = document.getElementById('analysis-slide');
+            const progressEl = document.getElementById('analysis-progress');
+            if (!slideContainer) return;
+
+            const slide = this.analysisSlides[this.currentAnalysisIndex];
+            if (!slide) return;
+
+            slideContainer.innerHTML = `
+                <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">
+                    ${slide.title || 'Разбор'}
+                </p>
+                <p class="mb-2 font-semibold text-gray-800">
+                    ${slide.original}
+                </p>
+                <p class="mb-3 text-gray-700">
+                    ${slide.translation}
+                </p>
+                ${
+                    slide.notes && slide.notes.length
+                        ? `<ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                               ${slide.notes.map(n => `<li>${n}</li>`).join('')}
+                           </ul>`
+                        : ''
+                }
+            `;
+
+            if (progressEl) {
+                const total = this.analysisSlides.length;
+                const current = this.currentAnalysisIndex + 1;
+                progressEl.textContent = `${current} / ${total}`;
             }
-        });
+        },
 
-        audio.addEventListener('timeupdate',()=>{
-            if(progress && isFinite(audio.duration) && audio.duration>0){
-                progress.value = (audio.currentTime/audio.duration)*100;
+        nextAnalysisSlide() {
+            if (!this.analysisSlides.length) return;
+            if (this.currentAnalysisIndex < this.analysisSlides.length - 1) {
+                this.currentAnalysisIndex++;
+            } else {
+                // по кругу
+                this.currentAnalysisIndex = 0;
             }
-            if(curTimeEl){
-                curTimeEl.textContent = this.formatTime(audio.currentTime);
+            this.renderAnalysisSlide();
+        },
+
+        prevAnalysisSlide() {
+            if (!this.analysisSlides.length) return;
+            if (this.currentAnalysisIndex > 0) {
+                this.currentAnalysisIndex--;
+            } else {
+                // в конец
+                this.currentAnalysisIndex = this.analysisSlides.length - 1;
             }
-        });
+            this.renderAnalysisSlide();
+        },
 
-        if(progress){
-            progress.addEventListener('input',(e)=>{
-                if(!isFinite(audio.duration)||audio.duration<=0) return;
-                const val = Number(e.target.value)||0;
-                audio.currentTime = (val/100)*audio.duration;
-            });
-        }
+        // ======= КВИЗ В МОДАЛКЕ =======
+        startStoryQuiz() {
+            this.currentIndex = 0;
+            this.userAnswers = [];
 
-        if(speed){
-            speed.addEventListener('input',(e)=>{
-                const rate = parseFloat(e.target.value)||1;
-                audio.playbackRate = rate;
-                if(speedLabel) speedLabel.textContent = rate.toFixed(2)+'x';
-            });
-            audio.playbackRate = parseFloat(speed.value)||1;
-        }
-
-        audio.onplay = ()=>{ this.updateAudioUi(true); };
-        audio.onpause = ()=>{ this.updateAudioUi(false); };
-        audio.onended = ()=>{ this.updateAudioUi(false); };
-    },
-
-    formatTime(sec){
-        const s = Math.floor(sec%60);
-        const m = Math.floor(sec/60);
-        return `${m}:${s.toString().padStart(2,'0')}`;
-    },
-
-    toggleAudioPlay(){
-        const audio = document.getElementById('story-audio-player');
-        if(!audio) return;
-        if(audio.paused) audio.play(); else audio.pause();
-    },
-
-    updateAudioUi(isPlaying){
-        const playIcon = document.getElementById('play-icon');
-        const pauseIcon = document.getElementById('pause-icon');
-        const status = document.getElementById('audio-status');
-        if(!playIcon||!pauseIcon||!status) return;
-        if(isPlaying){
-            playIcon.classList.add('hidden');
-            pauseIcon.classList.remove('hidden');
-            status.textContent = 'Pause';
-        } else {
-            playIcon.classList.remove('hidden');
-            pauseIcon.classList.add('hidden');
-            status.textContent = 'Play';
-        }
-    },
-
-    /* ACCORDIONS */
-    toggleAccordion(contentId){
-        const content = document.getElementById(contentId);
-        const arrow = document.getElementById(contentId.replace('-content','-arrow'));
-        if(!content||!arrow) return;
-        const isOpen = content.classList.contains('is-open');
-        if(isOpen){
-            content.classList.remove('is-open');
-            arrow.innerHTML='&darr;';
-            setTimeout(()=>content.classList.add('hidden'),400);
-        }else{
-            content.classList.remove('hidden');
-            setTimeout(()=>content.classList.add('is-open'),10);
-            arrow.innerHTML='&uarr;';
-        }
-    },
-
-    closeAllAccordions(){
-        ['transcript','analysis'].forEach(id=>{
-            const c=document.getElementById(id+'-content');
-            const a=document.getElementById(id+'-arrow');
-            if(c){c.classList.remove('is-open');c.classList.add('hidden');}
-            if(a){a.innerHTML='&darr;';}
-        });
-    },
-
-    /* ANALYSIS CAROUSEL */
-    initAnalysisCarousel(){
-        if(!this.analysisSlides.length) return;
-        this.currentAnalysisIndex=0;
-        this.renderAnalysisSlide();
-    },
-
-    renderAnalysisSlide(){
-        const slideContainer=document.getElementById('analysis-slide');
-        const progressEl=document.getElementById('analysis-progress');
-        if(!slideContainer) return;
-        const slide=this.analysisSlides[this.currentAnalysisIndex];
-        if(!slide) return;
-        slideContainer.innerHTML=`
-            <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">
-                ${slide.title||'Разбор'}
-            </p>
-            <p class="mb-2 font-semibold text-gray-800">${slide.original}</p>
-            <p class="mb-3 text-gray-700">${slide.translation}</p>
-            ${
-                slide.notes && slide.notes.length
-                    ? `<ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                           ${slide.notes.map(n=>`<li>${n}</li>`).join('')}
-                       </ul>`
-                    : ''
-            }
-        `;
-        if(progressEl){
-            const total=this.analysisSlides.length;
-            const current=this.currentAnalysisIndex+1;
-            progressEl.textContent=`${current} / ${total}`;
-        }
-    },
-
-    nextAnalysisSlide(){
-        if(!this.analysisSlides.length) return;
-        this.currentAnalysisIndex = (this.currentAnalysisIndex+1)%this.analysisSlides.length;
-        this.renderAnalysisSlide();
-    },
-
-    prevAnalysisSlide(){
-        if(!this.analysisSlides.length) return;
-        this.currentAnalysisIndex =
-            (this.currentAnalysisIndex-1+this.analysisSlides.length)%this.analysisSlides.length;
-        this.renderAnalysisSlide();
-    },
-
-    /* QUIZ */
-    startStoryQuiz(){
-        this.currentIndex=0;
-        this.userAnswers=[];
-        this.renderCurrentQuestion();
-        this.updateProgress();
-        this.resetControls();
-        this.openModal('quiz-modal');
-    },
-
-    renderCurrentQuestion(){
-        const q=this.quizData[this.currentIndex];
-        if(!q) return;
-        const questionEl=document.getElementById('quiz-question');
-        const optionsContainer=document.getElementById('quiz-options');
-        const feedbackEl=document.getElementById('quiz-feedback');
-        if(!questionEl||!optionsContainer||!feedbackEl) return;
-        questionEl.textContent=q.question;
-        optionsContainer.innerHTML='';
-        q.options.forEach((opt,idx)=>{
-            const btn=document.createElement('button');
-            btn.className='quiz-option w-full py-2 px-3 border border-gray-300 rounded-lg text-sm text-left bg-white text-gray-800 font-medium hover:bg-indigo-100';
-            btn.textContent=opt;
-            btn.onclick=()=>this.selectOption(idx);
-            optionsContainer.appendChild(btn);
-        });
-        feedbackEl.classList.add('hidden');
-        feedbackEl.textContent='';
-        const endControls=document.getElementById('quiz-end-controls');
-        if(endControls) endControls.classList.add('hidden');
-        const nextBtn=document.getElementById('quiz-next-button');
-        if(nextBtn){
-            nextBtn.disabled=true;
-            nextBtn.classList.add('next-button-disabled');
-            nextBtn.classList.remove('next-button-active','hidden');
-        }
-    },
-
-    selectOption(idx){
-        const q=this.quizData[this.currentIndex];
-        if(!q) return;
-        const chosen=q.options[idx];
-        this.userAnswers[this.currentIndex]=chosen;
-        document.querySelectorAll('#quiz-options .quiz-option').forEach(btn=>{
-            btn.classList.remove('quiz-selected');
-            if(btn.textContent.trim()===chosen.trim()) btn.classList.add('quiz-selected');
-        });
-        const nextBtn=document.getElementById('quiz-next-button');
-        if(nextBtn){
-            nextBtn.disabled=false;
-            nextBtn.classList.remove('next-button-disabled');
-            nextBtn.classList.add('next-button-active');
-        }
-    },
-
-    nextQuizQuestion(){
-        if(this.currentIndex<this.quizData.length-1){
-            this.currentIndex++;
             this.renderCurrentQuestion();
             this.updateProgress();
-        }else{
-            this.finishQuiz();
-        }
-    },
+            this.resetControls();
 
-    updateProgress(){
-        const progressEl=document.getElementById('quiz-progress');
-        if(!progressEl) return;
-        const total=this.quizData.length;
-        const current=this.currentIndex+1;
-        progressEl.textContent=`Вопрос ${current} из ${total}`;
-    },
+            this.openModal('quiz-modal');
+        },
 
-    resetControls(){
-        const endControls=document.getElementById('quiz-end-controls');
-        if(endControls) endControls.classList.add('hidden');
-        const nextBtn=document.getElementById('quiz-next-button');
-        if(nextBtn){
-            nextBtn.disabled=true;
-            nextBtn.classList.add('next-button-disabled');
-            nextBtn.classList.remove('next-button-active','hidden');
-        }
-        const feedbackEl=document.getElementById('quiz-feedback');
-        if(feedbackEl){
+        renderCurrentQuestion() {
+            const q = this.quizData[this.currentIndex];
+            if (!q) return;
+
+            const questionEl = document.getElementById('quiz-question');
+            const optionsContainer = document.getElementById('quiz-options');
+            const feedbackEl = document.getElementById('quiz-feedback');
+
+            if (!questionEl || !optionsContainer || !feedbackEl) return;
+
+            questionEl.textContent = q.question;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((optionText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option w-full py-2 px-3 border border-gray-300 rounded-lg text-sm text-left bg-white text-gray-800 font-medium hover:bg-indigo-100';
+                btn.textContent = optionText;
+                btn.onclick = () => this.selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+
             feedbackEl.classList.add('hidden');
-            feedbackEl.textContent='';
+            feedbackEl.textContent = '';
+
+            const endControls = document.getElementById('quiz-end-controls');
+            if (endControls) endControls.classList.add('hidden');
+
+            const nextBtn = document.getElementById('quiz-next-button');
+            if (nextBtn) {
+                nextBtn.disabled = true;
+                nextBtn.classList.remove('next-button-active');
+                nextBtn.classList.add('next-button-disabled');
+                nextBtn.classList.remove('hidden');
+            }
+        },
+
+        selectOption(optionIndex) {
+            const q = this.quizData[this.currentIndex];
+            if (!q) return;
+
+            const chosen = q.options[optionIndex];
+            this.userAnswers[this.currentIndex] = chosen;
+
+            const optionButtons = document.querySelectorAll('#quiz-options .quiz-option');
+            optionButtons.forEach(btn => {
+                btn.classList.remove('quiz-selected');
+                if (btn.textContent.trim() === chosen.trim()) {
+                    btn.classList.add('quiz-selected');
+                }
+            });
+
+            const nextBtn = document.getElementById('quiz-next-button');
+            if (nextBtn) {
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('next-button-disabled');
+                nextBtn.classList.add('next-button-active');
+            }
+        },
+
+        nextQuizQuestion() {
+            if (this.currentIndex < this.quizData.length - 1) {
+                this.currentIndex++;
+                this.renderCurrentQuestion();
+                this.updateProgress();
+            } else {
+                this.finishQuiz();
+            }
+        },
+
+        updateProgress() {
+            const progressEl = document.getElementById('quiz-progress');
+            if (!progressEl) return;
+
+            const total = this.quizData.length;
+            const current = this.currentIndex + 1;
+            progressEl.textContent = `Вопрос ${current} из ${total}`;
+        },
+
+        resetControls() {
+            const endControls = document.getElementById('quiz-end-controls');
+            if (endControls) endControls.classList.add('hidden');
+
+            const nextBtn = document.getElementById('quiz-next-button');
+            if (nextBtn) {
+                nextBtn.disabled = true;
+                nextBtn.classList.add('next-button-disabled');
+                nextBtn.classList.remove('next-button-active');
+                nextBtn.classList.remove('hidden');
+            }
+
+            const feedbackEl = document.getElementById('quiz-feedback');
+            if (feedbackEl) {
+                feedbackEl.classList.add('hidden');
+                feedbackEl.textContent = '';
+            }
+        },
+
+        finishQuiz() {
+            const total = this.quizData.length;
+            let correctCount = 0;
+
+            this.quizData.forEach((q, i) => {
+                if (this.userAnswers[i] === q.answer) {
+                    correctCount++;
+                }
+            });
+
+            const feedbackEl = document.getElementById('quiz-feedback');
+            if (feedbackEl) {
+                feedbackEl.textContent = `Вы ответили правильно на ${correctCount} из ${total} вопросов.`;
+                feedbackEl.classList.remove('hidden');
+            }
+
+            const nextBtn = document.getElementById('quiz-next-button');
+            if (nextBtn) {
+                nextBtn.classList.add('hidden');
+            }
+
+            const endControls = document.getElementById('quiz-end-controls');
+            if (endControls) {
+                endControls.classList.remove('hidden');
+            }
+        },
+
+        showCorrectAnswers() {
+            const optionsContainer = document.getElementById('quiz-options');
+            const feedbackEl = document.getElementById('quiz-feedback');
+            if (!optionsContainer) return;
+
+            optionsContainer.innerHTML = '';
+
+            this.quizData.forEach((q, index) => {
+                const block = document.createElement('div');
+                block.className = 'mb-3 p-3 bg-indigo-50 rounded-lg';
+
+                block.innerHTML = `
+                    <p class="font-semibold mb-1">${index + 1}. ${q.question}</p>
+                    <p class="text-green-700 font-bold">Правильный ответ: ${q.answer}</p>
+                `;
+
+                optionsContainer.appendChild(block);
+            });
+
+            if (feedbackEl) {
+                feedbackEl.classList.add('hidden');
+            }
+        },
+
+        // ======= МОДАЛКИ =======
+        openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = modal ? modal.querySelector('.modal-content') : null;
+
+            if (!modal) return;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('is-open', 'opacity-100');
+                if (modalContent) {
+                    modalContent.classList.add('is-open');
+                }
+            }, 10);
+        },
+
+        closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = modal ? modal.querySelector('.modal-content') : null;
+
+            if (!modal) return;
+
+            modal.classList.remove('is-open', 'opacity-100');
+            if (modalContent) {
+                modalContent.classList.remove('is-open');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
-    },
+    };
 
-    finishQuiz(){
-        const total=this.quizData.length;
-        let correct=0;
-        this.quizData.forEach((q,i)=>{
-            if(this.userAnswers[i]===q.answer) correct++;
-        });
-        const feedbackEl=document.getElementById('quiz-feedback');
-        if(feedbackEl){
-            feedbackEl.textContent=`Вы ответили правильно на ${correct} из ${total} вопросов.`;
-            feedbackEl.classList.remove('hidden');
-        }
-        const nextBtn=document.getElementById('quiz-next-button');
-        if(nextBtn) nextBtn.classList.add('hidden');
-        const endControls=document.getElementById('quiz-end-controls');
-        if(endControls) endControls.classList.remove('hidden');
-    },
-
-    showCorrectAnswers(){
-        const optionsContainer=document.getElementById('quiz-options');
-        const feedbackEl=document.getElementById('quiz-feedback');
-        if(!optionsContainer) return;
-        optionsContainer.innerHTML='';
-        this.quizData.forEach((q,i)=>{
-            const block=document.createElement('div');
-            block.className='mb-3 p-3 bg-indigo-50 rounded-lg';
-            block.innerHTML=`
-                <p class="font-semibold mb-1">${i+1}. ${q.question}</p>
-                <p class="text-green-700 font-bold">Правильный ответ: ${q.answer}</p>
-            `;
-            optionsContainer.appendChild(block);
-        });
-        if(feedbackEl) feedbackEl.classList.add('hidden');
-    },
-
-    /* MODALS */
-    openModal(id){
-        const modal=document.getElementById(id);
-        const content=modal?modal.querySelector('.modal-content'):null;
-        if(!modal) return;
-        modal.classList.remove('hidden');
-        setTimeout(()=>{
-            modal.classList.add('is-open','opacity-100');
-            if(content) content.classList.add('is-open');
-        },10);
-    },
-
-    closeModal(id){
-        const modal=document.getElementById(id);
-        const content=modal?modal.querySelector('.modal-content'):null;
-        if(!modal) return;
-        modal.classList.remove('is-open','opacity-100');
-        if(content) content.classList.remove('is-open');
-        setTimeout(()=>modal.classList.add('hidden'),300);
-    }
-};
-
-window.addEventListener('load',()=>window.StoryApp.init());
+    window.addEventListener('load', () => {
+        window.StoryApp.init();
+    });
 </script>
+
+
 </body>
 </html>
