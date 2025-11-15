@@ -1,9 +1,9 @@
 [
 
     {
-        "id": "week",
+        "id": "week1",
         "title": "Week1",
         "filepath": "carousel_week1.json",
-        "wordCount": 12
+        "wordCount": 26
     }
 ]
