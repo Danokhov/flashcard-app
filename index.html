@@ -687,9 +687,9 @@ renderHomeScreen() {
                 // selectedWeek = 0, если не подписчик и не выбрал неделю
                 if (!this.isSubscriber && this.selectedWeek === 0) { 
                     // 1.1. Пробный урок
-                    // ИЗМЕНЕНО: Используем renderStoryScreen для загрузки trial.html внутри приложения
+                    // ИСПРАВЛЕНО: Добавляем параметр 0 для fromParam, чтобы навигация работала корректно
                     mainBlock.innerHTML += `
-                        <button onclick="window.App.renderStoryScreen('🚀 Пробный урок', '${getBaseUrl() + 'trial.html'}', 'home-screen')" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
+                        <button onclick="window.App.renderStoryScreen('🚀 Пробный урок', '${getBaseUrl() + 'trial.html'}', 'home-screen', 0)" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
                             <span>🚀 Пробный урок</span>
                             <span>Начать &rarr;</span>
                         </button>
@@ -1040,9 +1040,10 @@ renderHomeScreen() {
                 
                 document.getElementById('content-viewer-title').textContent = title;
                 
-                // !!! ИСПРАВЛЕНИЕ: ГАРАНТИРУЕМ РЕНДЕРИНГ КНОПКИ НАЗАД !!!
-                // Кнопка назад ведет на Контент Недели
-                this.renderBackButton('week-content', fromParam, 'content-viewer-screen');
+                // !!! ИСПРАВЛЕНИЕ: Используем fromScreen и fromParam для корректного возврата !!!
+                // Теперь, если пришли с 'week-content', возвращаемся в 'week-content'.
+                // Если пришли с 'home-screen', возвращаемся в 'home-screen'.
+                this.renderBackButton(fromScreen, fromParam, 'content-viewer-screen');
                 
                 const contentBody = document.getElementById('content-viewer-body');
                 contentBody.innerHTML = '<p class="text-center text-gray-500 py-10">Загрузка контента...</p>';
