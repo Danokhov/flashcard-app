@@ -674,7 +674,7 @@
 
             // ==================== РЕНДЕРИНГ ЭКРАНОВ ====================
 
-            renderHomeScreen() {
+renderHomeScreen() {
                 this.showScreen('home-screen');
                 this.returnContext = { screen: 'home-screen', param: null };
                 
@@ -685,9 +685,9 @@
                 // selectedWeek = 0, если не подписчик и не выбрал неделю
                 if (!this.isSubscriber && this.selectedWeek === 0) { 
                     // 1.1. Пробный урок
-                    // Изменено: теперь ведет на внешний файл trial.html
+                    // ИЗМЕНЕНО: Используем renderStoryScreen для загрузки trial.html внутри приложения
                     mainBlock.innerHTML += `
-                        <button onclick="window.App.renderExternalLinkScreen('🚀 Пробный урок', '${getBaseUrl() + 'trial.html'}', 'home-screen')" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
+                        <button onclick="window.App.renderStoryScreen('🚀 Пробный урок', '${getBaseUrl() + 'trial.html'}', 'home-screen')" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
                             <span>🚀 Пробный урок</span>
                             <span>Начать &rarr;</span>
                         </button>
@@ -711,7 +711,7 @@
                     }
                 }
                 
-                // 2. Кнопка "Подборки по неделям" (Замена "Все наборы слов")
+                // 2. Кнопка "Подборки по неделям"
                 mainBlock.innerHTML += `
                     <button onclick="window.App.renderWeeklySelections()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4 border border-gray-200">
                         <span>📚 Подборки за неделю</span>
@@ -719,7 +719,7 @@
                     </button>
                 `;
 
-                // 3. Раздел: Все наборы слов (Оставлен для возможности прямого перехода к отдельным наборам)
+                // 3. Раздел: Все наборы слов
                 mainBlock.innerHTML += `
                     <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4">
                         <span>📚 Все наборы слов</span>
@@ -729,7 +729,6 @@
 
                 this.renderDueTodaySection();
             },
-            
             /**
              * [НОВАЯ ФУНКЦИЯ] Отображает секцию с повторением на главном экране.
              */

@@ -68,10 +68,11 @@
             opacity: 0;
             visibility: hidden; 
         }
-        /* При открытии устанавливаем padding обратно и включаем скролл */
+/* При открытии устанавливаем padding обратно и включаем скролл */
         .accordion-content.is-open {
             /* УВЕЛИЧЕНА МАКСИМАЛЬНАЯ ВЫСОТА ДЛЯ УДОБНОЙ ПРОКРУТКИ */
-            max-height: 80vh; 
+            /* ИЗМЕНЕНО с 80vh на 90vh для большей гарантии */
+            max-height: 90vh; 
             opacity: 1;
             visibility: visible;
             overflow-y: auto; /* ВКЛЮЧАЕМ СКРОЛЛ ВНУТРИ БЛОКА */
@@ -83,7 +84,14 @@
 
     <!-- Основной контейнер страницы -->
     <div id="app" class="max-w-md mx-auto">
+  <div class="mb-4">
+            <button onclick="window.App.notifyParentToReturn()" class="text-gray-500 hover:text-indigo-600 font-semibold flex items-center transition duration-150">
+                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Назад в Главное меню
+            </button>
+        </div>
         
+        <h1 id="story-title" class="text-2xl font-extrabold text-gray-900 mb-6 text-center">...</h1>      
         <!-- Заголовок страницы (История недели) -->
         <h1 id="story-title" class="text-2xl font-extrabold text-gray-900 mb-6 text-center">Введение в немецкие артикли (A1)</h1>
         
@@ -308,7 +316,7 @@
 
             <!-- Кнопка "На главную" -->
             <div class="text-center pt-4">
-                 <button onclick="window.App.closeWebApp()" class="text-gray-500 hover:text-indigo-600 font-semibold transition duration-150">
+                 <button onclick="window.App.notifyParentToReturn()" class="text-gray-500 hover:text-indigo-600 font-semibold transition duration-150">
                     &larr; Назад к Подборкам Недели
                 </button>
             </div>
@@ -780,13 +788,22 @@
                 scrollArea.appendChild(returnButton);
             },
 
-            // ============ UTILITY LOGIC (Open Links, Modals, etc.) ============
+// ============ UTILITY LOGIC (Open Links, Modals, etc.) ============
             
-            closeWebApp() {
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) {
+            /**
+             * Сообщает родительскому окну (index.html), что нужно вернуться на Главный экран.
+             */
+            notifyParentToReturn() {
+                // Если мы находимся во встроенном iframe
+                if (window.parent && window.parent.App && typeof window.parent.App.renderHomeScreen === 'function') {
+                    // Вызываем функцию родителя напрямую (если возможно)
+                    window.parent.App.renderHomeScreen();
+                } else if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) {
+                    // Если не во фрейме, но в Telegram, закрываем (старое поведение)
                     window.Telegram.WebApp.close();
                 } else {
-                    console.log('Эмуляция: закрытие приложения для возврата в главное меню.');
+                    // Эмуляция для отладки
+                    console.log('Эмуляция: возвращение на главный экран.');
                 }
             },
 
