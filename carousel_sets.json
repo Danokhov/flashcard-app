@@ -1,20 +1,9 @@
 [
+
     {
-        "id": "animals",
-        "title": "Животные (Animals)",
-        "filepath": "carousel_animals.json",
-        "wordCount": 3
-    },
-    {
-        "id": "city",
-        "title": "Город (City)",
-        "filepath": "carousel_city.json",
-        "wordCount": 15
-    },
-    {
-        "id": "food",
-        "title": "Еда и Напитки (Food and Drinks)",
-        "filepath": "carousel_food.json",
+        "id": "week",
+        "title": "Week1",
+        "filepath": "carousel_week1.json",
         "wordCount": 12
     }
 ]
