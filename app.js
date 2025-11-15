@@ -14,6 +14,8 @@ window.App = {
     currentCardIndex: 0,
     isPracticeMode: false,
     currentHintImage: null,
+    forgottenCards: [],        // ← карточки, которые пользователь не помнил
+    totalStudied: 0,           // ← общее количество карточек в текущей сессии
 
     async init() {
         const cfg = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
@@ -30,9 +32,7 @@ window.App = {
     },
 
     initSpeech() {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.getVoices();
-        }
+        if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
     },
 
     speak(text) {
@@ -48,6 +48,11 @@ window.App = {
         window.speechSynthesis.speak(utter);
     },
 
+    speakCurrentWord() {
+        const word = document.getElementById('card-front-text').textContent.trim();
+        if (word) this.speak(word);
+    },
+
     async loadUserData() {
         try {
             const ref = doc(this.db, 'users', this.userId);
@@ -56,9 +61,13 @@ window.App = {
                 const d = snap.data();
                 this.hasCompletedTrial = d.hasCompletedTrial || false;
                 this.userProgress = d.cards || {};
+
                 if (d.isPaid && d.paidAt) {
                     const days = Math.floor((Date.now() - d.paidAt.toDate()) / 86400000);
                     this.unlockedWeek = Math.min(52, Math.floor(days / 7) + 1);
+                }
+                if (d.hasVisitedWeek1) {
+                    this.unlockedWeek = Math.max(this.unlockedWeek, 1);
                 }
             }
         } catch (e) { console.error(e); }
@@ -86,12 +95,18 @@ window.App = {
         const block = document.getElementById('main-content-block');
         block.innerHTML = '';
 
-        if (!this.hasCompletedTrial) {
-            block.innerHTML = `<button onclick="location.href='trial.html'" class="w-full py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-3xl shadow-2xl text-3xl font-bold">Пробный урок<br><span class="text-xl opacity-90">Бесплатно!</span></button>`;
-        } else if (this.unlockedWeek === 0) {
-            block.innerHTML = `<button onclick="Telegram.WebApp.openLink('https://t.me/your_payment_bot')" class="w-full py-12 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl shadow-2xl text-3xl font-bold">Открыть весь курс<br><span class="text-xl">52 недели • Новые каждую неделю</span></button>`;
+        if (this.hasCompletedTrial || this.unlockedWeek >= 1) {
+            block.innerHTML = `
+                <button onclick="window.App.renderWeeklySelections()" 
+                        class="w-full py-12 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl shadow-2xl text-3xl font-bold">
+                    Продолжить<br><span class="text-5xl font-black">Неделя 1</span>
+                </button>`;
         } else {
-            block.innerHTML = `<button onclick="window.App.renderWeeklySelections()" class="w-full py-12 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl shadow-2xl text-3xl font-bold">Продолжить<br><span class="text-5xl font-black">Неделя ${this.unlockedWeek}</span></button>`;
+            block.innerHTML = `
+                <button onclick="location.href='trial.html'" 
+                        class="w-full py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-3xl shadow-2xl text-3xl font-bold">
+                    Пробный урок<br><span class="text-xl opacity-90">Бесплатно!</span>
+                </button>`;
         }
         this.renderDueToday();
     },
@@ -136,7 +151,7 @@ window.App = {
                 <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
                     <h3 class="text-2xl font-bold mb-4">Неделя ${w}${w === 1 ? ' (открыта всем)' : ''}</h3>
                     <div class="grid grid-cols-2 gap-4">
-                        <button onclick="alert('Описание недели ${w}')" class="py-4 bg-gray-200 rounded-xl font-bold text-gray-700">Подробнее</button>
+                        <button onclick="alert('Скоро будет описание недели ${w}')" class="py-4 bg-gray-200 rounded-xl font-bold text-gray-700">Подробнее</button>
                         <button onclick="window.App.openWeek(${w})"
                                 class="py-4 rounded-xl font-bold transition ${isUnlocked 
                                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg' 
@@ -150,40 +165,15 @@ window.App = {
 
     openWeek(week) {
         if (week === 1) {
+            if (this.db) {
+                setDoc(doc(this.db, 'users', this.userId), { hasVisitedWeek1: true }, { merge: true });
+            }
             location.href = 'Text1.html';
         } else if (week <= this.unlockedWeek) {
             location.href = `week${week}.html`;
         } else {
             this.showLockedModal();
         }
-    },
-
-    renderAllSetsScreen() {
-        document.getElementById('list-title').textContent = 'Все наборы слов';
-        this.renderBackButton('renderHomeScreen()');
-        const list = document.getElementById('content-list');
-        list.innerHTML = '<p class="text-center py-8 text-gray-500">Загрузка...</p>';
-
-        this.carouselSets.forEach(async set => {
-            if (!set.cards) {
-                const res = await fetch(set.filepath);
-                set.cards = await res.json();
-            }
-            const div = document.createElement('div');
-            div.className = "bg-white rounded-2xl shadow-lg p-6 flex justify-between items-center mb-4";
-            div.innerHTML = `
-                <div>
-                    <div class="font-bold text-xl">${set.title}</div>
-                    <div class="text-gray-600">${set.cards.length} слов</div>
-                </div>
-                <button onclick="window.App.startSession('${set.id}', 'practice')" 
-                        class="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg">
-                    Учить
-                </button>
-            `;
-            list.appendChild(div);
-        });
-        this.showScreen('list-screen');
     },
 
     async startSession(setId, mode) {
@@ -201,7 +191,7 @@ window.App = {
         });
 
         if (cards.length === 0) {
-            alert(mode === 'practice' ? 'Нет слов' : 'Сегодня нет повторений');
+            alert(mode === 'practice' ? 'Нет слов в этом наборе' : 'Сегодня нет слов к повторению');
             return;
         }
 
@@ -209,13 +199,16 @@ window.App = {
         this.sessionCards.sort(() => Math.random() - 0.5);
         this.currentCardIndex = 0;
         this.isPracticeMode = mode === 'practice';
+        this.forgottenCards = [];
+        this.totalStudied = this.sessionCards.length;
+
         this.showScreen('study-screen');
         this.showNextCard();
     },
 
     showNextCard() {
         if (this.currentCardIndex >= this.sessionCards.length) {
-            this.showScreen('finish-screen');
+            this.showFinishScreen();
             return;
         }
 
@@ -253,24 +246,63 @@ window.App = {
 
     async handleAnswer(knewIt) {
         const clickSound = document.getElementById('click-sound');
-        if (clickSound) clickSound.currentTime = 0; clickSound.play();
+        if (clickSound) { clickSound.currentTime = 0; clickSound.play(); }
 
         const card = this.sessionCards[this.currentCardIndex];
         const key = card.word + card.translation;
 
         if (!this.isPracticeMode) {
             let p = this.userProgress[key] || { box: 1 };
-            if (!knewIt) p.box = 1;
-            else p.box = Math.min(6, p.box + 1);
-
+            if (!knewIt) {
+                p.box = 1;
+                this.forgottenCards.push(card);
+            } else {
+                p.box = Math.min(6, p.box + 1);
+            }
             const days = REPETITION_INTERVALS[p.box];
             p.nextReview = new Date(Date.now() + days * 86400000).toISOString().split('T')[0];
             this.userProgress[key] = p;
             await this.saveProgress();
-            this.renderDueToday(); // ← мгновенное обновление!
+            this.renderDueToday();
         }
 
         this.currentCardIndex++;
+        this.showNextCard();
+    },
+
+    showFinishScreen() {
+        this.showScreen('finish-screen');
+
+        const total = this.sessionCards.length;
+        const remembered = total - this.forgottenCards.length;
+        const forgotten = this.forgottenCards.length;
+
+        document.getElementById('total-studied').textContent = total;
+        document.getElementById('remembered-count').textContent = remembered;
+        document.getElementById('forgotten-count').textContent = forgotten;
+        document.getElementById('forgotten-count-btn').textContent = forgotten;
+
+        const repeatBtn = document.getElementById('repeat-forgotten-btn');
+        if (forgotten > 0) {
+            repeatBtn.classList.remove('hidden');
+        } else {
+            repeatBtn.classList.add('hidden');
+        }
+    },
+
+    repeatForgotten() {
+        if (this.forgottenCards.length === 0) return;
+        this.sessionCards = [...this.forgottenCards];
+        this.forgottenCards = [];
+        this.currentCardIndex = 0;
+        this.showScreen('study-screen');
+        this.showNextCard();
+    },
+
+    restartSession() {
+        this.currentCardIndex = 0;
+        this.forgottenCards = [];
+        this.showScreen('study-screen');
         this.showNextCard();
     },
 

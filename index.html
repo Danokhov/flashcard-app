@@ -57,6 +57,17 @@
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.05); }
 }
+
+.speaker-btn {
+    animation: gentle-pulse 4s infinite ease-in-out;
+    width: 72px;
+    height: 72px;
+}
+
+@keyframes gentle-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
     </style>
 
 <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3" preload="auto"></audio>
@@ -108,52 +119,54 @@
     <!-- Повторение -->
     <div id="study-screen" class="hidden">
         <div class="bg-gray-200 rounded-full h-2.5 mb-4"><div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all" style="width:0%"></div></div>
-<!-- 3D КАРТОЧКА С ОЗВУЧКОЙ -->
-<div id="card" class="card-container mx-auto max-w-sm">
-    <div id="card-inner" class="card-3d relative w-full h-80">
-        <!-- Лицевая сторона -->
-        <div id="card-front" class="card-face front flex flex-col items-center justify-center p-8 bg-white rounded-3xl shadow-2xl">
-            <div class="flex items-center gap-4">
-                <div id="card-front-text" class="text-5xl font-bold text-gray-800 text-center leading-tight"></div>
-                <button onclick="event.stopPropagation(); window.App.speak(card.word)" 
-                        class="w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                              d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 6v12a1 1 0 01-1.707.707L5.586 15z"></path>
-                    </svg>
-                </button>
+
+        <!-- 3D КАРТОЧКА С КРАСИВОЙ КНОПКОЙ ОЗВУЧКИ ПО ЦЕНТРУ СНИЗУ -->
+        <div id="card" class="card-container mx-auto max-w-sm">
+            <div id="card-inner" class="card-3d relative w-full h-80">
+                <!-- Лицевая сторона -->
+                <div id="card-front" class="card-face front flex flex-col justify-between items-center p-8 bg-white rounded-3xl shadow-2xl">
+                    <div id="card-front-text" class="text-5xl font-bold text-gray-800 text-center leading-tight px-4"></div>
+                    
+                    <!-- КНОПКА ОЗВУЧКИ — ПО ЦЕНТРУ СНИЗУ + ПУЛЬСАЦИЯ -->
+                    <button onclick="event.stopPropagation(); window.App.speakCurrentWord()" 
+                            class="speaker-btn w-18 h-18 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center transform hover:scale-110 transition-all">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 6v12a1 1 0 01-1.707.707L5.586 15z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Обратная сторона -->
+                <div id="card-back" class="card-face back flex items-center justify-center p-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl shadow-2xl text-white">
+                    <div id="card-back-text" class="text-5xl font-bold text-center leading-tight px-4"></div>
+                </div>
             </div>
         </div>
 
-        <!-- Обратная сторона -->
-        <div id="card-back" class="card-face back flex items-center justify-center p-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl shadow-2xl text-white">
-            <div id="card-back-text" class="text-5xl font-bold text-center leading-tight"></div>
+        <!-- КНОПКИ УПРАВЛЕНИЯ -->
+        <div id="controls-show" class="mt-8 space-y-4">
+            <button onclick="window.App.showAnswer()" 
+                    class="w-full py-5 bg-blue-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-blue-700 transition">
+                Показать ответ
+            </button>
+            
+            <button onclick="window.App.showHint()" 
+                    id="hint-button" 
+                    class="hint-btn w-full py-4 bg-yellow-400 text-yellow-900 font-bold text-lg rounded-2xl shadow-lg hover:bg-yellow-500 transition hidden">
+                Подсказка (картинка)
+            </button>
+        </div>
+
+        <div id="controls-rate" class="hidden mt-8 grid grid-cols-2 gap-6">
+            <button onclick="window.App.handleAnswer(false)" class="py-6 bg-red-500 text-white font-bold text-2xl rounded-2xl shadow-lg hover:bg-red-600">
+                Не помню
+            </button>
+            <button onclick="window.App.handleAnswer(true)" class="py-6 bg-green-500 text-white font-bold text-2xl rounded-2xl shadow-lg hover:bg-green-600">
+                Помню
+            </button>
         </div>
     </div>
-</div>
-
-<!-- КНОПКИ УПРАВЛЕНИЯ (внизу, под карточкой) -->
-<div id="controls-show" class="mt-8 space-y-4">
-    <button onclick="window.App.showAnswer()" 
-            class="w-full py-5 bg-blue-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-blue-700 transition">
-        Показать ответ
-    </button>
-    
-    <button onclick="window.App.showHint()" 
-            id="hint-button" 
-            class="hint-btn w-full py-4 bg-yellow-400 text-yellow-900 font-bold text-lg rounded-2xl shadow-lg hover:bg-yellow-500 transition hidden">
-        Подсказка (картинка)
-    </button>
-</div>
-
-<div id="controls-rate" class="hidden mt-8 grid grid-cols-2 gap-6">
-    <button onclick="window.App.handleAnswer(false)" class="py-6 bg-red-500 text-white font-bold text-2xl rounded-2xl shadow-lg hover:bg-red-600">
-        Не помню
-    </button>
-    <button onclick="window.App.handleAnswer(true)" class="py-6 bg-green-500 text-white font-bold text-2xl rounded-2xl shadow-lg hover:bg-green-600">
-        Помню
-    </button>
-</div>
 
 <!-- Модалка "Заблокировано" -->
 <div id="locked-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onclick="window.App.closeModal('locked-modal')">
