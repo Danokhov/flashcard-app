@@ -68,10 +68,10 @@
             opacity: 0;
             visibility: hidden; 
         }
-/* При открытии устанавливаем padding обратно и включаем скролл */
+
+        /* При открытии устанавливаем padding обратно и включаем скролл */
         .accordion-content.is-open {
             /* УВЕЛИЧЕНА МАКСИМАЛЬНАЯ ВЫСОТА ДЛЯ УДОБНОЙ ПРОКРУТКИ */
-            /* ИЗМЕНЕНО с 80vh на 90vh для большей гарантии */
             max-height: 90vh; 
             opacity: 1;
             visibility: visible;
@@ -84,15 +84,16 @@
 
     <!-- Основной контейнер страницы -->
     <div id="app" class="max-w-md mx-auto">
-  <div class="mb-4">
-            <button onclick="window.App.notifyParentToReturn()" class="text-gray-500 hover:text-indigo-600 font-semibold flex items-center transition duration-150">
+        
+        <!-- КНОПКА НАЗАД (ЕДИНСТВЕННАЯ: К Контенту Недели) -->
+        <div class="mb-4 pt-4">
+            <button onclick="window.App.notifyParentToReturn('week-content')" class="text-blue-500 hover:text-blue-700 font-semibold flex items-center transition duration-150">
                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Назад в Главное меню
+                ← К Контенту Недели
             </button>
         </div>
         
-        <h1 id="story-title" class="text-2xl font-extrabold text-gray-900 mb-6 text-center">...</h1>      
-        <!-- Заголовок страницы (История недели) -->
+        <!-- Заголовок страницы (Оставляем для автономности, но он дублирует заголовок родителя) -->
         <h1 id="story-title" class="text-2xl font-extrabold text-gray-900 mb-6 text-center">Введение в немецкие артикли (A1)</h1>
         
         <div class="space-y-6">
@@ -167,8 +168,8 @@
                         <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
                         <p class="mb-3">Dr. Keller antwortet:</p>
                         <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
-                        <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
-                        <p class="mb-3">Dann fragt er:</p>
+                        <p class="mb-3">„Die Antibiotika wirken schnell, но Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
+                        <p class="mb-3">Dann fragт он:</p>
                         <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
                         <p class="mb-3">Thomas antwortet:</p>
                         <p class="mb-3">„Ja, bitte – für drei Tage.“</p>
@@ -314,12 +315,12 @@
             </button>
 
 
-            <!-- Кнопка "На главную" -->
-            <div class="text-center pt-4">
+            <!-- Кнопка "На главную" (ЛИШНЯЯ КНОПКА - УДАЛЯЕТСЯ) -->
+            <!-- <div class="text-center pt-4">
                  <button onclick="window.App.notifyParentToReturn()" class="text-gray-500 hover:text-indigo-600 font-semibold transition duration-150">
                     &larr; Назад к Подборкам Недели
                 </button>
-            </div>
+            </div> -->
 
         </div>
     </div>
@@ -793,17 +794,18 @@
             /**
              * Сообщает родительскому окну (index.html), что нужно вернуться на Главный экран.
              */
-            notifyParentToReturn() {
+            notifyParentToReturn(targetScreen) {
                 // Если мы находимся во встроенном iframe
-                if (window.parent && window.parent.App && typeof window.parent.App.renderHomeScreen === 'function') {
-                    // Вызываем функцию родителя напрямую (если возможно)
-                    window.parent.App.renderHomeScreen();
+                if (window.parent && window.parent.App && typeof window.parent.App.renderWeekContent === 'function') {
+                    // Вызываем функцию родителя напрямую для возврата к Контенту Недели
+                    const weekNum = window.parent.App.selectedWeek || 1;
+                    window.parent.App.renderWeekContent(weekNum);
                 } else if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) {
                     // Если не во фрейме, но в Telegram, закрываем (старое поведение)
                     window.Telegram.WebApp.close();
                 } else {
                     // Эмуляция для отладки
-                    console.log('Эмуляция: возвращение на главный экран.');
+                    console.log('Эмуляция: возвращение к Контенту Недели.');
                 }
             },
 
