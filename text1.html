@@ -58,7 +58,6 @@
             opacity: 0.8;
         }
 
-
         /* АККОРДЕОН: Скрыт (hidden класс от Tailwind будет обеспечивать display: none) */
         .accordion-content {
             /* Эти стили отвечают ТОЛЬКО за анимацию, когда класс hidden снят */
@@ -77,35 +76,28 @@
             visibility: visible;
             overflow-y: auto; /* ВКЛЮЧАЕМ СКРОЛЛ ВНУТРИ БЛОКА */
         }
+
+        /* --- НОВЫЕ СТИЛИ ДЛЯ ФИКСАЦИИ ПАНЕЛИ АУДИО --- */
+        /* Добавим отступ к body, чтобы контент не скрывался под фиксированной панелью. 
+           (Размер панели: 3rem + 2*0.75rem padding + 2*0.25rem margin-y = ~4.5rem) 
+           Мы добавим 5.5rem для запаса.
+        */
+        .content-padding {
+            padding-top: 5.5rem; /* Добавляем отступ сверху */
+        }
+        
     </style>
 </head>
 
-<body class="min-h-screen bg-gray-100 font-sans p-4">
+<!-- Добавляем класс content-padding, чтобы контент не скрывался под фиксированной панелью -->
+<body class="min-h-screen bg-gray-100 font-sans content-padding">
 
-    <!-- Основной контейнер страницы -->
-    <div id="app" class="max-w-md mx-auto">
-        
-        <!-- КНОПКА НАЗАД (УДАЛЕНА: Навигация будет обрабатываться родительским index.html) -->
-        
-        <!-- Заголовок страницы (УДАЛЕН: Заголовок будет вставлен родительским index.html) -->
-        
-        <div class="space-y-6">
-
-            <!-- 1. ИЗОБРАЖЕНИЕ -->
-            <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
-                
-                <img id="story-image" 
-                     src="Woche1_text.png" 
-                     alt="Иллюстрация к уроку по немецким артиклям"
-                     class="w-full h-auto object-cover" 
-                     onclick="event.preventDefault(); event.stopPropagation();" /> <!-- Защита от перехвата клика/тапа -->
-
-                <!-- Аудиоплеер (скрыт) -->
-                <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
-            </div>
-            
-            <!-- 2. НОВЫЙ БЛОК ПЛЕЕРА ПОД КАРТИНКОЙ -->
-            <!-- !!! ИЗМЕНЕНИЕ: onlick теперь вызывает StoryApp !!! -->
+    <!-- 2. ФИКСИРОВАННЫЙ НОВЫЙ БЛОК ПЛЕЕРА -->
+    <!-- Классы: fixed inset-x-0 top-0 z-50 - фиксируют по ширине сверху -->
+    <!-- px-4 pt-4 pb-2 - отступы, чтобы панель была немного "плавающей" -->
+    <div class="fixed inset-x-0 top-0 z-50 bg-gray-100 p-4 shadow-xl">
+        <div class="max-w-md mx-auto">
+             <!-- !!! ИЗМЕНЕНИЕ: onlick теперь вызывает StoryApp !!! -->
             <div class="audio-controls" onclick="window.StoryApp.toggleAudioPlay()">
                 <button id="audio-play-button" class="flex items-center space-x-2">
                     <!-- Иконка Play -->
@@ -119,6 +111,28 @@
                     <span id="audio-status" class="text-lg font-bold">Слушать историю</span>
                 </button>
             </div>
+        </div>
+    </div>
+    
+    <!-- Основной контейнер страницы -->
+    <div id="app" class="max-w-md mx-auto">
+        
+        <div class="space-y-6">
+
+            <!-- 1. ИЗОБРАЖЕНИЕ (АУДИО ПЕРЕНЕСЕНО ВВЕРХ) -->
+            <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
+                
+                <img id="story-image" 
+                     src="Woche1_text.png" 
+                     alt="Иллюстрация к уроку по немецким артиклям"
+                     class="w-full h-auto object-cover" 
+                     onclick="event.preventDefault(); event.stopPropagation();" /> <!-- Защита от перехвата клика/тапа -->
+
+                <!-- Аудиоплеер (скрыт) -->
+                <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
+            </div>
+            
+            <!-- УДАЛЕН БЛОК ПЛЕЕРА, ТЕПЕРЬ ОН ФИКСИРОВАННЫЙ ВВЕРХУ -->
             
             <!-- 3. БЛОК "АККОРДЕОНЫ" -->
             <div class="space-y-4">
@@ -190,38 +204,38 @@
                     <!-- ДОБАВЛЕН p-4 И hidden ВНУТРИ DIV -->
                     <div id="analysis-content" class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4"> 
 
-    <!-- КАРУСЕЛЬ РАЗБОРА -->
-    <div id="analysis-carousel" class="space-y-4">
-        <!-- СЮДА JS БУДЕТ ПОДСТАВЛЯТЬ ТЕКУЩИЙ СЛАЙД -->
-        <div id="analysis-slide" class="space-y-3"></div>
+                        <!-- КАРУСЕЛЬ РАЗБОРА -->
+                        <div id="analysis-carousel" class="space-y-4">
+                            <!-- СЮДА JS БУДЕТ ПОДСТАВЛЯТЬ ТЕКУЩИЙ СЛАЙД -->
+                            <div id="analysis-slide" class="space-y-3"></div>
 
-        <!-- КНОПКИ НАВИГАЦИИ -->
-        <div class="flex items-center justify-between mt-4">
-            <button onclick="window.StoryApp.prevAnalysisSlide()"
-                    class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
-                ← Назад
-            </button>
+                            <!-- КНОПКИ НАВИГАЦИИ -->
+                            <div class="flex items-center justify-between mt-4">
+                                <button onclick="window.StoryApp.prevAnalysisSlide()"
+                                        class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
+                                    ← Назад
+                                </button>
 
-            <span id="analysis-progress" class="text-xs text-gray-500 mx-2 flex-1 text-center">
-                1 / 1
-            </span>
+                                <span id="analysis-progress" class="text-xs text-gray-500 mx-2 flex-1 text-center">
+                                    1 / 1
+                                </span>
 
-            <button onclick="window.StoryApp.nextAnalysisSlide()"
-                    class="py-2 px-4 bg-indigo-500 text-white rounded-lg text-sm font-semibold hover:bg-indigo-600 transition">
-                Вперёд →
-            </button>
-        </div>
-    </div>
+                                <button onclick="window.StoryApp.nextAnalysisSlide()"
+                                        class="py-2 px-4 bg-indigo-500 text-white rounded-lg text-sm font-semibold hover:bg-indigo-600 transition">
+                                    Вперёд →
+                                </button>
+                            </div>
+                        </div>
 
-    <!-- КНОПКА "СКАЧАТЬ РАЗБОР" ОСТАЁТСЯ ВНИЗУ -->
-    <div class="mt-6 pt-4 border-t border-gray-300">
-        <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank" 
-           class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition duration-150 flex items-center justify-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            Скачать Разбор (PDF)
-        </a>
-    </div>
-</div>
+                        <!-- КНОПКА "СКАЧАТЬ РАЗБОР" ОСТАЁТСЯ ВНИЗУ -->
+                        <div class="mt-6 pt-4 border-t border-gray-300">
+                            <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank" 
+                            class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition duration-150 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Скачать Разбор (PDF)
+                            </a>
+                        </div>
+                    </div>
 
             
             <!-- 4. КНОПКА УПРАЖНЕНИЯ (КВИЗ) - НОВАЯ ПОЗИЦИЯ: В САМОМ НИЗУ -->
