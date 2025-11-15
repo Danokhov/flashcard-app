@@ -917,6 +917,15 @@
                 const weekData = WEEKLY_CONTENT_MAP[weekNum];
                 if (!weekData) return;
                 
+                // >>> ИСПРАВЛЕНИЕ: Если пользователь не подписчик и текущая неделя - Неделя 1, 
+                // и она еще не выбрана (selectedWeek === 0), сохраняем ее как выбранную.
+                const isTrialLessonClicked = !this.isSubscriber && weekNum === 1 && this.selectedWeek === 0;
+                if (isTrialLessonClicked) {
+                    this.selectedWeek = 1;
+                    // Сохраняем прогресс, чтобы при следующем входе отображалась активная подборка, а не кнопка Пробного урока.
+                    this.saveProgress(); 
+                }
+                
                 // 1. Определение контекста возврата
                 // Если Неподписчик И активна Неделя 1 (Пробный урок), то возвращаемся на Главный экран.
                 // Иначе (Подписчик или Неделя 1 открыта через список), возвращаемся на Список Недель.
@@ -1187,32 +1196,19 @@
                         buttonText = 'Назад к Подборкам Недели';
                         break;
                     case 'week-content':
-                        // Возврат из подраздела (История, Видео) в Контент Недели
-                        // Здесь нужно определить, куда возвращаться из подраздела,
-                        // в зависимости от того, откуда пришли в week-content
+                        // Определяем, куда возвращаться из подраздела (видео/история)
+                        // Если активная неделя — Пробный урок (Неделя 1 для неподписчика), 
+                        // возвращаемся на Главный экран (как было в предыдущем шаге).
                         const isTrialLesson = !this.isSubscriber && this.selectedWeek === 1;
 
                         if (isTrialLesson) {
-                            // Если пришли из Пробного урока, возвращаемся на Главный экран
                              targetFunction = 'window.App.renderHomeScreen()';
                              buttonText = '← Назад в Главное меню';
                         } else {
-                            // Если пришли из Подборок за неделю, возвращаемся к Контенту Недели
+                            // Иначе возвращаемся к Контенту Недели
                             targetFunction = `window.App.renderWeekContent(${param})`; 
                             buttonText = '← К Контенту Недели';
                         }
-                        
-                        // NOTE: В вашем оригинальном коде здесь была ошибка,
-                        // targetFunction была установлена на `window.App.renderWeekContent(${param})`
-                        // но в этой функции (renderBackButton) нет информации о том, откуда
-                        // мы пришли *на* `week-content`, поэтому используем `renderWeekContent(${param})`
-                        // для возврата к самому контенту недели, а не к списку недель.
-                        // Для Пробного урока, где нет списка недель, мы жестко возвращаем на Главный экран.
-                        
-                        // Используем param (weekNum) для перехода к нужному контенту недели
-                        targetFunction = `window.App.renderWeekContent(${param})`; 
-                        buttonText = '← К Контенту Недели';
-
                         break;
                     case 'carousel-list':
                         targetFunction = `window.App.renderCarouselListScreen('week-content', ${this.selectedWeek})`; 
