@@ -7,70 +7,43 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        .card { perspective: 1000px; }
-        .card-inner { position: relative; transition: transform 0.6s; transform-style: preserve-3d; }
-        .card.is-flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; top: 0; left: 0; }
-        .card-back { transform: rotateY(180deg); }
-        @keyframes slide-left { from { transform: translateX(0); opacity: 1; } to { transform: translateX(-100%); opacity: 0; } }
-        .card.slide-out { animation: slide-left 0.4s ease forwards; }
+        .card-container { perspective: 1200px; padding: 20px; }
+        .card-3d {
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-style: preserve-3d;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-radius: 24px;
+        }
+        .card-3d:hover { transform: translateY(-8px) rotateX(4deg) rotateY(6deg); }
+        .card-3d.is-flipped { transform: rotateY(180deg) translateY(-8px); }
+        .card-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            border-radius: 24px; top: 0; left: 0;
+        }
+        .card-face.back { transform: rotateY(180deg); }
+
+        /* Пульсирующая кнопка озвучки */
+        .speaker-btn {
+            animation: gentle-pulse 4s infinite ease-in-out;
+            width: 72px; height: 72px;
+        }
+        @keyframes gentle-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Кнопка подсказки */
+        .hint-btn { animation: pulse 3s infinite; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
         .modal-content { transition: transform 0.3s ease; transform: scale(0.95); }
         .modal.is-open .modal-content { transform: scale(1); }
-        .card-container {
-    perspective: 1200px;
-    padding: 20px;
-}
-
-.card-3d {
-    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    transform-style: preserve-3d;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    border-radius: 24px;
-}
-
-.card-3d:hover {
-    transform: translateY(-8px) rotateX(4deg) rotateY(6deg);
-}
-
-.card-3d.is-flipped {
-    transform: rotateY(180deg) translateY(-8px);
-}
-
-.card-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 24px;
-    top: 0; left: 0;
-}
-
-.card-face.back {
-    transform: rotateY(180deg);
-}
-
-.hint-btn {
-    animation: pulse 3s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-.speaker-btn {
-    animation: gentle-pulse 4s infinite ease-in-out;
-    width: 72px;
-    height: 72px;
-}
-
-@keyframes gentle-pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
     </style>
 
-<audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3" preload="auto"></audio>
+    <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3" preload="auto"></audio>
 </head>
 <body class="min-h-screen bg-gray-100 font-sans p-4">
 
@@ -81,10 +54,8 @@
     <!-- ГЛАВНОЕ МЕНЮ -->
     <div id="home-screen" class="hidden">
         <h1 class="text-2xl font-bold text-center mb-8 text-gray-800">Немецкий за 10 минут</h1>
-
         <div id="main-content-block" class="space-y-4"></div>
 
-        <!-- ДВЕ КНОПКИ — как ты и хотел изначально -->
         <button onclick="window.App.renderWeeklySelections()" 
                 class="w-full py-6 bg-white rounded-2xl shadow-xl text-xl font-bold text-gray-800">
             Подборки по неделям
@@ -95,41 +66,36 @@
             Все наборы слов
         </button>
 
-        <!-- Горящие повторения -->
         <div id="due-today-section" class="hidden mt-6 pt-6 border-t border-gray-200">
             <h2 class="text-xl font-bold mb-4">К повторению сегодня</h2>
             <div id="due-today-list" class="space-y-3"></div>
         </div>
     </div>
 
-    <!-- Экран недель -->
+    <!-- Экраны недель и наборов -->
     <div id="weekly-screen" class="hidden">
         <h1 class="text-2xl font-bold text-center mb-6">Подборки по неделям</h1>
         <div id="back-button-container" class="mb-4"></div>
         <div id="weekly-list" class="space-y-4"></div>
     </div>
 
-    <!-- Экран всех наборов -->
     <div id="list-screen" class="hidden">
         <h1 id="list-title" class="text-2xl font-bold text-center mb-6"></h1>
         <div id="back-button-container" class="mb-4"></div>
         <div id="content-list" class="space-y-4"></div>
     </div>
 
-    <!-- Повторение -->
+    <!-- ПОВТОРЕНИЕ -->
     <div id="study-screen" class="hidden">
         <div class="bg-gray-200 rounded-full h-2.5 mb-4"><div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all" style="width:0%"></div></div>
 
-        <!-- 3D КАРТОЧКА С КРАСИВОЙ КНОПКОЙ ОЗВУЧКИ ПО ЦЕНТРУ СНИЗУ -->
+        <!-- КАРТОЧКА -->
         <div id="card" class="card-container mx-auto max-w-sm">
             <div id="card-inner" class="card-3d relative w-full h-80">
-                <!-- Лицевая сторона -->
                 <div id="card-front" class="card-face front flex flex-col justify-between items-center p-8 bg-white rounded-3xl shadow-2xl">
                     <div id="card-front-text" class="text-5xl font-bold text-gray-800 text-center leading-tight px-4"></div>
-                    
-                    <!-- КНОПКА ОЗВУЧКИ — ПО ЦЕНТРУ СНИЗУ + ПУЛЬСАЦИЯ -->
                     <button onclick="event.stopPropagation(); window.App.speakCurrentWord()" 
-                            class="speaker-btn w-18 h-18 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center transform hover:scale-110 transition-all">
+                            class="speaker-btn bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                   d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 6v12a1 1 0 01-1.707.707L5.586 15z"></path>
@@ -137,7 +103,6 @@
                     </button>
                 </div>
 
-                <!-- Обратная сторона -->
                 <div id="card-back" class="card-face back flex items-center justify-center p-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl shadow-2xl text-white">
                     <div id="card-back-text" class="text-5xl font-bold text-center leading-tight px-4"></div>
                 </div>
@@ -150,9 +115,7 @@
                     class="w-full py-5 bg-blue-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-blue-700 transition">
                 Показать ответ
             </button>
-            
-            <button onclick="window.App.showHint()" 
-                    id="hint-button" 
+            <button onclick="window.App.showHint()" id="hint-button" 
                     class="hint-btn w-full py-4 bg-yellow-400 text-yellow-900 font-bold text-lg rounded-2xl shadow-lg hover:bg-yellow-500 transition hidden">
                 Подсказка (картинка)
             </button>
@@ -168,27 +131,70 @@
         </div>
     </div>
 
-<!-- Модалка "Заблокировано" -->
-<div id="locked-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onclick="window.App.closeModal('locked-modal')">
-    <div class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 modal-content" onclick="event.stopPropagation()">
-        <h3 class="text-2xl font-bold text-center mb-4">Неделя заблокирована</h3>
-        <p class="text-center text-gray-700 mb-8">Откроется после оплаты курса</p>
-        <button onclick="Telegram.WebApp.openLink('https://t.me/твой_бот_оплаты')" class="w-full py-5 bg-green-500 text-white font-bold rounded-2xl">Получить доступ</button>
-        <button onclick="window.App.closeModal('locked-modal')" class="w-full mt-3 py-3 text-gray-600">Позже</button>
-    </div>
-</div>
-<!-- МОДАЛЬНОЕ ОКНО С ПОДСКАЗКОЙ-КАРТИНКОЙ -->
-<div id="hint-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4" onclick="window.App.closeModal('hint-modal')">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden modal-content" onclick="event.stopPropagation()">
-        <img id="hint-image" src="" alt="Подсказка" class="w-full h-auto object-cover max-h-96">
-        <div class="p-6 text-center">
-            <button onclick="window.App.closeModal('hint-modal')" 
-                    class="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-2xl shadow-lg">
-                Закрыть
-            </button>
+<!-- ЭКРАН ЗАВЕРШЕНИЯ СЕССИИ — САМЫЙ ВАЖНЫЙ БЛОК -->
+<div id="finish-screen" class="hidden">
+    <div class="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+        <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-8">Сессия завершена!</h2>
+
+            <div class="space-y-6 mb-10 text-lg">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Всего слов:</span>
+                    <span id="total-studied" class="font-bold text-blue-600 text-2xl">0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Хорошо помню:</span>
+                    <span id="remembered-count" class="font-bold text-green-600 text-2xl">0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Нужно повторить:</span>
+                    <span id="forgotten-count" class="font-bold text-red-600 text-2xl">0</span>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <button id="repeat-forgotten-btn" onclick="window.App.repeatForgotten()"
+                        class="w-full py-5 bg-red-500 hover:bg-red-600 text-white font-bold text-xl rounded-2xl shadow-lg transition hidden">
+                    Повторить <span id="forgotten-count-btn">0</span> слов, которые не помнил
+                </button>
+
+                <button onclick="window.App.restartSession()"
+                        class="w-full py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-xl rounded-2xl shadow-lg">
+                    Пройти весь набор ещё раз
+                </button>
+
+                <button onclick="window.App.renderHomeScreen()"
+                        class="w-full py-5 bg-gray-700 hover:bg-gray-800 text-white font-bold text-xl rounded-2xl shadow-lg transition">
+                    В главное меню
+                </button>
+            </div>
         </div>
     </div>
 </div>
+
+    <!-- Модальные окна -->
+    <div id="locked-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onclick="window.App.closeModal('locked-modal')">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 modal-content" onclick="event.stopPropagation()">
+            <h3 class="text-2xl font-bold text-center mb-4">Неделя заблокирована</h3>
+            <p class="text-center text-gray-700 mb-8">Откроется после оплаты курса</p>
+            <button onclick="Telegram.WebApp.openLink('https://t.me/твой_бот_оплаты')" class="w-full py-5 bg-green-500 text-white font-bold rounded-2xl">Получить доступ</button>
+            <button onclick="window.App.closeModal('locked-modal')" class="w-full mt-3 py-3 text-gray-600">Позже</button>
+        </div>
+    </div>
+
+    <div id="hint-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4" onclick="window.App.closeModal('hint-modal')">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden modal-content" onclick="event.stopPropagation()">
+            <img id="hint-image" src="" alt="Подсказка" class="w-full h-auto object-cover max-h-96">
+            <div class="p-6 text-center">
+                <button onclick="window.App.closeModal('hint-modal')" 
+                        class="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-2xl shadow-lg">
+                    Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="module" src="app.js"></script>
 </body>
 </html>

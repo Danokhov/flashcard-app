@@ -53,26 +53,32 @@ window.App = {
         if (word) this.speak(word);
     },
 
-    async loadUserData() {
-        try {
-            const ref = doc(this.db, 'users', this.userId);
-            const snap = await getDoc(ref);
-            if (snap.exists()) {
-                const d = snap.data();
-                this.hasCompletedTrial = d.hasCompletedTrial || false;
-                this.userProgress = d.cards || {};
+async loadUserData() {
+    try {
+        const ref = doc(this.db, 'users', this.userId);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+            const d = snap.data();
+            this.hasCompletedTrial = d.hasCompletedTrial || false;
+            this.userProgress = d.cards || {};
 
-                if (d.isPaid && d.paidAt) {
-                    const days = Math.floor((Date.now() - d.paidAt.toDate()) / 86400000);
-                    this.unlockedWeek = Math.min(52, Math.floor(days / 7) + 1);
-                }
-                if (d.hasVisitedWeek1) {
-                    this.unlockedWeek = Math.max(this.unlockedWeek, 1);
-                }
+            if (d.isPaid && d.paidAt) {
+                const days = Math.floor((Date.now() - d.paidAt.toDate()) / 86400000);
+                this.unlockedWeek = Math.min(52, Math.floor(days / 7) + 1);
             }
-        } catch (e) { console.error(e); }
-        this.renderDueToday();
-    },
+            if (d.hasVisitedWeek1) {
+                this.unlockedWeek = Math.max(this.unlockedWeek, 1);
+            }
+        }
+    } catch (e) { console.error(e); }
+
+    // ← ЭТА СТРОЧКА — ГАРАНТИЯ, ЧТО ДАЖЕ БЕЗ FIREBASE РАБОТАЕТ
+    if (localStorage.getItem('hasVisitedWeek1') === 'true') {
+        this.unlockedWeek = Math.max(this.unlockedWeek, 1);
+    }
+
+    this.renderDueToday();
+},
 
     async saveProgress() {
         if (!this.db) return;
@@ -163,20 +169,29 @@ window.App = {
         }
     },
 
-    async openWeek(week) {
-        if (week === 1) {
-            if (this.db) {
-                await setDoc(doc(this.db, 'users', this.userId), { hasVisitedWeek1: true }, { merge: true });
-                this.unlockedWeek = Math.max(this.unlockedWeek, 1);
-                this.renderHomeScreen(); // ← мгновенное обновление меню
-            }
-            location.href = 'Text1.html';
-        } else if (week <= this.unlockedWeek) {
-            location.href = `week${week}.html`;
+async openWeek(week) {
+    if (week === 1) {
+        // СРАЗУ ПОМЕЧАЕМ, ЧТО ПОЛЬЗОВАТЕЛЬ НАЧАЛ КУРС
+        if (this.db) {
+            await setDoc(doc(this.db, 'users', this.userId), { hasVisitedWeek1: true }, { merge: true });
         } else {
-            this.showLockedModal();
+            localStorage.setItem('hasVisitedWeek1', 'true');
         }
-    },
+
+        // СРАЗУ ОБНОВЛЯЕМ СОСТОЯНИЕ В ПАМЯТИ
+        this.unlockedWeek = Math.max(this.unlockedWeek, 1);
+
+        // ПЕРЕХОДИМ НА НЕДЕЛЮ 1
+        location.href = 'Text1.html';
+        return;
+    }
+
+    if (week <= this.unlockedWeek) {
+        location.href = `week${week}.html`;
+    } else {
+        this.showLockedModal();
+    }
+},
 
     renderAllSetsScreen() {
         document.getElementById('list-title').textContent = 'Все наборы слов';
