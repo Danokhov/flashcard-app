@@ -592,15 +592,22 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             },
 
 
+            // [НОВАЯ ФУНКЦИЯ] для (пере)установки обработчиков Telegram
+            setupTelegramHandlers() {
+                if (!this.tg) {
+                    this.tg = window.Telegram.WebApp;
+                    this.tg.ready(); 
+                }
+                // (Пере)назначаем наш главный обработчик "Назад"
+                this.tg.BackButton.onClick(() => this.handleTelegramBackClick());
+            },
+
             async init() {
                 try {
                     // --- ИНИЦИАЛИЗАЦИЯ TELEGRAM API ---
                     // Делаем это *первым*, чтобы API было доступно
-                    this.tg = window.Telegram.WebApp;
-                    this.tg.ready(); // Сообщаем Telegram, что приложение готово
-                    
-                    // Устанавливаем обработчик для кнопки "Назад" ("Zurück")
-                    this.tg.BackButton.onClick(() => this.handleTelegramBackClick());
+                    // [ИЗМЕНЕНО] Вызываем новую функцию
+                    this.setupTelegramHandlers();
                     // ------------------------------------
 
                     // Инициализация Firebase
@@ -1164,6 +1171,11 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     if (storyApp && typeof storyApp.init === 'function') {
                          storyApp.init();
                     }
+                    
+                    // --- [!!!] КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ [!!!] ---
+                    // Скрипты из text1.html могли ПЕРЕЗАПИСАТЬ наш обработчик BackButton.
+                    // Мы должны ВОССТАНОВИТЬ его СЕЙЧАС.
+                    this.setupTelegramHandlers();
                     // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
 
                 } catch (error) {
