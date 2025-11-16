@@ -28,7 +28,7 @@
             display: block;
         }
 
-        /* sticky-панель ПОД картинкой/заголовком */
+        /* sticky-панель ПОД картинкой/заголовком (это та самая липкая панель) */
         .audio-sticky-wrapper {
             position: sticky;
             top: 0;              /* прилипает к верхнему краю окна */
@@ -81,10 +81,22 @@
     <!-- заголовок истории -->
     <h1 class="text-2xl font-bold text-center text-gray-900">Der Termin beim Arzt</h1>
 
-    <!-- STICKY-ПАНЕЛЬ АУДИО: Play + ползунок -->
+    <!-- STICKY-ПАНЕЛЬ АУДИО: Play + ползунок + скорость -->
     <div class="audio-sticky-wrapper">
         <div class="bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-200 flex flex-col gap-2">
-            <div class="flex items-center justify-center">
+            
+            <!-- КНОПКА PLAY/PAUSE И КОНТРОЛЬ СКОРОСТИ -->
+            <div class="flex items-center justify-between">
+                <!-- Контроль скорости (NEW) -->
+                <select id="audio-speed-select"
+                        class="p-2 pl-3 pr-6 rounded-xl border-2 border-indigo-200 text-sm font-semibold bg-white text-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition shadow-sm">
+                    <option value="0.75">0.75x (Медленно)</option>
+                    <option value="1.0" selected>1.0x (Норма)</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2.0">2.0x (Быстро)</option>
+                </select>
+
                 <button id="audio-main-button"
                         class="audio-main-button rounded-full bg-blue-600 text-white px-7 py-2.5 flex items-center gap-2">
                     <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -101,6 +113,7 @@
                 </button>
             </div>
 
+            <!-- ИНДИКАТОР ПРОГРЕССА -->
             <div class="flex flex-col gap-1">
                 <input id="audio-progress" type="range" min="0" max="100" value="0">
                 <div class="flex justify-between text-xs text-gray-500">
@@ -327,10 +340,19 @@ window.StoryApp = {
         const audio = document.getElementById('story-audio-player');
         const playBtn = document.getElementById('audio-main-button');
         const progress = document.getElementById('audio-progress');
+        const speedSelect = document.getElementById('audio-speed-select'); // NEW: Элемент выбора скорости
         const curTimeEl = document.getElementById('audio-current-time');
         const durEl = document.getElementById('audio-duration');
 
         if(!audio) return;
+
+        // NEW: Обработка изменения скорости воспроизведения
+        if(speedSelect){
+            speedSelect.addEventListener('change',(e)=>{
+                // Установка скорости воспроизведения
+                audio.playbackRate = parseFloat(e.target.value);
+            });
+        }
 
         if(playBtn){
             playBtn.addEventListener('click',(e)=>{
