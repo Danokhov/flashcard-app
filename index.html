@@ -113,15 +113,6 @@
             width: 100%;
             height: 100%;
         }
-        /* [НОВЫЙ СТИЛЬ] Для изолированного контента */
-        .content-iframe {
-            width: 100%;
-            height: 75vh; /* 75% высоты экрана */
-            border: none;
-            border-radius: 0.75rem; /* rounded-xl */
-            background-color: #ffffff; /* Белый фон во время загрузки */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
         /* Стили для карусели */
         .carousel-card {
             min-height: 250px;
@@ -222,8 +213,8 @@
              <div id="content-viewer-back-button-container" class="mb-4"></div>        
             <h2 id="content-viewer-title" class="text-xl font-bold text-gray-800 mb-4 text-center"></h2>
             <!-- Тут будет загружаться контент text1.html -->
-            <div id="content-viewer-body" class="p-0 bg-gray-100 rounded-xl">
-                <!-- [ИЗМЕНЕНО] Контент будет вставлен через iframe -->
+            <div id="content-viewer-body" class="p-4 bg-gray-100 rounded-xl">
+                <p class="text-center text-gray-500">Загрузка контента...</p>
             </div>
         </div>
         
@@ -722,11 +713,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
 
-            // [!!! НАЧАЛО ВОССТАНОВЛЕННОГО БЛОКА ФУНКЦИЙ !!!]
-
-            /**
-             * [НОВАЯ ФУНКЦИЯ] Рассчитывает максимально доступную неделю.
-             */
             getMaxAvailableWeek() {
                 if (!this.isSubscriber || !this.activationDate) {
                     return 1; 
@@ -738,9 +724,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 return Math.min(ALL_WEEKS.length, Math.max(1, maxWeek));
             },
             
-            /**
-             * [НОВАЯ ФУНКЦИЯ] Обработка подписки (вызывается Telegram-ботом)
-             */
             async activateSubscription() {
                 if (this.isSubscriber) return; 
                 this.isSubscriber = true;
@@ -748,16 +731,88 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 this.selectedWeek = 1; 
                 this.unlockedWeek = this.getMaxAvailableWeek(); 
                 await this.saveProgress();
-                this.renderHomeScreen(false, true); // Рендер с очисткой стека
+                this.renderHomeScreen(false, true); // Рендерим с очисткой стека
             },
 
-            // ==================== РЕНДЕРИНГ ЭКРАНОВ ====================
+            // ==================== НОВАЯ ЛОГИКА НАВИГАЦИИ ====================
 
+            /**
+             * [НОВЫЙ] Обработчик нажатия кнопки "Zurück" в хедере Telegram.
+             */
+            handleTelegramBackClick() {
+                // В стеке не может быть меньше 2 экранов (home + текущий)
+                if (this.navigationHistory.length < 2) {
+                    // Этого не должно случиться, так как кнопка "Назад" должна быть скрыта на home-screen
+                    return; 
+                }
+                
+                // 1. Удаляем *текущий* экран из истории
+                this.navigationHistory.pop();
+                
+                // 2. Получаем *предыдущее* состояние
+                const prevState = this.navigationHistory[this.navigationHistory.length - 1];
+                
+                // 3. Перерисовываем предыдущее состояние
+                // true = "это навигация назад", не нужно снова пушить в историю
+                this.reRenderState(prevState, true);
+            },
+
+            /**
+             * [НОВЫЙ] "Роутер", который перерисовывает экран из состояния в истории.
+             */
+            reRenderState(state, isBackNavigation = false) {
+                if (!state) {
+                    this.renderHomeScreen(isBackNavigation); // Безопасный возврат
+                    return;
+                }
+
+                const { renderFunc, param } = state;
+                
+                // Вызываем соответствующую функцию рендеринга
+                switch (renderFunc) {
+                    case 'renderHomeScreen':
+                        this.renderHomeScreen(isBackNavigation);
+                        break;
+                    case 'renderWeeklySelections':
+                        this.renderWeeklySelections(isBackNavigation);
+                        break;
+                    case 'renderWeekContent':
+                        this.renderWeekContent(param, isBackNavigation);
+                        break;
+                    case 'renderAllSetsScreen':
+                        this.renderAllSetsScreen(isBackNavigation);
+                        break;
+                    case 'renderVideoContentScreen':
+                        this.renderVideoContentScreen(param.title, param.videoUrl, param.textContent, isBackNavigation);
+                        break;
+                    case 'renderExternalLinkScreen':
+                        this.renderExternalLinkScreen(param.title, param.url, isBackNavigation);
+                        break;
+                    case 'renderStoryScreen':
+                        this.renderStoryScreen(param.title, param.url, isBackNavigation);
+                        break;
+                    case 'renderCarouselListScreen':
+                        this.renderCarouselListScreen(isBackNavigation);
+                        break;
+                    case 'startCarouselSession':
+                        this.startCarouselSession(param.setId, param.setTitle, param.filepath, isBackNavigation);
+                        break;
+                    case 'startSession':
+                        this.startSession(param.setId, param.mode, isBackNavigation);
+                        break;
+                    default:
+                        this.renderHomeScreen(isBackNavigation); // По умолчанию
+                }
+            },
+
+
+            // ==================== РЕНДЕРИНГ ЭКРАНОВ (ИЗМЕНЕНО) ====================
+
+            // isBack - флаг, что мы пришли сюда по кнопке "Назад"
+            // clearStack - флаг, что нужно очистить всю историю (напр. при клике "Домой" в футере)
             renderHomeScreen(isBack = false, clearStack = false) {
-                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('home-screen', isBack, { renderFunc: 'renderHomeScreen', param: null }, clearStack);
-
+                this.renderDueTodaySection();
+                
                 const mainBlock = document.getElementById('main-content-block');
                 mainBlock.innerHTML = '';
                 
@@ -799,8 +854,11 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 `;
                 
                 this.renderDueTodaySection();
+                
+                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
+                this.showScreen('home-screen', isBack, { renderFunc: 'renderHomeScreen', param: null }, clearStack);
             },
-
+            
             renderDueTodaySection() {
                 const section = document.getElementById('due-today-section');
                 const list = document.getElementById('due-today-list');
@@ -824,32 +882,37 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
                     if (dueCount > 0) {
                         dueSetsCount++;
-                        list.appendChild(Object.assign(document.createElement('div'), {
-                            className: "bg-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 flex justify-between items-center transform transition hover:-translate-y-1",
-                            innerHTML: `
-                                <div>
-                                    <span class="font-bold text-gray-800">${set.name}</span>
-                                    <span class="text-sm text-orange-600 font-medium block">Доступно для повторения: ${dueCount}</span>
-                                </div>
-                                <button onclick="window.App.promptForDirection('${set.id}', 'review')"
-                                        class="py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center">
-                                    Начать
-                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </button>
-                            `
-                        }));
+                        const setEl = document.createElement('div');
+                        setEl.className = "bg-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 flex justify-between items-center transform transition hover:-translate-y-1";
+                        setEl.innerHTML = `
+                            <div>
+                                <span class="font-bold text-gray-800">${set.name}</span>
+                                <span class="text-sm text-orange-600 font-medium block">Доступно для повторения: ${dueCount}</span>
+                            </div>
+                            <button onclick="window.App.promptForDirection('${set.id}', 'review')"
+                                    class="py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center">
+                                Начать
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </button>
+                        `;
+                        list.appendChild(setEl);
                     }
                 });
-                section.classList.toggle('hidden', dueSetsCount === 0);
+
+                if (dueSetsCount > 0) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
             },
 
             renderWeeklySelections(isBack = false) {
                 // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
                 document.getElementById('list-title').innerText = '📚 Подборки за неделю';
                 document.getElementById('filter-controls').innerHTML = '';
+
                 const contentListDiv = document.getElementById('content-list');
                 contentListDiv.innerHTML = '';
-                
                 this.unlockedWeek = this.getMaxAvailableWeek(); 
 
                 ALL_WEEKS.forEach(i => {
@@ -919,7 +982,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             async selectAndRenderWeek(weekNum) {
                 this.selectedWeek = weekNum;
                 await this.saveProgress();
-                this.renderWeekContent(weekNum);
+                this.renderWeekContent(weekNum); // Это уже не 'isBack'
             },
             
             renderMenuCard(container, title, subtitle, onClickAction, style = 'bg-white hover:bg-gray-50') {
@@ -937,65 +1000,60 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             },
             
             renderWeekContent(weekNum, isBack = false) {
-                // [ИЗМЕНЕНО] Логика для восстановления состояния
-                let param;
-                if(isBack) {
-                    param = weekNum; // weekNum уже является объектом {weekNum: ...}
-                    weekNum = param.weekNum;
-                } else {
-                    param = { weekNum }; // Создаем объект для истории
-                }
-                
                 const weekData = WEEKLY_CONTENT_MAP[weekNum];
                 if (!weekData) return;
                 
                 const isTrialLesson = !this.isSubscriber && weekNum === 1;
                 
-                document.getElementById('list-title').innerText = isTrialLesson 
-                    ? `🚀 Контент Пробного урока` 
-                    : `📚 Контент Недели ${weekNum}`;
-                
+                if (isTrialLesson) {
+                    document.getElementById('list-title').innerText = `🚀 Контент Пробного урока`;
+                } else {
+                    document.getElementById('list-title').innerText = `📚 Контент Недели ${weekNum}`;
+                }
+
+                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
                 document.getElementById('filter-controls').innerHTML = '';
                 const contentListDiv = document.getElementById('content-list');
                 contentListDiv.innerHTML = '';
                 
-                // 1. Ассоциации (Видео)
-                // [ИЗМЕНЕНО] Параметры передаются как объект
-                const videoParam = {
-                    title: `🧠 Видео ассоциации`,
-                    videoUrl: weekData.associationVideo,
-                    textContent: null
-                };
+                // 1. Ассоциации на неделю (Видео)
                 this.renderMenuCard(contentListDiv, 
-                    videoParam.title, 
+                    `🧠 Видео ассоциации`, 
                     weekData.associationTitle,
-                    `window.App.renderVideoContentScreen(${JSON.stringify(videoParam).replace(/"/g, "'")})`
+                    `window.App.renderVideoContentScreen('${weekData.associationTitle.replace(/'/g, "\\'")}', '${weekData.associationVideo}', null)`
                 );
                 
-                // 2. Карусель
+                // 2. Карусель ассоциаций
                 const carouselSet = this.carouselSetsMetadata.find(set => set.id === weekData.carouselId);
                 if (carouselSet) {
                     this.renderMenuCard(contentListDiv, 
                         `🖼️ Карусель ассоциаций: ${carouselSet.title}`, 
                         `Визуальное изучение ${carouselSet.wordCount} слов`,
-                        // [ИЗМЕНЕНО] Передаем параметры как отдельные аргументы
                         `window.App.startCarouselSession('${carouselSet.id}', '${carouselSet.title}', '${carouselSet.filepath}')`,
                         'bg-purple-100 hover:bg-purple-200'
                     );
+                } else {
+                     this.renderMenuCard(contentListDiv, 
+                        `🖼️ Карусель ассоциаций (Ошибка)`, 
+                        `Набор не найден или не загружен.`,
+                        `void(0)`,
+                        'button-locked'
+                    );
                 }
-                
+
                 // 3. История недели
                 let storyAction;
-                const storyTitle = `📖 История недели ${weekNum}`;
                 if (weekNum === 1 && weekData.storyLink === 'text1.html') {
-                    // [ИЗМЕНЕНО] Параметры передаются как отдельные аргументы
-                    storyAction = `window.App.renderStoryScreen('${storyTitle}', '${getBaseUrl() + 'text1.html'}')`; 
+                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${getBaseUrl() + 'text1.html'}')`; 
                 } else {
-                    // [ИЗМЕНЕНО] Параметры передаются как объект
-                    const linkParam = { title: storyTitle, url: weekData.storyLink };
-                    storyAction = `window.App.renderExternalLinkScreen(${JSON.stringify(linkParam).replace(/"/g, "'")})`; 
+                    storyAction = `window.App.renderExternalLinkScreen('📖 История недели ${weekNum}', '${weekData.storyLink}')`; 
                 }
-                this.renderMenuCard(contentListDiv, storyTitle, `Видео + квиз`, storyAction);
+                
+                this.renderMenuCard(contentListDiv, 
+                    `📖 История недели`, 
+                    `Видео + квиз`,
+                    storyAction 
+                );
 
                 // 4. Слова на неделю
                 this.renderMenuCard(contentListDiv, 
@@ -1005,63 +1063,226 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     'bg-green-100 hover:bg-green-200'
                 );
                 
-                // 5. Диалоги (Внешняя ссылка)
-                // [ИЗМЕНЕНО] Параметры передаются как объект
-                const dialogParam = { title: `🗣️ Диалоги Недели ${weekNum}`, url: weekData.dialoguesLink };
+                // 5. Полезные фразы
                 this.renderMenuCard(contentListDiv, 
-                    `🗣️ Полезные фразы / Диалоги`, 
+                    `🗣️ Полезные фразы / Диалоги на тему`, 
                     `Внешняя ссылка`,
-                    `window.App.renderExternalLinkScreen(${JSON.stringify(dialogParam).replace(/"/g, "'")})` 
+                    `window.App.renderExternalLinkScreen('🗣️ Диалоги Недели ${weekNum}', '${weekData.dialoguesLink}')` 
                 );
-                
+
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('list-screen', isBack, { renderFunc: 'renderWeekContent', param });
+                this.showScreen('list-screen', isBack, { renderFunc: 'renderWeekContent', param: weekNum });
+                
+                if (this.carouselSetsMetadata.length === 0) {
+                     this.loadCarouselMetadata().then(() => {
+                         this.renderWeekContent(weekNum, true); // Перерисовываем, но отмечаем как isBack, чтобы не дублировать историю
+                     });
+                }
             },
             
-            renderVideoContentScreen(param, isBack = false) {
-                // [ИЗМЕНЕНО] Логика для восстановления состояния
-                const { title, videoUrl, textContent } = param;
-                
+            renderVideoContentScreen(title, videoUrl, textContent, isBack = false) {
+                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
                 document.getElementById('video-title').textContent = title;
                 const videoIframe = document.getElementById('video-embed');
                 const extraTextDiv = document.getElementById('video-extra-text');
 
-                if (videoUrl) {
-                    videoIframe.src = videoUrl;
-                    videoIframe.style.display = 'block';
-                } else {
-                    videoIframe.src = '';
-                    videoIframe.style.display = 'none';
-                }
+                videoIframe.src = videoUrl ? videoUrl : '';
+                videoIframe.style.display = videoUrl ? 'block' : 'none';
                 
                 extraTextDiv.innerHTML = textContent ? `<p>${textContent}</p>` : '';
                 extraTextDiv.style.display = textContent ? 'block' : 'none';
                 
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('video-content-screen', isBack, { renderFunc: 'renderVideoContentScreen', param });
+                this.showScreen('video-content-screen', isBack, { 
+                    renderFunc: 'renderVideoContentScreen', 
+                    param: {title, videoUrl, textContent} 
+                });
             },
             
-            renderExternalLinkScreen(param, isBack = false) {
-                // [ИЗМЕНЕНО] Логика для восстановления состояния
-                const { title, url } = param;
-
+            renderExternalLinkScreen(title, url, isBack = false) {
+                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
                 document.getElementById('external-link-title').textContent = title;
                 document.getElementById('external-link-button').href = url;
                 document.getElementById('external-link-url-display').textContent = url;
                 
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('external-link-screen', isBack, { renderFunc: 'renderExternalLinkScreen', param });
+                this.showScreen('external-link-screen', isBack, { 
+                    renderFunc: 'renderExternalLinkScreen', 
+                    param: {title, url} 
+                });
 
-                if (this.tg && this.tg.openLink) {
-                    this.tg.openLink(url);
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+                    window.Telegram.WebApp.openLink(url);
                 }
             },
+
+            async renderStoryScreen(title, url, isBack = false) {
+    document.getElementById('content-viewer-title').textContent = title;
+    const contentBody = document.getElementById('content-viewer-body');
+    contentBody.innerHTML = '<p class="text-center text-gray-500 py-10">Загрузка контента...</p>';
+
+    this.showScreen('content-viewer-screen', isBack, { 
+        renderFunc: 'renderStoryScreen', 
+        param: {title, url} 
+    });
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        let htmlContent = await response.text();
+        
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        
+        // вставляем стили и контент
+        let styleHtml = '';
+        doc.head.querySelectorAll('style, link').forEach(el => {
+            if (el.tagName === 'LINK') {
+                const link = document.createElement('link');
+                link.rel = el.rel;
+                link.href = el.href;
+                document.head.appendChild(link);
+            } else {
+                styleHtml += el.outerHTML;
+            }
+        });
+        const innerContent = doc.body.innerHTML;
+        contentBody.innerHTML = styleHtml + innerContent;
+
+        // === КРИТИЧЕСКАЯ ЧАСТЬ ===
+        // Сначала даём выполниться всем скриптам из text1.html
+        const scripts = doc.querySelectorAll('script');
+        const scriptPromises = [];
+
+        scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            if (script.src) {
+                newScript.src = script.src;
+                newScript.type = 'text/javascript';
+                // для внешних скриптов ждём загрузки
+                const promise = new Promise((resolve, reject) => {
+                    newScript.onload = resolve;
+                    newScript.onerror = reject;
+                });
+                scriptPromises.push(promise);
+            } else {
+                newScript.textContent = script.textContent;
+            }
+            document.body.appendChild(newScript);  // или contentBody.appendChild
+        });
+
+        // Дожидаемся полной загрузки всех внешних скриптов
+        if (scriptPromises.length > 0) {
+            await Promise.all(scriptPromises);
+        }
+
+        // Теперь, когда ВСЁ из text1.html выполнилось (включая StoryApp.init())
+        // — принудительно возвращаем себе кнопку «Назад»
+        setTimeout(() => {
+            // Сбрасываем любой чужой обработчик
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.BackButton.show();
+                // Полностью перехватываем управление
+                window.Telegram.WebApp.BackButton.onClick(() => {
+                    window.App.handleTelegramBackClick();
+                });
+            }
+        }, 100); // небольшая задержка, чтобы точно после всех init()
+
+    } catch (error) {
+        contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка загрузки: ${error.message}</p>`;
+        console.error(error);
+    }
+},
+
+            renderAllSetsScreen(isBack = false) {
+                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
+                document.getElementById('list-title').innerText = '📚 Все наборы слов';
+                this.renderSetFilterControls();
+                
+                const filteredSets = WORD_SETS.filter(set => {
+                    const weekMatch = this.currentWeekFilter === 'All' || set.week.toString() === this.currentWeekFilter;
+                    const unlockedMatch = set.week <= this.unlockedWeek; 
+                    return weekMatch && unlockedMatch;
+                });
+                
+                this.renderSetCards(filteredSets);
+                
+                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
+                this.showScreen('list-screen', isBack, { renderFunc: 'renderAllSetsScreen', param: null });
+            },
+
+            // ==================== ФИЛЬТРЫ И КАРТОЧКИ (Без изменений) ====================
+
+            renderSetFilterControls() {
+                const filterControls = document.getElementById('filter-controls');
+                filterControls.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3">
+                        <select id="week-filter" onchange="window.App.updateSetFilter('week', this.value)" 
+                                class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="All">Все Недели</option>
+                            ${ALL_WEEKS.map(w => `<option value="${w}" ${this.currentWeekFilter === w.toString() ? 'selected' : ''}>Неделя ${w}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+            },
             
-            // [!!! КОНЕЦ ВОССТАНОВЛЕННОГО БЛОКА ФУНКЦИЙ !!!]
+            updateSetFilter(filterType, value) {
+                if (filterType === 'week') {
+                    this.currentWeekFilter = value;
+                }
+                this.renderAllSetsScreen(); // Это создаст новый (дублирующий) элемент истории. Это нормально.
+            },
 
-            // [!!! НАЧАЛО ВОССТАНОВЛЕННОГО БЛОКА КАРУСЕЛИ !!!]
+            renderSetCards(setsToRender) {
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '';
+                const today = this.getTodayDateString();
 
-            // ==================== ЛОГИКА КАРУСЕЛИ ====================
+                if (setsToRender.length === 0) {
+                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет наборов, удовлетворяющих условиям фильтрации.</p>';
+                    return;
+                }
+
+                setsToRender.forEach(set => {
+                    let dueCount = 0;
+                    set.cards.forEach(card => {
+                        const progress = this.userProgress[card.id];
+                        if (!progress || (progress.nextReview && progress.nextReview <= today)) {
+                            dueCount++;
+                        }
+                    });
+
+                    const setContainer = document.createElement('div');
+                    setContainer.className = "w-full p-4 bg-white rounded-xl shadow-md";
+                    
+                    setContainer.innerHTML = `
+                        <div class="flex justify-between items-center mb-3">
+                            <div>
+                                <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
+                                <span class="block text-sm text-gray-500">Неделя ${set.week} | ${set.cards.length} слов</span>
+                            </div>
+                            ${dueCount > 0 ? 
+                                `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">${dueCount} к повтору</span>` :
+                                `<span class="text-green-500 font-semibold">✓</span>`
+                            }
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
+                                    onclick="window.App.promptForDirection('${set.id}', 'review')">
+                                Повторить (${dueCount})
+                            </button>
+                            <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
+                                    onclick="window.App.promptForDirection('${set.id}', 'practice')">
+                                Практика (Все)
+                            </button>
+                        </div>
+                    `;
+                    contentListDiv.appendChild(setContainer);
+                });
+            },
+            
+            // ==================== ЛОГИКА КАРУСЕЛИ (ИЗМЕНЕНО) ====================
             
             async loadCarouselMetadata() {
                 try {
@@ -1079,15 +1300,13 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             },
 
             async renderCarouselListScreen(isBack = false) {
+                // [ИЗМЕНЕНО] Убраны this.carouselReturnContext и this.renderBackButton
                 document.getElementById('carousel-list-title').innerText = 'Карусель ассоциаций';
                 const listDiv = document.getElementById('carousel-sets-list');
                 listDiv.innerHTML = '<p class="text-center text-gray-500 py-6">Загрузка списка наборов...</p>';
-
-                // [ИЗМЕНЕНО] Вызываем showScreen
-                this.showScreen('carousel-list-screen', isBack, { 
-                    renderFunc: 'renderCarouselListScreen', 
-                    param: null 
-                });
+                
+                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
+                this.showScreen('carousel-list-screen', isBack, { renderFunc: 'renderCarouselListScreen', param: null });
                 
                 if (this.carouselSetsMetadata.length === 0) {
                    await this.loadCarouselMetadata();
@@ -1106,26 +1325,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         <span>${set.title}</span>
                         <span class="text-sm text-gray-500">${set.wordCount} слов &rarr;</span>
                     `;
-                    // [ИЗМЕНЕНО] Передаем параметры
                     button.onclick = () => this.startCarouselSession(set.id, set.title, set.filepath);
                     listDiv.appendChild(button);
                 });
             },
             
             async startCarouselSession(setId, setTitle, filepath, isBack = false) {
-                // [ИЗМЕНЕНО] Логика для восстановления состояния
-                let param;
-                if(isBack) {
-                    param = setId; // setId уже является объектом { setId, setTitle, filepath }
-                    setId = param.setId;
-                    setTitle = param.setTitle;
-                    filepath = param.filepath;
-                } else {
-                    param = { setId, setTitle, filepath }; // Создаем объект для истории
-                }
-
-                // Показываем экран загрузки
-                this.showScreen('loading-screen'); 
+                // [ИЗМЕНЕНО] Убраны this.carouselReturnContext
+                this.showScreen('loading-screen', isBack); // Показываем загрузку (isBack, чтобы не записать 'loading' в историю)
                 
                 try {
                     const response = await fetch(getBaseUrl() + filepath);
@@ -1134,20 +1341,25 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     let rawResponseText = await response.text(); 
                     this.carouselCards = JSON.parse(rawResponseText);
 
-                    if (this.carouselCards.length === 0) throw new Error('Набор пуст.');
+                    if (this.carouselCards.length === 0) {
+                        throw new Error('Набор пуст.');
+                    }
 
                     this.currentCarouselIndex = 0;
-                    this.showCarouselCard(); // Показываем первую карточку
-
-                    // [ИЗМЕНЕНО] Вызываем showScreen для карусели ПОСЛЕ загрузки
+                    this.showCarouselCard();
+                    
+                    // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
                     this.showScreen('image-carousel-screen', isBack, { 
                         renderFunc: 'startCarouselSession', 
-                        param 
+                        param: {setId, setTitle, filepath} 
                     });
                     
                 } catch (error) {
-                    this.showError(`Ошибка загрузки карусели: ${error.message}`);
+                    this.showScreen('loading-screen', true); // true = не пишем в историю
+                    document.getElementById('loading-screen').innerHTML = `<p class="text-red-500 text-center py-6">Ошибка загрузки карусели: ${error.message}</p>`;
                     console.error('Carousel Data Load Error:', error);
+                    // Автоматически вернем пользователя назад через 2 сек
+                    setTimeout(() => this.handleTelegramBackClick(), 2000);
                 }
             },
 
@@ -1160,6 +1372,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 document.getElementById('carousel-translation').classList.add('hidden');
                 document.getElementById('toggle-translation-button').textContent = 'Показать перевод';
+                // [ИЗМЕНЕНО] Убран вызов renderBackButton
             },
 
             showNextWord() {
@@ -1186,11 +1399,108 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     button.textContent = 'Показать перевод';
                 }
             },
+            
+            // [ИЗМЕНЕНО] Функция УДАЛЕНА, так как HTML кнопка удалена
+            // returnToCarouselList() { ... }
 
-            // [!!! КОНЕЦ ВОССТАНОВЛЕННОГО БЛОКА КАРУСЕЛИ !!!]
 
-            /**
-             * [НОВАЯ ВЕРСИЯ] Рендерит кнопку "Назад" в фиксированном футере.
+            // ==================== ЛОГИКА ПОВТОРЕНИЯ (ИЗМЕНЕНО) ====================
+
+            promptForDirection(setId, mode) {
+                this.tempSetId = setId;
+                this.tempMode = mode;
+                this.openModal('direction-modal');
+            },
+
+            closeDirectionModal() {
+                this.closeModal('direction-modal');
+            },
+
+            startSessionWithDirection(direction) {
+                this.currentDirection = direction;
+                this.closeDirectionModal();
+                // [ИЗМЕНЕНО] Передаем renderFunc в startSession
+                this.startSession(this.tempSetId, this.tempMode);
+            },
+            
+            startSession(setId, mode, isBack = false) {
+                const set = WORD_SETS.find(s => s.id === setId);
+                if (!set) return;
+
+                this.isPracticeMode = (mode === 'practice');
+                
+                if (this.isPracticeMode) {
+                    this.sessionCards = set.cards.map(card => ({...card})); 
+                } else {
+                    const today = this.getTodayDateString();
+                    this.sessionCards = set.cards.filter(card => {
+                        const progress = this.userProgress[card.id];
+                        return !progress || (progress.nextReview && progress.nextReview <= today);
+                    });
+                }
+                
+                // [ИЗМЕНЕНО] Состояние для истории
+                const historyState = { renderFunc: 'startSession', param: {setId, mode} };
+
+                if (this.sessionCards.length === 0) {
+                    this.showScreen('finish-screen', isBack, historyState); // Записываем в историю
+                    document.getElementById('finish-screen-text').textContent = this.isPracticeMode 
+                        ? 'В этом наборе нет карточек.' 
+                        : 'Для этого набора нет карточек к повторению на сегодня!';
+                    return;
+                }
+                
+                this.sessionCards.sort(() => Math.random() - 0.5);
+                this.currentCardIndex = 0;
+                
+                this.showScreen('study-screen', isBack, historyState); // Записываем в историю
+                this.showNextCard();
+            },
+
+            showAnswer() {
+                document.getElementById('card').classList.add('is-flipped');
+                document.getElementById('controls-show').classList.add('hidden');
+                document.getElementById('controls-rate').classList.remove('hidden');
+                
+                if (this.currentDirection === 'ru-de') {
+                     this.speakGerman(this.sessionCards[this.currentCardIndex].back);
+                }
+            },
+            
+            showNextCard() {
+                if (this.currentCardIndex >= this.sessionCards.length) {
+                    // [ИЗМЕНЕНО] Состояние для истории
+                    const historyState = this.navigationHistory[this.navigationHistory.length - 1];
+                    this.showScreen('finish-screen', false, historyState); // Переиспользуем состояние, но не пишем в историю
+                    document.getElementById('finish-screen-text').textContent = 'Вы прошли все карточки в этой сессии.';
+                    return;
+                }
+                
+                const cardEl = document.getElementById('card');
+                cardEl.classList.remove('is-flipped', 'slide-in');
+                void cardEl.offsetWidth; // Трюк для перезапуска анимации
+                cardEl.classList.add('slide-in');
+
+                const totalCards = this.sessionCards.length;
+                const percent = ((this.currentCardIndex + 1) / totalCards) * 100;
+                document.getElementById('progress-bar').style.width = `${percent}%`;
+
+                document.getElementById('controls-show').classList.remove('hidden');
+                document.getElementById('controls-rate').classList.add('hidden');
+
+                const card = this.sessionCards[this.currentCardIndex];
+                
+                const speakerIconSvg = `
+                    <svg class="w-6 h-6 text-blue-500 hover:text-blue-700 inline-block ml-2 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 6v12a1 1 0 01-1.707.707L5.586 15z"></path>
+                    </svg>
+                `;
+                
+                const germanHtml = `
+                    <div class="flex items-center justify-center gap-2">
+                        <span>${card.back}</span>
+                        <span onclick="window.App.speakGerman('${card.back}', event)">
+                            ${speakerIconSvg}
                         </span>
                     </div>
                 `;
@@ -1364,13 +1674,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
     </script>
     
-    <!-- 
-        ВЕСЬ СТАРЫЙ БЛОК СКРИПТОВ, КОТОРЫЙ БЫЛ ЗДЕСЬ, 
-        (включая <script src="https://telegram.org/js/telegram-web-app.js"> и tg.BackButton.onClick(() => history.back()))
-        БЫЛ ПОЛНОСТЬЮ УДАЛЕН.
-        
-        Он вызывал конфликт и перезаписывал правильную логику кнопки "Назад".
-    -->
+    <!-- ВТОРОЙ СКРИПТ УДАЛЕН, так как вся логика Telegram API теперь встроена в основной модуль <script type="module"> -->
 
 </body>
 </html>
