@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>История Недели 1: Артикли (A1)</title>
-    <!-- Tailwind -->
+    <title>История Недели 1: Arzttermin</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -20,20 +20,23 @@
         .next-button-disabled { background-color:#D1D5DB!important;color:#6B7280!important;cursor:not-allowed;box-shadow:none!important; }
         .next-button-active { background:linear-gradient(to right,#4F46E5,#6366F1)!important;color:#fff!important;box-shadow:0 4px 10px -2px rgba(79,70,229,0.5);transition:all 0.2s ease; }
         .next-button-active:hover { opacity:.9;transform:translateY(-1px); }
-        #question-box { border-left:5px solid #6366F1; }
+        #question-box { border-left: 5px solid #6366F1; }
 
-        .story-visual-container img { width:100%;height:auto;display:block; }
+        .story-visual-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
 
-        /* ФИКСИРОВАННАЯ СВЕРХУ ПАНЕЛЬ АУДИО */
-        #audio-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            background: rgba(243,244,246,0.96); /* bg-gray-100 с лёгким blur-эффектом */
+        /* sticky-панель ПОД картинкой/заголовком */
+        .audio-sticky-wrapper {
+            position: sticky;
+            top: 0;              /* прилипает к верхнему краю окна */
+            z-index: 30;
+            background: rgba(243,244,246,0.97); /* bg-gray-100 */
             backdrop-filter: blur(6px);
-            border-bottom: 1px solid rgba(209,213,219,0.9); /* gray-300 */
+            padding-top: 0.5rem;
+            padding-bottom: 0.75rem;
         }
 
         .audio-main-button {
@@ -42,13 +45,10 @@
         .audio-main-button:hover {
             transform: translateY(-1px);
             box-shadow: 0 8px 18px rgba(37,99,235,0.55);
-            opacity: .95;
+            opacity:.95;
         }
 
-        input[type="range"] {
-            width:100%;
-            cursor:pointer;
-        }
+        input[type="range"] { width:100%; cursor:pointer; }
 
         /* Аккордеоны */
         .accordion-content {
@@ -67,42 +67,10 @@
     </style>
 </head>
 
-<body class="min-h-screen bg-gray-100 font-sans">
+<body class="min-h-screen bg-gray-100 font-sans p-4">
+<div id="app" class="max-w-md mx-auto space-y-6">
 
-<!-- ФИКСИРОВАННАЯ ПАНЕЛЬ С АУДИО -->
-<div id="audio-bar">
-    <div class="max-w-md mx-auto px-4 py-3 flex flex-col gap-2">
-        <div class="flex items-center justify-center">
-            <button id="audio-main-button"
-                    class="audio-main-button rounded-full bg-blue-600 text-white px-7 py-2.5 flex items-center gap-2">
-                <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z"
-                          clip-rule="evenodd"></path>
-                </svg>
-                <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z"
-                          clip-rule="evenodd"></path>
-                </svg>
-                <span id="audio-status" class="font-semibold text-base">Play</span>
-            </button>
-        </div>
-
-        <div class="flex flex-col gap-1">
-            <input id="audio-progress" type="range" min="0" max="100" value="0">
-            <div class="flex justify-between text-xs text-gray-500">
-                <span id="audio-current-time">0:00</span>
-                <span id="audio-duration">0:00</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ОСНОВНОЙ КОНТЕНТ: ОТСТУП ВВЕРХУ, ЧТОБЫ НЕ ЗАЕЗЖАТЬ ПОД ПАНЕЛЬ -->
-<div id="app" class="max-w-md mx-auto p-4 pt-28 space-y-6">
-
-    <!-- Картинка + аудио -->
+    <!-- картинка -->
     <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
         <img src="Woche1_text.png"
              alt="Иллюстрация к истории"
@@ -110,10 +78,43 @@
         <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
     </div>
 
+    <!-- заголовок истории -->
+    <h1 class="text-2xl font-bold text-center text-gray-900">Der Termin beim Arzt</h1>
+
+    <!-- STICKY-ПАНЕЛЬ АУДИО: Play + ползунок -->
+    <div class="audio-sticky-wrapper">
+        <div class="bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-200 flex flex-col gap-2">
+            <div class="flex items-center justify-center">
+                <button id="audio-main-button"
+                        class="audio-main-button rounded-full bg-blue-600 text-white px-7 py-2.5 flex items-center gap-2">
+                    <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                    <span id="audio-status" class="font-semibold text-base">Play</span>
+                </button>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <input id="audio-progress" type="range" min="0" max="100" value="0">
+                <div class="flex justify-between text-xs text-gray-500">
+                    <span id="audio-current-time">0:00</span>
+                    <span id="audio-duration">0:00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- АККОРДЕОНЫ -->
     <div class="space-y-4">
 
-        <!-- ТРАНСКРИПЦИЯ -->
+        <!-- транскрипция -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             <button id="transcript-button"
                     onclick="window.StoryApp.toggleAccordion('transcript-content')"
@@ -155,7 +156,7 @@
                 <p class="mb-3">Dann fragt er:</p>
                 <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
                 <p class="mb-3">Thomas antwortet:</p>
-                <p class="mb-3">„Ja, bitte – für drei Tage.“</p>
+                <p class="mb-3">„Ja, bitte – для drei Tage.“</p>
                 <p class="mb-3">Dr. Keller notiert es und lächelt:</p>
                 <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
                 <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
@@ -167,7 +168,7 @@
             </div>
         </div>
 
-        <!-- РАЗБОР (карусель) -->
+        <!-- разбор текста (карусель) -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             <button id="analysis-button"
                     onclick="window.StoryApp.toggleAccordion('analysis-content')"
@@ -197,23 +198,11 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="mt-6 pt-4 border-t border-gray-300">
-                    <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-                       target="_blank"
-                       class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                        Скачать разбор (PDF)
-                    </a>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Кнопка квиза -->
+    <!-- кнопка квиза -->
     <button onclick="window.StoryApp.startStoryQuiz()"
             class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
                    hover:bg-indigo-600 transition flex justify-between items-center 
@@ -223,7 +212,7 @@
     </button>
 </div>
 
-<!-- МОДАЛКА КВИЗА (упрощённо, как раньше) -->
+<!-- модалка квиза (короткая версия) -->
 <div id="quiz-modal"
      class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0"
      onclick="window.StoryApp.closeModal('quiz-modal')" role="dialog" aria-modal="true">
@@ -373,9 +362,9 @@ window.StoryApp = {
             });
         }
 
-        audio.onplay = ()=>{ this.updateAudioUi(true); };
-        audio.onpause = ()=>{ this.updateAudioUi(false); };
-        audio.onended = ()=>{ this.updateAudioUi(false); };
+        audio.onplay  = ()=> this.updateAudioUi(true);
+        audio.onpause = ()=> this.updateAudioUi(false);
+        audio.onended = ()=> this.updateAudioUi(false);
     },
 
     formatTime(sec){
@@ -619,3 +608,4 @@ window.addEventListener('load',()=>window.StoryApp.init());
 </script>
 </body>
 </html>
+
