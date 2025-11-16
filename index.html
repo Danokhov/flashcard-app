@@ -709,7 +709,7 @@
 
 
     <!-- "МАГИЯ" (JavaScript) -->
-<script type="module">
+<<script type="module">
         // Импортируем необходимые модули Firebase (v9+)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
@@ -879,6 +879,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
           userAnswers: [],
           analysisSlides: [], // [ИЗМЕНЕНО] Инициализируем как пустой массив
           currentAnalysisIndex: 0,
+          
+          // [НОВОЕ] Хранилища для обработчиков, чтобы избежать дублирования
+          audioPlayHandler: null,
+          audioProgressHandler: null,
 
           init() {
             this.initAudioPlayback();
@@ -900,11 +904,19 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             if (!audio) return;
 
+            // [ИЗМЕНЕНО] Удаляем старый обработчик, прежде чем добавить новый
             if (playBtn) {
-              playBtn.addEventListener('click', (e) => {
+              // 1. Удаляем *старый* обработчик, если он существует
+              if (this.audioPlayHandler) {
+                playBtn.removeEventListener('click', this.audioPlayHandler);
+              }
+              // 2. Создаем и сохраняем *новый* обработчик
+              this.audioPlayHandler = (e) => {
                 e.stopPropagation();
                 this.toggleAudioPlay();
-              });
+              };
+              // 3. Добавляем новый обработчик
+              playBtn.addEventListener('click', this.audioPlayHandler);
             }
 
             audio.addEventListener('loadedmetadata', () => {
@@ -922,12 +934,20 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
               }
             });
 
+            // [ИЗМЕНЕНО] Та же логика для ползунка
             if (progress) {
-              progress.addEventListener('input', (e) => {
+              // 1. Удаляем *старый* обработчик
+              if (this.audioProgressHandler) {
+                progress.removeEventListener('input', this.audioProgressHandler);
+              }
+              // 2. Создаем и сохраняем *новый*
+              this.audioProgressHandler = (e) => {
                 if (!isFinite(audio.duration) || audio.duration <= 0) return;
                 const val = Number(e.target.value) || 0;
                 audio.currentTime = (val / 100) * audio.duration;
-              });
+              };
+              // 3. Добавляем новый
+              progress.addEventListener('input', this.audioProgressHandler);
             }
 
             audio.onplay = () => this.updateAudioUi(true);
@@ -1808,19 +1828,24 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
                 // 3. История недели
                 let storyAction;
-                if (weekNum === 1 && weekData.storyLink === 'text1.html') {
-                    // [ИЗМЕНЕНО] Убран getBaseUrl() и 'text1.html', 
-                    // [ИЗМЕНЕНО] Передаем ID недели (week_1, week_2)
-                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', 'week_${weekNum}')`; 
-                } else {
+                // [ИЗМЕНЕНО] Проверяем по ID, а не по storyLink
+                const storyId = `week_${weekNum}`;
+                if (this.allStoryContent[storyId]) {
+                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${storyId}')`; 
+                } else if (weekData.storyLink) {
+                    // Оставляем как запасной вариант для внешних ссылок
                     storyAction = `window.App.renderExternalLinkScreen('📖 История недели ${weekNum}', '${weekData.storyLink}')`; 
+                } else {
+                    storyAction = `void(0)`; // Блокируем, если нет контента
                 }
                 
                 this.renderMenuCard(contentListDiv, 
                     `📖 История недели`, 
                     `Видео + квиз`,
-                    storyAction 
+                    storyAction,
+                    (this.allStoryContent[storyId] || weekData.storyLink) ? 'bg-white hover:bg-gray-50' : 'button-locked'
                 );
+
 
                 // 4. Слова на неделю
                 this.renderMenuCard(contentListDiv, 
@@ -1928,7 +1953,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     content.transcript.forEach(paragraph => {
                         const p = document.createElement('p');
                         p.className = 'mb-3';
-                        p.textContent = paragraph;
+                        p.innerHTML = paragraph;
                         transcriptContainer.appendChild(p);
                     });
                 }
@@ -2399,6 +2424,18 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
              * @param {boolean} clearStack - true, если нужно очистить всю историю (напр. "Домой")
              */
             showScreen(screenId, isBackNavigation = false, historyState = null, clearStack = false) {
+                
+                // [НОВОЕ ИСПРАВЛЕНИЕ №2]
+                // Если мы уходим с экрана истории, ставим аудио на паузу.
+                if (this.currentScreenId === 'content-viewer-screen' && screenId !== 'content-viewer-screen') {
+                    const audio = document.getElementById('story-audio-player');
+                    if (audio && !audio.paused) {
+                        audio.pause();
+                        // Обновляем UI кнопки (Play/Pause), чтобы при возврате
+                        // она была в правильном состоянии
+                        window.StoryApp.updateAudioUi(false);
+                    }
+                }
                 
                 // 1. Логика истории навигации
                 if (clearStack) {
