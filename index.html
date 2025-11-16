@@ -1130,12 +1130,16 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             /**
              * Загружает и отображает HTML-контент (например, text1.html) внутри SPA.
              */
+/**
+             * Загружает и отображает HTML-контент (например, text1.html) внутри SPA.
+             * [ИСПРАВЛЕНО] Теперь также загружает <style> теги из <head>.
+             */
             async renderStoryScreen(title, url, fromScreen, fromParam) {
                 this.returnContext = { screen: fromScreen, param: fromParam };
                 
                 document.getElementById('content-viewer-title').textContent = title;
                 
-                // !!! ИСПРАВЛЕНИЕ: Используем fromScreen и fromParam для корректного возврата !!!
+                // Используем fromScreen и fromParam для корректного возврата
                 this.renderBackButton(fromScreen, fromParam, 'content-viewer-screen');
                 
                 const contentBody = document.getElementById('content-viewer-body');
@@ -1148,17 +1152,26 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     if (!response.ok) throw new Error('Network response was not ok');
                     let htmlContent = await response.text();
                     
-                    // 1. Изолируем и чистим HTML
+                    // 1. Изолируем HTML
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(htmlContent, 'text/html');
                     
-                    // Извлекаем чистый контент из <body>
+                    // 2. [НОВОЕ] Извлекаем стили из <head>
+                    const styles = doc.head.querySelectorAll('style');
+                    let styleHtml = '';
+                    styles.forEach(style => {
+                        styleHtml += style.outerHTML;
+                    });
+
+                    // 3. Извлекаем чистый контент из <body>
                     const innerContent = doc.body ? doc.body.innerHTML : htmlContent;
                     
-                    // 2. Вставляем HTML
-                    contentBody.innerHTML = innerContent;
+                    // 4. [ИЗМЕНЕНО] Вставляем СТИЛИ + HTML
+                    // Сначала вставляем стили, потом контент
+                    contentBody.innerHTML = styleHtml + innerContent;
                     
-                    // 3. Выполняем скрипты
+                    // 5. Выполняем скрипты
+                    // (Эта часть не изменилась, она и так работала)
                     const scripts = doc.querySelectorAll('script');
                     scripts.forEach(script => {
                         const newScript = document.createElement('script');
@@ -1174,13 +1187,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         contentBody.appendChild(newScript);
                     });
                     
-                    // 4. Запускаем встроенный init, если он есть
-                    // Обратите внимание: StoryApp - это локальное имя для скрипта text1.html
+                    // 6. Запускаем встроенный init, если он есть
+                    // (Эта часть не изменилась)
                     const storyApp = window.StoryApp; 
                     if (storyApp && typeof storyApp.init === 'function') {
                          storyApp.init();
                     }
-
 
                 } catch (error) {
                     contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка загрузки контента: ${error.message}</p>`;
