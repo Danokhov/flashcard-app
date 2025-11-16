@@ -57,7 +57,12 @@
     padding-bottom: 0.75rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-
+#audio-bar.fixed-audio-bar > div {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
 /* Чтобы контент не прыгал — отступ под панель */
 #audio-bar-placeholder.fixed-visible {
     height: 120px; /* подбери под реальную высоту твоего бара (примерно 100-130px) */
@@ -92,7 +97,7 @@
   </style>
 </head>
 
-<body class="min-h-screen bg-gray-100 font-sans pt-20"> <!-- вот этот pt-20 важен! -->
+<body class="min-h-screen bg-gray-100 font-sans"> <!-- вот этот pt-20 важен! -->
 <div id="app" class="max-w-md mx-auto p-4 space-y-6">
 
   <!-- картинка + аудио -->
@@ -444,34 +449,53 @@ window.StoryApp = {
 
   /* ====== FIXED AUDIO BAR ====== */
 initStickyAudioBar() {
-    const wrapper = document.getElementById('audio-bar-wrapper');
-    const bar = document.getElementById('audio-bar');
+    const wrapper   = document.getElementById('audio-bar-wrapper');
+    const bar       = document.getElementById('audio-bar');
     const placeholder = document.getElementById('audio-bar-placeholder');
     if (!wrapper || !bar || !placeholder) return;
 
-    // Высота шапки Telegram (обычно 56px, но может быть больше на iOS с notch)
-    const tgHeaderHeight = window.Telegram?.WebApp?.initDataUnsafe?.header_height || 
-                           (window.innerHeight - window.Telegram.WebApp.viewportStableHeight) || 56;
+    // Реальная высота шапки Telegram
+    const getHeaderHeight = () => {
+        if (window.Telegram?.WebApp?.viewportStableHeight) {
+            return window.innerHeight - window.Telegram.WebApp.viewportStableHeight;
+        }
+        return 56; // fallback
+    };
+
+    let barHeight = 0;
 
     const checkScroll = () => {
+        const headerH = getHeaderHeight();
         const wrapperTop = wrapper.getBoundingClientRect().top;
-        const shouldBeFixed = wrapperTop <= tgHeaderHeight; // когда доезжаем до верха
+        const shouldFix = wrapperTop <= headerH;
 
-        if (shouldBeFixed) {
+        if (shouldFix && !bar.classList.contains('fixed-audio-bar')) {
+            // Измеряем высоту один раз перед фиксацией
+            barHeight = bar.offsetHeight;
+            placeholder.style.height = barHeight + 'px';
+
             bar.classList.add('fixed-audio-bar');
-            placeholder.classList.add('fixed-visible');
-            // Динамически подгоняем top под реальную шапку TG
-            bar.style.top = `${tgHeaderHeight}px`;
-        } else {
+            bar.style.top = `${headerH}px`;
+            bar.style.left = '0';
+            bar.style.right = '0';
+            bar.style.width = '100%';
+        } else if (!shouldFix && bar.classList.contains('fixed-audio-bar')) {
             bar.classList.remove('fixed-audio-bar');
-            placeholder.classList.remove('fixed-visible');
+            placeholder.style.height = '0';
             bar.style.top = '';
+            bar.style.left = '';
+            bar.style.right = Manson;
+            bar.style.width = '';
         }
     };
 
+    // Дебаг: видно, когда срабатывает
+    // window.addEventListener('scroll', () => console.log('scroll'));
     window.addEventListener('scroll', checkScroll);
     window.addEventListener('resize', checkScroll);
-    checkScroll(); // при загрузке
+    
+    // Запускаем сразу
+    setTimeout(checkScroll, 100);
 },
 
   /* ====== АККОРДЕОНЫ ====== */
