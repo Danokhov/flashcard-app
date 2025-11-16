@@ -1364,7 +1364,13 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
     </script>
     
-    <!-- ВТОРОЙ СКРИПТ УДАЛЕН, так как вся логика Telegram API теперь встроена в основной модуль <script type="module"> -->
+    <!-- 
+        ВЕСЬ СТАРЫЙ БЛОК СКРИПТОВ, КОТОРЫЙ БЫЛ ЗДЕСЬ, 
+        (включая <script src="https://telegram.org/js/telegram-web-app.js"> и tg.BackButton.onClick(() => history.back()))
+        БЫЛ ПОЛНОСТЬЮ УДАЛЕН.
+        
+        Он вызывал конфликт и перезаписывал правильную логику кнопки "Назад".
+    -->
 
 </body>
 </html>
