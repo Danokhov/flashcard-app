@@ -127,12 +127,13 @@
         
         <!-- 1. Экран Загрузки (виден по умолчанию) -->
         <div id="loading-screen" class="text-center py-20">
-            <p class="text-gray-500">Загрузка данных...</p>
+            <p class="text-gray-500">Загрузка приложения...</p>
         </div>
 
         <!-- 2. ГЛАВНОЕ МЕНЮ (Home Screen) -->
         <div id="home-screen" class="hidden">
             <h1 class="text-2xl font-bold text-center mb-8 text-gray-800">Главное меню</h1>
+          
             <div class="space-y-4">
 
                 <!-- ДИНАМИЧЕСКИЙ БЛОК: Пробный урок ИЛИ Активная неделя/Уроки по неделям -->
@@ -1250,89 +1251,99 @@ renderHomeScreen() {
          * [НОВАЯ ВЕРСИЯ] Рендерит "Синюю кнопку НАЗАД" в контейнере текущего экрана.
          * Футером больше не управляет.
          */
-        renderBackButton(target, param = null, screenOverride = null) {
+renderBackButton(target, param = null, screenOverride = null) {
+    // 0. Запоминаем, КУДА надо возвращаться при "Назад"
+    this.returnContext = { screen: target, param };
 
-            // 1. Сначала очищаем ВСЕ контейнеры для кнопок "Назад"
-            const allContainers = [
-                'back-button-container', 'video-back-button-container', 
-                'external-link-back-button-container', 'content-viewer-back-button-container',
-                'carousel-list-back-button-container', 'carousel-back-button-container',
-                'study-back-button-container'
-            ];
-            allContainers.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerHTML = '';
-            });
+    // 1. Очищаем все контейнеры под кнопки "Назад"
+    const allContainers = [
+        'back-button-container', 'video-back-button-container', 
+        'external-link-back-button-container', 'content-viewer-back-button-container',
+        'carousel-list-back-button-container', 'carousel-back-button-container',
+        'study-back-button-container'
+    ];
+    allContainers.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '';
+    });
 
-            // 2. Если мы на главном экране, просто выходим
-            if (target === 'home-screen') {
-                return; // Кнопка "Назад" не нужна
+    // 2. Определяем, в каком ЭКРАНЕ мы сейчас рисуем кнопку
+    const currentScreenId = screenOverride || this.currentScreen || 'list-screen';
+
+    // На самом главном экране физическая кнопка "Назад" не нужна
+    if (currentScreenId === 'home-screen') {
+        return;
+    }
+
+    // 3. Выбираем контейнер по экрану
+    let containerId;
+    switch (currentScreenId) {
+        case 'video-content-screen':
+            containerId = 'video-back-button-container';
+            break;
+        case 'external-link-screen':
+            containerId = 'external-link-back-button-container';
+            break;
+        case 'content-viewer-screen':
+            containerId = 'content-viewer-back-button-container';
+            break;
+        case 'carousel-list-screen':
+            containerId = 'carousel-list-back-button-container';
+            break;
+        case 'image-carousel-screen':
+            containerId = 'carousel-back-button-container';
+            break;
+        case 'study-screen':
+            containerId = 'study-back-button-container';
+            break;
+        case 'list-screen':
+        default:
+            containerId = 'back-button-container';
+            break;
+    }
+
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // 4. Определяем ТЕКСТ кнопки (логика как в твоём коде)
+    let buttonText = 'Назад';
+
+    switch (target) {
+        case 'home-screen':
+            buttonText = 'В Главное меню';
+            break;
+        case 'weekly-selections':
+            buttonText = 'К Подборкам Недели';
+            break;
+        case 'week-content': {
+            const isTrialLesson = !this.isSubscriber && this.selectedWeek === 1;
+            if (isTrialLesson) {
+                buttonText = 'В Главное меню';
+            } else {
+                buttonText = 'К Контенту Недели';
             }
+            break;
+        }
+        case 'carousel-list':
+            buttonText = 'К Списку Каруселей';
+            break;
+        default:
+            buttonText = 'Назад';
+    }
 
-            // 3. Определяем, в какой контейнер вставить кнопку
-            let containerId;
-            switch(screenOverride) {
-                case 'video-content-screen': containerId = 'video-back-button-container'; break;
-                case 'external-link-screen': containerId = 'external-link-back-button-container'; break;
-                case 'content-viewer-screen': containerId = 'content-viewer-back-button-container'; break;
-                case 'carousel-list-screen': containerId = 'carousel-list-back-button-container'; break;
-                case 'image-carousel-screen': containerId = 'carousel-back-button-container'; break;
-                // 'study-screen' будет обработан отдельно
-                default:
-                    // По умолчанию используем 'list-screen' или 'study-screen'
-                    if (this.currentScreenId === 'study-screen') {
-                        containerId = 'study-back-button-container';
-                    } else if (this.currentScreenId === 'list-screen') {
-                         containerId = 'back-button-container';
-                    }
-            }
+    // 5. Рендерим СИНЮЮ кнопку, которая вызывает общий handleBackNavigation
+    container.innerHTML = `
+        <button type="button"
+                onclick="window.App.handleBackNavigation()"
+                class="inline-flex items-center py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-150">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m7 7h18"></path>
+            </svg>
+            ${buttonText}
+        </button>
+    `;
+}
 
-            const container = document.getElementById(containerId);
-            // Если контейнер не найден (например, на study-screen), выходим
-            if (!container) return;
-
-
-            // 4. Определяем "умную" функцию возврата (ваша логика)
-            let targetFunction;
-            let buttonText = 'Назад'; // Текст по умолчанию
-
-            switch (target) {
-                case 'home-screen':
-                    targetFunction = 'window.App.renderHomeScreen()';
-                    buttonText = 'В Главное меню';
-                    break;
-                case 'weekly-selections':
-                    targetFunction = 'window.App.renderWeeklySelections()';
-                    buttonText = 'К Подборкам Недели';
-                    break;
-                case 'week-content':
-                    const isTrialLesson = !this.isSubscriber && this.selectedWeek === 1;
-                    if (isTrialLesson) {
-                         targetFunction = 'window.App.renderHomeScreen()';
-                         buttonText = 'В Главное меню';
-                    } else {
-                        targetFunction = `window.App.renderWeekContent(${param})`; 
-                        buttonText = 'К Контенту Недели';
-                    }
-                    break;
-                case 'carousel-list':
-                    targetFunction = `window.App.renderCarouselListScreen('week-content', ${this.selectedWeek})`; 
-                    buttonText = 'К Списку Каруселей';
-                    break;
-                default:
-                    targetFunction = 'window.App.renderHomeScreen()';
-                    buttonText = 'В Главное меню';
-            }
-
-            // 5. Рендерим "Синюю кнопку НАЗАД"
-            container.innerHTML = `
-                <button onclick="${targetFunction}" 
-                        class="inline-flex items-center py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-150">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    ${buttonText}
-                </button>
-            `;
-        },
             renderSetFilterControls() {
                 // (Логика фильтров для "Все наборы слов" - не изменена)
                 const filterControls = document.getElementById('filter-controls');
@@ -1775,17 +1786,49 @@ renderHomeScreen() {
                 this.closeModal('hint-modal');
             },
             
-            showScreen(screenId) {
-                this.currentScreenId = screenId;
-                ['loading-screen', 'home-screen', 'list-screen', 'study-screen', 'finish-screen', 'video-content-screen', 'external-link-screen', 'content-viewer-screen', 'carousel-list-screen', 'image-carousel-screen'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.classList.add('hidden');
-                });
-                const screen = document.getElementById(screenId);
-                if (screen) {
-                    screen.classList.remove('hidden');
-                }
-            },
+showScreen(screenId) {
+    // Полный список твоих экранов
+    const screens = [
+        'loading-screen',
+        'home-screen',
+        'list-screen',
+        'video-content-screen',
+        'external-link-screen',
+        'content-viewer-screen',
+        'carousel-list-screen',
+        'image-carousel-screen',
+        'study-screen',
+        'finish-screen'
+    ];
+
+    // Скрываем все экраны, показываем нужный
+    screens.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === screenId) {
+            el.classList.remove('hidden');
+        } else {
+            el.classList.add('hidden');
+        }
+    });
+
+    // Запоминаем текущий экран SPA
+    this.currentScreen = screenId;
+
+    // Синхронизируем системную кнопку Telegram
+    if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+
+        // На корневых экранах → Schließen
+        if (screenId === 'home-screen' || screenId === 'loading-screen') {
+            tg.BackButton.hide();
+        } 
+        // На внутренних → Zurück
+        else {
+            tg.BackButton.show();
+        }
+    }
+},
             
             showError(message) {
                 this.showScreen('loading-screen');
@@ -1821,21 +1864,149 @@ renderHomeScreen() {
             window.App.init();
         });
 
-    </script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+ <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   const tg = window.Telegram.WebApp;
+  tg.ready();
 
-  tg.ready(); // очень важно!
+  window.App = window.App || {};
+  // ==== Telegram WebApp init ====
+let tg;
+if (window.Telegram && window.Telegram.WebApp) {
+    tg = window.Telegram.WebApp;
+    tg.ready();
+}
 
-  // Принудительно показать кнопку "Назад"
-  tg.BackButton.show();
+// Текущий экран SPA
+App.currentScreen = 'loading-screen';
 
+/**
+ * Универсальная функция "назад", общая для:
+ *  - HTML-кнопки назад, которую ты рендеришь в контейнер
+ *  - системной кнопки Telegram.BackButton
+ */
+handleBackNavigation() {
+    const ctx = this.returnContext || { screen: 'home-screen', param: null };
+
+    switch (ctx.screen) {
+        case 'home-screen':
+            this.renderHomeScreen();
+            break;
+
+        case 'weekly-selections':
+            this.renderWeeklySelections();
+            break;
+
+        case 'week-content': {
+            // Логика из твоего старого renderBackButton
+            const isTrialLesson = !this.isSubscriber && this.selectedWeek === 1;
+            if (isTrialLesson) {
+                this.renderHomeScreen();
+            } else {
+                this.renderWeekContent(ctx.param); // param = номер недели
+            }
+            break;
+        }
+
+        case 'carousel-list':
+            this.renderCarouselListScreen('week-content', this.selectedWeek);
+            break;
+
+        default:
+            this.renderHomeScreen();
+    }
+};
+
+// Системная кнопка "Zurück" в тулбаре Telegram
+if (tg) {
+    tg.BackButton.onClick(() => {
+        App.handleBackNavigation();
+    });
+}
+
+/**
+ * Обновляем состояние системной кнопки Telegram в зависимости от экрана.
+ * На "home-screen" — Schließen, на остальных — Zurück.
+ */
+updateTelegramBackButton = function () {
+    if (!tg) return;
+    if (this.currentScreen === 'home-screen' || this.currentScreen === 'loading-screen') {
+        tg.BackButton.hide();   // Schließen
+    } else {
+        tg.BackButton.show();   // Zurück
+    }
+};
+
+
+  // Все твои экраны из разметки
+  const SCREENS = [
+    'loading-screen',
+    'home-screen',
+    'list-screen',
+    'video-content-screen',
+    'external-link-screen',
+    'content-viewer-screen',
+    'carousel-list-screen',
+    'image-carousel-screen',
+    'study-screen',
+    'finish-screen'
+  ];
+
+  // Какие экраны считаем "корнем" (там должна быть кнопка Schließen)
+  const ROOT_SCREENS = ['home-screen'];
+
+  App.currentScreen = 'loading-screen';
+  App.screenStack = [];
+
+  App.setScreen = function(screenId, options = {}) {
+    const { push = true } = options;
+
+    // Показать нужный экран, остальные спрятать
+    SCREENS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (id === screenId) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    });
+
+    // Вести стек навигации
+    if (push && App.currentScreen && App.currentScreen !== screenId) {
+      App.screenStack.push(App.currentScreen);
+    }
+
+    App.currentScreen = screenId;
+    App.updateBackButton();
+  };
+
+  App.updateBackButton = function() {
+    if (ROOT_SCREENS.includes(App.currentScreen)) {
+      tg.BackButton.hide();   // будет Schließen
+    } else {
+      tg.BackButton.show();   // будет Zurück
+    }
+  };
+
+  // Реакция на системную кнопку "Zurück"
   tg.BackButton.onClick(() => {
-    // твоя логика "назад":
-    history.back(); // или переключение экрана/стейта
+    if (App.screenStack.length === 0) {
+      // На всякий случай можно просто закрыть WebApp
+      tg.close();
+      return;
+    }
+    const prev = App.screenStack.pop();
+    App.setScreen(prev, { push: false });
+  });
+
+  // Когда всё загрузилось — показываем главное меню как корень
+  document.addEventListener('DOMContentLoaded', () => {
+    App.screenStack = [];
+    App.setScreen('home-screen', { push: false });
   });
 </script>
+
 
 </body>
 </html>
