@@ -1116,7 +1116,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
 
-            async renderStoryScreen(title, url, isBack = false) {
+async renderStoryScreen(title, url, isBack = false) {
     document.getElementById('content-viewer-title').textContent = title;
     const contentBody = document.getElementById('content-viewer-body');
     contentBody.innerHTML = '<p class="text-center text-gray-500 py-10">Загрузка контента...</p>';
@@ -1134,7 +1134,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         
-        // вставляем стили и контент
+        // Вставляем стили и ссылки
         let styleHtml = '';
         doc.head.querySelectorAll('style, link').forEach(el => {
             if (el.tagName === 'LINK') {
@@ -1149,8 +1149,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
         const innerContent = doc.body.innerHTML;
         contentBody.innerHTML = styleHtml + innerContent;
 
-        // === КРИТИЧЕСКАЯ ЧАСТЬ ===
-        // Сначала даём выполниться всем скриптам из text1.html
+        // Выполняем скрипты
         const scripts = doc.querySelectorAll('script');
         const scriptPromises = [];
 
@@ -1159,7 +1158,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             if (script.src) {
                 newScript.src = script.src;
                 newScript.type = 'text/javascript';
-                // для внешних скриптов ждём загрузки
                 const promise = new Promise((resolve, reject) => {
                     newScript.onload = resolve;
                     newScript.onerror = reject;
@@ -1168,12 +1166,17 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             } else {
                 newScript.textContent = script.textContent;
             }
-            document.body.appendChild(newScript);  // или contentBody.appendChild
+            contentBody.appendChild(newScript);  // Append в contentBody для локального контекста
         });
 
-        // Дожидаемся полной загрузки всех внешних скриптов
+        // Дожидаемся загрузки внешних скриптов
         if (scriptPromises.length > 0) {
             await Promise.all(scriptPromises);
+        }
+
+        // ВРУЧНУЮ ВЫЗЫВАЕМ INIT ИЗ TEXT1.HTML (это ключевой фикс)
+        if (window.StoryApp && typeof window.StoryApp.init === 'function') {
+            window.StoryApp.init();
         }
 
     } catch (error) {
