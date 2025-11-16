@@ -43,16 +43,25 @@
       display:block;
     }
 
-    /* класс для фиксированной панели при скролле */
-    .fixed-audio-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 40;
-      background: rgba(243,244,246,0.97); /* bg-gray-100 */
-      backdrop-filter: blur(6px);
-    }
+
+/* ФИКСИРОВАННАЯ ПАНЕЛЬ ПРОИГРЫВАТЕЛЯ */
+#audio-bar.fixed-audio-bar {
+    position: fixed;
+    top: env(safe-area-inset-top, 0px); /* Автоматически подстраивается под шапку TG */
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: rgba(243, 244, 246, 0.97);
+    backdrop-filter: blur(6px);
+    padding-top: 0.5rem;
+    padding-bottom: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Чтобы контент не прыгал — отступ под панель */
+#audio-bar-placeholder.fixed-visible {
+    height: 120px; /* подбери под реальную высоту твоего бара (примерно 100-130px) */
+}
 
     .audio-main-button {
       transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
@@ -78,22 +87,12 @@
       visibility:visible;
       overflow-y:auto;
     }
-    .fixed-audio-bar {
-    position: fixed;
-    top: 56px; /* ← расстояние под вашу верхнюю панель TG WebApp */
-    left: 0;
-    right: 0;
-    z-index: 999;
-    background: rgba(243, 244, 246, 0.97); /* bg-gray-100 */
-    backdrop-filter: blur(6px);
-    padding-top: 0.25rem;
-    padding-bottom: 0.5rem;
-}
+
 
   </style>
 </head>
 
-<body class="min-h-screen bg-gray-100 font-sans">
+<body class="min-h-screen bg-gray-100 font-sans pt-20"> <!-- вот этот pt-20 важен! -->
 <div id="app" class="max-w-md mx-auto p-4 space-y-6">
 
   <!-- картинка + аудио -->
@@ -444,33 +443,36 @@ window.StoryApp = {
   },
 
   /* ====== FIXED AUDIO BAR ====== */
-  initStickyAudioBar() {
+initStickyAudioBar() {
     const wrapper = document.getElementById('audio-bar-wrapper');
     const bar = document.getElementById('audio-bar');
     const placeholder = document.getElementById('audio-bar-placeholder');
     if (!wrapper || !bar || !placeholder) return;
 
-    const barHeight = () => bar.offsetHeight || 0;
+    // Высота шапки Telegram (обычно 56px, но может быть больше на iOS с notch)
+    const tgHeaderHeight = window.Telegram?.WebApp?.initDataUnsafe?.header_height || 
+                           (window.innerHeight - window.Telegram.WebApp.viewportStableHeight) || 56;
 
-    const onScroll = () => {
-      const rect = wrapper.getBoundingClientRect();
-      if (rect.top <= 0) {
-        if (!bar.classList.contains('fixed-audio-bar')) {
-          bar.classList.add('fixed-audio-bar');
-          placeholder.style.height = barHeight() + 'px';
+    const checkScroll = () => {
+        const wrapperTop = wrapper.getBoundingClientRect().top;
+        const shouldBeFixed = wrapperTop <= tgHeaderHeight; // когда доезжаем до верха
+
+        if (shouldBeFixed) {
+            bar.classList.add('fixed-audio-bar');
+            placeholder.classList.add('fixed-visible');
+            // Динамически подгоняем top под реальную шапку TG
+            bar.style.top = `${tgHeaderHeight}px`;
+        } else {
+            bar.classList.remove('fixed-audio-bar');
+            placeholder.classList.remove('fixed-visible');
+            bar.style.top = '';
         }
-      } else {
-        if (bar.classList.contains('fixed-audio-bar')) {
-          bar.classList.remove('fixed-audio-bar');
-          placeholder.style.height = '0px';
-        }
-      }
     };
 
-    window.addEventListener('scroll', onScroll);
-    // Вызовем один раз при загрузке
-    onScroll();
-  },
+    window.addEventListener('scroll', checkScroll);
+    window.addEventListener('resize', checkScroll);
+    checkScroll(); // при загрузке
+},
 
   /* ====== АККОРДЕОНЫ ====== */
   toggleAccordion(contentId) {
