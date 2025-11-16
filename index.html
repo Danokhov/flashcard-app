@@ -1166,15 +1166,19 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         contentBody.appendChild(newScript);
                     });
                     
+                    // --- [!!!] НОВОЕ ИСПРАВЛЕНИЕ [!!!] ---
                     // Эта часть теперь должна работать, так как скрипты загружены корректно
                     const storyApp = window.StoryApp; 
                     if (storyApp && typeof storyApp.init === 'function') {
-                         storyApp.init();
+                         // Мы должны ДОЖДАТЬСЯ (await) выполнения init(),
+                         // так как он может быть асинхронным и устанавливать
+                         // свои обработчики событий (например, BackButton)
+                         await storyApp.init();
                     }
                     
-                    // --- [!!!] КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ [!!!] ---
-                    // Скрипты из text1.html могли ПЕРЕЗАПИСАТЬ наш обработчик BackButton.
-                    // Мы должны ВОССТАНОВИТЬ его СЕЙЧАС.
+                    // --- КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ ---
+                    // Теперь, когда storyApp.init() *гарантированно* завершился,
+                    // мы можем "вернуть" себе управление кнопкой "Zurück".
                     this.setupTelegramHandlers();
                     // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
 
