@@ -544,7 +544,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
         // 2. ЛОГИКА ПРИЛОЖЕНИЯ (Conceptual App Module)
         // ==========================================================
 
-        window.App = {
+        window.App = {  
             db: null,
             auth: null, // Добавляем экземпляр Auth
             userId: null,
@@ -761,6 +761,39 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 await this.saveProgress();
                 this.renderHomeScreen();
             },
+
+handleBackNavigation() {
+    const ctx = this.returnContext || { screen: 'home-screen', param: null };
+
+    switch (ctx.screen) {
+        case 'home-screen':
+            this.renderHomeScreen();
+            break;
+
+        case 'weekly-selections':
+            this.renderWeeklySelections();
+            break;
+
+        case 'week-content': {
+            // старая твоя логика
+            const isTrialLesson = !this.isSubscriber && this.selectedWeek === 1;
+            if (isTrialLesson) {
+                this.renderHomeScreen();
+            } else {
+                this.renderWeekContent(ctx.param); // param = номер недели
+            }
+            break;
+        }
+
+        case 'carousel-list':
+            this.renderCarouselListScreen('week-content', this.selectedWeek);
+            break;
+
+        default:
+            this.renderHomeScreen();
+    }
+},
+
 
             // ==================== РЕНДЕРИНГ ЭКРАНОВ ====================
 
@@ -1848,6 +1881,16 @@ showScreen(screenId) {
                 return date.toISOString().split('T')[0];
             }
         };
+
+        // Привязываем системную кнопку Telegram к нашей навигации
+if (window.Telegram && window.Telegram.WebApp) {
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.BackButton.onClick(() => {
+        window.App.handleBackNavigation();
+    });
+}
+
         
         // ==========================================================
         // 3. ЗАПУСК ПРИЛОЖЕНИЯ (Conceptual Bootstrap)
@@ -1865,7 +1908,7 @@ showScreen(screenId) {
         });
 
  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
+
   const tg = window.Telegram.WebApp;
   tg.ready();
 
