@@ -120,7 +120,7 @@
     </style>
 </head>
 
-<body class="min-h-screen bg-gray-100 font-sans p-4">
+<body class="min-h-screen bg-gray-100 font-sans p-4 pb-28">
 
     <!-- Основной контейнер приложения -->
     <div id="app" class="max-w-xl mx-auto">
@@ -159,8 +159,7 @@
         <div id="list-screen" class="hidden">
             <h1 id="list-title" class="text-2xl font-bold text-center mb-6 text-gray-800"></h1>
             
-            <!-- Кнопка "Назад" -->
-            <div id="back-button-container" class="mb-4"></div>
+            
             
             <!-- Динамические фильтры/поиск -->
             <div id="filter-controls" class="mb-4 space-y-3">
@@ -175,8 +174,7 @@
         
         <!-- 4. ЭКРАН ВИДЕО КОНТЕНТА (для ассоциаций недели) -->
         <div id="video-content-screen" class="hidden">
-             <!-- Кнопка "Назад" -->
-            <div id="video-back-button-container" class="mb-4"></div>
+             
 
             <h1 id="video-title" class="text-xl font-bold text-gray-800 mb-4 text-center"></h1>
             
@@ -193,7 +191,7 @@
 
         <!-- 5. ЭКРАН ВНЕШНЕЙ ССЫЛКИ -->
         <div id="external-link-screen" class="hidden text-center py-10">
-            <div id="external-link-back-button-container" class="mb-4 text-left"></div>
+           
 
             <h2 id="external-link-title" class="text-xl font-bold text-gray-800 mb-4"></h2>
             <p id="external-link-text" class="text-gray-600 mb-6 px-4">Нажмите кнопку ниже, чтобы перейти на отдельную страницу (или скопируйте ссылку).</p>
@@ -208,9 +206,7 @@
 
         <!-- 6. ЭКРАН ПРОСМОТРА СТРАНИЦЫ (для загрузки внутреннего HTML-контента, как text1.html) -->
         <div id="content-viewer-screen" class="hidden">
-            <!-- КОНТЕЙНЕР ДЛЯ КНОПКИ НАЗАД (ОБЯЗАТЕЛЕН) -->
-            <div id="content-viewer-back-button-container" class="mb-4"></div>
-            
+                     
             <h2 id="content-viewer-title" class="text-xl font-bold text-gray-800 mb-4 text-center"></h2>
             <!-- Тут будет загружаться контент text1.html -->
             <div id="content-viewer-body" class="p-4 bg-gray-100 rounded-xl">
@@ -221,7 +217,6 @@
         <!-- 7. ЭКРАН СПИСКА КАРУСЕЛЕЙ (Используется, если нет фиксированного набора) -->
         <div id="carousel-list-screen" class="hidden">
             <h1 id="carousel-list-title" class="text-2xl font-bold text-center mb-6 text-gray-800">Карусель ассоциаций</h1>
-            <div id="carousel-list-back-button-container" class="mb-4"></div>
             <div id="carousel-sets-list" class="space-y-4">
                 <!-- Сюда JS вставит кнопки наборов -->
             </div>
@@ -229,8 +224,7 @@
 
         <!-- 8. ЭКРАН КАРУСЕЛИ (Просмотр слов с картинками) -->
         <div id="image-carousel-screen" class="hidden">
-            <div id="carousel-back-button-container" class="mb-4"></div>
-            <h2 id="carousel-word-count" class="text-lg font-semibold text-gray-800 mb-4 text-center"></h2>
+                 <h2 id="carousel-word-count" class="text-lg font-semibold text-gray-800 mb-4 text-center"></h2>
 
             <!-- Карточка карусели -->
             <div class="carousel-card bg-white rounded-xl shadow-lg p-4 mb-6 relative">
@@ -331,7 +325,10 @@
 
     </div>
 
-    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <div id="navigation-footer" class="hidden fixed bottom-0 left-0 right-0 bg-white p-3 border-t border-gray-200 shadow-lg z-40 max-w-xl mx-auto rounded-t-xl">
+        <div id="nav-content-container">
+            </div>
+    </div>
 
     <!-- Модальное окно для Подсказки -->
     <div id="hint-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('hint-modal')">
@@ -746,11 +743,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             // ==================== РЕНДЕРИНГ ЭКРАНОВ ====================
 
-            renderHomeScreen() {
-                this.showScreen('home-screen');
-                this.returnContext = { screen: 'home-screen', param: null };
-                
-                const mainBlock = document.getElementById('main-content-block');
+renderHomeScreen() {
+            this.showScreen('home-screen');
+            this.returnContext = { screen: 'home-screen', param: null };
+
+            // ▼▼▼ ДОБАВЛЕНА ЭТА СТРОКА ▼▼▼
+            this.renderBackButton('home-screen'); // Скрываем футер на главном экране
+
+            const mainBlock = document.getElementById('main-content-block');
                 mainBlock.innerHTML = '';
                 
                 // 1. ДИНАМИЧЕСКИЙ БЛОК: Пробный урок ИЛИ Активная неделя
@@ -1221,76 +1221,66 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             /**
              * Рендерит кнопку "Назад" с учетом контекста
+/**
+             * [НОВАЯ ВЕРСИЯ] Рендерит кнопку "Назад" в фиксированном футере.
              */
             renderBackButton(target, param = null, screenOverride = null) {
-                let containerId;
-                switch(screenOverride) {
-                    case 'video-content-screen':
-                        containerId = 'video-back-button-container';
-                        break;
-                    case 'external-link-screen':
-                        containerId = 'external-link-back-button-container';
-                        break;
-                    case 'content-viewer-screen':
-                        containerId = 'content-viewer-back-button-container';
-                        break;
-                    case 'carousel-list-screen':
-                        containerId = 'carousel-list-back-button-container';
-                        break;
-                    case 'image-carousel-screen':
-                        containerId = 'carousel-back-button-container';
-                        break;
-                    default:
-                        containerId = 'back-button-container';
+                const footer = document.getElementById('navigation-footer');
+                const container = document.getElementById('nav-content-container');
+                
+                if (!footer || !container) return;
+
+                // 1. Определяем, нужна ли кнопка "Назад".
+                // Если 'target' - это 'home-screen', мы на главном экране, кнопка не нужна.
+                if (target === 'home-screen') {
+                    footer.classList.add('hidden'); // Скрываем весь футер
+                    container.innerHTML = '';
+                    return;
                 }
-                
-                const backBtnContainer = document.getElementById(containerId);
-                
-                if (!backBtnContainer) return; 
 
+                // 2. Ваша логика определения текста и функции (она не изменилась, она была правильной)
                 let targetFunction;
-                let buttonText; // Добавляем текст для кнопки
+                let buttonText; 
 
-                // Логика навигации
                 switch (target) {
                     case 'home-screen':
                         targetFunction = 'window.App.renderHomeScreen()';
-                        buttonText = 'Назад в Главное меню';
+                        buttonText = 'В Главное меню';
                         break;
                     case 'weekly-selections':
                         targetFunction = 'window.App.renderWeeklySelections()';
-                        buttonText = 'Назад к Подборкам Недели';
+                        buttonText = 'К Подборкам Недели';
                         break;
                     case 'week-content':
                         // Определяем, куда возвращаться из подраздела (видео/история)
-                        // Если активная неделя — Пробный урок (Неделя 1 для неподписчика), 
-                        // возвращаемся на Главный экран (как было в предыдущем шаге).
                         const isTrialLesson = !this.isSubscriber && this.selectedWeek === 1;
-
                         if (isTrialLesson) {
                              targetFunction = 'window.App.renderHomeScreen()';
-                             buttonText = '← Назад в Главное меню';
+                             buttonText = 'В Главное меню';
                         } else {
-                            // Иначе возвращаемся к Контенту Недели
                             targetFunction = `window.App.renderWeekContent(${param})`; 
-                            buttonText = '← К Контенту Недели';
+                            buttonText = 'К Контенту Недели';
                         }
                         break;
                     case 'carousel-list':
                         targetFunction = `window.App.renderCarouselListScreen('week-content', ${this.selectedWeek})`; 
-                        buttonText = '← К Списку Каруселей';
+                        buttonText = 'К Списку Каруселей';
                         break;
                     default:
                         targetFunction = 'window.App.renderHomeScreen()';
-                        buttonText = 'Назад в Главное меню';
+                        buttonText = 'В Главное меню';
                 }
 
-                backBtnContainer.innerHTML = `
-                    <button onclick="${targetFunction}" class="text-blue-500 hover:text-blue-700 font-semibold flex items-center">
-                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                        ${buttonText}
+                // 3. Рендерим красивую кнопку в футере
+                container.innerHTML = `
+                    <button onclick="${targetFunction}" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        <span>${buttonText}</span>
                     </button>
                 `;
+                
+                // 4. Показываем футер
+                footer.classList.remove('hidden');
             },
             
             renderSetFilterControls() {
