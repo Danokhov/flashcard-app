@@ -1224,65 +1224,79 @@ renderHomeScreen() {
 /**
              * [НОВАЯ ВЕРСИЯ] Рендерит кнопку "Назад" в фиксированном футере.
              */
+ /**
+             * [НОВАЯ ВЕРСИЯ] Рендерит в футере иконку "Назад" (умную) и иконку "Домой" (статичную).
+             */
             renderBackButton(target, param = null, screenOverride = null) {
                 const footer = document.getElementById('navigation-footer');
                 const container = document.getElementById('nav-content-container');
                 
                 if (!footer || !container) return;
 
-                // 1. Определяем, нужна ли кнопка "Назад".
+                // 1. Логика скрытия/показа
                 // Если 'target' - это 'home-screen', мы на главном экране, кнопка не нужна.
                 if (target === 'home-screen') {
                     footer.classList.add('hidden'); // Скрываем весь футер
                     container.innerHTML = '';
                     return;
                 }
+                
+                // Мы не на главном экране, поэтому показываем футер
+                footer.classList.remove('hidden');
 
-                // 2. Ваша логика определения текста и функции (она не изменилась, она была правильной)
-                let targetFunction;
-                let buttonText; 
+                // 2. Логика кнопки "Назад" (определяем, куда вернет "стрелка")
+                // (Это ваша существующая логика, она работает идеально)
+                let backTargetFunction;
 
                 switch (target) {
                     case 'home-screen':
-                        targetFunction = 'window.App.renderHomeScreen()';
-                        buttonText = 'В Главное меню';
+                        backTargetFunction = 'window.App.renderHomeScreen()';
                         break;
                     case 'weekly-selections':
-                        targetFunction = 'window.App.renderWeeklySelections()';
-                        buttonText = 'К Подборкам Недели';
+                        backTargetFunction = 'window.App.renderWeeklySelections()';
                         break;
                     case 'week-content':
                         // Определяем, куда возвращаться из подраздела (видео/история)
                         const isTrialLesson = !this.isSubscriber && this.selectedWeek === 1;
                         if (isTrialLesson) {
-                             targetFunction = 'window.App.renderHomeScreen()';
-                             buttonText = 'В Главное меню';
+                             backTargetFunction = 'window.App.renderHomeScreen()';
                         } else {
-                            targetFunction = `window.App.renderWeekContent(${param})`; 
-                            buttonText = 'К Контенту Недели';
+                            // Иначе возвращаемся к Контенту Недели
+                            backTargetFunction = `window.App.renderWeekContent(${param})`; 
                         }
                         break;
                     case 'carousel-list':
-                        targetFunction = `window.App.renderCarouselListScreen('week-content', ${this.selectedWeek})`; 
-                        buttonText = 'К Списку Каруселей';
+                        backTargetFunction = `window.App.renderCarouselListScreen('week-content', ${this.selectedWeek})`; 
                         break;
                     default:
-                        targetFunction = 'window.App.renderHomeScreen()';
-                        buttonText = 'В Главное меню';
+                        // По умолчанию "Назад" ведет в Главное меню
+                        backTargetFunction = 'window.App.renderHomeScreen()';
                 }
 
-                // 3. Рендерим красивую кнопку в футере
+                // 3. Рендерим ДВЕ ИКОНКИ в футере
+                // Мы используем `justify-between` для размещения их по краям
                 container.innerHTML = `
-                    <button onclick="${targetFunction}" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150 flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                        <span>${buttonText}</span>
-                    </button>
+                    <div class="flex justify-between items-center w-full px-2">
+                        
+                        <button onclick="${backTargetFunction}" 
+                                class="py-2 px-4 text-blue-500 hover:text-blue-700 transition duration-150 rounded-xl"
+                                aria-label="Назад">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+
+                        <button onclick="window.App.renderHomeScreen()" 
+                                class="py-2 px-4 text-blue-500 hover:text-blue-700 transition duration-150 rounded-xl"
+                                aria-label="Главное меню">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                        </button>
+                        
+                    </div>
                 `;
-                
-                // 4. Показываем футер
-                footer.classList.remove('hidden');
             },
-            
             renderSetFilterControls() {
                 // (Логика фильтров для "Все наборы слов" - не изменена)
                 const filterControls = document.getElementById('filter-controls');
