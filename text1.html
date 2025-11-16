@@ -78,6 +78,18 @@
       visibility:visible;
       overflow-y:auto;
     }
+    .fixed-audio-bar {
+    position: fixed;
+    top: 56px; /* ← расстояние под вашу верхнюю панель TG WebApp */
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: rgba(243, 244, 246, 0.97); /* bg-gray-100 */
+    backdrop-filter: blur(6px);
+    padding-top: 0.25rem;
+    padding-bottom: 0.5rem;
+}
+
   </style>
 </head>
 
@@ -432,28 +444,18 @@ window.StoryApp = {
   },
 
   /* ====== FIXED AUDIO BAR ====== */
-  initStickyAudioBar() {
-    const wrapper = document.getElementById('audio-bar-wrapper');
-    const bar = document.getElementById('audio-bar');
-    const placeholder = document.getElementById('audio-bar-placeholder');
-    if (!wrapper || !bar || !placeholder) return;
+initStickyAudioBar() {
+  const bar = document.getElementById('audio-bar');
+  const placeholder = document.getElementById('audio-bar-placeholder');
+  if (!bar || !placeholder) return;
 
-    const barHeight = () => bar.offsetHeight || 0;
+  const height = bar.offsetHeight;
 
-    const onScroll = () => {
-      const rect = wrapper.getBoundingClientRect();
-      if (rect.top <= 0) {
-        if (!bar.classList.contains('fixed-audio-bar')) {
-          bar.classList.add('fixed-audio-bar');
-          placeholder.style.height = barHeight() + 'px';
-        }
-      } else {
-        if (bar.classList.contains('fixed-audio-bar')) {
-          bar.classList.remove('fixed-audio-bar');
-          placeholder.style.height = '0px';
-        }
-      }
-    };
+  // делаем панель фиксированной сразу
+  bar.classList.add('fixed-audio-bar');
+  placeholder.style.height = height + 'px';
+}
+
 
     window.addEventListener('scroll', onScroll);
     // Вызовем один раз при загрузке
