@@ -28,15 +28,27 @@
             display: block;
         }
 
-        /* sticky-панель ПОД картинкой/заголовком (это та самая липкая панель) */
+        /* sticky-панель ПОД картинкой/заголовком (ЭТА ПАНЕЛЬ ТЕПЕРЬ СВОБОДНА ОТ #app) */
         .audio-sticky-wrapper {
             position: sticky;
             top: 0;              /* прилипает к верхнему краю окна */
             z-index: 30;
+            /* Дополнительные стили, чтобы занять всю ширину и центрироваться */
+            left: 0;
+            right: 0;
+            margin: 0 -1rem; /* Компенсируем padding p-4 на body */
+
             background: rgba(243,244,246,0.97); /* bg-gray-100 */
             backdrop-filter: blur(6px);
             padding-top: 0.5rem;
             padding-bottom: 0.75rem;
+        }
+        
+        /* Внутренний контейнер для ограничения ширины */
+        .audio-controls-container {
+            max-width: 448px; /* max-w-md из #app */
+            margin: 0 auto;
+            padding: 0 1rem; /* Восстанавливаем внутренний отступ, потерянный от body p-4 */
         }
 
         .audio-main-button {
@@ -68,162 +80,166 @@
 </head>
 
 <body class="min-h-screen bg-gray-100 font-sans p-4">
-<div id="app" class="max-w-md mx-auto space-y-6">
-
-    <!-- картинка -->
-    <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
-        <img src="Woche1_text.png"
-             alt="Иллюстрация к истории"
-             onclick="event.preventDefault();event.stopPropagation();">
-        <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
-    </div>
-
-    <!-- заголовок истории -->
-    <h1 class="text-2xl font-bold text-center text-gray-900">Der Termin beim Arzt</h1>
-
-    <!-- STICKY-ПАНЕЛЬ АУДИО: Play + ползунок + скорость -->
+    
+    <!-- STICKY-ПАНЕЛЬ АУДИО (ВЫНЕСЕНА ИЗ #app ДЛЯ КОРРЕКТНОЙ РАБОТЫ position: sticky) -->
     <div class="audio-sticky-wrapper">
-        <div class="bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-200 flex flex-col gap-2">
-            
-            <!-- КНОПКА PLAY/PAUSE И КОНТРОЛЬ СКОРОСТИ -->
-            <div class="flex items-center justify-between">
-                <!-- Контроль скорости (NEW) -->
-                <select id="audio-speed-select"
-                        class="p-2 pl-3 pr-6 rounded-xl border-2 border-indigo-200 text-sm font-semibold bg-white text-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition shadow-sm">
-                    <option value="0.75">0.75x (Медленно)</option>
-                    <option value="1.0" selected>1.0x (Норма)</option>
-                    <option value="1.25">1.25x</option>
-                    <option value="1.5">1.5x</option>
-                    <option value="2.0">2.0x (Быстро)</option>
-                </select>
+        <div class="audio-controls-container"> <!-- НОВЫЙ КОНТЕЙНЕР ДЛЯ ЦЕНТРИРОВАНИЯ -->
+            <div class="bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-200 flex flex-col gap-2">
+                
+                <!-- КНОПКА PLAY/PAUSE И КОНТРОЛЬ СКОРОСТИ -->
+                <div class="flex items-center justify-between">
+                    <!-- Контроль скорости (NEW) -->
+                    <select id="audio-speed-select"
+                            class="p-2 pl-3 pr-6 rounded-xl border-2 border-indigo-200 text-sm font-semibold bg-white text-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition shadow-sm">
+                        <option value="0.75">0.75x (Медленно)</option>
+                        <option value="1.0" selected>1.0x (Норма)</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="2.0">2.0x (Быстро)</option>
+                    </select>
 
-                <button id="audio-main-button"
-                        class="audio-main-button rounded-full bg-blue-600 text-white px-7 py-2.5 flex items-center gap-2">
-                    <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z"
-                              clip-rule="evenodd"></path>
-                    </svg>
-                    <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z"
-                              clip-rule="evenodd"></path>
-                    </svg>
-                    <span id="audio-status" class="font-semibold text-base">Play</span>
-                </button>
-            </div>
-
-            <!-- ИНДИКАТОР ПРОГРЕССА -->
-            <div class="flex flex-col gap-1">
-                <input id="audio-progress" type="range" min="0" max="100" value="0">
-                <div class="flex justify-between text-xs text-gray-500">
-                    <span id="audio-current-time">0:00</span>
-                    <span id="audio-duration">0:00</span>
+                    <button id="audio-main-button"
+                            class="audio-main-button rounded-full bg-blue-600 text-white px-7 py-2.5 flex items-center gap-2">
+                        <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span id="audio-status" class="font-semibold text-base">Play</span>
+                    </button>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- АККОРДЕОНЫ -->
-    <div class="space-y-4">
-
-        <!-- транскрипция -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-            <button id="transcript-button"
-                    onclick="window.StoryApp.toggleAccordion('transcript-content')"
-                    class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
-                <span><span class="mr-3 text-green-500">📖</span>Транскрипция</span>
-                <span id="transcript-arrow">&darr;</span>
-            </button>
-            <div id="transcript-content"
-                 class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4">
-                <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p>
-                <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt.</p>
-                <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
-                <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
-                <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
-                <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
-                <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
-                <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
-                <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
-                <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
-                <p class="mb-3">Die Mitarbeiterin hört ihm aufmerksam zu, als er seine Beschwerden beschreibt.</p>
-                <p class="mb-3">„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie Schmerzen haben, bekommen Sie natürlich schnell einen Termin.“</p>
-                <p class="mb-3">Am Nachmittag sitzt Thomas im Wartezimmer.</p>
-                <p class="mb-3">Es ist stickig, und er beginnt wieder zu schwitzen.</p>
-                <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, und jemand stöhnt leise vor Schmerzen.</p>
-                <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Magen brennt stärker, und ihm wird schwindlig.</p>
-                <p class="mb-3">Endlich ruft die Arzthelferin: „Herr Berger, bitte!“</p>
-                <p class="mb-3">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:</p>
-                <p class="mb-3">„Was fehlt Ihnen?“</p>
-                <p class="mb-3">Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach fühlt und nachts leidet.</p>
-                <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab und erklärt:</p>
-                <p class="mb-3">„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
-                <p class="mb-3">Dann fügt er hinzu:</p>
-                <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
-                <p class="mb-3">Thomas fragt:</p>
-                <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
-                <p class="mb-3">Dr. Keller antwortet:</p>
-                <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
-                <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
-                <p class="mb-3">Dann fragt er:</p>
-                <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
-                <p class="mb-3">Thomas antwortet:</p>
-                <p class="mb-3">„Ja, bitte – для drei Tage.“</p>
-                <p class="mb-3">Dr. Keller notiert es und lächelt:</p>
-                <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
-                <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
-                <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.“</p>
-                <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
-                <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen.</p>
-                <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und ausgeruht.</p>
-                <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
-            </div>
-        </div>
-
-        <!-- разбор текста (карусель) -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-            <button id="analysis-button"
-                    onclick="window.StoryApp.toggleAccordion('analysis-content')"
-                    class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
-                <span><span class="mr-3 text-blue-500">📝</span>Разбор текста</span>
-                <span id="analysis-arrow">&darr;</span>
-            </button>
-            <div id="analysis-content"
-                 class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4">
-                <div id="analysis-carousel" class="space-y-4">
-                    <div id="analysis-slide" class="space-y-3"></div>
-
-                    <div class="flex items-center justify-between mt-4">
-                        <button onclick="window.StoryApp.prevAnalysisSlide()"
-                                class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
-                            ← Назад
-                        </button>
-
-                        <span id="analysis-progress"
-                              class="text-xs text-gray-500 mx-2 flex-1 text-center">
-                            1 / 1
-                        </span>
-
-                        <button onclick="window.StoryApp.nextAnalysisSlide()"
-                                class="py-2 px-4 bg-indigo-500 text-white rounded-lg text-sm font-semibold hover:bg-indigo-600 transition">
-                            Вперёд →
-                        </button>
+                <!-- ИНДИКАТОР ПРОГРЕССА -->
+                <div class="flex flex-col gap-1">
+                    <input id="audio-progress" type="range" min="0" max="100" value="0">
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span id="audio-current-time">0:00</span>
+                        <span id="audio-duration">0:00</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- ОСНОВНОЙ КОНТЕНТ (ИДЕТ НИЖЕ ЛИПКОЙ ПАНЕЛИ) -->
+    <div id="app" class="max-w-md mx-auto space-y-6">
 
-    <!-- кнопка квиза -->
-    <button onclick="window.StoryApp.startStoryQuiz()"
-            class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
-                   hover:bg-indigo-600 transition flex justify-between items-center 
-                   bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl mt-4">
-        <span><span class="mr-3 text-yellow-300">🧠</span>Упражнения (Квиз)</span>
-        <span>&rarr;</span>
-    </button>
-</div>
+        <!-- картинка -->
+        <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
+            <img src="Woche1_text.png"
+                alt="Иллюстрация к истории"
+                onclick="event.preventDefault();event.stopPropagation();">
+            <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
+        </div>
+
+        <!-- заголовок истории -->
+        <h1 class="text-2xl font-bold text-center text-gray-900">Der Termin beim Arzt</h1>
+
+        <!-- АККОРДЕОНЫ -->
+        <div class="space-y-4">
+
+            <!-- транскрипция -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <button id="transcript-button"
+                        onclick="window.StoryApp.toggleAccordion('transcript-content')"
+                        class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
+                    <span><span class="mr-3 text-green-500">📖</span>Транскрипция</span>
+                    <span id="transcript-arrow">&darr;</span>
+                </button>
+                <div id="transcript-content"
+                    class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4">
+                    <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p>
+                    <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt.</p>
+                    <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
+                    <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
+                    <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
+                    <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
+                    <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
+                    <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
+                    <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
+                    <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
+                    <p class="mb-3">Die Mitarbeiterin hört ihm aufmerksam zu, als er seine Beschwerden beschreibt.</p>
+                    <p class="mb-3">„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie Schmerzen haben, bekommen Sie natürlich schnell einen Termin.“</p>
+                    <p class="mb-3">Am Nachmittag sitzt Thomas im Wartezimmer.</p>
+                    <p class="mb-3">Es ist stickig, und er beginnt wieder zu schwitzen.</p>
+                    <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, und jemand stöhnt leise vor Schmerzen.</p>
+                    <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Magen brennt stärker, und ihm wird schwindlig.</p>
+                    <p class="mb-3">Endlich ruft die Arzthelferin: „Herr Berger, bitte!“</p>
+                    <p class="mb-3">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:</p>
+                    <p class="mb-3">„Was fehlt Ihnen?“</p>
+                    <p class="mb-3">Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach fühlt und nachts leidet.</p>
+                    <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab und erklärt:</p>
+                    <p class="mb-3">„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
+                    <p class="mb-3">Dann fügt er hinzu:</p>
+                    <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
+                    <p class="mb-3">Thomas fragt:</p>
+                    <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
+                    <p class="mb-3">Dr. Keller antwortet:</p>
+                    <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
+                    <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
+                    <p class="mb-3">Dann fragt er:</p>
+                    <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
+                    <p class="mb-3">Thomas antwortet:</p>
+                    <p class="mb-3">„Ja, bitte – для drei Tage.“</p>
+                    <p class="mb-3">Dr. Keller notiert es und lächelt:</p>
+                    <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
+                    <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
+                    <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.“</p>
+                    <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
+                    <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen.</p>
+                    <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und ausgeruht.</p>
+                    <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
+                </div>
+            </div>
+
+            <!-- разбор текста (карусель) -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <button id="analysis-button"
+                        onclick="window.StoryApp.toggleAccordion('analysis-content')"
+                        class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
+                    <span><span class="mr-3 text-blue-500">📝</span>Разбор текста</span>
+                    <span id="analysis-arrow">&darr;</span>
+                </button>
+                <div id="analysis-content"
+                    class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4">
+                    <div id="analysis-carousel" class="space-y-4">
+                        <div id="analysis-slide" class="space-y-3"></div>
+
+                        <div class="flex items-center justify-between mt-4">
+                            <button onclick="window.StoryApp.prevAnalysisSlide()"
+                                    class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
+                                ← Назад
+                            </button>
+
+                            <span id="analysis-progress"
+                                class="text-xs text-gray-500 mx-2 flex-1 text-center">
+                                1 / 1
+                            </span>
+
+                            <button onclick="window.StoryApp.nextAnalysisSlide()"
+                                    class="py-2 px-4 bg-indigo-500 text-white rounded-lg text-sm font-semibold hover:bg-indigo-600 transition">
+                                Вперёд →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- кнопка квиза -->
+        <button onclick="window.StoryApp.startStoryQuiz()"
+                class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
+                    hover:bg-indigo-600 transition flex justify-between items-center 
+                    bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl mt-4">
+            <span><span class="mr-3 text-yellow-300">🧠</span>Упражнения (Квиз)</span>
+            <span>&rarr;</span>
+        </button>
+    </div>
 
 <!-- модалка квиза (короткая версия) -->
 <div id="quiz-modal"
