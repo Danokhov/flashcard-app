@@ -327,7 +327,577 @@
                 this.showScreen('story-week-screen', false, { renderFunc: 'openStoryWeek', param: {weekNumber, title} });
             },
 
-            // ... остальной код App ...
+            db: null,
+            auth: null, 
+            userId: null,
+            isAuthReady: false, 
+            userProgress: {}, 
+            
+            // ПОЛЯ ДЛЯ ПОДПИСКИ И АКТИВАЦИИ
+            isSubscriber: false, 
+            activationDate: null, 
+            selectedWeek: 0, 
+            
+            unlockedWeek: 1, 
+            sessionCards: [], 
+            currentCardIndex: 0,
+            isPracticeMode: false,
+            isAdvancing: false,
+            currentDirection: 'ru-de', 
+            tempSetId: null, 
+            tempMode: null,
+            currentScreenId: 'loading-screen', 
+            
+            // Состояние фильтров
+            currentWeekFilter: 'All', 
+            currentThemeFilter: 'All', 
+            
+            // --- НОВАЯ ЛОГИКА НАВИГАЦИИ ---
+            tg: null, // Объект Telegram Web App
+            navigationHistory: [], // Стек для хранения истории
+            // { renderFunc: 'renderHomeScreen', param: null }
+            // { renderFunc: 'renderWeekContent', param: 1 }
+            // { renderFunc: 'renderVideoContentScreen', param: { title: '...', videoUrl: '...' } }
+            // -------------------------------
+
+            // Данные карусели
+            carouselSetsMetadata: [],
+            carouselCards: [],
+            currentCarouselIndex: 0,
+            
+            /**
+             * ВАЖНО: Определяет путь к документу в Firestore, используя ВАШУ КОЛЛЕКЦИЮ И ID
+             */
+            getUserDocRef() {
+                 if (!this.db || !this.userId) return null;
+                 // Использование ВАШЕЙ КОЛЛЕКЦИИ (MY_COLLECTION_NAME) и Telegram ID (this.userId)
+                 return doc(this.db, MY_COLLECTION_NAME, this.userId);
+            },
+
+
+            // [НОВАЯ ФУНКЦИЯ] для (пере)установки обработчиков Telegram
+            setupTelegramHandlers() {
+                if (!this.tg) {
+                    this.tg = window.Telegram.WebApp;
+                    this.tg.ready(); 
+                }
+                // (Пере)назначаем наш главный обработчик "Назад"
+                this.tg.BackButton.onClick(() => this.handleTelegramBackClick());
+            },
+
+            async init() {
+                try {
+                    // --- ИНИЦИАЛИЗАЦИЯ TELEGRAM API ---
+                    // Делаем это *первым*, чтобы API было доступно
+                    // [ИЗМЕНЕНО] Вызываем новую функцию
+                    this.setupTelegramHandlers();
+                    // ------------------------------------
+
+                    // Инициализация Firebase
+                    if (Object.keys(firebaseConfig).length > 0 && firebaseConfig.apiKey !== "YOUR_FIREBASE_CONFIG_HERE") {
+                        const app = initializeApp(firebaseConfig);
+                        this.db = getFirestore(app);
+                        this.userId = MY_USER_ID_SOURCE;
+                        this.isAuthReady = true;
+                    } else {
+                         console.error("Firebase configuration not found or not set. Progress will not be saved.");
+                         this.isAuthReady = false;
+                         this.userId = MY_USER_ID_SOURCE; 
+                    }
+
+                    this.disableZoom();
+                    await this.loadCarouselMetadata(); 
+
+                    if (this.isAuthReady) {
+                        await this.loadProgress();
+                    } else {
+                        // В локальном режиме
+                        this.isSubscriber = false; 
+                        this.selectedWeek = 0; 
+                        this.unlockedWeek = this.getMaxAvailableWeek(); 
+                        this.renderHomeScreen(); // <-- Первый вызов, который запустит showScreen
+                    }
+
+                } catch (error) {
+                    this.showError(`Ошибка инициализации/аутентификации: ${error.message}`);
+                    console.error(error);
+                }
+            },
+            
+            disableZoom() {
+                document.addEventListener('touchstart', (event) => {
+                    if (event.touches.length > 1) {
+                        event.preventDefault();
+                    }
+                }, { passive: false });
+
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function (event) {
+                    const now = (new Date()).getTime();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+            },
+
+
+            async loadProgress() {
+                this.showScreen('loading-screen'); // Показываем загрузку
+                if (!this.isAuthReady) return; 
+
+                try {
+                    const docRef = this.getUserDocRef();
+                    if (!docRef) {
+                        console.error("Не удалось получить ссылку на документ Firestore.");
+                        return;
+                    }
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        this.userProgress = data.cards || {};
+                        this.isSubscriber = data.isSubscriber || false;
+                        this.activationDate = data.activationDate; 
+                        this.selectedWeek = data.selectedWeek || 0; 
+                        this.unlockedWeek = this.getMaxAvailableWeek(); 
+                    } else {
+                        // Новый пользователь
+                        this.userProgress = {};
+                        this.isSubscriber = false;
+                        this.selectedWeek = 0; 
+                        this.unlockedWeek = 1; 
+                        await this.saveProgress(); 
+                    }
+                } catch (error) {
+                    console.error("Error loading progress:", error);
+                } finally {
+                    this.renderHomeScreen(); // <-- Первый рендер после загрузки
+                }
+            },
+            
+            async saveProgress() {
+                if (!this.isAuthReady) return; 
+                try {
+                    const docRef = this.getUserDocRef();
+                    if (!docRef) {
+                        console.error("Не удалось получить ссылку на документ Firestore.");
+                        return;
+                    }
+                    await setDoc(docRef, { 
+                        cards: this.userProgress,
+                        isSubscriber: this.isSubscriber,
+                        activationDate: this.activationDate,
+                        selectedWeek: this.selectedWeek
+                    }, { merge: true });
+                    console.log('Прогресс сохранен в Firebase');
+                } catch (error) {
+                    console.error('Ошибка сохранения прогресса:', error);
+                }
+            },
+
+            getMaxAvailableWeek() {
+                if (!this.isSubscriber || !this.activationDate) {
+                    return 1; 
+                }
+                const activationTime = new Date(this.activationDate).getTime();
+                const currentTime = new Date().getTime();
+                const daysDiff = Math.floor((currentTime - activationTime) / (1000 * 60 * 60 * 24));
+                let maxWeek = Math.floor(daysDiff / 7) + 1;
+                return Math.min(ALL_WEEKS.length, Math.max(1, maxWeek));
+            },
+            
+            async activateSubscription() {
+                if (this.isSubscriber) return; 
+                this.isSubscriber = true;
+                this.activationDate = this.getTodayDateString();
+                this.selectedWeek = 1; 
+                this.unlockedWeek = this.getMaxAvailableWeek(); 
+                await this.saveProgress();
+                this.renderHomeScreen(false, true); // Рендерим с очисткой стека
+            },
+
+            // ==================== НОВАЯ ЛОГИКА НАВИГАЦИИ ====================
+
+            /**
+             * [НОВЫЙ] Обработчик нажатия кнопки "Zurück" в хедере Telegram.
+             */
+            handleTelegramBackClick() {
+                // В стеке не может быть меньше 2 экранов (home + текущий)
+                if (this.navigationHistory.length < 2) {
+                    // Этого не должно случиться, так как кнопка "Назад" должна быть скрыта на home-screen
+                    return; 
+                }
+                
+                // 1. Удаляем *текущий* экран из истории
+                this.navigationHistory.pop();
+                
+                // 2. Получаем *предыдущее* состояние
+                const prevState = this.navigationHistory[this.navigationHistory.length - 1];
+                
+                // 3. Перерисовываем предыдущее состояние
+                // true = "это навигация назад", не нужно снова пушить в историю
+                this.reRenderState(prevState, true);
+            },
+
+            /**
+             * [НОВЫЙ] "Роутер", который перерисовывает экран из состояния в истории.
+             */
+            reRenderState(state, isBackNavigation = false) {
+                if (!state) {
+                    this.renderHomeScreen(isBackNavigation); // Безопасный возврат
+                    return;
+                }
+
+                const { renderFunc, param } = state;
+                
+                // Вызываем соответствующую функцию рендеринга
+                switch (renderFunc) {
+                    case 'renderHomeScreen':
+                        this.renderHomeScreen(isBackNavigation);
+                        break;
+                    case 'renderWeeklySelections':
+                        this.renderWeeklySelections(isBackNavigation);
+                        break;
+                    case 'renderWeekContent':
+                        this.renderWeekContent(param, isBackNavigation);
+                        break;
+                    case 'renderAllSetsScreen':
+                        this.renderAllSetsScreen(isBackNavigation);
+                        break;
+                    case 'renderVideoContentScreen':
+                        this.renderVideoContentScreen(param.title, param.videoUrl, param.textContent, isBackNavigation);
+                        break;
+                    case 'renderExternalLinkScreen':
+                        this.renderExternalLinkScreen(param.title, param.url, isBackNavigation);
+                        break;
+                    case 'renderStoryScreen':
+                        this.renderStoryScreen(param.title, param.url, isBackNavigation);
+                        break;
+                    case 'renderCarouselListScreen':
+                        this.renderCarouselListScreen(isBackNavigation);
+                        break;
+                    case 'startCarouselSession':
+                        this.startCarouselSession(param.setId, param.setTitle, param.filepath, isBackNavigation);
+                        break;
+                    case 'startSession':
+                        this.startSession(param.setId, param.mode, isBackNavigation);
+                        break;
+                    default:
+                        this.renderHomeScreen(isBackNavigation); // По умолчанию
+                }
+            },
+
+
+            // ==================== РЕНДЕРИНГ ЭКРАНОВ (ИЗМЕНЕНО) ====================
+
+            // isBack - флаг, что мы пришли сюда по кнопке "Назад"
+            // clearStack - флаг, что нужно очистить всю историю (напр. при клике "Домой" в футере)
+            renderHomeScreen(isBack = false, clearStack = false) {
+                this.renderDueTodaySection();
+                
+                const mainBlock = document.getElementById('main-content-block');
+                mainBlock.innerHTML = '';
+                
+                if (!this.isSubscriber && this.selectedWeek === 0) { 
+                    mainBlock.innerHTML += `
+                        <button onclick="window.App.renderWeekContent(1)" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
+                            <span>🚀 Пробный урок</span>
+                            <span>Начать &rarr;</span>
+                        </button>
+                    `;
+                } else {
+                    const activeWeek = this.selectedWeek;
+                    const weekTitle = activeWeek === 1 && !this.isSubscriber 
+                                    ? 'Пробный урок (Неделя 1)' 
+                                    : `Неделя ${activeWeek}`;
+                    
+                    if (activeWeek >= 1 && activeWeek <= ALL_WEEKS.length) {
+                        mainBlock.innerHTML += `
+                            <button onclick="window.App.renderWeekContent(${activeWeek})" class="active-week-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
+                                <span>📅 Активная подборка: ${weekTitle}</span>
+                                <span>Продолжить &rarr;</span>
+                            </button>
+                        `;
+                    }
+                }
+                
+                mainBlock.innerHTML += `
+                    <button onclick="window.App.renderWeeklySelections()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4 border border-gray-200">
+                        <span>📚 Подборки за неделю</span>
+                        <span>&rarr;</span>
+                    </button>
+                `;
+
+                mainBlock.innerHTML += `
+                    <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4">
+                        <span>📚 Все наборы слов</span>
+                        <span>&rarr;</span>
+                    </button>
+                `;
+                
+                this.renderDueTodaySection();
+                
+                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
+                this.showScreen('home-screen', isBack, { renderFunc: 'renderHomeScreen', param: null }, clearStack);
+            },
+            
+            renderDueTodaySection() {
+                const section = document.getElementById('due-today-section');
+                const list = document.getElementById('due-today-list');
+                if (!section || !list) return;
+
+                const today = this.getTodayDateString();
+                let dueSetsCount = 0;
+                list.innerHTML = '';
+
+                WORD_SETS.forEach(set => {
+                    if (this.isSubscriber && set.week > this.unlockedWeek) return;
+                    if (!this.isSubscriber && set.week > 1) return;
+
+                    let dueCount = 0;
+                    set.cards.forEach(card => {
+                        const progress = this.userProgress[card.id];
+                        if (!progress || (progress.nextReview && progress.nextReview <= today)) {
+                            dueCount++;
+                        }
+                    });
+
+                    if (dueCount > 0) {
+                        dueSetsCount++;
+                        const setEl = document.createElement('div');
+                        setEl.className = "bg-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 flex justify-between items-center transform transition hover:-translate-y-1";
+                        setEl.innerHTML = `
+                            <div>
+                                <span class="font-bold text-gray-800">${set.name}</span>
+                                <span class="text-sm text-orange-600 font-medium block">Доступно для повторения: ${dueCount}</span>
+                            </div>
+                            <button onclick="window.App.promptForDirection('${set.id}', 'review')"
+                                    class="py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center">
+                                Начать
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </button>
+                        `;
+                        list.appendChild(setEl);
+                    }
+                });
+
+                if (dueSetsCount > 0) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            },
+
+            renderWeeklySelections(isBack = false) {
+                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
+                document.getElementById('list-title').innerText = '📚 Подборки за неделю';
+                document.getElementById('filter-controls').innerHTML = '';
+
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '';
+                this.unlockedWeek = this.getMaxAvailableWeek(); 
+
+                ALL_WEEKS.forEach(i => {
+                    const isSubscriber = this.isSubscriber;
+                    const maxAvailableWeek = this.unlockedWeek;
+                    const isCurrentSelected = i === this.selectedWeek; 
+                    const isAvailable = isSubscriber ? (i <= maxAvailableWeek) : (i === 1); 
+                    const weekData = WEEKLY_CONTENT_MAP[i];
+                    
+                    let statusText = 'Доступно';
+                    let buttonClass = 'bg-white hover:bg-gray-50';
+
+                    if (!isAvailable) {
+                        buttonClass = 'button-locked';
+                        if (!isSubscriber) {
+                            statusText = '🔒 Оформите подписку';
+                        } else {
+                            const activationTime = new Date(this.activationDate).getTime();
+                            const currentTime = new Date().getTime();
+                            const daysDiff = Math.floor((currentTime - activationTime) / (1000 * 60 * 60 * 24));
+                            const daysNeeded = (i - 1) * 7;
+                            const daysLeft = daysNeeded - daysDiff;
+                            statusText = `🔒 Доступно через ${daysLeft} дн.`;
+                        }
+                    } else if (i === 1 && !isSubscriber) {
+                        buttonClass = 'bg-green-100 border-2 border-green-500';
+                        statusText = 'Пробный урок';
+                    } else if (isCurrentSelected) {
+                        buttonClass = 'bg-yellow-100 border-2 border-yellow-500';
+                        statusText = 'Активно';
+                    }
+
+                    const weekContainer = document.createElement('div');
+                    weekContainer.className = `w-full p-4 rounded-xl shadow-md ${buttonClass}`;
+                    weekContainer.innerHTML = `
+                        <div class="flex justify-between items-center mb-3">
+                            <div>
+                                <span class="font-bold text-lg ${!isAvailable ? 'text-gray-500' : 'text-gray-800'}">Неделя ${i}</span>
+                                <span class="block text-sm ${!isAvailable ? 'text-orange-600' : 'text-gray-500'}">${statusText}</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="window.App.showWeekDetails(${i}, '${weekData.description.replace(/'/g, "\\'")}')" 
+                                    class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150">
+                                Подробнее
+                            </button>
+                            <button id="week-learn-${i}" 
+                                    class="w-full py-2 px-3 text-white font-semibold rounded-xl text-sm transition duration-150 ${isAvailable ? 'bg-blue-500 hover:bg-blue-600' : 'button-locked'}"
+                                    onclick="${isAvailable ? `window.App.selectAndRenderWeek(${i})` : 'void(0)'}">
+                                Учить
+                            </button>
+                        </div>
+                    `;
+                    contentListDiv.appendChild(weekContainer);
+                });
+                
+                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
+                this.showScreen('list-screen', isBack, { renderFunc: 'renderWeeklySelections', param: null });
+            },
+            
+            showWeekDetails(weekNum, description) {
+                document.getElementById('week-details-title').textContent = `Неделя ${weekNum}`;
+                document.getElementById('week-details-body').textContent = description;
+                this.openModal('week-details-modal');
+            },
+
+            async selectAndRenderWeek(weekNum) {
+                this.selectedWeek = weekNum;
+                await this.saveProgress();
+                this.renderWeekContent(weekNum); // Это уже не 'isBack'
+            },
+            
+            renderMenuCard(container, title, subtitle, onClickAction, style = 'bg-white hover:bg-gray-50') {
+                const button = document.createElement('button');
+                button.className = `w-full text-left p-4 ${style} rounded-xl shadow-md flex justify-between items-center transition duration-150`;
+                button.setAttribute('onclick', onClickAction);
+                button.innerHTML = `
+                    <div>
+                        <span class="font-semibold text-lg text-gray-800">${title}</span>
+                        <span class="block text-sm text-gray-500">${subtitle}</span>
+                    </div>
+                    <span>&rarr;</span>
+                `;
+                container.appendChild(button);
+            },
+            
+            renderWeekContent(weekNum, isBack = false) {
+                const weekData = WEEKLY_CONTENT_MAP[weekNum];
+                if (!weekData) return;
+                
+                const isTrialLesson = !this.isSubscriber && weekNum === 1;
+                
+                if (isTrialLesson) {
+                    document.getElementById('list-title').innerText = `🚀 Контент Пробного урока`;
+                } else {
+                    document.getElementById('list-title').innerText = `📚 Контент Недели ${weekNum}`;
+                }
+
+                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
+                document.getElementById('filter-controls').innerHTML = '';
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '';
+                
+                // 1. Ассоциации на неделю (Видео)
+                this.renderMenuCard(contentListDiv, 
+                    `🧠 Видео ассоциации`, 
+                    weekData.associationTitle,
+                    `window.App.renderVideoContentScreen('${weekData.associationTitle.replace(/'/g, "\\'")}', '${weekData.associationVideo}', null)`
+                );
+                
+                // 2. Карусель ассоциаций
+                const carouselSet = this.carouselSetsMetadata.find(set => set.id === weekData.carouselId);
+                if (carouselSet) {
+                    this.renderMenuCard(contentListDiv, 
+                        `🖼️ Карусель ассоциаций: ${carouselSet.title}`, 
+                        `Визуальное изучение ${carouselSet.wordCount} слов`,
+                        `window.App.startCarouselSession('${carouselSet.id}', '${carouselSet.title}', '${carouselSet.filepath}')`,
+                        'bg-purple-100 hover:bg-purple-200'
+                    );
+                } else {
+                     this.renderMenuCard(contentListDiv, 
+                        `🖼️ Карусель ассоциаций (Ошибка)`, 
+                        `Набор не найден или не загружен.`,
+                        `void(0)`,
+                        'button-locked'
+                    );
+                }
+
+                // 3. История недели
+                let storyAction;
+                if (weekNum === 1 && weekData.storyLink === 'text1.html') {
+                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${getBaseUrl() + 'text1.html'}')`; 
+                } else {
+                    storyAction = `window.App.renderExternalLinkScreen('📖 История недели ${weekNum}', '${weekData.storyLink}')`; 
+                }
+                
+                this.renderMenuCard(contentListDiv, 
+                    `📖 История недели`, 
+                    `Видео + квиз`,
+                    storyAction 
+                );
+
+                // 4. Слова на неделю
+                this.renderMenuCard(contentListDiv, 
+                    `📚 Слова на неделю`, 
+                    `Повторение ${WORD_SETS.find(s => s.id === weekData.wordSetId)?.cards.length || 0} слов`,
+                    `window.App.promptForDirection('${weekData.wordSetId}', 'practice')`,
+                    'bg-green-100 hover:bg-green-200'
+                );
+                
+                // 5. Полезные фразы
+                this.renderMenuCard(contentListDiv, 
+                    `🗣️ Полезные фразы / Диалоги на тему`, 
+                    `Внешняя ссылка`,
+                    `window.App.renderExternalLinkScreen('🗣️ Диалоги Недели ${weekNum}', '${weekData.dialoguesLink}')` 
+                );
+
+                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
+                this.showScreen('list-screen', isBack, { renderFunc: 'renderWeekContent', param: weekNum });
+                
+                if (this.carouselSetsMetadata.length === 0) {
+                     this.loadCarouselMetadata().then(() => {
+                         this.renderWeekContent(weekNum, true); // Перерисовываем, но отмечаем как isBack, чтобы не дублировать историю
+                     });
+                }
+            },
+            
+            renderVideoContentScreen(title, videoUrl, textContent, isBack = false) {
+                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
+                document.getElementById('video-title').textContent = title;
+                const videoIframe = document.getElementById('video-embed');
+                const extraTextDiv = document.getElementById('video-extra-text');
+
+                videoIframe.src = videoUrl ? videoUrl : '';
+                videoIframe.style.display = videoUrl ? 'block' : 'none';
+                
+                extraTextDiv.innerHTML = textContent ? `<p>${textContent}</p>` : '';
+                extraTextDiv.style.display = textContent ? 'block' : 'none';
+                
+                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
+                this.showScreen('video-content-screen', isBack, { 
+                    renderFunc: 'renderVideoContentScreen', 
+                    param: {title, videoUrl, textContent} 
+                });
+            },
+            
+            renderExternalLinkScreen(title, url, isBack = false) {
+                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
+                document.getElementById('external-link-title').textContent = title;
+                document.getElementById('external-link-button').href = url;
+                document.getElementById('external-link-url-display').textContent = url;
+                
+                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
+                this.showScreen('external-link-screen', isBack, { 
+                    renderFunc: 'renderExternalLinkScreen', 
+                    param: {title, url} 
+                });
+
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+                    window.Telegram.WebApp.openLink(url);
+                }
+            },
         };
 
 window.addEventListener('load', () => {
