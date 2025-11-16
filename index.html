@@ -118,7 +118,7 @@
             min-height: 250px;
         }
 
-        /* --- СТИЛИ ИЗ TEXT1.HTML --- */
+        /* --- Стили, интегрированные из text1.html --- */
         .quiz-option { transition: all 0.15s ease; outline: none; }
         .quiz-option:hover { transform: translateY(-2px); box-shadow: 0 6px 10px -2px rgba(0,0,0,0.1); }
         .quiz-selected {
@@ -147,7 +147,6 @@
           height:auto;
           display:block;
         }
-
 
         /* ФИКСИРОВАННАЯ ПАНЕЛЬ ПРОИГРЫВАТЕЛЯ */
         #audio-bar.fixed-audio-bar {
@@ -204,7 +203,7 @@
           visibility:visible;
           overflow-y:auto;
         }
-        /* --- КОНЕЦ СТИЛЕЙ ИЗ TEXT1.HTML --- */
+        /* --- Конец интегрированных стилей --- */
     </style>
 </head>
 
@@ -300,218 +299,121 @@
              <!-- Кнопка "Назад" УДАЛЕНА. -->
              <div id="content-viewer-back-button-container" class="mb-4"></div>        
             <h2 id="content-viewer-title" class="text-xl font-bold text-gray-800 mb-4 text-center"></h2>
-            <!-- Тут будет загружаться контент text1.html -->
+            
+            <!-- 
+              --- НАЧАЛО ИНТЕГРАЦИИ text1.html ---
+              HTML-контент из text1.html теперь находится здесь
+            -->
             <div id="content-viewer-body" class="p-4 bg-gray-100 rounded-xl">
-                <!-- <p class="text-center text-gray-500">Загрузка контента...</p> -->
-
-                <!-- ===== НАЧАЛО ИНТЕГРИРОВАННОГО КОНТЕНТА TEXT1.HTML ===== -->
-                <!-- Обертка, чтобы можно было скрыть/показать этот контент -->
-                <div id="story-text1-content" class="story-content-wrapper hidden">
-                    
-                    <!-- Контент из <body> text1.html (id="app" изменен на "story-text1-app") -->
-                    <div id="story-text1-app" class="p-4 space-y-6">
-                        <!-- картинка + аудио -->
-                        <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
-                            <!-- ИЗМЕНЕНО: Путь к изображениям и аудио теперь должен быть относительным от index.html -->
-                            <!-- Предполагая, что text1.html, index.html, и ресурсы (png/mp3) находятся в одной папке -->
-                            <img src="Woche1_text.png"
-                                 alt="Иллюстрация к истории"
-                                 onerror="this.onerror=null; this.src='https://placehold.co/600x300/FCA5A5/FFFFFF?text=Woche1_text.png+not+found';"
-                                 onclick="event.preventDefault();event.stopPropagation();">
-                            <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
-                        </div>
-
-                        <!-- заголовок -->
-                        <h1 class="text-2xl font-bold text-center text-gray-900">
-                            Der Termin beim Arzt
-                        </h1>
-
-                        <!-- ОБЁРТКА ПАНЕЛИ: сначала обычная, потом становится fixed -->
-                        <div id="audio-bar-wrapper">
-                            <div id="audio-bar">
-                                <div class="max-w-md mx-auto">
-                                    <div class="bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-200 flex flex-col gap-2">
-                                        <div class="flex items-center justify-center">
-                                            <button id="audio-main-button"
-                                                    class="audio-main-button rounded-full bg-blue-600 text-white px-7 py-2.5 flex items-center gap-2">
-                                                <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z"
-                                                          clip-rule="evenodd"></path>
-                                                </svg>
-                                                <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                          clip-rule="evenodd"></path>
-                                                </svg>
-                                                <span id="audio-status" class="font-semibold text-base">Play</span>
-                                            </button>
-                                        </div>
-
-                                        <div class="flex flex-col gap-1">
-                                            <input id="audio-progress" type="range" min="0" max="100" value="0">
-                                            <div class="flex justify-between text-xs text-gray-500">
-                                                <span id="audio-current-time">0:00</span>
-                                                <span id="audio-duration">0:00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- плейсхолдер, чтобы страница не “прыгала”, когда бар становится fixed -->
-                        <div id="audio-bar-placeholder" style="height: 0;"></div>
-
-                        <!-- АККОРДЕОНЫ -->
-                        <div class="space-y-4">
-
-                            <!-- транскрипция -->
-                            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                                <button id="transcript-button"
-                                        onclick="window.StoryApp.toggleAccordion('transcript-content')"
-                                        class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
-                                    <span><span class="mr-3 text-green-500">📖</span>Транскрипция</span>
-                                    <span id="transcript-arrow">&darr;</span>
-                                </button>
-                                <div id="transcript-content"
-                                     class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4">
-                                    <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p>
-                                    <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt.</p>
-                                    <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
-                                    <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
-                                    <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
-                                    <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
-                                    <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
-                                    <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
-                                    <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
-                                    <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
-                                    <p class="mb-3">Die Mitarbeiterin hört ihm aufmerksam zu, als er seine Beschwerden beschreibt.</p>
-                                    <p class="mb-3">„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie Schmerzen haben, bekommen Sie natürlich schnell einen Termin.“</p>
-                                    <p class="mb-3">Am Nachmittag sitzt Thomas im Wartezimmer.</p>
-                                    <p class="mb-3">Es ist stickig, und er beginnt wieder zu schwitzen.</p>
-                                    <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, und jemand stöhnt leleise vor Schmerzen.</p>
-                                    <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Magen brennt stärker, und ihm wird schwindlig.</p>
-                                    <p class="mb-3">Endlich ruft die Arzthelferin: „Herr Berger, bitte!“</p>
-                                    <p class="mb-3">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:</p>
-                                    <p class="mb-3">„Was fehlt Ihnen?“</p>
-                                    <p class="mb-3">Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach fühlt und nachts leidet.</p>
-                                    <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab und erklärt:</p>
-                                    <p class="mb-3">„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
-                                    <p class="mb-3">Dann fügt er hinzu:</p>
-                                    <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
-                                    <p class="mb-3">Thomas fragt:</p>
-                                    <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
-                                    <p class="mb-3">Dr. Keller antwortet:</p>
-                                    <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
-                                    <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
-                                    <p class="mb-3">Dann fragt er:</p>
-                                    <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
-                                    <p class="mb-3">Thomas antwortet:</p>
-                                    <p class="mb-3">„Ja, bitte – für drei Tage.“</p>
-                                    <p class="mb-3">Dr. Keller notiert es und lächelt:</p>
-                                    <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
-                                    <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
-                                    <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.“</p>
-                                    <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
-                                    <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen.</p>
-                                    <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und изgeruht.</p>
-                                    <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
-                                </div>
-                            </div>
-
-                            <!-- разбор текста -->
-                            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                                <button id="analysis-button"
-                                        onclick="window.StoryApp.toggleAccordion('analysis-content')"
-                                        class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
-                                    <span><span class="mr-3 text-blue-500">📝</span>Разбор текста</span>
-                                    <span id="analysis-arrow">&darr;</span>
-                                </button>
-                                <div id="analysis-content"
-                                     class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4">
-                                    <div id="analysis-carousel" class="space-y-4">
-                                        <div id="analysis-slide" class="space-y-3"></div>
-
-                                        <div class="flex items-center justify-between mt-4">
-                                            <button onclick="window.StoryApp.prevAnalysisSlide()"
-                                                    class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
-                                                ← Назад
-                                            </button>
-
-                                            <span id="analysis-progress"
-                                                  class="text-xs text-gray-500 mx-2 flex-1 text-center">
-                                                1 / 1
-                                            </span>
-
-                                            <button onclick="window.StoryApp.nextAnalysisSlide()"
-                                                    class="py-2 px-4 bg-indigo-500 text-white rounded-lg text-sm font-semibold hover:bg-indigo-600 transition">
-                                                Вперёд →
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- кнопка квиза -->
-                        <button onclick="window.StoryApp.startStoryQuiz()"
-                                class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
-                                       hover:bg-indigo-600 transition flex justify-between items-center 
-                                       bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl mt-4">
-                            <span><span class="mr-3 text-yellow-300">🧠</span>Упражнения (Квиз)</span>
-                            <span>&rarr;</span>
-                        </button>
-                    </div>
-
-                    <!-- модалка квиза из text1.html -->
-                    <div id="quiz-modal"
-                         class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0"
-                         onclick="window.StoryApp.closeModal('quiz-modal')" role="dialog" aria-modal="true">
-                        <div id="quiz-modal-content"
-                             class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full"
-                             onclick="event.stopPropagation()">
-                            <h3 id="quiz-modal-title"
-                                class="text-xl font-bold mb-4 text-gray-800 text-center border-b pb-2">Квиз по истории</h3>
-
-                            <div class="text-sm text-gray-500 mb-4 text-center">
-                                <span id="quiz-progress">Вопрос 1 из 3</span>
-                            </div>
-
-                            <div id="quiz-scroll-area" class="max-h-[65vh] overflow-y-auto pr-2">
-                                <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
-                                    <p id="quiz-question" class="text-xl font-bold text-gray-800"></p>
-                                </div>
-                                <div id="quiz-options" class="space-y-3"></div>
-                                <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold hidden"></p>
-                            </div>
-
-                            <button id="quiz-next-button"
-                                    onclick="window.StoryApp.nextQuizQuestion()"
-                                    class="w-full mt-6 py-3 px-4 font-bold rounded-xl shadow-md transition next-button-disabled"
-                                    disabled>
-                                Следующий вопрос
-                            </button>
-
-                            <div id="quiz-end-controls" class="space-y-3 mt-6 hidden">
-                                <button onclick="window.StoryApp.startStoryQuiz()"
-                                        class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition">
-                                    Пройти ещё раз
-                                </button>
-                                <button onclick="window.StoryApp.showCorrectAnswers()"
-                                        class="w-full py-3 px-4 bg-yellow-500 text-yellow-900 font-bold rounded-xl shadow-md hover:bg-yellow-600 transition">
-                                    Показать правильные ответы
-                                </button>
-                                <button onclick="window.StoryApp.closeModal('quiz-modal')"
-                                        class="w-full py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition">
-                                    Завершить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
+                
+                <!-- картинка + аудио -->
+                <div class="story-visual-container rounded-xl shadow-xl overflow-hidden">
+                  <img src="Woche1_text.png"
+                       alt="Иллюстрация к истории"
+                       onclick="event.preventDefault();event.stopPropagation();">
+                  <audio id="story-audio-player" src="Woche1_text.mp3"></audio>
                 </div>
-                <!-- ===== КОНЕЦ ИНТЕГРИРОВАННОГО КОНТЕНТА TEXT1.HTML ===== -->
+
+                <!-- заголовок -->
+                <h1 class="text-2xl font-bold text-center text-gray-900">
+                  Der Termin beim Arzt
+                </h1>
+
+                <!-- ОБЁРТКА ПАНЕЛИ: сначала обычная, потом становится fixed -->
+                <div id="audio-bar-wrapper">
+                  <div id="audio-bar">
+                    <div class="max-w-md mx-auto">
+                      <div class="bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-200 flex flex-col gap-2">
+                        <div class="flex items-center justify-center">
+                          <button id="audio-main-button"
+                                  class="audio-main-button rounded-full bg-blue-600 text-white px-7 py-2.5 flex items-center gap-2">
+                            <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span id="audio-status" class="font-semibold text-base">Play</span>
+                          </button>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                          <input id="audio-progress" type="range" min="0" max="100" value="0">
+                          <div class="flex justify-between text-xs text-gray-500">
+                            <span id="audio-current-time">0:00</span>
+                            <span id="audio-duration">0:00</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- плейсхолдер, чтобы страница не “прыгала”, когда бар становится fixed -->
+                <div id="audio-bar-placeholder" style="height: 0;"></div>
+
+                <!-- АККОРДЕОНЫ -->
+                <div class="space-y-4">
+
+                  <!-- транскрипция (теперь кнопка модального окна) -->
+                  <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <button id="transcript-button"
+                            onclick="window.App.openModal('transcript-modal')"
+                            class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
+                      <span><span class="mr-3 text-green-500">📖</span>Транскрипция</span>
+                      <span>&rarr;</span>
+                    </button>
+                    <!-- Содержимое аккордеона <div id="transcript-content">...</div> было удалено и перемещено в модальное окно -->
+                  </div>
+
+                  <!-- разбор текста -->
+                  <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <button id="analysis-button"
+                            onclick="window.StoryApp.toggleAccordion('analysis-content')"
+                            class="w-full py-4 px-5 text-left text-lg font-semibold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition">
+                      <span><span class="mr-3 text-blue-500">📝</span>Разбор текста</span>
+                      <span id="analysis-arrow">&darr;</span>
+                    </button>
+                    <div id="analysis-content"
+                         class="accordion-content bg-gray-50 border-t border-gray-200 hidden p-4">
+                      <div id="analysis-carousel" class="space-y-4">
+                        <div id="analysis-slide" class="space-y-3"></div>
+
+                        <div class="flex items-center justify-between mt-4">
+                          <button onclick="window.StoryApp.prevAnalysisSlide()"
+                                  class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">
+                            ← Назад
+                          </button>
+
+                          <span id="analysis-progress"
+                                class="text-xs text-gray-500 mx-2 flex-1 text-center">
+                            1 / 1
+                          </span>
+
+                          <button onclick="window.StoryApp.nextAnalysisSlide()"
+                                  class="py-2 px-4 bg-indigo-500 text-white rounded-lg text-sm font-semibold hover:bg-indigo-600 transition">
+                            Вперёд →
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- кнопка квиза -->
+                <button onclick="window.StoryApp.startStoryQuiz()"
+                        class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
+                               hover:bg-indigo-600 transition flex justify-between items-center 
+                               bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl mt-4">
+                  <span><span class="mr-3 text-yellow-300">🧠</span>Упражнения (Квиз)</span>
+                  <span>&rarr;</span>
+                </button>
+                
             </div>
+            <!-- --- КОНЕЦ ИНТЕГРАЦИИ text1.html --- -->
         </div>
         
         <!-- 7. ЭКРАН СПИСКА КАРУСЕЛЕЙ (Используется, если нет фиксированного набора) -->
@@ -686,9 +588,119 @@
         </div>
     </div>
 
+    <!-- ===== ИНТЕГРАЦИЯ: Модальное окно квиза из text1.html ===== -->
+    <div id="quiz-modal"
+         class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0"
+         onclick="window.StoryApp.closeModal('quiz-modal')" role="dialog" aria-modal="true">
+      <div id="quiz-modal-content"
+           class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full"
+           onclick="event.stopPropagation()">
+        <h3 id="quiz-modal-title"
+            class="text-xl font-bold mb-4 text-gray-800 text-center border-b pb-2">Квиз по истории</h3>
+
+        <div class="text-sm text-gray-500 mb-4 text-center">
+          <span id="quiz-progress">Вопрос 1 из 3</span>
+        </div>
+
+        <div id="quiz-scroll-area" class="max-h-[65vh] overflow-y-auto pr-2">
+          <div id="question-box" class="bg-indigo-50 p-4 rounded-lg mb-4 shadow-inner">
+            <p id="quiz-question" class="text-xl font-bold text-gray-800"></p>
+          </div>
+          <div id="quiz-options" class="space-y-3"></div>
+          <p id="quiz-feedback" class="mt-4 text-center text-xl font-extrabold hidden"></p>
+        </div>
+
+        <button id="quiz-next-button"
+                onclick="window.StoryApp.nextQuizQuestion()"
+                class="w-full mt-6 py-3 px-4 font-bold rounded-xl shadow-md transition next-button-disabled"
+                disabled>
+          Следующий вопрос
+        </button>
+
+        <div id="quiz-end-controls" class="space-y-3 mt-6 hidden">
+          <button onclick="window.StoryApp.startStoryQuiz()"
+                  class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition">
+            Пройти ещё раз
+          </button>
+          <button onclick="window.StoryApp.showCorrectAnswers()"
+                  class="w-full py-3 px-4 bg-yellow-500 text-yellow-900 font-bold rounded-xl shadow-md hover:bg-yellow-600 transition">
+            Показать правильные ответы
+          </button>
+          <button onclick="window.StoryApp.closeModal('quiz-modal')"
+                  class="w-full py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition">
+            Завершить
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== КОНЕЦ ИНТЕГРАЦИИ: Модальное окно квиза ===== -->
+
+    <!-- ===== НОВОЕ: Модальное окно для Транскрипции ===== -->
+    <div id="transcript-modal"
+         class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0"
+         onclick="window.App.closeModal('transcript-modal')" role="dialog" aria-modal="true">
+      <div id="transcript-modal-content"
+           class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full"
+           onclick="event.stopPropagation()">
+        <h3 id="transcript-modal-title"
+            class="text-xl font-bold mb-4 text-gray-800 text-center border-b pb-2">Транскрипция</h3>
+
+        <!-- Скроллируемый контейнер -->
+        <div id="transcript-scroll-area" class="max-h-[65vh] overflow-y-auto pr-2 text-gray-700">
+            <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p>
+            <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt.</p>
+            <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
+            <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
+            <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
+            <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
+            <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
+            <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
+            <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
+            <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
+            <p class="mb-3">Die Mitarbeiterin hört ihm aufmerksam zu, als er seine Beschwerden beschreibt.</p>
+            <p class="mb-3">„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie Schmerzen haben, bekommen Sie natürlich schnell einen Termin.“</p>
+            <p class="mb-3">Am Nachmittag sitzt Thomas im Wartezimmer.</p>
+            <p class="mb-3">Es ist stickig, und er beginnt wieder zu schwitzen.</p>
+            <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, und jemand stöhnt leлеise vor Schmerzen.</p>
+            <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Magen brennt stärker, und ihm wird schwindlig.</p>
+            <p class="mb-3">Endlich ruft die Arzthelferin: „Herr Berger, bitte!“</p>
+            <p class="mb-3">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:</p>
+            <p class="mb-3">„Was fehlt Ihnen?“</p>
+            <p class="mb-3">Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach fühlt und nachts leidet.</p>
+            <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab und erklärt:</p>
+            <p class="mb-3">„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
+            <p class="mb-3">Dann fügt er hinzu:</p>
+            <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
+            <p class="mb-3">Thomas fragt:</p>
+            <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
+            <p class="mb-3">Dr. Keller antwortet:</p>
+            <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
+            <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
+            <p class="mb-3">Dann fragt er:</p>
+            <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
+            <p class="mb-3">Thomas antwortet:</p>
+            <p class="mb-3">„Ja, bitte – für drei Tage.“</p>
+            <p class="mb-3">Dr. Keller notiert es und lächelt:</p>
+            <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
+            <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
+            <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.“</p>
+            <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
+            <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen.</p>
+            <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und изgeruht.</p>
+            <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
+        </div>
+
+        <button onclick="window.App.closeModal('transcript-modal')"
+                class="w-full mt-6 py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition">
+          Закрыть
+        </button>
+      </div>
+    </div>
+    <!-- ===== КОНЕЦ: Модальное окно для Транскрипции ===== -->
+
 
     <!-- "МАГИЯ" (JavaScript) -->
-    <script type="module">
+<script type="module">
         // Импортируем необходимые модули Firebase (v9+)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
@@ -731,11 +743,11 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
         const appId = MY_APP_ID; 
         const initialAuthToken = null; // Отключаем Auth Canvas
         
+
         // ==========================================================
-        // 1. КОНФИГУРАЦИЯ И ДАННЫЕ (Conceptual Data Module)
+        // ===== ИНТЕГРАЦИЯ: Данные и логика из text1.html =====
         // ==========================================================
         
-        // --- КОНТЕНТ ИЗ TEXT1.HTML ---
         const QUIZ_DATA = [
           {
             question: "Что чувствует Томас утром?",
@@ -810,7 +822,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             this.initAudioPlayback();
             this.initAnalysisCarousel();
             this.initStickyAudioBar();
-            // ← Добавьте эту строку:
+            // Показываем кнопку "Назад" при инициализации,
+            // т.к. главный App.js ее перехватит
             if (window.Telegram?.WebApp?.BackButton) {
                 window.Telegram.WebApp.BackButton.show();
              }   
@@ -899,15 +912,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             // Вычисляем высоту шапки Telegram
             const getTelegramHeaderHeight = () => {
-                // Используем 0, так как мы внутри SPA и не можем точно знать высоту хедера
-                // Альтернатива: передать ее из window.App
-                return 0; 
-                /*
                 if (window.Telegram?.WebApp?.viewportStableHeight) {
                     return window.innerHeight - window.Telegram.WebApp.viewportStableHeight;
                 }
                 return 56; // запасной вариант
-                */
             };
 
             let barHeight = 0;
@@ -932,20 +940,11 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     }
                 }
             };
-            
-            // Сбрасываем позицию при инициализации, чтобы избежать "залипания"
-            // при возврате на экран
-            if (bar.classList.contains('fixed-audio-bar')) {
-                bar.classList.remove('fixed-audio-bar');
-                placeholder.style.height = '0px';
-                bar.style.top = '';
-            }
 
-            window.addEventListener('scroll', checkPosition, { capture: true }); // Используем capture
+            window.addEventListener('scroll', checkPosition);
             window.addEventListener('resize', checkPosition);
-            
-            // Проверяем сразу при загрузке
-            setTimeout(checkPosition, 50);
+            // Проверяем сразу при загрузке (на случай, если уже проскроллено)
+            setTimeout(checkPosition, 100);
         },
 
           /* ====== АККОРДЕОНЫ ====== */
@@ -1034,8 +1033,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             const questionEl = document.getElementById('quiz-question');
             const optionsContainer = document.getElementById('quiz-options');
             const feedbackEl = document.getElementById('quiz-feedback');
+            const questionBox = document.getElementById('question-box'); // Добавлено
 
-            if (!questionEl || !optionsContainer || !feedbackEl) return;
+            if (!questionEl || !optionsContainer || !feedbackEl || !questionBox) return; // Добавлено questionBox
+
+            // --- ИЗМЕНЕНО: Показываем элементы при рендере вопроса ---
+            questionBox.classList.remove('hidden');
+            optionsContainer.classList.remove('hidden');
+            // --- КОНЕЦ ИЗМЕНЕНИЯ ---
 
             questionEl.textContent = q.question;
             optionsContainer.innerHTML = '';
@@ -1099,6 +1104,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             const progressEl = document.getElementById('quiz-progress');
             if (!progressEl) return;
 
+            // --- ИЗМЕНЕНО: Показываем прогресс ---
+            progressEl.classList.remove('hidden');
+            // --- КОНЕЦ ИЗМЕНЕНИЯ ---
+
             const total = this.quizData.length;
             const current = this.currentIndex + 1;
             progressEl.textContent = `Вопрос ${current} из ${total}`;
@@ -1141,6 +1150,17 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             const endControls = document.getElementById('quiz-end-controls');
             if (endControls) endControls.classList.remove('hidden');
+
+            // --- ИЗМЕНЕНО: Скрываем вопрос, опции и прогресс при завершении ---
+            const questionBox = document.getElementById('question-box');
+            if (questionBox) questionBox.classList.add('hidden');
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            if (optionsContainer) optionsContainer.classList.add('hidden');
+            
+            const progressEl = document.getElementById('quiz-progress');
+            if (progressEl) progressEl.classList.add('hidden');
+            // --- КОНЕЦ ИЗМЕНЕНИЯ ---
           },
 
           showCorrectAnswers() {
@@ -1163,7 +1183,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             if (feedbackEl) feedbackEl.classList.add('hidden');
           },
 
-          /* ====== МОДАЛКИ (Дубликаты из window.App, но нужны для StoryApp) ====== */
+          /* ====== МОДАЛКИ (StoryApp) ====== */
           openModal(id) {
             const modal = document.getElementById(id);
             const content = modal ? modal.querySelector('.modal-content') : null;
@@ -1186,8 +1206,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             setTimeout(() => modal.classList.add('hidden'), 300);
           }
         };
-        // --- КОНЕЦ КОНТЕНТА ИЗ TEXT1.HTML ---
-
+        // ===== КОНЕЦ ИНТЕГРАЦИИ text1.html =====
+        
+        // ==========================================================
+        // 1. КОНФИГУРАЦИЯ И ДАННЫЕ (Conceptual Data Module)
+        // ==========================================================
+        
         // Интервалы повторения в днях (от 1 до 6 боксов)
         const REPETITION_INTERVALS = {
             1: 1,  // 1 день
@@ -1793,9 +1817,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 // 3. История недели
                 let storyAction;
                 if (weekNum === 1 && weekData.storyLink === 'text1.html') {
-                    // storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${getBaseUrl() + 'text1.html'}')`; 
-                    // ИЗМЕНЕНО: Передаем ID 'text1.html' вместо URL
-                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', 'text1.html')`;
+                    // [ИЗМЕНЕНО] Убран getBaseUrl() и 'text1.html', 
+                    // так как URL больше не нужен - функция renderStoryScreen знает, что делать
+                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', 'internal')`; 
                 } else {
                     storyAction = `window.App.renderExternalLinkScreen('📖 История недели ${weekNum}', '${weekData.storyLink}')`; 
                 }
@@ -1867,107 +1891,42 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
 
+            // [ИЗМЕНЕНО] renderStoryScreen теперь просто показывает встроенный контент
             async renderStoryScreen(title, url, isBack = false) {
-                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
+                // 1. Устанавливаем заголовок
                 document.getElementById('content-viewer-title').textContent = title;
                 const contentBody = document.getElementById('content-viewer-body');
-                // contentBody.innerHTML = '<p class="text-center text-gray-500 py-10">Загрузка контента...</p>';
-
-                // [ИЗМЕНЕНО] Вызываем showScreen *до* fetch, чтобы история записалась сразу
+                
+                // 2. Показываем экран и записываем в историю
+                // URL больше не используется, но мы его сохраняем в 'param' для
+                // 'case renderStoryScreen' в reRenderState, если он понадобится.
                 this.showScreen('content-viewer-screen', isBack, { 
                     renderFunc: 'renderStoryScreen', 
-                    param: {title, url} // 'url' теперь используется как 'storyId'
+                    param: {title, url} // url здесь (напр. 'internal') просто для истории
                 });
-                
-                // 1. Скрываем все обертки контента
-                const storyContents = contentBody.querySelectorAll('.story-content-wrapper');
-                storyContents.forEach(el => el.classList.add('hidden'));
 
-                // 2. Находим нужную обертку по 'url' (который теперь 'storyId')
-                let storyContentEl = null;
-                if (url === 'text1.html') { 
-                    storyContentEl = document.getElementById('story-text1-content');
-                }
-
-                if (storyContentEl) {
-                    storyContentEl.classList.remove('hidden');
-                    
-                    // 3. Инициализируем соответствующий JS-объект (напр. StoryApp)
-                    if (url === 'text1.html' && window.StoryApp && typeof window.StoryApp.init === 'function') {
-                         // Инициализируем его каждый раз при показе
-                         window.StoryApp.init();
-                    }
-                    
-                    // 4. Восстанавливаем обработчики Telegram
-                    this.setupTelegramHandlers();
-
-                } else {
-                    // Если вдруг контент не найден, показываем ошибку
-                    // Сначала очистим, на всякий случай
-                    contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка: Контент для ${url} не найден.</p>`;
-                }
-
-                /*
-                // --- СТАРАЯ ЛОГИКА FETCH ---
                 try {
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    let htmlContent = await response.text();
-                    
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(htmlContent, 'text/html');
-                    
-                    const styles = doc.head.querySelectorAll('style');
-                    let styleHtml = '';
-                    styles.forEach(style => {
-                        styleHtml += style.outerHTML;
-                    });
-
-                    const innerContent = doc.body ? doc.body.innerHTML : htmlContent;
-                    contentBody.innerHTML = styleHtml + innerContent;
-                    
-                    // --- ИСПРАВЛЕННАЯ ЛОГИКА ЗАГРУЗКИ СКРИПТОВ ---
-                    const scripts = doc.querySelectorAll('script');
-                    scripts.forEach(script => {
-                        const newScript = document.createElement('script');
-                        // Копируем все атрибуты (type, defer, etc.)
-                        script.getAttributeNames().forEach(attr => {
-                            newScript.setAttribute(attr, script.getAttribute(attr));
-                        });
-                        
-                        // [ИСПРАВЛЕНИЕ]
-                        if (script.src && script.src !== '') {
-                            // Если это внешний скрипт, устанавливаем src
-                            newScript.src = script.src;
-                        } else {
-                            // Если это встроенный скрипт, копируем его содержимое
-                            newScript.textContent = script.textContent;
-                        }
-                        // Добавляем скрипт в тело загруженного контента
-                        contentBody.appendChild(newScript);
-                    });
-                    
-                    // --- [!!!] НОВОЕ ИСПРАВЛЕНИЕ [!!!] ---
-                    // Эта часть теперь должна работать, так как скрипты загружены корректно
-                    const storyApp = window.StoryApp; 
-                    if (storyApp && typeof storyApp.init === 'function') {
-                         // Мы должны ДОЖДАТЬСЯ (await) выполнения init(),
-                         // так как он может быть асинхронным и устанавливать
-                         // свои обработчики событий (например, BackButton)
-                         await storyApp.init();
+                    // 3. Инициализируем StoryApp (который теперь загружен в <script>)
+                    if (window.StoryApp && typeof window.StoryApp.init === 'function') {
+                         // Мы должны ДОЖДАТЬСЯ (await), если init асинхронный
+                         // (Хотя в text1.html он не async, лучше перестраховаться)
+                         // В нашем случае init() - синхронный, await не обязателен, но и не вредит.
+                         await window.StoryApp.init();
+                    } else {
+                        console.error("StoryApp не найден или не имеет .init()");
+                        contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка: Не удалось инициализировать контент истории.</p>`;
+                        return;
                     }
                     
-                    // --- КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ ---
-                    // Теперь, когда storyApp.init() *гарантированно* завершился,
-                    // мы можем "вернуть" себе управление кнопкой "Zurück".
+                    // 4. "Возвращаем" управление кнопкой "Назад"
+                    // (так как StoryApp.init() мог ее перехватить)
                     this.setupTelegramHandlers();
-                    // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
 
                 } catch (error) {
-                    contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка загрузки контента: ${error.message}</p>`;
-                    console.error('Error loading story content:', error);
+                    // Очистка HTML не нужна, т.к. он уже статически там.
+                    // contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка инициализации контента: ${error.message}</p>`;
+                    console.error('Error initializing story content:', error);
                 }
-                */
             },
 
             renderAllSetsScreen(isBack = false) {
@@ -2175,10 +2134,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
             
-            // [ИЗМЕНЕНО] Функция УДАЛЕНА, так как HTML кнопка удалена
-            // returnToCarouselList() { ... }
-
-
             // ==================== ЛОГИКА ПОВТОРЕНИЯ (ИЗМЕНЕНО) ====================
 
             promptForDirection(setId, mode) {
@@ -2337,27 +2292,18 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             // ==================== УТИЛИТЫ ====================
 
             openModal(modalId) {
-                const modal = document.getElementById(modalId);
-                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
-                
-                if (modal) {
-                    modal.classList.remove('hidden');
-                    setTimeout(() => {
-                        modal.classList.add('is-open', 'opacity-100');
-                        if (modalContent) modalContent.classList.add('is-open');
-                    }, 10);
-                }
+                // Используем унифицированную логику StoryApp для всех модалок
+                window.StoryApp.openModal(modalId);
             },
             
             closeModal(modalId) {
-                const modal = document.getElementById(modalId);
-                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
-                
-                if (modal) {
-                    modal.classList.remove('is-open', 'opacity-100');
-                    if (modalContent) modalContent.classList.remove('is-open');
-                    setTimeout(() => modal.classList.add('hidden'), 300);
-                }
+                // Используем унифицированную логику StoryApp для всех модалок
+                window.StoryApp.closeModal(modalId);
+            },
+
+            // [ИЗМЕНЕНО] closeDirectionModal теперь тоже использует StoryApp.closeModal
+            closeDirectionModal() {
+                this.closeModal('direction-modal');
             },
             
             showHint() {
@@ -2449,7 +2395,5 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
     </script>
     
-    <!-- ВТОРОЙ СКРИПТ УДАЛЕН, так как вся логика Telegram API теперь встроена в основной модуль <script type="module"> -->
-
 </body>
 </html>
