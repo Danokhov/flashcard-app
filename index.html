@@ -1822,5 +1822,20 @@ renderHomeScreen() {
         });
 
     </script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  const tg = window.Telegram.WebApp;
+
+  tg.ready(); // очень важно!
+
+  // Принудительно показать кнопку "Назад"
+  tg.BackButton.show();
+
+  tg.BackButton.onClick(() => {
+    // твоя логика "назад":
+    history.back(); // или переключение экрана/стейта
+  });
+</script>
+
 </body>
 </html>
