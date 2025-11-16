@@ -1138,21 +1138,33 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     const innerContent = doc.body ? doc.body.innerHTML : htmlContent;
                     contentBody.innerHTML = styleHtml + innerContent;
                     
+                    // --- ИСПРАВЛЕННАЯ ЛОГИКА ЗАГРУЗКИ СКРИПТОВ ---
                     const scripts = doc.querySelectorAll('script');
                     scripts.forEach(script => {
                         const newScript = document.createElement('script');
+                        // Копируем все атрибуты (type, defer, etc.)
                         script.getAttributeNames().forEach(attr => {
                             newScript.setAttribute(attr, script.getAttribute(attr));
                         });
-                        newScript.src = script.src ? script.src : '';
-                        newScript.textContent = script.textContent;
+                        
+                        // [ИСПРАВЛЕНИЕ]
+                        if (script.src && script.src !== '') {
+                            // Если это внешний скрипт, устанавливаем src
+                            newScript.src = script.src;
+                        } else {
+                            // Если это встроенный скрипт, копируем его содержимое
+                            newScript.textContent = script.textContent;
+                        }
+                        // Добавляем скрипт в тело загруженного контента
                         contentBody.appendChild(newScript);
                     });
                     
+                    // Эта часть теперь должна работать, так как скрипты загружены корректно
                     const storyApp = window.StoryApp; 
                     if (storyApp && typeof storyApp.init === 'function') {
                          storyApp.init();
                     }
+                    // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
 
                 } catch (error) {
                     contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка загрузки контента: ${error.message}</p>`;
