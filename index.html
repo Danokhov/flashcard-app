@@ -369,7 +369,16 @@
                     <!-- Содержимое аккордеона <div id="transcript-content">...</div> было удалено и перемещено в модальное окно -->
                   </div>
 
-                  <!-- разбор текста -->
+                  <!-- [ИЗМЕНЕНО] кнопка квиза (ПЕРЕМЕЩЕНА СЮДА) -->
+                  <button onclick="window.StoryApp.startStoryQuiz()"
+                          class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
+                                 hover:bg-indigo-600 transition flex justify-between items-center 
+                                 bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl">
+                    <span><span class="mr-3 text-yellow-300">🧠</span>Упражнения (Квиз)</span>
+                    <span>&rarr;</span>
+                  </button>
+                  
+                  <!-- [ИЗМЕНЕНО] разбор текста -->
                   <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                     <button id="analysis-button"
                             onclick="window.StoryApp.toggleAccordion('analysis-content')"
@@ -403,14 +412,7 @@
                   </div>
                 </div>
 
-                <!-- кнопка квиза -->
-                <button onclick="window.StoryApp.startStoryQuiz()"
-                        class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
-                               hover:bg-indigo-600 transition flex justify-between items-center 
-                               bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl mt-4">
-                  <span><span class="mr-3 text-yellow-300">🧠</span>Упражнения (Квиз)</span>
-                  <span>&rarr;</span>
-                </button>
+                <!-- [ИЗМЕНЕНО] кнопка квиза УДАЛЕНА ОТСЮДА -->
                 
             </div>
             <!-- --- КОНЕЦ ИНТЕГРАЦИИ text1.html --- -->
@@ -655,7 +657,7 @@
         <div id="transcript-scroll-area" class="max-h-[60vh] overflow-y-auto pr-2 text-gray-700">
             <!-- [ИЗМЕНЕНО] Заголовок "Der Termin beim Arzt" удален -->
             <!-- <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p> -->
-            <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt.</p>
+            <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas не stimmt.</p>
             <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
             <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
             <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
@@ -750,87 +752,139 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
         const appId = MY_APP_ID; 
         const initialAuthToken = null; // Отключаем Auth Canvas
         
-
         // ==========================================================
-        // ===== ИНТЕГРАЦИЯ: Данные и логика из text1.html =====
+        // 1. КОНФИГУРАЦИЯ И ДАННЫЕ (Conceptual Data Module)
         // ==========================================================
         
-        const QUIZ_DATA = [
-          {
-            question: "Что чувствует Томас утром?",
-            answer: "Ему плохо: жар, боль, слабость",
-            options: [
-              "Он полон энергии",
-              "Ему плохо: жар, боль, слабость",
-              "Он просто немного голоден"
-            ]
-          },
-          {
-            question: "Что советует жена Томасу?",
-            answer: "Пойти к врачу",
-            options: [
-              "Пойти на работу",
-              "Выпить кофе и подождать",
-              "Пойти к врачу"
-            ]
-          },
-          {
-            question: "Что говорит врач насчёт антибиотиков?",
-            answer: "Принимать регулярно после еды несколько дней",
-            options: [
-              "Пить только если снова станет больно",
-              "Принимать регулярно после еды несколько дней",
-              "Можно прекратить сразу, как станет лучше"
-            ]
-          }
+        // Интервалы повторения в днях (от 1 до 6 боксов)
+        const REPETITION_INTERVALS = {
+            1: 1,  // 1 день
+            2: 3,  // 3 дня
+            3: 7,  // 7 дней
+            4: 14, // 2 недели
+            5: 30, // 1 месяц
+            6: 90  // 3 месяца
+        };
+        
+        /**
+         * Утилита для получения базового URL (корневой папки приложения)
+         */
+        function getBaseUrl() {
+            const path = window.location.pathname.split('/');
+            // Удаляем имя файла (index.html)
+            path.pop(); 
+            // Получаем путь к папке (например, '/subfolder/')
+            const folderPath = path.join('/') + (path.length > 1 ? '/' : ''); 
+            
+            // Собираем полный базовый URL: 'https://[your-site-name].netlify.app/subfolder/'
+            const base = window.location.origin + folderPath;
+            
+            // Убираем конечный слэш, если это корень, или оставляем, если есть путь
+            return base.endsWith('/') ? base : base + '/';
+        }
+
+        /**
+         * Данные наборов слов
+         */
+        const WORD_SETS = [
+            // Неделя 1
+            { id: "a1_nouns_1", week: 1, name: "Сущ. A1 (Часть 1)", cards: [
+                { id: "der_Tisch", front: "стол", back: "der Tisch", hintImage: "https://placehold.co/150x100/505050/ffffff?text=Стол" },
+                { id: "die_Frau", front: "женщина", back: "die Frau" }
+            ]},
+            // Неделя 2
+            { id: "a1_nouns_2", week: 2, name: "Сущ. A1 (Часть 2)", cards: [
+                { id: "das_Auto", front: "машина", back: "das Auto" },
+                { id: "das_Haus", front: "дом", back: "das Haus" }
+            ]},
+            // Неделя 3 (Пока заблокирована для новых пользователей)
+            { id: "a1_nouns_3", week: 3, name: "Сущ. A1 (Часть 3)", cards: [
+                { id: "der_Mann", front: "мужчина", back: "der Mann" },
+                { id: "die_Stadt", front: "город", back: "die Stadt" }
+            ]},
+            // Неделя 4 (Новый набор)
+            { id: "a1_verbs_1", week: 4, name: "Глаголы A1 (Часть 1)", cards: [
+                { id: "machen", front: "делать", back: "machen" },
+                { id: "gehen", front: "идти", back: "gehen" }
+            ]},
         ];
 
-        const ANALYSIS_SLIDES = [
-          {
-            title: "Начало истории",
-            original: "Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt. Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.",
-            translation: "Когда Томас просыпается в понедельник утром, он сразу понимает, что что-то не так. Он весь в поту, у него болит голова, затекла спина и болит желудок.",
-            notes: [
-              "etwas stimmt nicht – что-то не так",
-              "Mir tut der Kopf weh – у меня болит голова",
-              "Schmerzen im Magen haben – болит желудок"
-            ]
-          },
-          {
-            title: "Жена советует врача",
-            original: "Außerdem fühlt er sich müde und schwach. Seine Frau schaut ihn besorgt an: „Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“",
-            translation: "Кроме того, он чувствует себя усталым и слабым. Жена смотрит на него с тревогой: «Томас, ты выглядишь совсем плохо. Я волнуюсь. Тебе лучше бы сходить к врачу».",
-            notes: [
-              "sich müde / schwach fühlen – чувствовать себя усталым / слабым",
-              "sich Sorgen machen – волноваться",
-              "du solltest lieber ... – тебе лучше бы ..."
-            ]
-          },
-          {
-            title: "Диагноз и лекарства",
-            original: "„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen.“",
-            translation: "«У вас, вероятно, воспаление желудка. Я выпишу вам сильные антибиотики. Вы должны принимать их регулярно — три раза в день после еды».",
-            notes: [
-              "eine Magenentzündung – воспаление желудка",
-              "Medikamente verschreiben – выписать лекарства",
-              "Tabletten einnehmen – принимать таблетки"
-            ]
-          }
-        ];
+        /**
+         * Карта контента для каждой недели. 
+         * Добавлено поле 'description' для модального окна "Подробнее".
+         */
+        const WEEKLY_CONTENT_MAP = {
+            1: {
+                associationVideo: "https://www.youtube.com/embed/jNQXAC9IVRw?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для запоминания существительных A1",
+                storyLink: "text1.html", // Относительный путь для загрузки внутри SPA
+                wordSetId: "a1_nouns_1",
+                carouselId: "week1", 
+                description: "В этой подборке вы начнете изучение базовых существительных уровня А1, освоите артикли и получите видео-ассоциации для быстрого запоминания.",
+                // [ИЗМЕНЕНО]
+                dialoguesTitle: "Диалоги (Неделя 1): Знакомство",
+                dialoguesVideo: "https://www.youtube.com/embed/R-p9lq-E_OQ?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
+                dialoguesText: "<b>Диалог 1:</b><br>- Hallo! Wie heißt du?<br>- Ich heiße Anna. Und du?<br><br><b>Полезные фразы:</b><br>Guten Tag.<br>Wie geht's?"
+            },
+            2: {
+                associationVideo: "https://www.youtube.com/embed/2-nFz1WJ3vM?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для артикля 'Das' (средний род)",
+                storyLink: "https://your-domain.com/story/week2",
+                wordSetId: "a1_nouns_2",
+                carouselId: "week1", 
+                description: "Фокусируемся на существительных среднего рода (Das) и разбираем основные конструкции для описания дома и города.",
+                // [ИЗМЕНЕНО]
+                dialoguesTitle: "Диалоги (Неделя 2): В ресторане",
+                dialoguesVideo: "https://www.youtube.com/embed/example2?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
+                dialoguesText: "<b>Диалог 2:</b><br>- Ich hätte gern einen Kaffee, bitte.<br>- Sonst noch etwas?<br><br><b>Полезные фразы:</b><br>Die Speisekarte, bitte.<br>Zahlen, bitte."
+            },
+            3: {
+                associationVideo: "https://www.youtube.com/embed/M0TfQvX5X1o?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для существительных А1 (Часть 3)",
+                storyLink: "https://your-domain.com/story/week3",
+                wordSetId: "a1_nouns_3",
+                carouselId: "week1", 
+                description: "Продолжаем расширять словарный запас А1, изучая слова, связанные с людьми и местами. Доступно после 2-й недели подписки.",
+                // [ИЗМЕНЕНО]
+                dialoguesTitle: "Диалоги (Неделя 3): Покупки",
+                dialoguesVideo: "https://www.youtube.com/embed/example3?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
+                dialoguesText: "<b>Диалог 3:</b><br>- Was kostet das?<br>- Das kostet 10 Euro.<br><br><b>Полезные фразы:</b><br>Das ist zu teuer.<br>Ich nehme das."
+            },
+            4: {
+                associationVideo: "https://www.youtube.com/embed/example4?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для глаголов A1",
+                storyLink: "https://your-domain.com/story/week4",
+                wordSetId: "a1_verbs_1", 
+                carouselId: "week1",
+                description: "Изучение первых 10 важных глаголов уровня A1, их спряжения и использования в простых предложениях.",
+                // [ИЗМЕНЕНО]
+                dialoguesTitle: "Диалоги (Неделя 4): Планы",
+                dialoguesVideo: "https://www.youtube.com/embed/example4_dialog?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
+                dialoguesText: "<b>Диалог 4:</b><br>- Was machst du heute?<br>- Ich gehe ins Kino.<br><br><b>Полезные фразы:</b><br>Hast du Zeit?<br>Kommst du mit?"
+            },
+        };
 
+        // Вспомогательные массивы для фильтров
+        const ALL_WEEKS = Object.keys(WEEKLY_CONTENT_MAP).map(Number).sort((a, b) => a - b);
+
+
+        // ===== НАЧАЛО ИНТЕГРАЦИИ text1.html (JavaScript) =====
+        
+        // [ИЗМЕНЕНО] 
+        // Раньше здесь были жестко заданы QUIZ_DATA и ANALYSIS_SLIDES.
+        // Теперь они инициализируются как пустые и будут заполняться из JSON.
         window.StoryApp = {
-          quizData: QUIZ_DATA,
+          quizData: [], // [ИЗМЕНЕНО] Инициализируем как пустой массив
           currentIndex: 0,
           userAnswers: [],
-          analysisSlides: ANALYSIS_SLIDES,
+          analysisSlides: [], // [ИЗМЕНЕНО] Инициализируем как пустой массив
           currentAnalysisIndex: 0,
 
           init() {
             this.initAudioPlayback();
-            this.initAnalysisCarousel();
+            this.initAnalysisCarousel(); // Эта функция теперь будет использовать данные из quizData
             this.initStickyAudioBar();
-            // Показываем кнопку "Назад" при инициализации,
-            // т.к. главный App.js ее перехватит
+            // ← Добавьте эту строку:
             if (window.Telegram?.WebApp?.BackButton) {
                 window.Telegram.WebApp.BackButton.show();
              }   
@@ -929,7 +983,21 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             const headerHeight = getTelegramHeaderHeight();
 
             const checkPosition = () => {
+                if (!wrapper || !bar || !placeholder) return; // Проверка на null
+                
                 const wrapperRect = wrapper.getBoundingClientRect();
+                
+                // Проверяем, что плеер не в модальном окне
+                const isInModal = bar.closest('#transcript-modal');
+                if (isInModal) {
+                    if (bar.classList.contains('fixed-audio-bar')) {
+                        bar.classList.remove('fixed-audio-bar');
+                        placeholder.style.height = '0px';
+                        bar.style.top = '';
+                    }
+                    return; // Не делаем "липким" в модальном окне
+                }
+
 
                 // Когда верхняя граница обёртки дошла до нижней границы шапки TG
                 if (wrapperRect.top <= headerHeight) {
@@ -974,7 +1042,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
           /* ====== КАРУСЕЛЬ РАЗБОРА ====== */
           initAnalysisCarousel() {
-            if (!this.analysisSlides.length) return;
+            // [ИЗМЕНЕНО] Проверяем, есть ли данные в this.analysisSlides
+            if (!this.analysisSlides || !this.analysisSlides.length) {
+                const slideContainer = document.getElementById('analysis-slide');
+                if (slideContainer) slideContainer.innerHTML = '<p class="text-gray-500 text-center">Нет данных для разбора.</p>';
+                return;
+            }
             this.currentAnalysisIndex = 0;
             this.renderAnalysisSlide();
           },
@@ -1010,14 +1083,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
           },
 
           nextAnalysisSlide() {
-            if (!this.analysisSlides.length) return;
+            if (!this.analysisSlides || !this.analysisSlides.length) return;
             this.currentAnalysisIndex =
               (this.currentAnalysisIndex + 1) % this.analysisSlides.length;
             this.renderAnalysisSlide();
           },
 
           prevAnalysisSlide() {
-            if (!this.analysisSlides.length) return;
+            if (!this.analysisSlides || !this.analysisSlides.length) return;
             this.currentAnalysisIndex =
               (this.currentAnalysisIndex - 1 + this.analysisSlides.length) % this.analysisSlides.length;
             this.renderAnalysisSlide();
@@ -1025,12 +1098,18 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
           /* ====== КВИЗ ====== */
           startStoryQuiz() {
+            // [ИЗМЕНЕНО] Проверяем, есть ли данные в this.quizData
+            if (!this.quizData || !this.quizData.length) {
+                console.error("Нет данных для квиза!");
+                // Можно показать alert или просто не открывать модалку
+                return;
+            }
             this.currentIndex = 0;
             this.userAnswers = [];
             this.renderCurrentQuestion();
             this.updateProgress();
             this.resetControls();
-            this.openModal('quiz-modal');
+            window.App.openModal('quiz-modal'); // [ИЗМЕНЕНО] Используем App.openModal
           },
 
           renderCurrentQuestion() {
@@ -1040,9 +1119,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             const questionEl = document.getElementById('quiz-question');
             const optionsContainer = document.getElementById('quiz-options');
             const feedbackEl = document.getElementById('quiz-feedback');
-            const questionBox = document.getElementById('question-box'); // Добавлено
+            const questionBox = document.getElementById('question-box'); 
 
-            if (!questionEl || !optionsContainer || !feedbackEl || !questionBox) return; // Добавлено questionBox
+            if (!questionEl || !optionsContainer || !feedbackEl || !questionBox) return; 
 
             // --- ИЗМЕНЕНО: Показываем элементы при рендере вопроса ---
             questionBox.classList.remove('hidden');
@@ -1194,133 +1273,18 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             if (feedbackEl) feedbackEl.classList.add('hidden');
           },
 
-          /* ====== МОДАЛКИ (StoryApp) ====== */
+          /* ====== МОДАЛКИ (ВНУТРИ StoryApp) ====== */
+          // [ИЗМЕНЕНО] Эти функции теперь вызываются из App.openModal / App.closeModal
+          // поэтому мы можем их УДАЛИТЬ или оставить (пока оставим, но они не используются)
           openModal(id) {
-            const modal = document.getElementById(id);
-            const content = modal ? modal.querySelector('.modal-content') : null;
-            if (!modal) return;
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-              modal.classList.add('is-open', 'opacity-100');
-              if (content) content.classList.add('is-open');
-            }, 10);
+            // ... (Этот код больше не используется, используется App.openModal)
           },
 
           closeModal(id) {
-            const modal = document.getElementById(id);
-            const content = modal ? modal.querySelector('.modal-content') : null;
-            if (!modal) return;
-
-            modal.classList.remove('is-open', 'opacity-100');
-            if (content) content.classList.remove('is-open');
-            setTimeout(() => modal.classList.add('hidden'), 300);
+            // ... (Этот код больше не используется, используется App.closeModal)
           }
         };
         // ===== КОНЕЦ ИНТЕГРАЦИИ text1.html =====
-        
-        // ==========================================================
-        // 1. КОНФИГУРАЦИЯ И ДАННЫЕ (Conceptual Data Module)
-        // ==========================================================
-        
-        // Интервалы повторения в днях (от 1 до 6 боксов)
-        const REPETITION_INTERVALS = {
-            1: 1,  // 1 день
-            2: 3,  // 3 дня
-            3: 7,  // 7 дней
-            4: 14, // 2 недели
-            5: 30, // 1 месяц
-            6: 90  // 3 месяца
-        };
-        
-        /**
-         * Утилита для получения базового URL (корневой папки приложения)
-         */
-        function getBaseUrl() {
-            const path = window.location.pathname.split('/');
-            // Удаляем имя файла (index.html)
-            path.pop(); 
-            // Получаем путь к папке (например, '/subfolder/')
-            const folderPath = path.join('/') + (path.length > 1 ? '/' : ''); 
-            
-            // Собираем полный базовый URL: 'https://[your-site-name].netlify.app/subfolder/'
-            const base = window.location.origin + folderPath;
-            
-            // Убираем конечный слэш, если это корень, или оставляем, если есть путь
-            return base.endsWith('/') ? base : base + '/';
-        }
-
-        /**
-         * Данные наборов слов
-         */
-        const WORD_SETS = [
-            // Неделя 1
-            { id: "a1_nouns_1", week: 1, name: "Сущ. A1 (Часть 1)", cards: [
-                { id: "der_Tisch", front: "стол", back: "der Tisch", hintImage: "https://placehold.co/150x100/505050/ffffff?text=Стол" },
-                { id: "die_Frau", front: "женщина", back: "die Frau" }
-            ]},
-            // Неделя 2
-            { id: "a1_nouns_2", week: 2, name: "Сущ. A1 (Часть 2)", cards: [
-                { id: "das_Auto", front: "машина", back: "das Auto" },
-                { id: "das_Haus", front: "дом", back: "das Haus" }
-            ]},
-            // Неделя 3 (Пока заблокирована для новых пользователей)
-            { id: "a1_nouns_3", week: 3, name: "Сущ. A1 (Часть 3)", cards: [
-                { id: "der_Mann", front: "мужчина", back: "der Mann" },
-                { id: "die_Stadt", front: "город", back: "die Stadt" }
-            ]},
-            // Неделя 4 (Новый набор)
-            { id: "a1_verbs_1", week: 4, name: "Глаголы A1 (Часть 1)", cards: [
-                { id: "machen", front: "делать", back: "machen" },
-                { id: "gehen", front: "идти", back: "gehen" }
-            ]},
-        ];
-
-        /**
-         * Карта контента для каждой недели. 
-         * Добавлено поле 'description' для модального окна "Подробнее".
-         */
-        const WEEKLY_CONTENT_MAP = {
-            1: {
-                associationVideo: "https://www.youtube.com/embed/jNQXAC9IVRw?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для запоминания существительных A1",
-                storyLink: "text1.html", // Относительный путь для загрузки внутри SPA
-                wordSetId: "a1_nouns_1",
-                dialoguesLink: "https://your-domain.com/dialogs/week1",
-                carouselId: "week1", 
-                description: "В этой подборке вы начнете изучение базовых существительных уровня А1, освоите артикли и получите видео-ассоциации для быстрого запоминания."
-            },
-            2: {
-                associationVideo: "https://www.youtube.com/embed/2-nFz1WJ3vM?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для артикля 'Das' (средний род)",
-                storyLink: "https://your-domain.com/story/week2",
-                wordSetId: "a1_nouns_2",
-                dialoguesLink: "https://your-domain.com/dialogs/week2",
-                carouselId: "week1", 
-                description: "Фокусируемся на существительных среднего рода (Das) и разбираем основные конструкции для описания дома и города."
-            },
-            3: {
-                associationVideo: "https://www.youtube.com/embed/M0TfQvX5X1o?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для существительных А1 (Часть 3)",
-                storyLink: "https://your-domain.com/story/week3",
-                wordSetId: "a1_nouns_3",
-                dialoguesLink: "https://your-domain.com/dialogs/week3",
-                carouselId: "week1", 
-                description: "Продолжаем расширять словарный запас А1, изучая слова, связанные с людьми и местами. Доступно после 2-й недели подписки."
-            },
-            4: {
-                associationVideo: "https://www.youtube.com/embed/example4?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для глаголов A1",
-                storyLink: "https://your-domain.com/story/week4",
-                wordSetId: "a1_verbs_1", 
-                dialoguesLink: "https://your-domain.com/dialogs/week4",
-                carouselId: "week1",
-                description: "Изучение первых 10 важных глаголов уровня A1, их спряжения и использования в простых предложениях."
-            },
-        };
-
-        // Вспомогательные массивы для фильтров
-        const ALL_WEEKS = Object.keys(WEEKLY_CONTENT_MAP).map(Number).sort((a, b) => a - b);
 
 
         // ==========================================================
@@ -1334,6 +1298,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             isAuthReady: false, 
             userProgress: {}, 
             audioPlayerOriginalParent: null, // [НОВОЕ] Для хранения родителя плеера
+            allStoryContent: {}, // [НОВОЕ] Для хранения загруженного JSON
             
             // ПОЛЯ ДЛЯ ПОДПИСКИ И АКТИВАЦИИ
             isSubscriber: false, 
@@ -1409,6 +1374,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
                     this.disableZoom();
                     await this.loadCarouselMetadata(); 
+                    await this.loadStoryContent(); // [НОВОЕ] Загружаем контент историй
 
                     if (this.isAuthReady) {
                         await this.loadProgress();
@@ -1443,6 +1409,19 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }, false);
             },
 
+
+            // [НОВОЕ] Загружает контент для историй (транскрипты, квизы и т.д.)
+            async loadStoryContent() {
+                try {
+                    const response = await fetch(getBaseUrl() + 'story_content.json');
+                    if (!response.ok) throw new Error('Не удалось загрузить story_content.json');
+                    this.allStoryContent = await response.json();
+                    console.log('Контент историй загружен:', this.allStoryContent);
+                } catch (error) {
+                    console.error("Ошибка загрузки контента историй:", error);
+                    this.showError('Не удалось загрузить контент историй.');
+                }
+            },
 
             async loadProgress() {
                 this.showScreen('loading-screen'); // Показываем загрузку
@@ -1574,7 +1553,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         this.renderExternalLinkScreen(param.title, param.url, isBackNavigation);
                         break;
                     case 'renderStoryScreen':
-                        this.renderStoryScreen(param.title, param.url, isBackNavigation);
+                        // [ИЗМЕНЕНО] param.url -> param.weekId
+                        this.renderStoryScreen(param.title, param.weekId, isBackNavigation);
                         break;
                     case 'renderCarouselListScreen':
                         this.renderCarouselListScreen(isBackNavigation);
@@ -1830,8 +1810,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 let storyAction;
                 if (weekNum === 1 && weekData.storyLink === 'text1.html') {
                     // [ИЗМЕНЕНО] Убран getBaseUrl() и 'text1.html', 
-                    // так как URL больше не нужен - функция renderStoryScreen знает, что делать
-                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', 'internal')`; 
+                    // [ИЗМЕНЕНО] Передаем ID недели (week_1, week_2)
+                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', 'week_${weekNum}')`; 
                 } else {
                     storyAction = `window.App.renderExternalLinkScreen('📖 История недели ${weekNum}', '${weekData.storyLink}')`; 
                 }
@@ -1851,10 +1831,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 );
                 
                 // 5. Полезные фразы
+                // [ИЗМЕНЕНО]
+                const dialoguesTextEscaped = (weekData.dialoguesText || '').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\r\n|\r|\n/g, '<br>');
+                const dialoguesTitleEscaped = (weekData.dialoguesTitle || `Диалоги Недели ${weekNum}`).replace(/'/g, "\\'");
+
                 this.renderMenuCard(contentListDiv, 
                     `🗣️ Полезные фразы / Диалоги на тему`, 
-                    `Внешняя ссылка`,
-                    `window.App.renderExternalLinkScreen('🗣️ Диалоги Недели ${weekNum}', '${weekData.dialoguesLink}')` 
+                    `Видео и текст`, // [ИЗМЕНЕНО]
+                    `window.App.renderVideoContentScreen('${dialoguesTitleEscaped}', '${weekData.dialoguesVideo || ''}', '${dialoguesTextEscaped}')` // [ИЗМЕНЕНО]
                 );
 
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
@@ -1874,9 +1858,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const extraTextDiv = document.getElementById('video-extra-text');
 
                 videoIframe.src = videoUrl ? videoUrl : '';
-                videoIframe.style.display = videoUrl ? 'block' : 'none';
                 
-                extraTextDiv.innerHTML = textContent ? `<p>${textContent}</p>` : '';
+                // [ИСПРАВЛЕНИЕ] Показываем/скрываем контейнер видео
+                const videoContainer = videoIframe.closest('.video-container');
+                if(videoContainer) {
+                    videoContainer.style.display = videoUrl ? 'block' : 'none';
+                }
+
+                extraTextDiv.innerHTML = textContent ? textContent : ''; // Используем innerHTML для поддержки <b>
                 extraTextDiv.style.display = textContent ? 'block' : 'none';
                 
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
@@ -1903,40 +1892,69 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
 
-            // [ИЗМЕНЕНО] renderStoryScreen теперь просто показывает встроенный контент
-            async renderStoryScreen(title, url, isBack = false) {
-                // 1. Устанавливаем заголовок
-                document.getElementById('content-viewer-title').textContent = title;
-                const contentBody = document.getElementById('content-viewer-body');
+            // [СИЛЬНО ИЗМЕНЕНО] 
+            // Эта функция больше не загружает HTML. Она читает данные из
+            // 'this.allStoryContent' и динамически заполняет страницу.
+            async renderStoryScreen(title, weekId, isBack = false) { // weekId = 'week_1'
                 
-                // 2. Показываем экран и записываем в историю
-                // URL больше не используется, но мы его сохраняем в 'param' для
-                // 'case renderStoryScreen' в reRenderState, если он понадобится.
+                // 1. Получаем контент из загруженных данных
+                const content = this.allStoryContent[weekId];
+                if (!content) {
+                    this.showError(`Контент для '${weekId}' не найден.`);
+                    console.error(`Контент для '${weekId}' не найден в this.allStoryContent`);
+                    return; // Не показываем экран, если нет данных
+                }
+
+                // 2. Устанавливаем заголовок экрана
+                document.getElementById('content-viewer-title').textContent = title;
+                
+                // 3. Заполняем элементы истории (заголовок, аудио, картинка)
+                const storyBody = document.getElementById('content-viewer-body');
+                storyBody.querySelector('h1').textContent = content.title;
+                // (Если пути к аудио/картинкам тоже в JSON, их можно установить здесь)
+                // [ИЗМЕНЕНО] Устанавливаем пути к медиа из JSON
+                const imgEl = storyBody.querySelector('.story-visual-container img');
+                const audioEl = storyBody.querySelector('#story-audio-player');
+                
+                if (imgEl && content.imageSrc) imgEl.src = content.imageSrc;
+                if (audioEl && content.audioSrc) audioEl.src = content.audioSrc;
+
+
+                // 4. [НОВОЕ] Заполняем модальное окно транскрипции
+                const transcriptContainer = document.getElementById('transcript-scroll-area');
+                transcriptContainer.innerHTML = ''; // Очищаем старые данные
+                
+                if (content.transcript && Array.isArray(content.transcript)) {
+                    content.transcript.forEach(paragraph => {
+                        const p = document.createElement('p');
+                        p.className = 'mb-3';
+                        p.textContent = paragraph;
+                        transcriptContainer.appendChild(p);
+                    });
+                }
+
+                // 5. [НОВОЕ] Передаем данные о квизе и разборе в 'StoryApp'
+                window.StoryApp.quizData = content.quiz || [];
+                window.StoryApp.analysisSlides = content.analysis || [];
+                
+                // 6. Показываем экран и записываем в историю
                 this.showScreen('content-viewer-screen', isBack, { 
                     renderFunc: 'renderStoryScreen', 
-                    param: {title, url} // url здесь (напр. 'internal') просто для истории
+                    param: {title, weekId} 
                 });
 
                 try {
-                    // 3. Инициализируем StoryApp (который теперь загружен в <script>)
+                    // 7. Инициализируем StoryApp (он подхватит новые данные)
                     if (window.StoryApp && typeof window.StoryApp.init === 'function') {
-                         // Мы должны ДОЖДАТЬСЯ (await), если init асинхронный
-                         // (Хотя в text1.html он не async, лучше перестраховаться)
-                         // В нашем случае init() - синхронный, await не обязателен, но и не вредит.
                          await window.StoryApp.init();
                     } else {
                         console.error("StoryApp не найден или не имеет .init()");
-                        contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка: Не удалось инициализировать контент истории.</p>`;
-                        return;
                     }
                     
-                    // 4. "Возвращаем" управление кнопкой "Назад"
-                    // (так как StoryApp.init() мог ее перехватить)
+                    // 8. Восстанавливаем обработчик кнопки "Назад"
                     this.setupTelegramHandlers();
 
                 } catch (error) {
-                    // Очистка HTML не нужна, т.к. он уже статически там.
-                    // contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка инициализации контента: ${error.message}</p>`;
                     console.error('Error initializing story content:', error);
                 }
             },
@@ -1948,7 +1966,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 const filteredSets = WORD_SETS.filter(set => {
                     const weekMatch = this.currentWeekFilter === 'All' || set.week.toString() === this.currentWeekFilter;
-                    const unlockedMatch = set.week <= this.unlockedWeek; 
+                    // [ИСПРАВЛЕНИЕ] Проверяем подписку
+                    const unlockedMatch = (this.isSubscriber && set.week <= this.unlockedWeek) || (!this.isSubscriber && set.week === 1);
                     return weekMatch && unlockedMatch;
                 });
                 
@@ -1977,7 +1996,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 if (filterType === 'week') {
                     this.currentWeekFilter = value;
                 }
-                this.renderAllSetsScreen(); // Это создаст новый (дублирующий) элемент истории. Это нормально.
+                this.renderAllSetsScreen(true); // true = isBack, не дублируем историю
             },
 
             renderSetCards(setsToRender) {
@@ -2146,6 +2165,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
             
+            // [ИЗМЕНЕНО] Функция УДАЛЕНА, так как HTML кнопка удалена
+            // returnToCarouselList() { ... }
+
+
             // ==================== ЛОГИКА ПОВТОРЕНИЯ (ИЗМЕНЕНО) ====================
 
             promptForDirection(setId, mode) {

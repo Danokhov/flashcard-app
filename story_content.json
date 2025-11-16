@@ -1,0 +1,110 @@
+{
+    "week_1": {
+        "title": "Der Termin beim Arzt",
+        "audioSrc": "Woche1_text.mp3",
+        "imageSrc": "Woche1_text.png",
+        "transcript": [
+  "Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas не stimmt.",
+  "Er ist völlig <b>verschwitzt</b>, sein Kopf tut weh, der <b>Rücken</b> ist steif, und er hat <b>Schmerzen</b> im <b>Magen</b>.",
+  "Außerdem fühlt er sich müde und schwach.",
+  "Seine Frau schaut ihn besorgt an:",
+  "„Thomas, du siehst gar nicht gut aus. Ich mache mir <b>Sorgen</b>. Du solltest lieber zum Arzt gehen.“",
+  "Thomas nickt, aber er hat Angst, dass es etwas <b>Schlimmes</b> sein könnte.",
+  "„Vielleicht ist es nur Stress“, murmelt er.",
+  "„Vielleicht“, antwortet sie <b>ruhig</b>, „aber deine <b>Gesundheit</b> ist wichtiger.“",
+  "Er ruft an der Rezeption der Praxis an.",
+  "Die Mitarbeiterin hört ihm aufmerksam zu, als er seine <b>Beschwerden</b> beschreibt.",
+  "„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie <b>Schmerzen</b> haben, bekommen Sie natürlich schnell einen <b>Termin</b>.“",
+  "Am Nachmittag sitzt Thomas im Wartezimmer.",
+  "Es ist <b>stickig</b>, und er beginnt wieder zu schwitzen.",
+  "Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, und jemand stöhnt leise vor <b>Schmerzen</b>.",
+  "Thomas versucht ruhig zu atmen, doch der <b>Magen</b> <b>brennt</b> stärker, und ihm wird schwindlig.",
+  "Endlich ruft die Arzthelferin: „Herr Berger, bitte!“",
+  "Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:",
+  "„Was fehlt Ihnen?“",
+  "Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach <b>fühlt</b> und nachts <b>leidet</b>.",
+  "Der Arzt <b>misst</b> den Blutdruck, hört den <b>Körper</b> ab und erklärt:",
+  "„Sie haben wahrscheinlich eine Magenentzündung. Ich <b>verschreibe</b> Ihnen starke <b>Antibiotika</b>. Sie müssen sie regelmäßig <b>einnehmen</b> – drei Mal am Tag nach dem Essen. Hier ist außerdem ein <b>Rezept</b>, damit Sie die <b>Medikamente</b> in der Apotheke bekommen.“",
+  "Dann fügt er hinzu:",
+  "„Sie sollen die <b>Antibiotika</b> immer nach dem Essen <b>einnehmen</b>, damit der <b>Magen</b> sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“",
+  "Thomas fragt:",
+  "„Wie lange soll ich die Tabletten nehmen?“",
+  "Dr. Keller antwortet:",
+  "„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“",
+  "„Die <b>Antibiotika</b> <b>wirken</b> schnell, aber Sie brauchen <b>Ruhe</b>. <b>Vermeiden</b> Sie Kaffee und Alkohol.“",
+  "Dann fragt er:",
+  "„Brauchen Sie auch ein Attest für die Arbeit?“",
+  "Thomas antwortет:",
+  "„Ja, bitte – für drei Tage.“",
+  "Dr. Keller notiert es und lächelt:",
+  "„In Ordnung. Dann ruhen Sie sich gut aus.“",
+  "Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:",
+  "„Ich werde mich gut <b>kümmern um</b> dich, bis es dir besser geht.“",
+  "Nach zwei Tagen geht es ihm schon besser.",
+  "Die <b>Schmerzen</b> sind fast weg, das <b>Brennen</b> im <b>Magen</b> ist vorbei, und er kann wieder schlafen.",
+  "Am dritten День fühlt sich Thomas stark und изgeruht.",
+  "Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war и die <b>Medikamente</b> gut <b>wirken</b>."
+],
+        "quiz": [
+          {
+            "question": "Что чувствует Томас утром?",
+            "answer": "Ему плохо: жар, боль, слабость",
+            "options": [
+              "Он полон энергии",
+              "Ему плохо: жар, боль, слабость",
+              "Он просто немного голоден"
+            ]
+          },
+          {
+            "question": "Что советует жена Томасу?",
+            "answer": "Пойти к врачу",
+            "options": [
+              "Пойти на работу",
+              "Выпить кофе и подождать",
+              "Пойти к врачу"
+            ]
+          },
+          {
+            "question": "Что говорит врач насчёт антибиотиков?",
+            "answer": "Принимать регулярно после еды несколько дней",
+            "options": [
+              "Пить только если снова станет больно",
+              "Принимать регулярно после еды несколько дней",
+              "Можно прекратить сразу, как станет лучше"
+            ]
+          }
+        ],
+        "analysis": [
+          {
+            "title": "Начало истории",
+            "original": "Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas nicht stimmt. Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.",
+            "translation": "Когда Томас просыпается в понедельник утром, он сразу понимает, что что-то не так. Он весь в поту, у него болит голова, затекла спина и болит желудок.",
+            "notes": [
+              "etwas stimmt nicht – что-то не так",
+              "Mir tut der Kopf weh – у меня болит голова",
+              "Schmerzen im Magen haben – болит желудок"
+            ]
+          },
+          {
+            "title": "Жена советует врача",
+            "original": "Außerdem fühlt er sich müde und schwach. Seine Frau schaut ihn besorgt an: „Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“",
+            "translation": "Кроме того, он чувствует себя усталым и слабым. Жена смотрит на него с тревогой: «Томас, ты выглядишь совсем плохо. Я волнуюсь. Тебе лучше бы сходить к врачу».",
+            "notes": [
+              "sich müde / schwach fühlen – чувствовать себя усталым / слабым",
+              "sich Sorgen machen – волноваться",
+              "du solltest lieber ... – тебе лучше бы ..."
+            ]
+          },
+          {
+            "title": "Диагноз и лекарства",
+            "original": "„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen.“",
+            "translation": "«У вас, вероятно, воспаление желудка. Я выпишу вам сильные антибиотики. Вы должны принимать их регулярно — три раза в день после еды».",
+            "notes": [
+              "eine Magenentzündung – воспаление желудка",
+              "Medikamente verschreiben – выписать лекарства",
+              "Tabletten einnehmen – принимать таблетки"
+            ]
+          }
+        ]
+    }
+}
