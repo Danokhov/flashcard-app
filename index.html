@@ -1176,19 +1176,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             await Promise.all(scriptPromises);
         }
 
-        // Теперь, когда ВСЁ из text1.html выполнилось (включая StoryApp.init())
-        // — принудительно возвращаем себе кнопку «Назад»
-        setTimeout(() => {
-            // Сбрасываем любой чужой обработчик
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.BackButton.show();
-                // Полностью перехватываем управление
-                window.Telegram.WebApp.BackButton.onClick(() => {
-                    window.App.handleTelegramBackClick();
-                });
-            }
-        }, 100); // небольшая задержка, чтобы точно после всех init()
-
     } catch (error) {
         contentBody.innerHTML = `<p class="text-red-500 text-center py-10">Ошибка загрузки: ${error.message}</p>`;
         console.error(error);

@@ -377,6 +377,10 @@ window.StoryApp = {
     this.initAudioPlayback();
     this.initAnalysisCarousel();
     this.initStickyAudioBar();
+    // ← Добавьте эту строку:
+    if (window.Telegram?.WebApp?.BackButton) {
+        window.Telegram.WebApp.BackButton.show();
+     }   
   },
 
   /* ====== АУДИО ====== */
