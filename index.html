@@ -538,6 +538,18 @@
                     Помню ✅
                 </button>
             </div>
+            
+            <div id="controls-practice-all" class="hidden grid grid-cols-3 gap-3">
+                <button onclick="window.App.prevCard()" class="py-3 px-4 bg-gray-400 text-white font-bold rounded-xl shadow-md hover:bg-gray-500 transition duration-150">
+                    ← Назад
+                </button>
+                <button id="hint-button-practice-all" onclick="window.App.showHint()" class="py-2 px-4 bg-yellow-400 text-yellow-900 font-semibold rounded-xl shadow-md hover:bg-yellow-500 transition duration-150 hidden">
+                    💡 Подсказка
+                </button>
+                <button onclick="window.App.nextCard()" class="py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150">
+                    Вперед →
+                </button>
+            </div>
              <!-- Кнопка "Назад в меню" во время сессии УДАЛЕНА. -->
         </div>
         
@@ -783,12 +795,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
         
         // Интервалы повторения в днях (от 1 до 6 боксов)
         const REPETITION_INTERVALS = {
-            1: 1,  // 1 день
-            2: 3,  // 3 дня
-            3: 7,  // 7 дней
-            4: 14, // 2 недели
-            5: 30, // 1 месяц
-            6: 90  // 3 месяца
+            1: 0,  // Первое повторение — в тот же день
+            2: 1,  // 1 день
+            3: 3,  // 3 дня
+            4: 7,  // 7 дней
+            5: 14, // 2 недели
+            6: 30  // 1 месяц
         };
         
         /**
@@ -2089,7 +2101,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                                 К повтору (${dueCount})
                             </button>
                             <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
-                                    onclick="window.App.promptForDirection('${set.id}', 'practice', 'allsets')">
+                                    onclick="window.App.promptForDirection('${set.id}', 'practice-all', 'allsets')">
                                 Практика всех слов
                             </button>
                         </div>
@@ -2245,9 +2257,13 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 if (!set) return;
 
                 this.isPracticeMode = (mode === 'practice');
+                this.isPracticeAllMode = (mode === 'practice-all');
 
                 // Заполняем массив карточек для сессии в зависимости от режима
-                if (this.isPracticeMode) {
+                if (this.isPracticeAllMode) {
+                    // Практика всех слов: показываем ВСЕ карточки набора БЕЗ фильтрации
+                    this.sessionCards = set.cards.map(card => ({ ...card }));
+                } else if (this.isPracticeMode) {
                     // В режиме Практика: если пришли из меню Недели - показываем все карточки недели,
                     // если из раздела "Все наборы слов" - показываем только те карточки, которые пользователь пометил как "Учить"
                     if (source === 'week') {
@@ -2265,27 +2281,29 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     });
                 }
 
-                // [ИЗМЕНЕНО] Меняем текст кнопок в зависимости от режима
+                // [ИЗМЕНЕНО] Меняем текст кнопок и видимость в зависимости от режима
                 const rateNoButton = document.querySelector('#controls-rate button:nth-child(1)');
                 const rateYesButton = document.querySelector('#controls-rate button:nth-child(2)');
 
-                if (this.isPracticeMode) {
+                if (this.isPracticeAllMode) {
+                    // Режим "Практика всех слов": показываем только навигационные кнопки (Назад, Подсказка, Вперед)
+                    document.getElementById('controls-show').classList.add('hidden');
+                    document.getElementById('controls-rate').classList.add('hidden');
+                    document.getElementById('controls-practice-all').classList.remove('hidden');
+                } else if (this.isPracticeMode) {
                     // Режим "Практика": Учить (false) / Знаю (true)
                     rateNoButton.innerHTML = 'Учить 🎓';
                     rateYesButton.innerHTML = 'Знаю 👍';
+                    document.getElementById('controls-show').classList.add('hidden');
+                    document.getElementById('controls-rate').classList.remove('hidden');
+                    document.getElementById('controls-practice-all').classList.add('hidden');
                 } else {
                     // Режим "Повторение": Не помню (false) / Помню (true)
                     rateNoButton.innerHTML = 'Не помню ❌';
                     rateYesButton.innerHTML = 'Помню ✅';
-                }
-
-                // Показ кнопок сразу в зависимости от режима: в Практике показываем сразу две кнопки (Учить/Знаю)
-                if (this.isPracticeMode) {
-                    document.getElementById('controls-show').classList.add('hidden');
-                    document.getElementById('controls-rate').classList.remove('hidden');
-                } else {
                     document.getElementById('controls-show').classList.remove('hidden');
                     document.getElementById('controls-rate').classList.add('hidden');
+                    document.getElementById('controls-practice-all').classList.add('hidden');
                 }
 
                 // [ИЗМЕНЕНО] Состояние для истории (включаем источник)
@@ -2309,7 +2327,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             showAnswer() {
                 document.getElementById('card').classList.add('is-flipped');
                 // В режиме Practice кнопки видны сразу и не меняются при перевороте
-                if (!this.isPracticeMode) {
+                // В режиме PracticeAll кнопки видны всегда (навигационные)
+                if (!this.isPracticeMode && !this.isPracticeAllMode) {
                     document.getElementById('controls-show').classList.add('hidden');
                     document.getElementById('controls-rate').classList.remove('hidden');
                 }
@@ -2337,13 +2356,19 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const percent = ((this.currentCardIndex + 1) / totalCards) * 100;
                 document.getElementById('progress-bar').style.width = `${percent}%`;
 
-                // Показ кнопок в зависимости от режима: Practice — сразу две кнопки, Review — кнопка "Показать ответ"
-                if (this.isPracticeMode) {
+                // Показ кнопок в зависимости от режима: Practice — сразу две кнопки, PracticeAll — навигационные, Review — кнопка "Показать ответ"
+                if (this.isPracticeAllMode) {
+                    document.getElementById('controls-show').classList.add('hidden');
+                    document.getElementById('controls-rate').classList.add('hidden');
+                    document.getElementById('controls-practice-all').classList.remove('hidden');
+                } else if (this.isPracticeMode) {
                     document.getElementById('controls-show').classList.add('hidden');
                     document.getElementById('controls-rate').classList.remove('hidden');
+                    document.getElementById('controls-practice-all').classList.add('hidden');
                 } else {
                     document.getElementById('controls-show').classList.remove('hidden');
                     document.getElementById('controls-rate').classList.add('hidden');
+                    document.getElementById('controls-practice-all').classList.add('hidden');
                 }
 
                 const card = this.sessionCards[this.currentCardIndex];
@@ -2379,9 +2404,22 @@ async handleAnswer(knewIt) {
                 if (this.isAdvancing) return; 
                 this.isAdvancing = true;
 
-                // [ИЗМЕНЕНО] Новая логика для Practice Mode и Review Mode
+                // [ИЗМЕНЕНО] Новая логика для Practice Mode, PracticeAll Mode и Review Mode
                 const card = this.sessionCards[this.currentCardIndex];
                 let progress = this.userProgress[card.id] || { box: 0 };
+
+                // В режиме "Практика всех слов" не меняем userProgress, просто переходим к следующей карточке
+                if (this.isPracticeAllMode) {
+                    // Практика без изменения статусов
+                    document.getElementById('card').classList.add('slide-out');
+                    setTimeout(() => {
+                        document.getElementById('card').classList.remove('slide-out'); 
+                        this.currentCardIndex++; 
+                        this.isAdvancing = false; 
+                        this.showNextCard(); 
+                    }, 400);
+                    return;
+                }
 
                 if (this.isPracticeMode) {
                     // В режиме "Практика": "Учить" vs "Знаю"
@@ -2543,6 +2581,36 @@ async handleAnswer(knewIt) {
                     document.getElementById('hint-image').src = 'https://placehold.co/400x150/FCA5A5/FFFFFF?text=Нет+Изображения';
                 }
                 this.openModal('hint-modal');
+            },
+
+            // Навигация для режима "Практика всех слов"
+            prevCard() {
+                if (this.currentCardIndex > 0) {
+                    document.getElementById('card').classList.add('slide-out');
+                    setTimeout(() => {
+                        document.getElementById('card').classList.remove('slide-out');
+                        this.currentCardIndex--;
+                        this.isAdvancing = false;
+                        this.showNextCard();
+                    }, 400);
+                }
+            },
+
+            nextCard() {
+                if (this.currentCardIndex < this.sessionCards.length - 1) {
+                    document.getElementById('card').classList.add('slide-out');
+                    setTimeout(() => {
+                        document.getElementById('card').classList.remove('slide-out');
+                        this.currentCardIndex++;
+                        this.isAdvancing = false;
+                        this.showNextCard();
+                    }, 400);
+                } else {
+                    // Если это последняя карточка, переходим на экран завершения
+                    const historyState = this.navigationHistory[this.navigationHistory.length - 1];
+                    this.showScreen('finish-screen', false, historyState);
+                    document.getElementById('finish-screen-text').textContent = 'Вы прошли все карточки в этой сессии.';
+                }
             },
 
             // Вспомогательная функция: найти карточку по id и вернуть {set, card}
