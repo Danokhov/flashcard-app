@@ -543,7 +543,7 @@
                 <button onclick="window.App.prevCard()" class="py-3 px-4 bg-gray-400 text-white font-bold rounded-xl shadow-md hover:bg-gray-500 transition duration-150">
                     ← Назад
                 </button>
-                <button id="hint-button-practice-all" onclick="window.App.showHint()" class="py-2 px-4 bg-yellow-400 text-yellow-900 font-semibold rounded-xl shadow-md hover:bg-yellow-500 transition duration-150 hidden">
+                <button id="hint-button-practice-all" onclick="window.App.showHint()" class="py-2 px-4 bg-yellow-400 text-yellow-900 font-semibold rounded-xl shadow-md hover:bg-yellow-500 transition duration-150">
                     💡 Подсказка
                 </button>
                 <button onclick="window.App.nextCard()" class="py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150">
@@ -565,23 +565,23 @@
 
     </div>
 
-<div id="navigation-footer" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40 max-w-xl mx-auto">
+<div id="navigation-footer" class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-500 to-blue-600 border-t border-blue-700 shadow-2xl z-40 max-w-xl mx-auto">
     <div id="nav-content-container" class="flex justify-around items-center h-16">
 
         <!-- ИЗМЕНЕНО: onclick вызывает renderHomeScreen с clearStack=true, чтобы сбросить историю навигации -->
-        <button onclick="window.App.renderHomeScreen(false, true)" class="flex flex-col items-center justify-center text-gray-600 hover:text-blue-500 transition-colors w-1/3 py-2">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-            <span class="text-xs mt-1">Главная</span>
+        <button onclick="window.App.renderHomeScreen(false, true)" class="flex flex-col items-center justify-center text-white hover:text-blue-100 transition-colors w-1/3 py-2 group">
+            <svg class="w-7 h-7 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V20a2 2 0 002 2h12a2 2 0 002-2v-9.586l.707.707a1 1 0 001.414-1.414l-7-7z"></path></svg>
+            <span class="text-xs mt-1 font-semibold">Главная</span>
         </button>
 
-        <button onclick="window.App.renderAllSetsScreen()" class="flex flex-col items-center justify-center text-gray-600 hover:text-blue-500 transition-colors w-1/3 py-2">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13.5M8.25 6.253v13.5m7.5-13.5v13.5M3 10.5h18M3 13.5h18m-9-1.5v-3"></path></svg>
-            <span class="text-xs mt-1">Все слова</span>
+        <button onclick="window.App.renderAllSetsScreen()" class="flex flex-col items-center justify-center text-white hover:text-blue-100 transition-colors w-1/3 py-2 group">
+            <svg class="w-7 h-7 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+            <span class="text-xs mt-1 font-semibold">Все слова</span>
         </button>
 
-        <button onclick="window.App.renderWeeklySelections()" class="flex flex-col items-center justify-center text-gray-600 hover:text-blue-500 transition-colors w-1/3 py-2">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <span class="text-xs mt-1">Недели</span>
+        <button onclick="window.App.renderWeeklySelections()" class="flex flex-col items-center justify-center text-white hover:text-blue-100 transition-colors w-1/3 py-2 group">
+            <svg class="w-7 h-7 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path></svg>
+            <span class="text-xs mt-1 font-semibold">Недели</span>
         </button>
 
     </div>
@@ -2109,10 +2109,15 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                             }
                         </div>
                         <div class="grid grid-cols-2 gap-3">
-                            <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
-                                    onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')">
-                                К повтору (${dueCount})
-                            </button>
+                            ${dueCount > 0 ? 
+                                `<button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
+                                        onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')">
+                                    К повтору (${dueCount})
+                                </button>` :
+                                `<button class="w-full py-2 px-3 bg-gray-300 text-gray-500 font-semibold rounded-xl text-sm cursor-not-allowed" disabled>
+                                    К повтору (0)
+                                </button>`
+                            }
                             <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
                                     onclick="window.App.promptForDirection('${set.id}', 'practice-all', 'allsets')">
                                 Практика всех слов
@@ -2411,6 +2416,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
                 
                 document.getElementById('hint-button').classList.toggle('hidden', !card.hintImage);
+                // Показываем/скрываем кнопку подсказки в режиме practice-all
+                document.getElementById('hint-button-practice-all').classList.toggle('hidden', !card.hintImage);
             },
             
 async handleAnswer(knewIt) {
