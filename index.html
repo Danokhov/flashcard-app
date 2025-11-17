@@ -322,18 +322,19 @@
                 <div id="mantra-modal-body">
                     <div id="mantra-card-area">
                         <div id="mantra-progress" class="text-sm text-gray-500 mb-2">0 / 0</div>
-                        <div class="bg-gray-50 p-6 rounded-xl shadow-inner text-center">
+                        <div class="bg-gray-50 p-6 rounded-xl shadow-inner text-center cursor-pointer" onclick="window.App.flipMantraCard()" title="Нажмите, чтобы перевернуть">
                             <div id="mantra-front-container" class="mantra-face">
                                 <div id="mantra-front" class="text-xl font-semibold text-gray-900">...</div>
+                                <div class="text-sm text-gray-500 mt-3">Перевернуть!</div>
                             </div>
                             <div id="mantra-back-container" class="mantra-face hidden">
-                                <div id="mantra-back" class="text-xl font-semibold text-gray-900">...</div>
+                                <div class="flex items-center justify-center gap-3">
+                                    <div id="mantra-back" class="text-xl font-semibold text-gray-900">...</div>
+                                    <button onclick="event.stopPropagation(); window.App.speakMantra(document.getElementById('mantra-back').textContent)" class="ml-2 p-2 rounded-full btn-primary" title="Озвучить">
+                                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"></path></svg>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="mt-4 flex gap-2">
-                            <button onclick="window.App.flipMantraCard()" class="btn-secondary flex-1">Перевернуть</button>
-                            <button onclick="window.App.speakMantra(document.getElementById('mantra-back').textContent)" class="btn-primary flex-1">🔊 Озвучить</button>
                         </div>
 
                         <div class="mt-4 flex gap-2" id="mantra-controls">
@@ -1154,17 +1155,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
           updateAudioUi(isPlaying) {
             const playIcon = document.getElementById('play-icon');
             const pauseIcon = document.getElementById('pause-icon');
-            const status = document.getElementById('audio-status');
-            if (!playIcon || !pauseIcon || !status) return;
+            if (!playIcon || !pauseIcon) return;
 
             if (isPlaying) {
               playIcon.classList.add('hidden');
               pauseIcon.classList.remove('hidden');
-              status.textContent = 'Pause';
             } else {
               playIcon.classList.remove('hidden');
               pauseIcon.classList.add('hidden');
-              status.textContent = 'Play';
             }
           },
 
@@ -2400,6 +2398,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     this.mantraKnownCount = 0;
                     this.mantraUnknownCount = 0;
                     this.mantraSeen = [];
+                    // Reset UI: show card area, hide summary, clear actions
+                    document.getElementById('mantra-card-area').classList.remove('hidden');
+                    document.getElementById('mantra-summary').classList.add('hidden');
+                    document.getElementById('mantra-summary-actions').innerHTML = '';
                     this.showMantraCard();
                 } catch (err) {
                     console.error('Mantra load error', err);
@@ -2428,8 +2430,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 } else {
                     front.classList.add('hidden');
                     back.classList.remove('hidden');
-                    // озвучка немецкой версии при перевороте
-                    this.speakGerman(document.getElementById('mantra-back').textContent);
                 }
             },
 
@@ -2488,6 +2488,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     this.mantraKnownCount = 0;
                     this.mantraUnknownCount = 0;
                     document.getElementById('mantra-summary').classList.add('hidden');
+                    document.getElementById('mantra-summary-actions').innerHTML = '';
                     document.getElementById('mantra-card-area').classList.remove('hidden');
                     this.showMantraCard();
                 } else {
@@ -2504,6 +2505,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     this.mantraUnknownCount = 0;
                     this.mantraSeen = [];
                     document.getElementById('mantra-summary').classList.add('hidden');
+                    document.getElementById('mantra-summary-actions').innerHTML = '';
                     document.getElementById('mantra-card-area').classList.remove('hidden');
                     this.showMantraCard();
                 }
@@ -2804,6 +2806,15 @@ async handleAnswer(knewIt) {
                     if (player && originalParent) {
                         originalParent.prepend(player); // Возвращаем плеер в начало его контейнера
                     }
+                }
+
+                // [НОВОЕ] Очистка мантра-сессии при закрытии модала
+                if (modalId === 'mantra-modal') {
+                    this.mantraCards = [];
+                    this.currentMantraIndex = 0;
+                    this.mantraKnownCount = 0;
+                    this.mantraUnknownCount = 0;
+                    this.mantraSeen = [];
                 }
 
                 // [ИЗМЕНЕНО] Код StoryApp.closeModal() УДАЛЕН
