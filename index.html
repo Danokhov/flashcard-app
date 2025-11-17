@@ -10,6 +10,16 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <style>
+        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
         /* Стили для анимации переворота карточки */
         .card { perspective: 1000px; }
         .card-inner {
@@ -28,7 +38,13 @@
             -webkit-backface-visibility: hidden;
             top: 0; left: 0;
         }
+        .card-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
         .card-back {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
             transform: rotateY(180deg);
         }
         
@@ -56,6 +72,8 @@
         .modal-content {
             transition: transform 0.3s ease;
             transform: scale(0.95);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            border-radius: 20px;
         }
         .modal.is-open {
             opacity: 1;
@@ -64,38 +82,88 @@
             transform: scale(1);
         }
 
-        /* Стиль для заблокированной кнопки */
-        .button-locked {
-            background-color: #e5e7eb; /* gray-200 */
-            color: #6b7280; /* gray-500 */
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-        
-        /* Новый стиль для кнопки Пробного урока */
-        .promo-button {
-            background: linear-gradient(to right, #F97316, #FBBF24); /* Orange/Amber */
+        /* Современные кнопки */
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            font-weight: bold;
+            font-weight: 600;
+            border-radius: 12px;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-        .promo-button:hover {
-            box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.5), 0 4px 6px -2px rgba(249, 115, 22, 0.2);
+        .btn-primary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
         }
-        
-        /* Стиль для кнопки Активной недели */
-        .active-week-button {
-            background: linear-gradient(to right, #3B82F6, #2563EB); /* Blue */
-            color: white;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        .active-week-button:hover {
-            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.5), 0 4px 6px -2px rgba(59, 130, 246, 0.2);
-            transform: translateY(-2px);
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.6);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+            color: white;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Карточки контента */
+        .card-content {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Главное содержимое */
+        .main-content {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Стиль для заблокированной кнопки */
+        .button-locked {
+            background-color: #e5e7eb;
+            color: #6b7280;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
         /* Контейнер 16:9 для видео */
         .video-container {
             position: relative;
@@ -243,63 +311,72 @@
         </div>
 
         <!-- 2. ГЛАВНОЕ МЕНЮ (Home Screen) -->
-        <div id="home-screen" class="hidden">
-            <h1 class="text-2xl font-bold text-center mb-8 text-gray-800">Главное меню</h1>
-            <div class="space-y-4">
-
-                <!-- ДИНАМИЧЕСКИЙ БЛОК: Пробный урок ИЛИ Активная неделя/Уроки по неделям -->
-                <div id="main-content-block">
-                    <!-- Заполняется JS (включает Пробный, Подборки за неделю и Все наборы слов) -->
+        <div id="home-screen" class="hidden main-content">
+            <div class="px-4 pt-6 max-w-2xl mx-auto">
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-3">🇩🇪</div>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-orange-500 via-yellow-500 to-red-500 bg-clip-text text-transparent mb-1">Мнемо Deutsch</h1>
+                    <p class="text-gray-600 text-lg font-semibold">Клуб изучения немецкого языка</p>
                 </div>
-                
-                <!-- 3. Раздел: Все наборы слов (УДАЛЕН из статического HTML, чтобы не дублировать) -->
-                
-                <!-- НОВАЯ СЕКЦИЯ: Горящие повторения -->
-                <div id="due-today-section" class="hidden pt-6 mt-4 border-t border-gray-200">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <span>🔥 К повторению сегодня</span>
-                    </h2>
-                    <div id="due-today-list" class="space-y-3">
-                        <!-- Сюда JS добавит горящие сеты -->
+
+                <div class="space-y-4">
+                    <!-- ДИНАМИЧЕСКИЙ БЛОК: Пробный урок ИЛИ Активная неделя/Уроки по неделям -->
+                    <div id="main-content-block">
+                        <!-- Заполняется JS (включает Пробный, Подборки за неделю и Все наборы слов) -->
+                    </div>
+                    
+                    <!-- НОВАЯ СЕКЦИЯ: Горящие повторения -->
+                    <div id="due-today-section" class="hidden pt-6 mt-6 border-t-2 border-purple-200">
+                        <h2 class="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent mb-4 flex items-center">
+                            <span class="mr-2">🔥</span>
+                            <span>К повторению сегодня</span>
+                        </h2>
+                        <div id="due-today-list" class="space-y-3">
+                            <!-- Сюда JS добавит горящие сеты -->
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
         
         <!-- 3. ЭКРАН СПИСКА (для недель, сетов) -->
-        <div id="list-screen" class="hidden">
-            <h1 id="list-title" class="text-2xl font-bold text-center mb-6 text-gray-800"></h1>
-            
-            <!-- Кнопка "Назад" УДАЛЕНА. Будет использоваться Telegram.WebApp.BackButton -->
-            <div id="back-button-container" class="mb-4"></div>
-            
-            <!-- Динамические фильтры/поиск -->
-            <div id="filter-controls" class="mb-4 space-y-3">
-                <!-- Фильтры или поиск будут вставлены здесь -->
-            </div>
-            
-            <!-- Список содержимого -->
-            <div id="content-list" class="space-y-4">
-                <!-- Сюда будут вставлены наборы, недели -->
+        <div id="list-screen" class="hidden main-content">
+            <div class="max-w-2xl mx-auto px-4 pt-6">
+                <h1 id="list-title" class="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"></h1>
+                <p class="text-center text-gray-600 mb-6">Выберите набор для начала</p>
+                
+                <!-- Кнопка "Назад" УДАЛЕНА. Будет использоваться Telegram.WebApp.BackButton -->
+                <div id="back-button-container" class="mb-4"></div>
+                
+                <!-- Динамические фильтры/поиск -->
+                <div id="filter-controls" class="mb-4 space-y-3">
+                    <!-- Фильтры или поиск будут вставлены здесь -->
+                </div>
+                
+                <!-- Список содержимого -->
+                <div id="content-list" class="space-y-4 pb-20">
+                    <!-- Сюда будут вставлены наборы, недели -->
+                </div>
             </div>
         </div>
         
         <!-- 4. ЭКРАН ВИДЕО КОНТЕНТА (для ассоциаций недели) -->
-        <div id="video-content-screen" class="hidden">
+        <div id="video-content-screen" class="hidden main-content">
             <!-- Кнопка "Назад" УДАЛЕНА. -->
             <div id="video-back-button-container" class="mb-4"></div> 
-
-            <h1 id="video-title" class="text-xl font-bold text-gray-800 mb-4 text-center"></h1>
             
-            <!-- Видео 16:9 -->
-            <div class="video-container mb-6">
-                <iframe id="video-embed" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
+            <div class="max-w-2xl mx-auto px-4 pt-6">
+                <h1 id="video-title" class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 text-center"></h1>
+                
+                <!-- Видео 16:9 -->
+                <div class="video-container mb-6 rounded-2xl overflow-hidden shadow-2xl">
+                    <iframe id="video-embed" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
 
-            <!-- Дополнительный текст (для заданий недели) -->
-            <div id="video-extra-text" class="p-4 bg-white rounded-xl shadow-lg text-gray-700">
-                <!-- Сюда будет вставлен текст задания -->
+                <!-- Дополнительный текст (для заданий недели) -->
+                <div id="video-extra-text" class="card-content p-6 text-gray-700">
+                    <!-- Сюда будет вставлен текст задания -->
+                </div>
             </div>
         </div>
 
@@ -498,69 +575,83 @@
         </div>
 
         <!-- 9. Экран Повторения (Study Screen) -->
-        <div id="study-screen" class="hidden">
+        <div id="study-screen" class="hidden main-content">
             <!-- Кнопка "Назад" УДАЛЕНА. -->
             <div id="study-back-button-container" class="mt-4"></div>
-            <!-- Прогресс-бар -->
-            <div class="bg-gray-200 rounded-full h-2.5 mb-4">
-                <div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-            </div>
             
-            <!-- Карточка -->
-            <div id="card" class="card h-64 w-full mb-4">
-                <div id="card-inner" class="card-inner h-full w-full" onclick="window.App.showAnswer()">
-                    <!-- Передняя сторона -->
-                    <div id="card-front" class="card-front flex items-center justify-center p-6 bg-white rounded-xl shadow-lg text-center">
-                        <div id="card-front-text" class="text-2xl font-semibold"></div>
-                    </div>
-                    <!-- Задняя сторона -->
-                    <div id="card-back" class="card-back flex items-center justify-center p-6 bg-blue-100 rounded-xl shadow-lg text-center">
-                        <div id="card-back-text" class="text-2xl font-semibold"></div>
+            <div class="max-w-2xl mx-auto px-4 pt-6">
+                <!-- Прогресс-бар -->
+                <div class="bg-gray-300 rounded-full h-2.5 mb-6 shadow-lg">
+                    <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-2.5 rounded-full transition-all duration-500 shadow-lg" style="width: 0%"></div>
+                </div>
+                
+                <!-- Карточка -->
+                <div id="card" class="card h-80 w-full mb-6">
+                    <div id="card-inner" class="card-inner h-full w-full" onclick="window.App.showAnswer()">
+                        <!-- Передняя сторона -->
+                        <div id="card-front" class="card-front flex items-center justify-center p-6 rounded-2xl shadow-2xl text-center cursor-pointer hover:shadow-xl transition-shadow">
+                            <div id="card-front-text" class="text-3xl font-bold"></div>
+                        </div>
+                        <!-- Задняя сторона -->
+                        <div id="card-back" class="card-back flex items-center justify-center p-6 rounded-2xl shadow-2xl text-center cursor-pointer hover:shadow-xl transition-shadow">
+                            <div id="card-back-text" class="text-3xl font-bold"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Кнопки управления -->
+                <!-- Кнопки управления -->
             <div id="controls-show" class="text-center space-y-3">
-                <button onclick="window.App.showAnswer()" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150">
+                <button onclick="window.App.showAnswer()" class="btn-primary w-full py-3 px-4 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                     Показать ответ
                 </button>
-                <button id="hint-button" onclick="window.App.showHint()" class="w-full py-2 px-4 bg-yellow-400 text-yellow-900 font-semibold rounded-xl shadow-md hover:bg-yellow-500 transition duration-150 hidden">
-                    💡 Показать подсказку
+                <button id="hint-button" onclick="window.App.showHint()" class="btn-secondary w-full py-2 px-4 flex items-center justify-center gap-2 hidden">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>
+                    💡 Подсказка
                 </button>
             </div>
             
             <div id="controls-rate" class="hidden grid grid-cols-2 gap-4">
-                <button onclick="window.App.handleAnswer(false)" class="py-3 px-4 bg-red-500 text-white font-bold rounded-xl shadow-md hover:bg-red-600 transition duration-150">
-                    Не помню ❌
+                <button onclick="window.App.handleAnswer(false)" class="btn-danger py-3 px-4 flex items-center justify-center gap-2 font-bold">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
+                    Учить
                 </button>
-                <button onclick="window.App.handleAnswer(true)" class="py-3 px-4 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition duration-150">
-                    Помню ✅
+                <button onclick="window.App.handleAnswer(true)" class="btn-success py-3 px-4 flex items-center justify-center gap-2 font-bold">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path></svg>
+                    Знаю
                 </button>
             </div>
             
             <div id="controls-practice-all" class="hidden grid grid-cols-3 gap-3">
-                <button onclick="window.App.prevCard()" class="py-3 px-4 bg-gray-400 text-white font-bold rounded-xl shadow-md hover:bg-gray-500 transition duration-150">
-                    ← Назад
+                <button onclick="window.App.prevCard()" class="btn-secondary py-3 px-4 flex items-center justify-center gap-2 font-bold">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"></path></svg>
+                    Назад
                 </button>
-                <button id="hint-button-practice-all" onclick="window.App.showHint()" class="py-2 px-4 bg-yellow-400 text-yellow-900 font-semibold rounded-xl shadow-md hover:bg-yellow-500 transition duration-150">
-                    💡 Подсказка
+                <button id="hint-button-practice-all" onclick="window.App.showHint()" class="btn-secondary py-2 px-4 flex items-center justify-center gap-2 font-bold">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>
+                    Подсказка
                 </button>
-                <button onclick="window.App.nextCard()" class="py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition duration-150">
-                    Вперед →
+                <button onclick="window.App.nextCard()" class="btn-primary py-3 px-4 flex items-center justify-center gap-2 font-bold">
+                    Вперед
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"></path></svg>
                 </button>
             </div>
              <!-- Кнопка "Назад в меню" во время сессии УДАЛЕНА. -->
         </div>
         
         <!-- 10. Экран Завершения (Finish Screen) -->
-         <div id="finish-screen" class="hidden text-center py-20">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Сессия завершена!</h2>
-            <p id="finish-screen-text" class="text-gray-600 mb-6">Вы прошли все карточки в этой сессии.</p>
-            <!-- ИЗМЕНЕНО: Добавлен параметр clearStack=true -->
-            <button onclick="window.App.renderHomeScreen(false, true)" class="py-3 px-6 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600">
-                В меню
-            </button>
+         <div id="finish-screen" class="hidden main-content">
+            <div class="max-w-2xl mx-auto px-4 py-20">
+                <div class="card-content p-8 text-center">
+                    <svg class="w-20 h-20 mx-auto mb-4 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path></svg>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Отлично! 🎉</h2>
+                    <p id="finish-screen-text" class="text-gray-600 mb-6 text-lg">Вы прошли все карточки в этой сессии.</p>
+                    <button onclick="window.App.renderHomeScreen(false, true)" class="btn-primary py-3 px-8 inline-flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V20a2 2 0 002 2h12a2 2 0 002-2v-9.586l.707.707a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        В меню
+                    </button>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -588,29 +679,31 @@
 </div>
 
     <!-- Модальное окно для Подсказки -->
-    <div id="hint-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('hint-modal')">
-        <div id="hint-modal-content" class="modal-content bg-white p-4 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
-            <h3 class="text-lg font-semibold mb-3">Подсказка:</h3>
-            <img id="hint-image" src="" alt="Подсказка" class="w-full h-auto rounded-md object-contain max-h-64" onerror="this.onerror=null; this.src='https://placehold.co/400x150/FCA5A5/FFFFFF?text=Нет+Изображения';">
-            <button onclick="window.App.closeModal('hint-modal')" class="w-full mt-4 py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300">
+    <div id="hint-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('hint-modal')">
+        <div id="hint-modal-content" class="modal-content bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">💡 Подсказка</h3>
+            <img id="hint-image" src="" alt="Подсказка" class="w-full h-auto rounded-lg object-contain max-h-64 mb-4" onerror="this.onerror=null; this.src='https://placehold.co/400x150/FCA5A5/FFFFFF?text=Нет+Изображения';">
+            <button onclick="window.App.closeModal('hint-modal')" class="btn-primary w-full py-2 px-4">
                 Закрыть
             </button>
         </div>
     </div>
     
     <!-- Модальное окно для Выбора направления -->
-    <div id="direction-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeDirectionModal()">
-        <div id="direction-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
-            <h3 class="text-lg font-semibold mb-4 text-center">Выберите направление</h3>
+    <div id="direction-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeDirectionModal()">
+        <div id="direction-modal-content" class="modal-content bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full" onclick="event.stopPropagation()">
+            <h3 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 text-center">🌍 Направление обучения</h3>
             <div class="space-y-3">
-                <button onclick="window.App.startSessionWithDirection('ru-de')" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600">
+                <button onclick="window.App.startSessionWithDirection('ru-de')" class="btn-primary w-full py-3 px-4 flex items-center justify-center gap-2">
+                    <span>🇷🇺</span>
                     Русский → Немецкий
                 </button>
-                <button onclick="window.App.startSessionWithDirection('de-ru')" class="w-full py-3 px-4 bg-purple-500 text-white font-bold rounded-xl shadow-md hover:bg-purple-600">
+                <button onclick="window.App.startSessionWithDirection('de-ru')" class="btn-success w-full py-3 px-4 flex items-center justify-center gap-2">
+                    <span>🇩🇪</span>
                     Немецкий → Русский
                 </button>
-                <button onclick="window.App.closeDirectionModal()" class="w-full mt-2 py-2 px-4 text-gray-600 font-semibold rounded-xl hover:bg-gray-100">
-                    Отмена
+                <button onclick="window.App.closeDirectionModal()" class="btn-secondary w-full mt-4 py-2 px-4">
+                    ✕ Отмена
                 </button>
             </div>
         </div>
