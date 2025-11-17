@@ -321,25 +321,31 @@
                 </div>
                 <div id="mantra-modal-body">
                     <div id="mantra-card-area">
-                        <div id="mantra-progress" class="text-sm text-gray-500 mb-2">0 / 0</div>
-                        <div class="bg-gray-50 p-6 rounded-xl shadow-inner text-center cursor-pointer" onclick="window.App.flipMantraCard()" title="Нажмите, чтобы перевернуть">
-                            <div id="mantra-front-container" class="mantra-face">
-                                <div id="mantra-front" class="text-xl font-semibold text-gray-900">...</div>
-                                <div class="text-sm text-gray-500 mt-3">Перевернуть!</div>
+                        <div id="mantra-progress" class="text-sm text-gray-500 mb-4 text-center">0 / 0</div>
+                        
+                        <!-- Верхний блок: Русский (всегда видим) -->
+                        <div class="bg-blue-50 p-6 rounded-xl shadow-md mb-3">
+                            <p class="text-sm text-gray-500 mb-2">Русский:</p>
+                            <div id="mantra-russian" class="text-xl font-semibold text-gray-900">...</div>
+                        </div>
+
+                        <!-- Нижний блок: Немецкий (закрыт/открыт) -->
+                        <div class="bg-green-50 p-6 rounded-xl shadow-md">
+                            <div id="mantra-german-hidden">
+                                <button onclick="window.App.showMantraAnswer()" class="btn-secondary w-full">Показать ответ</button>
                             </div>
-                            <div id="mantra-back-container" class="mantra-face hidden">
-                                <div class="flex items-center justify-center gap-3">
-                                    <div id="mantra-back" class="text-xl font-semibold text-gray-900">...</div>
-                                    <button onclick="event.stopPropagation(); window.App.speakMantra(document.getElementById('mantra-back').textContent)" class="ml-2 p-2 rounded-full btn-primary" title="Озвучить">
-                                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"></path></svg>
-                                    </button>
-                                </div>
+                            <div id="mantra-german-shown" class="hidden">
+                                <p class="text-sm text-gray-500 mb-2">Немецкий:</p>
+                                <div id="mantra-german" class="text-xl font-semibold text-gray-900 mb-3">...</div>
+                                <button onclick="window.App.speakMantra(document.getElementById('mantra-german').textContent)" class="btn-primary w-full mb-3">🔊 Озвучить</button>
                             </div>
                         </div>
 
+                        <!-- Оценка -->
+                        <div class="mt-4 text-center text-sm text-gray-600 mb-3">Оцени свой ответ:</div>
                         <div class="mt-4 flex gap-2" id="mantra-controls">
-                            <button onclick="window.App.handleMantraAnswer(false)" class="btn-danger flex-1">Не знаю</button>
-                            <button onclick="window.App.handleMantraAnswer(true)" class="btn-success flex-1">Знаю</button>
+                            <button onclick="window.App.handleMantraAnswer(false)" class="btn-danger flex-1">Не верно</button>
+                            <button onclick="window.App.handleMantraAnswer(true)" class="btn-success flex-1">Верно</button>
                         </div>
                     </div>
 
@@ -2412,25 +2418,22 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             showMantraCard() {
                 const card = this.mantraCards[this.currentMantraIndex];
                 if (!card) return;
-                // front = Russian, back = German
-                document.getElementById('mantra-front').textContent = card.ru || '';
-                document.getElementById('mantra-back').textContent = card.de || '';
-                // show front by default
-                document.getElementById('mantra-front-container').classList.remove('hidden');
-                document.getElementById('mantra-back-container').classList.add('hidden');
+                // Russian always visible
+                document.getElementById('mantra-russian').textContent = card.ru || '';
+                // German hidden by default
+                document.getElementById('mantra-german').textContent = card.de || '';
+                document.getElementById('mantra-german-hidden').classList.remove('hidden');
+                document.getElementById('mantra-german-shown').classList.add('hidden');
                 document.getElementById('mantra-progress').textContent = `${this.currentMantraIndex + 1} / ${this.mantraCards.length}`;
             },
 
+            showMantraAnswer() {
+                document.getElementById('mantra-german-hidden').classList.add('hidden');
+                document.getElementById('mantra-german-shown').classList.remove('hidden');
+            },
+
             flipMantraCard() {
-                const front = document.getElementById('mantra-front-container');
-                const back = document.getElementById('mantra-back-container');
-                if (front.classList.contains('hidden')) {
-                    front.classList.remove('hidden');
-                    back.classList.add('hidden');
-                } else {
-                    front.classList.add('hidden');
-                    back.classList.remove('hidden');
-                }
+                // Deprecated - no longer used in new design
             },
 
             speakMantra(text) {
@@ -2444,17 +2447,18 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             },
 
             handleMantraAnswer(known) {
-                // record
+                // record answer
                 if (known) this.mantraKnownCount++;
                 else this.mantraUnknownCount++;
                 this.mantraSeen.push({ index: this.currentMantraIndex, known });
 
-                // advance
+                // advance to next card or show summary
                 this.currentMantraIndex++;
                 if (this.currentMantraIndex >= this.mantraCards.length) {
-                    // finished
+                    // finished session
                     this.showMantraSummary();
                 } else {
+                    // reset UI for next card
                     this.showMantraCard();
                 }
             },
