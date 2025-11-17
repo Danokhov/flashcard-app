@@ -618,7 +618,7 @@
     <!-- ===== ИНТЕГРАЦИЯ: Модальное окно квиза ===== -->
     <div id="quiz-modal"
          class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0"
-         onclick="window.App.closeModal('quiz-modal')" role="dialog" aria-modal="true">
+         onclick="window.StoryApp.closeModal('quiz-modal')" role="dialog" aria-modal="true">
       <div id="quiz-modal-content"
            class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full"
            onclick="event.stopPropagation()">
@@ -2244,14 +2244,18 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
                 this.isPracticeMode = (mode === 'practice');
                 
+                // [ИЗМЕНЕНО] Меняем текст кнопок в зависимости от режима
+                const rateNoButton = document.querySelector('#controls-rate button:nth-child(1)');
+                const rateYesButton = document.querySelector('#controls-rate button:nth-child(2)');
+
                 if (this.isPracticeMode) {
-                    this.sessionCards = set.cards.map(card => ({...card})); 
+                    // Режим "Практика": Учить (false) / Знаю (true)
+                    rateNoButton.innerHTML = 'Учить 🎓';
+                    rateYesButton.innerHTML = 'Знаю 👍';
                 } else {
-                    const today = this.getTodayDateString();
-                    this.sessionCards = set.cards.filter(card => {
-                        const progress = this.userProgress[card.id];
-                        return !progress || (progress.nextReview && progress.nextReview <= today);
-                    });
+                    // Режим "Повторение": Не помню (false) / Помню (true)
+                    rateNoButton.innerHTML = 'Не помню ❌';
+                    rateYesButton.innerHTML = 'Помню ✅';
                 }
                 
                 // [ИЗМЕНЕНО] Состояние для истории
@@ -2332,21 +2336,41 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 document.getElementById('hint-button').classList.toggle('hidden', !card.hintImage);
             },
             
-            async handleAnswer(knewIt) {
+async handleAnswer(knewIt) {
                 if (this.isAdvancing) return; 
                 this.isAdvancing = true;
 
-                if (!this.isPracticeMode) {
-                    const card = this.sessionCards[this.currentCardIndex];
-                    let progress = this.userProgress[card.id] || { box: 0 };
+                // [ИЗМЕНЕНО] Новая логика для Practice Mode и Review Mode
+                const card = this.sessionCards[this.currentCardIndex];
+                let progress = this.userProgress[card.id] || { box: 0 };
 
-                    progress.box = knewIt ? Math.min(6, (progress.box || 0) + 1) : 1;
-                    progress.nextReview = this.getFutureDateString(REPETITION_INTERVALS[progress.box]);
-                    
-                    this.userProgress[card.id] = progress;
-                    if (this.isAuthReady) { 
-                        this.saveProgress(); 
+                if (this.isPracticeMode) {
+                    // В режиме "Практика": "Учить" vs "Знаю"
+                    if (knewIt) { // "Знаю 👍" - пользователь нажал "Знаю" (knewIt = true)
+                        // Пользователь знает слово. Ставим высокий бокс (например, 5 = 30 дней)
+                        progress.box = 5;
+                    } else { // "Учить 🎓" - пользователь нажал "Учить" (knewIt = false)
+                        // Пользователь хочет учить. Ставим бокс 1 (1 день)
+                        progress.box = 1;
                     }
+                } else {
+                    // В режиме "Повторение": "Не помню" vs "Помню"
+                    if (knewIt) { // "Помню ✅"
+                        // Пользователь вспомнил. Продвигаем бокс.
+                        progress.box = Math.min(6, (progress.box || 0) + 1);
+                    } else { // "Не помню ❌"
+                        // Пользователь забыл. Сбрасываем на бокс 1.
+                        progress.box = 1;
+                    }
+                }
+
+                // Общая логика: установить дату след. повторения и сохранить
+                // Эта логика теперь выполняется для ОБЕИХ режимов (Практика и Повторение)
+                progress.nextReview = this.getFutureDateString(REPETITION_INTERVALS[progress.box]);
+                this.userProgress[card.id] = progress;
+
+                if (this.isAuthReady) { 
+                    this.saveProgress(); 
                 }
                 
                 document.getElementById('card').classList.add('slide-out');
