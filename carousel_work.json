@@ -1,0 +1,77 @@
+[
+    {
+        "word": "der Job",
+        "translation": "работа, должность",
+        "image": "https://placehold.co/300x200/3B82F6/FFFFFF?text=Job"
+    },
+    {
+        "word": "das Büro",
+        "translation": "офис",
+        "image": "https://placehold.co/300x200/1F2937/FFFFFF?text=Buero"
+    },
+    {
+        "word": "der Schreibtisch",
+        "translation": "письменный стол",
+        "image": "https://placehold.co/300x200/6B7280/FFFFFF?text=Schreibtisch"
+    },
+    {
+        "word": "der Chef",
+        "translation": "начальник, шеф",
+        "image": "https://placehold.co/300x200/374151/FFFFFF?text=Chef"
+    },
+    {
+        "word": "der Kollege",
+        "translation": "коллега",
+        "image": "https://placehold.co/300x200/4B5563/FFFFFF?text=Kollege"
+    },
+    {
+        "word": "die Kollegin",
+        "translation": "коллега (женщина)",
+        "image": "https://placehold.co/300x200/5A6B7A/FFFFFF?text=Kollegin"
+    },
+    {
+        "word": "das Gehalt",
+        "translation": "зарплата, оклад",
+        "image": "https://placehold.co/300x200/059669/FFFFFF?text=Gehalt"
+    },
+    {
+        "word": "die Besprechung",
+        "translation": "совещание, встреча",
+        "image": "https://placehold.co/300x200/7C3AED/FFFFFF?text=Besprechung"
+    },
+    {
+        "word": "die Aufgabe",
+        "translation": "задача, задание",
+        "image": "https://placehold.co/300x200/DC2626/FFFFFF?text=Aufgabe"
+    },
+    {
+        "word": "die Beförderung",
+        "translation": "повышение по службе",
+        "image": "https://placehold.co/300x200/F59E0B/FFFFFF?text=Beforderung"
+    },
+    {
+        "word": "der Termin",
+        "translation": "срок, дедлайн",
+        "image": "https://placehold.co/300x200/EF4444/FFFFFF?text=Termin"
+    },
+    {
+        "word": "arbeiten",
+        "translation": "работать",
+        "image": "https://placehold.co/300x200/8B5CF6/FFFFFF?text=arbeiten"
+    },
+    {
+        "word": "verdienen",
+        "translation": "зарабатывать, заслуживать",
+        "image": "https://placehold.co/300x200/06B6D4/FFFFFF?text=verdienen"
+    },
+    {
+        "word": "kündigen",
+        "translation": "увольняться, подать в отставку",
+        "image": "https://placehold.co/300x200/EC4899/FFFFFF?text=kuendigen"
+    },
+    {
+        "word": "die Karriere",
+        "translation": "карьера",
+        "image": "https://placehold.co/300x200/10B981/FFFFFF?text=Karriere"
+    }
+]
