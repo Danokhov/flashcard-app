@@ -76,12 +76,18 @@
 }
 
     .audio-main-button {
-      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
     .audio-main-button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(37,99,235,0.55);
-      opacity:.95;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+    .audio-main-button:active {
+      transform: translateY(0);
     }
 
     input[type="range"] { width:100%; cursor:pointer; }
@@ -126,7 +132,7 @@
         <div class="bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-200 flex flex-col gap-2">
           <div class="flex items-center justify-center">
             <button id="audio-main-button"
-                    class="audio-main-button rounded-full bg-blue-600 text-white px-7 py-2.5 flex items-center gap-2">
+                    class="audio-main-button rounded-full text-white px-7 py-2.5 flex items-center gap-2">
               <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z"
