@@ -204,6 +204,31 @@
           overflow-y:auto;
         }
         /* --- Конец интегрированных стилей --- */
+        /* --- Стили для Транскрипции --- */
+        #transcript-scroll-area {
+            /* Вот ваш шрифт. 
+              1rem = 16px (по умолчанию)
+              1.125rem = 18px (как text-lg в Tailwind)
+              1.25rem = 20px (как text-xl в Tailwind)
+            */
+            font-size: 1.125rem; 
+        }
+        
+        #transcript-scroll-area p {
+            /* Вот ваши отступы. 
+              По умолчанию у вас 'mb-3', что равно 0.75rem (12px).
+              mb-2 = 0.5rem (8px)
+              mb-1 = 0.25rem (4px)
+            */
+            margin-bottom: 0.5rem; 
+
+            /* Если вы хотите уменьшить не отступ МЕЖДУ абзацами, 
+              а интервал МЕЖДУ строками ВНУТРИ абзаца (межстрочный интервал), 
+              используйте 'line-height':
+            */
+            /* line-height: 1.4; */ /* (по умолчанию примерно 1.5 или 1.6) */
+        }
+        /* --- Конец стилей для Транскрипции --- */
     </style>
 </head>
 
@@ -593,7 +618,7 @@
     <!-- ===== ИНТЕГРАЦИЯ: Модальное окно квиза ===== -->
     <div id="quiz-modal"
          class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0"
-         onclick="window.StoryApp.closeModal('quiz-modal')" role="dialog" aria-modal="true">
+         onclick="window.App.closeModal('quiz-modal')" role="dialog" aria-modal="true">
       <div id="quiz-modal-content"
            class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-sm w-full"
            onclick="event.stopPropagation()">
