@@ -2061,13 +2061,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
 
                 setsToRender.forEach(set => {
-                    // В разделе "Все наборы" отображаем ТОЛЬКО карточки, которые пользователь пометил как "Учить" (isLearning === true)
-                    const visibleCards = set.cards.filter(card => this.userProgress[card.id] && this.userProgress[card.id].isLearning === true);
-                    const visibleCount = visibleCards.length;
-
-                    // Считаем dueCount только среди видимых карточек
+                    // Для экрана "Все наборы" показываем наборы с двумя кнопками: "К повтору (N)" и "Практика (Все)"
                     let dueCount = 0;
-                    visibleCards.forEach(card => {
+                    set.cards.forEach(card => {
                         const progress = this.userProgress[card.id];
                         if (!progress || (progress.nextReview && progress.nextReview <= today)) {
                             dueCount++;
@@ -2076,54 +2072,28 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
                     const setContainer = document.createElement('div');
                     setContainer.className = "w-full p-4 bg-white rounded-xl shadow-md";
-                    
-                    // Заголовок набора
-                    let html = `
+                    setContainer.innerHTML = `
                         <div class="flex justify-between items-center mb-3">
                             <div>
                                 <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
-                                <span class="block text-sm text-gray-500">Неделя ${set.week} | ${visibleCount} слов</span>
+                                <span class="block text-sm text-gray-500">Неделя ${set.week} | ${set.cards.length} слов</span>
                             </div>
                             ${dueCount > 0 ? 
                                 `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">${dueCount} к повтору</span>` :
                                 `<span class="text-green-500 font-semibold">✓</span>`
                             }
                         </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
+                                    onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')">
+                                К повтору (${dueCount})
+                            </button>
+                            <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
+                                    onclick="window.App.promptForDirection('${set.id}', 'practice', 'allsets')">
+                                Практика всех слов
+                            </button>
+                        </div>
                     `;
-
-                    // Если есть видимые карточки — выводим их список с per-card контролами
-                    if (visibleCount > 0) {
-                        const cardRows = visibleCards.map(card => `
-                            <div class="flex items-center justify-between py-2 border-t">
-                                <div class="text-left">
-                                    <div class="font-medium">${card.front} <span class="text-sm text-gray-500">— ${card.back || ''}</span></div>
-                                </div>
-                                <div class="flex gap-2 items-center">
-                                    <button onclick="window.App.allSetsRemember('${card.id}')" class="py-1 px-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600">Помню</button>
-                                    <button onclick="window.App.allSetsForgot('${card.id}')" class="py-1 px-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600">Не помню</button>
-                                    <button onclick="window.App.showHintForAllSet('${card.id}')" class="py-1 px-2 bg-yellow-400 text-yellow-900 text-sm rounded-lg hover:bg-yellow-500">Подсказка</button>
-                                </div>
-                            </div>
-                        `).join('');
-
-                        html += `<div class="mt-2">${cardRows}</div>`;
-                    } else {
-                        // Если видимых карточек нет — показываем кнопки уровня набора
-                        html += `
-                            <div class="grid grid-cols-2 gap-3 mt-3">
-                                <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
-                                        onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')">
-                                    Повторить (${dueCount})
-                                </button>
-                                <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
-                                        onclick="window.App.promptForDirection('${set.id}', 'practice', 'allsets')">
-                                    Практика (Все)
-                                </button>
-                            </div>
-                        `;
-                    }
-
-                    setContainer.innerHTML = html;
                     contentListDiv.appendChild(setContainer);
                 });
             },
