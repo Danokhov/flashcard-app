@@ -312,14 +312,14 @@
 
         <!-- 2. ГЛАВНОЕ МЕНЮ (Home Screen) -->
         <div id="home-screen" class="hidden main-content">
-            <div class="px-4 pt-6 max-w-2xl mx-auto">
-                <div class="text-center mb-8">
-                    <div class="text-6xl mb-3">🇩🇪</div>
-                    <h1 class="text-4xl font-bold bg-gradient-to-r from-orange-500 via-yellow-500 to-red-500 bg-clip-text text-transparent mb-1">Мнемо Deutsch</h1>
-                    <p class="text-gray-600 text-lg font-semibold">Клуб изучения немецкого языка</p>
+            <div class="px-4 pt-2 pb-4 max-w-2xl mx-auto">
+                <div class="text-center mb-5">
+                    <div class="text-5xl mb-1">🇩🇪</div>
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-orange-500 via-yellow-500 to-red-500 bg-clip-text text-transparent mb-0.5">Мнемо Deutsch</h1>
+                    <p class="text-gray-600 text-sm font-semibold">Клуб изучения немецкого языка</p>
                 </div>
 
-                <div class="space-y-4">
+                <div class="space-y-2">
                     <!-- ДИНАМИЧЕСКИЙ БЛОК: Пробный урок ИЛИ Активная неделя/Уроки по неделям -->
                     <div id="main-content-block">
                         <!-- Заполняется JS (включает Пробный, Подборки за неделю и Все наборы слов) -->
@@ -363,18 +363,18 @@
         <!-- 4. ЭКРАН ВИДЕО КОНТЕНТА (для ассоциаций недели) -->
         <div id="video-content-screen" class="hidden main-content">
             <!-- Кнопка "Назад" УДАЛЕНА. -->
-            <div id="video-back-button-container" class="mb-4"></div> 
+            <div id="video-back-button-container" class="mb-2"></div> 
             
-            <div class="max-w-2xl mx-auto px-4 pt-6">
-                <h1 id="video-title" class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 text-center"></h1>
+            <div class="max-w-2xl mx-auto px-4 pt-2 pb-20">
+                <h1 id="video-title" class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 text-center"></h1>
                 
                 <!-- Видео 16:9 -->
-                <div class="video-container mb-6 rounded-2xl overflow-hidden shadow-2xl">
+                <div class="video-container mb-3 rounded-2xl overflow-hidden shadow-2xl">
                     <iframe id="video-embed" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
 
                 <!-- Дополнительный текст (для заданий недели) -->
-                <div id="video-extra-text" class="card-content p-6 text-gray-700">
+                <div id="video-extra-text" class="card-content p-4 text-gray-700 mb-4 text-sm max-h-32 overflow-y-auto">
                     <!-- Сюда будет вставлен текст задания -->
                 </div>
             </div>
@@ -758,7 +758,7 @@
                   class="w-full py-3 px-4 bg-yellow-500 text-yellow-900 font-bold rounded-xl shadow-md hover:bg-yellow-600 transition">
             Показать правильные ответы
           </button>
-          <button onclick="window.StoryApp.closeModal('quiz-modal')"
+          <button onclick="window.App.closeModal('quiz-modal')"
                   class="w-full py-3 px-4 bg-gray-500 text-white font-bold rounded-xl shadow-md hover:bg-gray-600 transition">
             Завершить
           </button>
@@ -1747,7 +1747,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 if (!this.isSubscriber && this.selectedWeek === 0) { 
                     mainBlock.innerHTML += `
-                        <button onclick="window.App.renderWeekContent(1)" class="promo-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
+                        <button onclick="window.App.renderWeekContent(1)" class="w-full py-4 px-5 rounded-xl shadow-xl bg-gradient-to-r from-green-400 to-green-600 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
                             <span>🚀 Пробный урок</span>
                             <span>Начать &rarr;</span>
                         </button>
@@ -1760,7 +1760,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     
                     if (activeWeek >= 1 && activeWeek <= ALL_WEEKS.length) {
                         mainBlock.innerHTML += `
-                            <button onclick="window.App.renderWeekContent(${activeWeek})" class="active-week-button w-full py-4 px-5 rounded-xl shadow-lg text-left text-lg font-bold flex justify-between items-center transition duration-150">
+                            <button onclick="window.App.renderWeekContent(${activeWeek})" class="w-full py-4 px-5 rounded-xl shadow-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
                                 <span>📅 Активная подборка: ${weekTitle}</span>
                                 <span>Продолжить &rarr;</span>
                             </button>
@@ -1769,14 +1769,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
                 
                 mainBlock.innerHTML += `
-                    <button onclick="window.App.renderWeeklySelections()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4 border border-gray-200">
+                    <button onclick="window.App.renderWeeklySelections()" class="w-full py-4 px-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-md text-left text-lg font-semibold text-indigo-900 hover:from-blue-100 hover:to-indigo-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-indigo-200">
                         <span>📚 Подборки за неделю</span>
                         <span>&rarr;</span>
                     </button>
                 `;
 
                 mainBlock.innerHTML += `
-                    <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-white rounded-xl shadow-lg text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150 mt-4">
+                    <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl shadow-md text-left text-lg font-semibold text-purple-900 hover:from-purple-100 hover:to-pink-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-purple-200">
                         <span>📚 Все наборы слов</span>
                         <span>&rarr;</span>
                     </button>
@@ -1945,32 +1945,13 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const contentListDiv = document.getElementById('content-list');
                 contentListDiv.innerHTML = '';
                 
-                // 1. Ассоциации на неделю (Видео)
+                // 1. Ассоциации на неделю (Видео + Карусель)
                 this.renderMenuCard(contentListDiv, 
-                    `🧠 Видео ассоциации`, 
+                    `🧠 Ассоциации: видео & визуальное обучение`, 
                     weekData.associationTitle,
                     `window.App.renderVideoContentScreen('${weekData.associationTitle.replace(/'/g, "\\'")}', '${weekData.associationVideo}', null)`
                 );
                 
-                // 2. Карусель ассоциаций
-                const carouselSet = this.carouselSetsMetadata.find(set => set.id === weekData.carouselId);
-                if (carouselSet) {
-                    this.renderMenuCard(contentListDiv, 
-                        `🖼️ Карусель ассоциаций: ${carouselSet.title}`, 
-                        `Визуальное изучение ${carouselSet.wordCount} слов`,
-                        `window.App.startCarouselSession('${carouselSet.id}', '${carouselSet.title}', '${carouselSet.filepath}')`,
-                        'bg-purple-100 hover:bg-purple-200'
-                    );
-                } else {
-                     this.renderMenuCard(contentListDiv, 
-                        `🖼️ Карусель ассоциаций (Ошибка)`, 
-                        `Набор не найден или не загружен.`,
-                        `void(0)`,
-                        'button-locked'
-                    );
-                }
-
-                // 3. История недели
                 let storyAction;
                 // [ИЗМЕНЕНО] Проверяем по ID, а не по storyLink
                 const storyId = `week_${weekNum}`;
@@ -2020,7 +2001,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
             
-            renderVideoContentScreen(title, videoUrl, textContent, isBack = false) {
+            renderVideoContentScreen(title, videoUrl, textContent, isBack = false, carouselData = null) {
                 // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
                 document.getElementById('video-title').textContent = title;
                 const videoIframe = document.getElementById('video-embed');
@@ -2040,7 +2021,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
                 this.showScreen('video-content-screen', isBack, { 
                     renderFunc: 'renderVideoContentScreen', 
-                    param: {title, videoUrl, textContent} 
+                    param: {title, videoUrl, textContent, carouselData} 
                 });
             },
             
