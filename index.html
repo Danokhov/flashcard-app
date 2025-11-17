@@ -18,6 +18,8 @@
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         /* Стили для анимации переворота карточки */
@@ -310,6 +312,45 @@
             <p class="text-gray-500">Загрузка данных...</p>
         </div>
 
+        <!-- МОДАЛЬНОЕ ОКНО: МАНТРЫ ПОЛЕЗНЫХ ФРАЗ -->
+        <div id="mantra-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="modal-content bg-white p-4 max-w-lg w-full rounded-2xl">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-lg font-semibold">Мантры полезных фраз</h3>
+                    <button onclick="window.App.closeModal('mantra-modal')" class="text-gray-500">✕</button>
+                </div>
+                <div id="mantra-modal-body">
+                    <div id="mantra-card-area">
+                        <div id="mantra-progress" class="text-sm text-gray-500 mb-2">0 / 0</div>
+                        <div class="bg-gray-50 p-6 rounded-xl shadow-inner text-center">
+                            <div id="mantra-front-container" class="mantra-face">
+                                <div id="mantra-front" class="text-xl font-semibold text-gray-900">...</div>
+                            </div>
+                            <div id="mantra-back-container" class="mantra-face hidden">
+                                <div id="mantra-back" class="text-xl font-semibold text-gray-900">...</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex gap-2">
+                            <button onclick="window.App.flipMantraCard()" class="btn-secondary flex-1">Перевернуть</button>
+                            <button onclick="window.App.speakMantra(document.getElementById('mantra-back').textContent)" class="btn-primary flex-1">🔊 Озвучить</button>
+                        </div>
+
+                        <div class="mt-4 flex gap-2" id="mantra-controls">
+                            <button onclick="window.App.handleMantraAnswer(false)" class="btn-danger flex-1">Не знаю</button>
+                            <button onclick="window.App.handleMantraAnswer(true)" class="btn-success flex-1">Знаю</button>
+                        </div>
+                    </div>
+
+                    <div id="mantra-summary" class="hidden text-center p-4">
+                        <!-- Сюда будет вставлен итог -->
+                    </div>
+
+                    <div id="mantra-summary-actions" class="mt-2"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- 2. ГЛАВНОЕ МЕНЮ (Home Screen) -->
         <div id="home-screen" class="hidden main-content">
             <div class="px-4 pt-2 pb-4 max-w-2xl mx-auto">
@@ -433,18 +474,13 @@
                       <div class="bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-200 flex flex-col gap-2">
                         <div class="flex items-center justify-center">
                           <button id="audio-main-button"
-                                  class="audio-main-button rounded-full btn-primary px-7 py-2.5 flex items-center gap-2 shadow-lg transition duration-150">
-                            <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                              <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.132z"
-                                    clip-rule="evenodd"></path>
+                                  class="audio-main-button rounded-full btn-primary px-6 py-3 flex items-center justify-center shadow-lg transition duration-150 hover:scale-110 active:scale-95">
+                            <svg id="play-icon" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"></path>
                             </svg>
-                            <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
-                              <path fill-rule="evenodd"
-                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a1 1 0 011 1v8a1 1 0 01-2 0V6a1 1 0 011-1zm3 1a1 1 0 00-1 1v8a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                    clip-rule="evenodd"></path>
+                            <svg id="pause-icon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"></path>
                             </svg>
-                            <span id="audio-status" class="font-semibold text-base">Play</span>
                           </button>
                         </div>
 
@@ -1951,10 +1987,21 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 contentListDiv.innerHTML = '';
                 
                 // 1. Ассоциации на неделю (Видео + Карусель)
+                const associationInstructionText = `<b>📌 Как учить слова:</b><br>
+1. Просмотри видео ассоциаций для запоминания<br>
+2. После этого повтор с помощью карусели ассоциаций<br>
+3. Эти слова будут доступны в Сете за неделю`;
                 this.renderMenuCard(contentListDiv, 
                     `🧠 Ассоциации: видео & визуальное обучение`, 
                     weekData.associationTitle,
-                    `window.App.currentWeekCarouselData = {setId: '${weekData.carouselId}', setTitle: '${weekData.associationTitle.replace(/'/g, "\\'")}', filepath: 'carousel_week1.json'}; window.App.renderVideoContentScreen('${weekData.associationTitle.replace(/'/g, "\\'")}', '${weekData.associationVideo}', null)`
+                    `window.App.currentWeekCarouselData = {setId: '${weekData.carouselId}', setTitle: '${weekData.associationTitle.replace(/'/g, "\\'")}', filepath: 'carousel_week1.json'}; window.App.renderVideoContentScreen('${weekData.associationTitle.replace(/'/g, "\\'")}', '${weekData.associationVideo}', \`${associationInstructionText.replace(/`/g, '\\`')}\`)`
+                );
+
+                // Мантры полезных фраз — открывает модальное окно с карточками
+                this.renderMenuCard(contentListDiv,
+                    `🕯️ Мантры полезных фраз`,
+                    'Короткие полезные фразы для ежедневной практики',
+                    `window.App.currentWeekMantraData = { setId: 'mantra_week1', setTitle: 'Мантры полезных фраз', filepath: 'mantra_week1.json' }; window.App.startMantraSession('mantra_week1','Мантры полезных фраз','mantra_week1.json')`
                 );
                 
                 let storyAction;
@@ -2029,7 +2076,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const carouselDataToUse = carouselData || this.currentWeekCarouselData;
                 if (carouselDataToUse && carouselDataToUse.setId && carouselDataToUse.setTitle && carouselDataToUse.filepath) {
                     const btn = document.createElement('button');
-                    btn.className = 'btn-primary w-full';
+                    btn.className = 'btn-success w-full py-4 px-6 text-lg font-semibold flex items-center justify-center gap-3 rounded-2xl shadow-lg hover:shadow-xl transition duration-150 hover:scale-105';
                     btn.innerHTML = '🖼️ Карусель ассоциаций';
                     btn.onclick = () => this.startCarouselSession(carouselDataToUse.setId, carouselDataToUse.setTitle, carouselDataToUse.filepath);
                     carouselButtonContainer.appendChild(btn);
@@ -2336,7 +2383,132 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     button.textContent = 'Показать перевод';
                 }
             },
-            
+
+            // ==================== ЛОГИКА МАНТР (НОВЫЙ БЛОК) ====================
+            async startMantraSession(setId, setTitle, filepath, isBack = false) {
+                this.openModal('mantra-modal');
+                try {
+                    const response = await fetch(getBaseUrl() + filepath);
+                    if (!response.ok) throw new Error('Не удалось загрузить мантры.');
+                    const raw = await response.text();
+                    this.mantraCards = JSON.parse(raw);
+                    if (!Array.isArray(this.mantraCards) || this.mantraCards.length === 0) {
+                        document.getElementById('mantra-modal-body').innerHTML = '<p class="text-center text-gray-500 py-6">Набор мантр пуст.</p>';
+                        return;
+                    }
+                    this.currentMantraIndex = 0;
+                    this.mantraKnownCount = 0;
+                    this.mantraUnknownCount = 0;
+                    this.mantraSeen = [];
+                    this.showMantraCard();
+                } catch (err) {
+                    console.error('Mantra load error', err);
+                    document.getElementById('mantra-modal-body').innerHTML = `<p class="text-red-500 text-center py-6">Ошибка загрузки мантр: ${err.message}</p>`;
+                }
+            },
+
+            showMantraCard() {
+                const card = this.mantraCards[this.currentMantraIndex];
+                if (!card) return;
+                // front = Russian, back = German
+                document.getElementById('mantra-front').textContent = card.ru || '';
+                document.getElementById('mantra-back').textContent = card.de || '';
+                // show front by default
+                document.getElementById('mantra-front-container').classList.remove('hidden');
+                document.getElementById('mantra-back-container').classList.add('hidden');
+                document.getElementById('mantra-progress').textContent = `${this.currentMantraIndex + 1} / ${this.mantraCards.length}`;
+            },
+
+            flipMantraCard() {
+                const front = document.getElementById('mantra-front-container');
+                const back = document.getElementById('mantra-back-container');
+                if (front.classList.contains('hidden')) {
+                    front.classList.remove('hidden');
+                    back.classList.add('hidden');
+                } else {
+                    front.classList.add('hidden');
+                    back.classList.remove('hidden');
+                    // озвучка немецкой версии при перевороте
+                    this.speakGerman(document.getElementById('mantra-back').textContent);
+                }
+            },
+
+            speakMantra(text) {
+                if (!text) return;
+                if (window.speechSynthesis) {
+                    const utter = new SpeechSynthesisUtterance(text);
+                    utter.lang = 'de-DE';
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(utter);
+                }
+            },
+
+            handleMantraAnswer(known) {
+                // record
+                if (known) this.mantraKnownCount++;
+                else this.mantraUnknownCount++;
+                this.mantraSeen.push({ index: this.currentMantraIndex, known });
+
+                // advance
+                this.currentMantraIndex++;
+                if (this.currentMantraIndex >= this.mantraCards.length) {
+                    // finished
+                    this.showMantraSummary();
+                } else {
+                    this.showMantraCard();
+                }
+            },
+
+            showMantraSummary() {
+                // hide card area, show summary
+                document.getElementById('mantra-card-area').classList.add('hidden');
+                const summaryEl = document.getElementById('mantra-summary');
+                summaryEl.classList.remove('hidden');
+                summaryEl.innerHTML = `
+                    <p class="text-lg font-semibold">Результат</p>
+                    <p class="mt-2">Пройдено: <b>${this.mantraKnownCount}</b></p>
+                    <p>Не пройдено: <b>${this.mantraUnknownCount}</b></p>
+                `;
+                // options: repeat not-known, retry all, close
+                document.getElementById('mantra-summary-actions').innerHTML = `
+                    <div class="flex gap-2 mt-4">
+                        <button class="btn-success flex-1" onclick="window.App.restartMantraWithFilter(false)">Повторить непроходные</button>
+                        <button class="btn-primary flex-1" onclick="window.App.restartMantraWithFilter(true)">Пройти заново все</button>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button class="py-2 px-4 text-sm text-gray-600" onclick="window.App.closeModal('mantra-modal')">Закрыть</button>
+                    </div>
+                `;
+            },
+
+            restartMantraWithFilter(restartAll) {
+                // rebuild mantraCards view
+                if (restartAll) {
+                    this.currentMantraIndex = 0;
+                    this.mantraKnownCount = 0;
+                    this.mantraUnknownCount = 0;
+                    document.getElementById('mantra-summary').classList.add('hidden');
+                    document.getElementById('mantra-card-area').classList.remove('hidden');
+                    this.showMantraCard();
+                } else {
+                    // filter to unknowns
+                    const unknownIndexes = this.mantraSeen.filter(s => !s.known).map(s => s.index);
+                    if (unknownIndexes.length === 0) {
+                        // nothing to repeat
+                        alert('Нет непроходных карточек для повторения.');
+                        return;
+                    }
+                    this.mantraCards = unknownIndexes.map(i => this.mantraCards[i]);
+                    this.currentMantraIndex = 0;
+                    this.mantraKnownCount = 0;
+                    this.mantraUnknownCount = 0;
+                    this.mantraSeen = [];
+                    document.getElementById('mantra-summary').classList.add('hidden');
+                    document.getElementById('mantra-card-area').classList.remove('hidden');
+                    this.showMantraCard();
+                }
+            },
+
             // [ИЗМЕНЕНО] Функция УДАЛЕНА, так как HTML кнопка удалена
             // returnToCarouselList() { ... }
 
