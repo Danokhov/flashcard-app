@@ -42,36 +42,36 @@
   "„Ich werde mich gut <b>kümmern um</b> dich, bis es dir besser geht.“",
   "Nach zwei Tagen geht es ihm schon besser.",
   "Die <b>Schmerzen</b> sind fast weg, das <b>Brennen</b> im <b>Magen</b> ist vorbei, und er kann wieder schlafen.",
-  "Am dritten День fühlt sich Thomas stark und изgeruht.",
+  "Am dritten Tag fühlt sich Thomas stark und gesund.",
   "Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war и die <b>Medikamente</b> gut <b>wirken</b>."
 ],
         "quiz": [
-          {
-            "question": "Что чувствует Томас утром?",
-            "answer": "Ему плохо: жар, боль, слабость",
-            "options": [
-              "Он полон энергии",
-              "Ему плохо: жар, боль, слабость",
-              "Он просто немного голоден"
-            ]
-          },
-          {
-            "question": "Что советует жена Томасу?",
-            "answer": "Пойти к врачу",
-            "options": [
-              "Пойти на работу",
-              "Выпить кофе и подождать",
-              "Пойти к врачу"
-            ]
-          },
-          {
-            "question": "Что говорит врач насчёт антибиотиков?",
-            "answer": "Принимать регулярно после еды несколько дней",
-            "options": [
-              "Пить только если снова станет больно",
-              "Принимать регулярно после еды несколько дней",
-              "Можно прекратить сразу, как станет лучше"
-            ]
+    {
+      "question": "Wie fühlt sich Thomas am Morgen?",
+      "answer": "Er fühlt sich schlecht: Er ist verschwitzt, hat Schmerzen und ist schwach",
+      "options": [
+        "Er ist voller Energie",
+        "Er fühlt sich schlecht: Er ist verschwitzt, hat Schmerzen und ist schwach",
+        "Er ist nur ein bisschen hungrig"
+      ]
+    },
+    {
+      "question": "Was rät die Frau Thomas?",
+      "answer": "Zum Arzt zu gehen",
+      "options": [
+        "Zur Arbeit zu gehen",
+        "Kaffee zu trinken und abzuwarten",
+        "Zum Arzt zu gehen"
+      ]
+    },
+    {
+      "question": "Was sagt der Arzt über die Antibiotika?",
+      "answer": "Sie regelmäßig nach dem Essen für einige Tage einnehmen",
+      "options": [
+        "Sie nur einnehmen, wenn es wieder wehtut",
+        "Sie regelmäßig nach dem Essen für einige Tage einnehmen",
+        "Man kann sofort aufhören, wenn es besser wird"
+      ]
           }
         ],
         "analysis": [
