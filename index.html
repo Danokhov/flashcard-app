@@ -1358,6 +1358,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             currentDirection: 'ru-de', 
             tempSetId: null, 
             tempMode: null,
+            tempSource: null,
             currentScreenId: 'loading-screen', 
             
             // Состояние фильтров
@@ -1608,7 +1609,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         this.startCarouselSession(param.setId, param.setTitle, param.filepath, isBackNavigation);
                         break;
                     case 'startSession':
-                        this.startSession(param.setId, param.mode, isBackNavigation);
+                        this.startSession(param.setId, param.mode, isBackNavigation, param.source);
                         break;
                     default:
                         this.renderHomeScreen(isBackNavigation); // По умолчанию
@@ -1699,7 +1700,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                                 <span class="font-bold text-gray-800">${set.name}</span>
                                 <span class="text-sm text-orange-600 font-medium block">Доступно для повторения: ${dueCount}</span>
                             </div>
-                            <button onclick="window.App.promptForDirection('${set.id}', 'review')"
+                                <button onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')"
                                     class="py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center">
                                 Начать
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -1876,7 +1877,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 this.renderMenuCard(contentListDiv, 
                     `📚 Слова на неделю`, 
                     `Повторение ${WORD_SETS.find(s => s.id === weekData.wordSetId)?.cards.length || 0} слов`,
-                    `window.App.promptForDirection('${weekData.wordSetId}', 'practice')`,
+                    `window.App.promptForDirection('${weekData.wordSetId}', 'practice', 'week')`,
                     'bg-green-100 hover:bg-green-200'
                 );
                 
@@ -2060,8 +2061,13 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
 
                 setsToRender.forEach(set => {
+                    // В разделе "Все наборы" отображаем ТОЛЬКО карточки, которые пользователь пометил как "Учить" (isLearning === true)
+                    const visibleCards = set.cards.filter(card => this.userProgress[card.id] && this.userProgress[card.id].isLearning === true);
+                    const visibleCount = visibleCards.length;
+
+                    // Считаем dueCount только среди видимых карточек
                     let dueCount = 0;
-                    set.cards.forEach(card => {
+                    visibleCards.forEach(card => {
                         const progress = this.userProgress[card.id];
                         if (!progress || (progress.nextReview && progress.nextReview <= today)) {
                             dueCount++;
@@ -2075,7 +2081,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         <div class="flex justify-between items-center mb-3">
                             <div>
                                 <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
-                                <span class="block text-sm text-gray-500">Неделя ${set.week} | ${set.cards.length} слов</span>
+                                <span class="block text-sm text-gray-500">Неделя ${set.week} | ${visibleCount} слов</span>
                             </div>
                             ${dueCount > 0 ? 
                                 `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">${dueCount} к повтору</span>` :
@@ -2084,11 +2090,11 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
-                                    onclick="window.App.promptForDirection('${set.id}', 'review')">
+                                    onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')">
                                 Повторить (${dueCount})
                             </button>
                             <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
-                                    onclick="window.App.promptForDirection('${set.id}', 'practice')">
+                                    onclick="window.App.promptForDirection('${set.id}', 'practice', 'allsets')">
                                 Практика (Все)
                             </button>
                         </div>
@@ -2221,9 +2227,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             // ==================== ЛОГИКА ПОВТОРЕНИЯ (ИЗМЕНЕНО) ====================
 
-            promptForDirection(setId, mode) {
+            promptForDirection(setId, mode, source = 'allsets') {
                 this.tempSetId = setId;
                 this.tempMode = mode;
+                this.tempSource = source;
                 this.openModal('direction-modal');
             },
 
@@ -2234,26 +2241,32 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             startSessionWithDirection(direction) {
                 this.currentDirection = direction;
                 this.closeDirectionModal();
-                // [ИЗМЕНЕНО] Передаем renderFunc в startSession
-                this.startSession(this.tempSetId, this.tempMode);
+                // [ИЗМЕНЕНО] Передаем renderFunc и источник в startSession
+                this.startSession(this.tempSetId, this.tempMode, false, this.tempSource);
             },
             
-            startSession(setId, mode, isBack = false) {
+            startSession(setId, mode, isBack = false, source = 'allsets') {
                 const set = WORD_SETS.find(s => s.id === setId);
                 if (!set) return;
 
                 this.isPracticeMode = (mode === 'practice');
-                
+
                 // Заполняем массив карточек для сессии в зависимости от режима
                 if (this.isPracticeMode) {
-                    // Практика: все карточки набора
-                    this.sessionCards = set.cards.map(card => ({ ...card }));
+                    // В режиме Практика: если пришли из меню Недели - показываем все карточки недели,
+                    // если из раздела "Все наборы слов" - показываем только те карточки, которые пользователь пометил как "Учить"
+                    if (source === 'week') {
+                        this.sessionCards = set.cards.map(card => ({ ...card }));
+                    } else {
+                        this.sessionCards = set.cards.filter(card => (this.userProgress[card.id] && this.userProgress[card.id].isLearning === true));
+                    }
                 } else {
-                    // Повторение: только карточки, доступные к повторению сегодня
+                    // Повторение: только карточки, доступные к повторению сегодня (и помеченные как учатся)
                     const today = this.getTodayDateString();
                     this.sessionCards = set.cards.filter(card => {
                         const progress = this.userProgress[card.id];
-                        return !progress || (progress.nextReview && progress.nextReview <= today);
+                        const isVisible = progress && progress.isLearning === true;
+                        return isVisible && (!progress || (progress.nextReview && progress.nextReview <= today));
                     });
                 }
 
@@ -2270,9 +2283,18 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     rateNoButton.innerHTML = 'Не помню ❌';
                     rateYesButton.innerHTML = 'Помню ✅';
                 }
-                
-                // [ИЗМЕНЕНО] Состояние для истории
-                const historyState = { renderFunc: 'startSession', param: {setId, mode} };
+
+                // Показ кнопок сразу в зависимости от режима: в Практике показываем сразу две кнопки (Учить/Знаю)
+                if (this.isPracticeMode) {
+                    document.getElementById('controls-show').classList.add('hidden');
+                    document.getElementById('controls-rate').classList.remove('hidden');
+                } else {
+                    document.getElementById('controls-show').classList.remove('hidden');
+                    document.getElementById('controls-rate').classList.add('hidden');
+                }
+
+                // [ИЗМЕНЕНО] Состояние для истории (включаем источник)
+                const historyState = { renderFunc: 'startSession', param: {setId, mode, source} };
 
                 if (this.sessionCards.length === 0) {
                     this.showScreen('finish-screen', isBack, historyState); // Записываем в историю
@@ -2281,19 +2303,22 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         : 'Для этого набора нет карточек к повторению на сегодня!';
                     return;
                 }
-                
+
                 this.sessionCards.sort(() => Math.random() - 0.5);
                 this.currentCardIndex = 0;
-                
+
                 this.showScreen('study-screen', isBack, historyState); // Записываем в историю
                 this.showNextCard();
             },
 
             showAnswer() {
                 document.getElementById('card').classList.add('is-flipped');
-                document.getElementById('controls-show').classList.add('hidden');
-                document.getElementById('controls-rate').classList.remove('hidden');
-                
+                // В режиме Practice кнопки видны сразу и не меняются при перевороте
+                if (!this.isPracticeMode) {
+                    document.getElementById('controls-show').classList.add('hidden');
+                    document.getElementById('controls-rate').classList.remove('hidden');
+                }
+
                 if (this.currentDirection === 'ru-de') {
                      this.speakGerman(this.sessionCards[this.currentCardIndex].back);
                 }
@@ -2317,8 +2342,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const percent = ((this.currentCardIndex + 1) / totalCards) * 100;
                 document.getElementById('progress-bar').style.width = `${percent}%`;
 
-                document.getElementById('controls-show').classList.remove('hidden');
-                document.getElementById('controls-rate').classList.add('hidden');
+                // Показ кнопок в зависимости от режима: Practice — сразу две кнопки, Review — кнопка "Показать ответ"
+                if (this.isPracticeMode) {
+                    document.getElementById('controls-show').classList.add('hidden');
+                    document.getElementById('controls-rate').classList.remove('hidden');
+                } else {
+                    document.getElementById('controls-show').classList.remove('hidden');
+                    document.getElementById('controls-rate').classList.add('hidden');
+                }
 
                 const card = this.sessionCards[this.currentCardIndex];
                 
@@ -2362,9 +2393,13 @@ async handleAnswer(knewIt) {
                     if (knewIt) { // "Знаю 👍" - пользователь нажал "Знаю" (knewIt = true)
                         // Пользователь знает слово. Ставим высокий бокс (например, 5 = 30 дней)
                         progress.box = 5;
+                        // Если пользователь знает слово — помечаем его как не изучаемое (скрывать в 'Все наборы')
+                        progress.isLearning = false;
                     } else { // "Учить 🎓" - пользователь нажал "Учить" (knewIt = false)
                         // Пользователь хочет учить. Ставим бокс 1 (1 день)
                         progress.box = 1;
+                        // Пользователь пометил слово для изучения — показываем в 'Все наборы'
+                        progress.isLearning = true;
                     }
                 } else {
                     // В режиме "Повторение": "Не помню" vs "Помню"
