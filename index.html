@@ -2244,6 +2244,19 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
                 this.isPracticeMode = (mode === 'practice');
                 
+                // Заполняем массив карточек для сессии в зависимости от режима
+                if (this.isPracticeMode) {
+                    // Практика: все карточки набора
+                    this.sessionCards = set.cards.map(card => ({ ...card }));
+                } else {
+                    // Повторение: только карточки, доступные к повторению сегодня
+                    const today = this.getTodayDateString();
+                    this.sessionCards = set.cards.filter(card => {
+                        const progress = this.userProgress[card.id];
+                        return !progress || (progress.nextReview && progress.nextReview <= today);
+                    });
+                }
+
                 // [ИЗМЕНЕНО] Меняем текст кнопок в зависимости от режима
                 const rateNoButton = document.querySelector('#controls-rate button:nth-child(1)');
                 const rateYesButton = document.querySelector('#controls-rate button:nth-child(2)');
