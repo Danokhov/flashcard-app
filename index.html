@@ -2077,7 +2077,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     const setContainer = document.createElement('div');
                     setContainer.className = "w-full p-4 bg-white rounded-xl shadow-md";
                     
-                    setContainer.innerHTML = `
+                    // Заголовок набора
+                    let html = `
                         <div class="flex justify-between items-center mb-3">
                             <div>
                                 <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
@@ -2088,17 +2089,41 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                                 `<span class="text-green-500 font-semibold">✓</span>`
                             }
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
-                                    onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')">
-                                Повторить (${dueCount})
-                            </button>
-                            <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
-                                    onclick="window.App.promptForDirection('${set.id}', 'practice', 'allsets')">
-                                Практика (Все)
-                            </button>
-                        </div>
                     `;
+
+                    // Если есть видимые карточки — выводим их список с per-card контролами
+                    if (visibleCount > 0) {
+                        const cardRows = visibleCards.map(card => `
+                            <div class="flex items-center justify-between py-2 border-t">
+                                <div class="text-left">
+                                    <div class="font-medium">${card.front} <span class="text-sm text-gray-500">— ${card.back || ''}</span></div>
+                                </div>
+                                <div class="flex gap-2 items-center">
+                                    <button onclick="window.App.allSetsRemember('${card.id}')" class="py-1 px-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600">Помню</button>
+                                    <button onclick="window.App.allSetsForgot('${card.id}')" class="py-1 px-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600">Не помню</button>
+                                    <button onclick="window.App.showHintForAllSet('${card.id}')" class="py-1 px-2 bg-yellow-400 text-yellow-900 text-sm rounded-lg hover:bg-yellow-500">Подсказка</button>
+                                </div>
+                            </div>
+                        `).join('');
+
+                        html += `<div class="mt-2">${cardRows}</div>`;
+                    } else {
+                        // Если видимых карточек нет — показываем кнопки уровня набора
+                        html += `
+                            <div class="grid grid-cols-2 gap-3 mt-3">
+                                <button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
+                                        onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')">
+                                    Повторить (${dueCount})
+                                </button>
+                                <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
+                                        onclick="window.App.promptForDirection('${set.id}', 'practice', 'allsets')">
+                                    Практика (Все)
+                                </button>
+                            </div>
+                        `;
+                    }
+
+                    setContainer.innerHTML = html;
                     contentListDiv.appendChild(setContainer);
                 });
             },
@@ -2511,6 +2536,53 @@ async handleAnswer(knewIt) {
                 if (!card || !card.hintImage) return;
                 document.getElementById('hint-image').src = card.hintImage; 
                 this.openModal('hint-modal');
+            },
+
+            // ========== Методы для экрана "Все наборы" (переключения без изменения isLearning) ==========
+            allSetsRemember(cardId) {
+                const entry = this.findCardById(cardId);
+                if (!entry) return;
+                let progress = this.userProgress[cardId] || { box: 0 };
+                progress.box = Math.min(6, (progress.box || 0) + 1);
+                progress.nextReview = this.getFutureDateString(REPETITION_INTERVALS[progress.box]);
+                // Не меняем isLearning
+                this.userProgress[cardId] = progress;
+                if (this.isAuthReady) this.saveProgress();
+                this.renderAllSetsScreen(true);
+            },
+
+            allSetsForgot(cardId) {
+                const entry = this.findCardById(cardId);
+                if (!entry) return;
+                let progress = this.userProgress[cardId] || { box: 0 };
+                progress.box = 1;
+                progress.nextReview = this.getFutureDateString(REPETITION_INTERVALS[progress.box]);
+                // Не меняем isLearning
+                this.userProgress[cardId] = progress;
+                if (this.isAuthReady) this.saveProgress();
+                this.renderAllSetsScreen(true);
+            },
+
+            showHintForAllSet(cardId) {
+                const entry = this.findCardById(cardId);
+                if (!entry) return;
+                const card = entry.card;
+                if (card && card.hintImage) {
+                    document.getElementById('hint-image').src = card.hintImage;
+                } else {
+                    document.getElementById('hint-image').src = 'https://placehold.co/400x150/FCA5A5/FFFFFF?text=Нет+Изображения';
+                }
+                this.openModal('hint-modal');
+            },
+
+            // Вспомогательная функция: найти карточку по id и вернуть {set, card}
+            findCardById(cardId) {
+                for (let s of WORD_SETS) {
+                    for (let c of s.cards) {
+                        if (c.id === cardId) return { set: s, card: c };
+                    }
+                }
+                return null;
             },
 
             /**
