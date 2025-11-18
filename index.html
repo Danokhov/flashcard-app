@@ -1885,6 +1885,13 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         <span>&rarr;</span>
                     </button>
                 `;
+                // New: All Topics section (empty for now)
+                mainBlock.innerHTML += `
+                    <button onclick="window.App.renderTopicsScreen()" class="w-full py-4 px-5 bg-gray-50 rounded-xl shadow-sm text-left text-lg font-medium text-gray-800 hover:bg-gray-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-gray-200">
+                        <span>🗂️ Все Темы</span>
+                        <span>&rarr;</span>
+                    </button>
+                `;
                 
                 this.renderDueTodaySection();
                 
@@ -2334,6 +2341,15 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
                 this.showScreen('list-screen', isBack, { renderFunc: 'renderAllSetsScreen', param: null });
+            },
+
+            renderTopicsScreen(isBack = false) {
+                // Simple placeholder screen for Topics (currently empty)
+                document.getElementById('list-title').innerText = '🗂️ Все Темы';
+                document.getElementById('filter-controls').innerHTML = '';
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Пока нет тем.</p>';
+                this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicsScreen', param: null });
             },
 
             // ==================== ФИЛЬТРЫ И КАРТОЧКИ (Без изменений) ====================
