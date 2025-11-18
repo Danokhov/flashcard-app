@@ -1,105 +1,3 @@
-            // Меню темы: вкладки "Слова на тему" и "Материалы"
-            async renderTopicMenu(topic, isBack = false) {
-                if (!topic || !topic.filepath) {
-                    alert('Файловый путь темы не указан.');
-                    return;
-                }
-                const contentListDiv = document.getElementById('content-list');
-                document.getElementById('list-title').innerText = topic.title || 'Тема';
-                document.getElementById('filter-controls').innerHTML = '';
-
-                // Вкладки
-                contentListDiv.innerHTML = `
-                  <div class="flex gap-2 mb-4">
-                    <button id="topic-tab-words" class="py-2 px-4 rounded-lg bg-blue-500 text-white font-semibold">Слова на тему</button>
-                    <button id="topic-tab-materials" class="py-2 px-4 rounded-lg bg-gray-200 text-gray-700 font-semibold">Материалы</button>
-                  </div>
-                  <div id="topic-tab-content"></div>
-                `;
-
-                // Вкладка "Слова на тему" по умолчанию
-                const tabContent = document.getElementById('topic-tab-content');
-                await this.renderTopicWords(topic, false, tabContent);
-
-                // Переключение вкладок
-                document.getElementById('topic-tab-words').onclick = async () => {
-                    document.getElementById('topic-tab-words').className = 'py-2 px-4 rounded-lg bg-blue-500 text-white font-semibold';
-                    document.getElementById('topic-tab-materials').className = 'py-2 px-4 rounded-lg bg-gray-200 text-gray-700 font-semibold';
-                    await this.renderTopicWords(topic, false, tabContent);
-                };
-                document.getElementById('topic-tab-materials').onclick = async () => {
-                    document.getElementById('topic-tab-words').className = 'py-2 px-4 rounded-lg bg-gray-200 text-gray-700 font-semibold';
-                    document.getElementById('topic-tab-materials').className = 'py-2 px-4 rounded-lg bg-blue-500 text-white font-semibold';
-                    await this.renderTopicMaterials(topic, tabContent);
-                };
-
-                this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicMenu', param: { topicId: topic.id, filepath: topic.filepath } });
-            },
-
-            // Вкладка "Слова на тему" (рендер в tabContent)
-            async renderTopicWords(topic, isBack = false, tabContentEl = null) {
-                if (!topic || !topic.filepath) {
-                    if (tabContentEl) tabContentEl.innerHTML = '<p class="text-gray-500 text-center py-6">Файл темы не найден.</p>';
-                    return;
-                }
-                const target = tabContentEl || document.getElementById('content-list');
-                target.innerHTML = '<p class="text-gray-500 text-center py-6">Загрузка слов...</p>';
-                try {
-                    const res = await fetch(getBaseUrl() + topic.filepath);
-                    if (!res.ok) throw new Error('Не удалось загрузить файл темы.');
-                    const raw = await res.text();
-                    const cards = JSON.parse(raw);
-                    if (!Array.isArray(cards) || cards.length === 0) {
-                        target.innerHTML = '<p class="text-gray-500 text-center py-6">В этой теме нет слов.</p>';
-                        return;
-                    }
-                    target.innerHTML = '';
-                    const frag = document.createDocumentFragment();
-                    cards.forEach(card => {
-                        const row = document.createElement('button');
-                        row.type = 'button';
-                        row.className = 'w-full text-left p-3 bg-white rounded-xl shadow-sm flex items-center justify-between gap-3 hover:bg-gray-50 transition';
-                        const left = document.createElement('div');
-                        left.className = 'flex items-center gap-3';
-                        const thumb = document.createElement('img');
-                        thumb.src = card.image || 'https://placehold.co/64x64/EEE/999?text=?';
-                        thumb.alt = card.word || '';
-                        thumb.className = 'w-12 h-12 object-cover rounded-md';
-                        thumb.loading = 'lazy';
-                        thumb.onerror = function() { this.onerror = null; this.src = 'https://placehold.co/64x64/EEE/999?text=?'; };
-                        const txt = document.createElement('div');
-                        const txtWord = document.createElement('div');
-                        txtWord.className = 'font-medium text-gray-800';
-                        txtWord.textContent = card.word || '';
-                        const txtTrans = document.createElement('div');
-                        txtTrans.className = 'text-xs text-gray-500';
-                        txtTrans.textContent = card.translation || '';
-                        txt.appendChild(txtWord);
-                        txt.appendChild(txtTrans);
-                        left.appendChild(thumb);
-                        left.appendChild(txt);
-                        const arrow = document.createElement('span');
-                        arrow.className = 'text-gray-400';
-                        arrow.textContent = 'Открыть';
-                        row.appendChild(left);
-                        row.appendChild(arrow);
-                        row.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            this.openTopicWordModal(card);
-                        });
-                        frag.appendChild(row);
-                    });
-                    target.appendChild(frag);
-                } catch (err) {
-                    target.innerHTML = '<p class="text-red-500 text-center py-6">Не удалось загрузить слова темы.</p>';
-                }
-            },
-
-            // Вкладка "Материалы" (рендер в tabContent)
-            async renderTopicMaterials(topic, tabContentEl) {
-                // Здесь можно реализовать загрузку и отображение материалов (например, PDF, ссылки, видео)
-                tabContentEl.innerHTML = '<p class="text-gray-500 text-center py-6">Пока нет материалов для этой темы.</p>';
-            },
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -839,21 +737,6 @@
         </div>
     </div>
     
-        <!-- Модальное окно для просмотра одной карточки темы -->
-        <div id="topic-word-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('topic-word-modal')">
-            <div id="topic-word-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-md w-full" onclick="event.stopPropagation()">
-                <button onclick="window.App.closeModal('topic-word-modal')" class="text-gray-500 float-right">✕</button>
-                <div class="text-center">
-                    <img id="topic-word-image" src="" alt="" class="w-full h-48 object-contain rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/400x200/EEE/999?text=No+Image';">
-                    <h3 id="topic-word-word" class="text-2xl font-bold text-gray-800 mb-2"></h3>
-                    <p id="topic-word-translation" class="text-gray-600 mb-4"></p>
-                    <div class="mt-2">
-                        <button onclick="window.App.closeModal('topic-word-modal')" class="w-full py-2 px-4 bg-blue-500 text-white rounded-lg">Закрыть</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     <!-- Модальное окно для Выбора направления -->
     <div id="direction-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeDirectionModal()">
         <div id="direction-modal-content" class="modal-content bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full" onclick="event.stopPropagation()">
@@ -1991,21 +1874,14 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 mainBlock.innerHTML += `
                     <button onclick="window.App.renderWeeklySelections()" class="w-full py-4 px-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-md text-left text-lg font-semibold text-indigo-900 hover:from-blue-100 hover:to-indigo-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-indigo-200">
-                        <span>🧩 Полезные материалы</span>
+                        <span>📚 Подборки за неделю</span>
                         <span>&rarr;</span>
                     </button>
                 `;
 
                 mainBlock.innerHTML += `
                     <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl shadow-md text-left text-lg font-semibold text-purple-900 hover:from-purple-100 hover:to-pink-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-purple-200">
-                        <span>📝 Слова в изучении</span>
-                        <span>&rarr;</span>
-                    </button>
-                `;
-                // New: All Topics section (empty for now)
-                mainBlock.innerHTML += `
-                    <button onclick="window.App.renderTopicsScreen()" class="w-full py-4 px-5 bg-gray-50 rounded-xl shadow-sm text-left text-lg font-medium text-gray-800 hover:bg-gray-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-gray-200">
-                        <span>🗂️ Все Темы</span>
+                        <span>📚 Все наборы слов</span>
                         <span>&rarr;</span>
                     </button>
                 `;
@@ -2444,173 +2320,20 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             renderAllSetsScreen(isBack = false) {
                 // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('list-title').innerText = '📝 Слова в изучении';
+                document.getElementById('list-title').innerText = '📚 Все наборы слов';
                 this.renderSetFilterControls();
-
-                // Фильтруем только слова, отмеченные как изучаемые
-                const filteredSets = WORD_SETS.map(set => {
-                    const filteredCards = set.cards.filter(card => {
-                        const progress = this.userProgress[card.id];
-                        return progress && progress.isLearning === true;
-                    });
-                    return { ...set, cards: filteredCards };
-                }).filter(set => set.cards.length > 0);
-
+                
+                const filteredSets = WORD_SETS.filter(set => {
+                    const weekMatch = this.currentWeekFilter === 'All' || set.week.toString() === this.currentWeekFilter;
+                    // [ИСПРАВЛЕНИЕ] Проверяем подписку
+                    const unlockedMatch = (this.isSubscriber && set.week <= this.unlockedWeek) || (!this.isSubscriber && set.week === 1);
+                    return weekMatch && unlockedMatch;
+                });
+                
                 this.renderSetCards(filteredSets);
-
+                
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
                 this.showScreen('list-screen', isBack, { renderFunc: 'renderAllSetsScreen', param: null });
-            },
-
-            renderTopicsScreen(isBack = false) {
-                document.getElementById('list-title').innerText = '🗂️ Все Темы';
-                document.getElementById('filter-controls').innerHTML = '';
-                const contentListDiv = document.getElementById('content-list');
-                contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Загрузка тем...</p>';
-
-                // Load topics.json and render list
-                fetch(getBaseUrl() + 'topics.json').then(res => {
-                    if (!res.ok) throw new Error('Не удалось загрузить topics.json');
-                    return res.json();
-                }).then(topics => {
-                    if (!Array.isArray(topics) || topics.length === 0) {
-                        contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Пока нет тем.</p>';
-                        return;
-                    }
-
-                    contentListDiv.innerHTML = '';
-                    topics.forEach(topic => {
-                        const card = document.createElement('div');
-                        card.className = 'w-full p-4 bg-white rounded-xl shadow-md flex items-center gap-4';
-
-                        const img = document.createElement('img');
-                        img.src = getBaseUrl() + (topic.image || '');
-                        img.alt = topic.title || 'Тема';
-                        img.className = 'w-16 h-16 object-cover rounded-lg';
-                        img.loading = 'lazy';
-                        img.onerror = function() { this.onerror = null; this.src = 'https://placehold.co/80x80/DDD/666?text=Topic'; };
-
-                        const info = document.createElement('div');
-                        info.className = 'flex-1';
-                        const title = document.createElement('div');
-                        title.className = 'font-semibold text-gray-800';
-                        title.textContent = topic.title || 'Без названия';
-                        info.appendChild(title);
-
-                        const actions = document.createElement('div');
-                        actions.className = 'flex items-center gap-2';
-                        const openBtn = document.createElement('button');
-                        openBtn.type = 'button';
-                        openBtn.className = 'py-2 px-3 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition';
-                        openBtn.textContent = 'Открыть';
-                        openBtn.addEventListener('click', () => {
-                            // Открыть меню темы с вкладками "Слова на тему" и "Материалы"
-                            this.renderTopicMenu(topic);
-                        });
-
-                        actions.appendChild(openBtn);
-                        card.appendChild(img);
-                        card.appendChild(info);
-                        card.appendChild(actions);
-
-                        contentListDiv.appendChild(card);
-                    });
-                }).catch(err => {
-                    console.error('Topics load error:', err);
-                    contentListDiv.innerHTML = '<p class="text-red-500 text-center py-6">Не удалось загрузить темы.</p>';
-                });
-
-                this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicsScreen', param: null });
-            },
-
-            // Render list of words for a chosen topic (words shown as clickable list)
-            async renderTopicWords(topic, isBack = false) {
-                if (!topic || !topic.filepath) {
-                    alert('Файловый путь темы не указан.');
-                    return;
-                }
-
-                const contentListDiv = document.getElementById('content-list');
-                document.getElementById('list-title').innerText = topic.title || 'Тема';
-                document.getElementById('filter-controls').innerHTML = '';
-                contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Загрузка слов...</p>';
-
-                try {
-                    const res = await fetch(getBaseUrl() + topic.filepath);
-                    if (!res.ok) throw new Error('Не удалось загрузить файл темы.');
-                    const raw = await res.text();
-                    const cards = JSON.parse(raw);
-
-                    if (!Array.isArray(cards) || cards.length === 0) {
-                        contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">В этой теме нет слов.</p>';
-                        return;
-                    }
-
-                    contentListDiv.innerHTML = '';
-                    // Use DocumentFragment for performance
-                    const frag = document.createDocumentFragment();
-                    cards.forEach(card => {
-                        const row = document.createElement('button');
-                        row.type = 'button';
-                        row.className = 'w-full text-left p-3 bg-white rounded-xl shadow-sm flex items-center justify-between gap-3 hover:bg-gray-50 transition';
-
-                        const left = document.createElement('div');
-                        left.className = 'flex items-center gap-3';
-                        const thumb = document.createElement('img');
-                        thumb.src = card.image || 'https://placehold.co/64x64/EEE/999?text=?';
-                        thumb.alt = card.word || '';
-                        thumb.className = 'w-12 h-12 object-cover rounded-md';
-                        thumb.loading = 'lazy';
-                        thumb.onerror = function() { this.onerror = null; this.src = 'https://placehold.co/64x64/EEE/999?text=?'; };
-
-                        const txt = document.createElement('div');
-                        const txtWord = document.createElement('div');
-                        txtWord.className = 'font-medium text-gray-800';
-                        txtWord.textContent = card.word || '';
-                        const txtTrans = document.createElement('div');
-                        txtTrans.className = 'text-xs text-gray-500';
-                        txtTrans.textContent = card.translation || '';
-                        txt.appendChild(txtWord);
-                        txt.appendChild(txtTrans);
-                        left.appendChild(thumb);
-                        left.appendChild(txt);
-
-                        const arrow = document.createElement('span');
-                        arrow.className = 'text-gray-400';
-                        arrow.textContent = 'Открыть';
-
-                        row.appendChild(left);
-                        row.appendChild(arrow);
-
-                        row.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            this.openTopicWordModal(card);
-                        });
-
-                        frag.appendChild(row);
-                    });
-
-                    contentListDiv.appendChild(frag);
-                    // push history state so Back works
-                    this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicWords', param: { topicId: topic.id, filepath: topic.filepath } });
-                } catch (err) {
-                    console.error('Topic words load error:', err);
-                    contentListDiv.innerHTML = '<p class="text-red-500 text-center py-6">Не удалось загрузить слова темы.</p>';
-                }
-            },
-
-            // Open a modal showing a single word (image, word, translation)
-            openTopicWordModal(card) {
-                if (!card) return;
-                const img = document.getElementById('topic-word-image');
-                const wordEl = document.getElementById('topic-word-word');
-                const transEl = document.getElementById('topic-word-translation');
-
-                if (img) img.src = card.image || 'https://placehold.co/400x200/EEE/999?text=No+Image';
-                if (wordEl) wordEl.textContent = card.word || '';
-                if (transEl) transEl.textContent = card.translation || '';
-
-                this.openModal('topic-word-modal');
             },
 
             // ==================== ФИЛЬТРЫ И КАРТОЧКИ (Без изменений) ====================
