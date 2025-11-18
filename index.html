@@ -1859,8 +1859,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 } else {
                     const activeWeek = this.selectedWeek;
                     const weekTitle = activeWeek === 1 && !this.isSubscriber 
-                                    ? 'Пробный урок (Неделя 1)' 
-                                    : `Неделя ${activeWeek}`;
+                                    ? 'Пробный урок (Тема 1)' 
+                                    : `Тема ${activeWeek}`;
                     
                     if (activeWeek >= 1 && activeWeek <= ALL_WEEKS.length) {
                         mainBlock.innerHTML += `
@@ -1874,7 +1874,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 mainBlock.innerHTML += `
                     <button onclick="window.App.renderWeeklySelections()" class="w-full py-4 px-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-md text-left text-lg font-semibold text-indigo-900 hover:from-blue-100 hover:to-indigo-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-indigo-200">
-                        <span>📚 Подборки за неделю</span>
+                        <span>🗂️ Все Темы</span>
                         <span>&rarr;</span>
                     </button>
                 `;
@@ -1968,7 +1968,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             renderWeeklySelections(isBack = false) {
                 // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('list-title').innerText = '📚 Подборки за неделю';
+                document.getElementById('list-title').innerText = '🗂️ Все Темы';
                 document.getElementById('filter-controls').innerHTML = '';
 
                 const contentListDiv = document.getElementById('content-list');
@@ -2013,7 +2013,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     const leftCol = document.createElement('div');
                     const titleSpan = document.createElement('span');
                     titleSpan.className = `font-bold text-lg ${!isAvailable ? 'text-gray-500' : 'text-gray-800'}`;
-                    titleSpan.textContent = `Неделя ${i}`;
+                    titleSpan.textContent = `Тема ${i}`;
                     const statusSpan = document.createElement('span');
                     statusSpan.className = `block text-sm ${!isAvailable ? 'text-orange-600' : 'text-gray-500'}`;
                     statusSpan.textContent = statusText;
@@ -2054,7 +2054,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             },
             
             showWeekDetails(weekNum, description) {
-                document.getElementById('week-details-title').textContent = `Неделя ${weekNum}`;
+                document.getElementById('week-details-title').textContent = `Тема ${weekNum}`;
                 document.getElementById('week-details-body').textContent = description;
                 this.openModal('week-details-modal');
             },
@@ -2345,7 +2345,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         <select id="week-filter" onchange="window.App.updateSetFilter('week', this.value)" 
                                 class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             <option value="All">Все Недели</option>
-                            ${ALL_WEEKS.map(w => `<option value="${w}" ${this.currentWeekFilter === w.toString() ? 'selected' : ''}>Неделя ${w}</option>`).join('')}
+                            ${ALL_WEEKS.map(w => `<option value="${w}" ${this.currentWeekFilter === w.toString() ? 'selected' : ''}>Тема ${w}</option>`).join('')}
                         </select>
                     </div>
                 `;
@@ -2384,7 +2384,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         <div class="flex justify-between items-center mb-3">
                             <div>
                                 <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
-                                <span class="block text-sm text-gray-500">Неделя ${set.week} | ${set.cards.length} слов</span>
+                                <span class="block text-sm text-gray-500">Тема ${set.week} | ${set.cards.length} слов</span>
                             </div>
                             ${dueCount > 0 ? 
                                 `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">${dueCount} к повтору</span>` :
