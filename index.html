@@ -737,6 +737,21 @@
         </div>
     </div>
     
+        <!-- Модальное окно для просмотра одной карточки темы -->
+        <div id="topic-word-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeModal('topic-word-modal')">
+            <div id="topic-word-modal-content" class="modal-content bg-white p-6 rounded-xl shadow-xl max-w-md w-full" onclick="event.stopPropagation()">
+                <button onclick="window.App.closeModal('topic-word-modal')" class="text-gray-500 float-right">✕</button>
+                <div class="text-center">
+                    <img id="topic-word-image" src="" alt="" class="w-full h-48 object-contain rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/400x200/EEE/999?text=No+Image';">
+                    <h3 id="topic-word-word" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                    <p id="topic-word-translation" class="text-gray-600 mb-4"></p>
+                    <div class="mt-2">
+                        <button onclick="window.App.closeModal('topic-word-modal')" class="w-full py-2 px-4 bg-blue-500 text-white rounded-lg">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     <!-- Модальное окно для Выбора направления -->
     <div id="direction-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeDirectionModal()">
         <div id="direction-modal-content" class="modal-content bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full" onclick="event.stopPropagation()">
@@ -2385,9 +2400,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         openBtn.className = 'py-2 px-3 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition';
                         openBtn.textContent = 'Открыть';
                         openBtn.addEventListener('click', () => {
-                            // Start carousel for this topic (uses filepath from topics.json)
+                            // Show list of words for this topic; clicking a word opens a single-card modal
                             if (topic.filepath) {
-                                this.startCarouselSession(topic.id || topic.title, topic.title || 'Тема', topic.filepath);
+                                this.renderTopicWords(topic);
                             } else {
                                 alert('Файловый путь для этой темы не указан.');
                             }
@@ -2406,6 +2421,96 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 });
 
                 this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicsScreen', param: null });
+            },
+
+            // Render list of words for a chosen topic (words shown as clickable list)
+            async renderTopicWords(topic, isBack = false) {
+                if (!topic || !topic.filepath) {
+                    alert('Файловый путь темы не указан.');
+                    return;
+                }
+
+                const contentListDiv = document.getElementById('content-list');
+                document.getElementById('list-title').innerText = topic.title || 'Тема';
+                document.getElementById('filter-controls').innerHTML = '';
+                contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Загрузка слов...</p>';
+
+                try {
+                    const res = await fetch(getBaseUrl() + topic.filepath);
+                    if (!res.ok) throw new Error('Не удалось загрузить файл темы.');
+                    const raw = await res.text();
+                    const cards = JSON.parse(raw);
+
+                    if (!Array.isArray(cards) || cards.length === 0) {
+                        contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">В этой теме нет слов.</p>';
+                        return;
+                    }
+
+                    contentListDiv.innerHTML = '';
+                    // Use DocumentFragment for performance
+                    const frag = document.createDocumentFragment();
+                    cards.forEach(card => {
+                        const row = document.createElement('button');
+                        row.type = 'button';
+                        row.className = 'w-full text-left p-3 bg-white rounded-xl shadow-sm flex items-center justify-between gap-3 hover:bg-gray-50 transition';
+
+                        const left = document.createElement('div');
+                        left.className = 'flex items-center gap-3';
+                        const thumb = document.createElement('img');
+                        thumb.src = card.image || 'https://placehold.co/64x64/EEE/999?text=?';
+                        thumb.alt = card.word || '';
+                        thumb.className = 'w-12 h-12 object-cover rounded-md';
+                        thumb.loading = 'lazy';
+                        thumb.onerror = function() { this.onerror = null; this.src = 'https://placehold.co/64x64/EEE/999?text=?'; };
+
+                        const txt = document.createElement('div');
+                        const txtWord = document.createElement('div');
+                        txtWord.className = 'font-medium text-gray-800';
+                        txtWord.textContent = card.word || '';
+                        const txtTrans = document.createElement('div');
+                        txtTrans.className = 'text-xs text-gray-500';
+                        txtTrans.textContent = card.translation || '';
+                        txt.appendChild(txtWord);
+                        txt.appendChild(txtTrans);
+                        left.appendChild(thumb);
+                        left.appendChild(txt);
+
+                        const arrow = document.createElement('span');
+                        arrow.className = 'text-gray-400';
+                        arrow.textContent = 'Открыть';
+
+                        row.appendChild(left);
+                        row.appendChild(arrow);
+
+                        row.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            this.openTopicWordModal(card);
+                        });
+
+                        frag.appendChild(row);
+                    });
+
+                    contentListDiv.appendChild(frag);
+                    // push history state so Back works
+                    this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicWords', param: { topicId: topic.id, filepath: topic.filepath } });
+                } catch (err) {
+                    console.error('Topic words load error:', err);
+                    contentListDiv.innerHTML = '<p class="text-red-500 text-center py-6">Не удалось загрузить слова темы.</p>';
+                }
+            },
+
+            // Open a modal showing a single word (image, word, translation)
+            openTopicWordModal(card) {
+                if (!card) return;
+                const img = document.getElementById('topic-word-image');
+                const wordEl = document.getElementById('topic-word-word');
+                const transEl = document.getElementById('topic-word-translation');
+
+                if (img) img.src = card.image || 'https://placehold.co/400x200/EEE/999?text=No+Image';
+                if (wordEl) wordEl.textContent = card.word || '';
+                if (transEl) transEl.textContent = card.translation || '';
+
+                this.openModal('topic-word-modal');
             },
 
             // ==================== ФИЛЬТРЫ И КАРТОЧКИ (Без изменений) ====================
