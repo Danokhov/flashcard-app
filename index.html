@@ -2344,11 +2344,67 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             },
 
             renderTopicsScreen(isBack = false) {
-                // Simple placeholder screen for Topics (currently empty)
                 document.getElementById('list-title').innerText = '🗂️ Все Темы';
                 document.getElementById('filter-controls').innerHTML = '';
                 const contentListDiv = document.getElementById('content-list');
-                contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Пока нет тем.</p>';
+                contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Загрузка тем...</p>';
+
+                // Load topics.json and render list
+                fetch(getBaseUrl() + 'topics.json').then(res => {
+                    if (!res.ok) throw new Error('Не удалось загрузить topics.json');
+                    return res.json();
+                }).then(topics => {
+                    if (!Array.isArray(topics) || topics.length === 0) {
+                        contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Пока нет тем.</p>';
+                        return;
+                    }
+
+                    contentListDiv.innerHTML = '';
+                    topics.forEach(topic => {
+                        const card = document.createElement('div');
+                        card.className = 'w-full p-4 bg-white rounded-xl shadow-md flex items-center gap-4';
+
+                        const img = document.createElement('img');
+                        img.src = getBaseUrl() + (topic.image || '');
+                        img.alt = topic.title || 'Тема';
+                        img.className = 'w-16 h-16 object-cover rounded-lg';
+                        img.loading = 'lazy';
+                        img.onerror = function() { this.onerror = null; this.src = 'https://placehold.co/80x80/DDD/666?text=Topic'; };
+
+                        const info = document.createElement('div');
+                        info.className = 'flex-1';
+                        const title = document.createElement('div');
+                        title.className = 'font-semibold text-gray-800';
+                        title.textContent = topic.title || 'Без названия';
+                        info.appendChild(title);
+
+                        const actions = document.createElement('div');
+                        actions.className = 'flex items-center gap-2';
+                        const openBtn = document.createElement('button');
+                        openBtn.type = 'button';
+                        openBtn.className = 'py-2 px-3 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition';
+                        openBtn.textContent = 'Открыть';
+                        openBtn.addEventListener('click', () => {
+                            // Start carousel for this topic (uses filepath from topics.json)
+                            if (topic.filepath) {
+                                this.startCarouselSession(topic.id || topic.title, topic.title || 'Тема', topic.filepath);
+                            } else {
+                                alert('Файловый путь для этой темы не указан.');
+                            }
+                        });
+
+                        actions.appendChild(openBtn);
+                        card.appendChild(img);
+                        card.appendChild(info);
+                        card.appendChild(actions);
+
+                        contentListDiv.appendChild(card);
+                    });
+                }).catch(err => {
+                    console.error('Topics load error:', err);
+                    contentListDiv.innerHTML = '<p class="text-red-500 text-center py-6">Не удалось загрузить темы.</p>';
+                });
+
                 this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicsScreen', param: null });
             },
 
