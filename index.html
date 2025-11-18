@@ -1645,7 +1645,15 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             async loadProgress() {
                 this.showScreen('loading-screen'); // Показываем загрузку
-                if (!this.isAuthReady) return; 
+                if (!this.isAuthReady) {
+                    // Попытка загрузить прогресс из localStorage когда Firebase недоступен
+                    try {
+                        this.loadLocalProgress();
+                    } catch (err) {
+                        console.warn('Local progress load failed:', err);
+                    }
+                    return;
+                }
 
                 try {
                     const docRef = this.getUserDocRef();
@@ -1678,22 +1686,62 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             },
             
             async saveProgress() {
-                if (!this.isAuthReady) return; 
-                try {
-                    const docRef = this.getUserDocRef();
-                    if (!docRef) {
-                        console.error("Не удалось получить ссылку на документ Firestore.");
-                        return;
+                // Если Firebase доступен — сохраняем в Firestore, иначе — в localStorage
+                if (this.isAuthReady) {
+                    try {
+                        const docRef = this.getUserDocRef();
+                        if (!docRef) {
+                            console.error("Не удалось получить ссылку на документ Firestore.");
+                            return;
+                        }
+                        await setDoc(docRef, { 
+                            cards: this.userProgress,
+                            isSubscriber: this.isSubscriber,
+                            activationDate: this.activationDate,
+                            selectedWeek: this.selectedWeek
+                        }, { merge: true });
+                        console.log('Прогресс сохранен в Firebase');
+                    } catch (error) {
+                        console.error('Ошибка сохранения прогресса:', error);
                     }
-                    await setDoc(docRef, { 
-                        cards: this.userProgress,
-                        isSubscriber: this.isSubscriber,
-                        activationDate: this.activationDate,
-                        selectedWeek: this.selectedWeek
-                    }, { merge: true });
-                    console.log('Прогресс сохранен в Firebase');
-                } catch (error) {
-                    console.error('Ошибка сохранения прогресса:', error);
+                } else {
+                    try {
+                        this.saveLocalProgress();
+                        console.log('Прогресс сохранен в localStorage');
+                    } catch (err) {
+                        console.error('Ошибка сохранения локального прогресса:', err);
+                    }
+                }
+            },
+
+            // Local storage helpers for offline / no-Firebase mode
+            loadLocalProgress() {
+                try {
+                    const raw = localStorage.getItem('flash_app_progress_v1');
+                    if (!raw) return;
+                    const data = JSON.parse(raw);
+                    this.userProgress = data.cards || {};
+                    this.isSubscriber = data.isSubscriber || false;
+                    this.activationDate = data.activationDate || null;
+                    this.selectedWeek = data.selectedWeek || 0;
+                    this.unlockedWeek = this.getMaxAvailableWeek();
+                    this.renderHomeScreen();
+                } catch (err) {
+                    console.error('Failed to parse local progress:', err);
+                }
+            },
+
+            saveLocalProgress() {
+                try {
+                    const payload = {
+                        cards: this.userProgress || {},
+                        isSubscriber: this.isSubscriber || false,
+                        activationDate: this.activationDate || null,
+                        selectedWeek: this.selectedWeek || 0
+                    };
+                    localStorage.setItem('flash_app_progress_v1', JSON.stringify(payload));
+                } catch (err) {
+                    console.error('Failed to save local progress:', err);
                 }
             },
 
@@ -1869,17 +1917,44 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         dueSetsCount++;
                         const setEl = document.createElement('div');
                         setEl.className = "bg-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 flex justify-between items-center transform transition hover:-translate-y-1";
-                        setEl.innerHTML = `
-                            <div>
-                                <span class="font-bold text-gray-800">${set.name}</span>
-                                <span class="text-sm text-orange-600 font-medium block">Доступно для повторения: ${dueCount}</span>
-                            </div>
-                                <button onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')"
-                                    class="py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center">
-                                Начать
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </button>
-                        `;
+
+                        const left = document.createElement('div');
+                        const title = document.createElement('span');
+                        title.className = 'font-bold text-gray-800';
+                        title.textContent = set.name;
+                        const info = document.createElement('span');
+                        info.className = 'text-sm text-orange-600 font-medium block';
+                        info.textContent = `Доступно для повторения: ${dueCount}`;
+                        left.appendChild(title);
+                        left.appendChild(info);
+
+                        const btn = document.createElement('button');
+                        btn.className = 'py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center';
+                        btn.type = 'button';
+                        btn.textContent = 'Начать';
+                        btn.addEventListener('click', () => this.promptForDirection(set.id, 'review', 'allsets'));
+
+                        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                        svg.setAttribute('class', 'w-4 h-4 ml-1');
+                        svg.setAttribute('fill', 'none');
+                        svg.setAttribute('stroke', 'currentColor');
+                        svg.setAttribute('viewBox', '0 0 24 24');
+                        const p1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        p1.setAttribute('stroke-linecap', 'round');
+                        p1.setAttribute('stroke-linejoin', 'round');
+                        p1.setAttribute('stroke-width', '2');
+                        p1.setAttribute('d', 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z');
+                        const p2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        p2.setAttribute('stroke-linecap', 'round');
+                        p2.setAttribute('stroke-linejoin', 'round');
+                        p2.setAttribute('stroke-width', '2');
+                        p2.setAttribute('d', 'M21 12a9 9 0 11-18 0 9 9 0 0118 0z');
+                        svg.appendChild(p1);
+                        svg.appendChild(p2);
+                        btn.appendChild(svg);
+
+                        setEl.appendChild(left);
+                        setEl.appendChild(btn);
                         list.appendChild(setEl);
                     }
                 });
@@ -1932,25 +2007,45 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
                     const weekContainer = document.createElement('div');
                     weekContainer.className = `w-full p-4 rounded-xl shadow-md ${buttonClass}`;
-                    weekContainer.innerHTML = `
-                        <div class="flex justify-between items-center mb-3">
-                            <div>
-                                <span class="font-bold text-lg ${!isAvailable ? 'text-gray-500' : 'text-gray-800'}">Неделя ${i}</span>
-                                <span class="block text-sm ${!isAvailable ? 'text-orange-600' : 'text-gray-500'}">${statusText}</span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="window.App.showWeekDetails(${i}, '${weekData.description.replace(/'/g, "\\'")}')" 
-                                    class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150">
-                                Подробнее
-                            </button>
-                            <button id="week-learn-${i}" 
-                                    class="w-full py-2 px-3 text-white font-semibold rounded-xl text-sm transition duration-150 ${isAvailable ? 'bg-blue-500 hover:bg-blue-600' : 'button-locked'}"
-                                    onclick="${isAvailable ? `window.App.selectAndRenderWeek(${i})` : 'void(0)'}">
-                                Учить
-                            </button>
-                        </div>
-                    `;
+
+                    const topRow = document.createElement('div');
+                    topRow.className = 'flex justify-between items-center mb-3';
+                    const leftCol = document.createElement('div');
+                    const titleSpan = document.createElement('span');
+                    titleSpan.className = `font-bold text-lg ${!isAvailable ? 'text-gray-500' : 'text-gray-800'}`;
+                    titleSpan.textContent = `Неделя ${i}`;
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = `block text-sm ${!isAvailable ? 'text-orange-600' : 'text-gray-500'}`;
+                    statusSpan.textContent = statusText;
+                    leftCol.appendChild(titleSpan);
+                    leftCol.appendChild(statusSpan);
+                    topRow.appendChild(leftCol);
+
+                    const bottomRow = document.createElement('div');
+                    bottomRow.className = 'grid grid-cols-2 gap-3';
+
+                    const detailsBtn = document.createElement('button');
+                    detailsBtn.className = 'w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150';
+                    detailsBtn.type = 'button';
+                    detailsBtn.textContent = 'Подробнее';
+                    detailsBtn.addEventListener('click', () => this.showWeekDetails(i, weekData.description));
+
+                    const learnBtn = document.createElement('button');
+                    learnBtn.id = `week-learn-${i}`;
+                    learnBtn.className = `w-full py-2 px-3 text-white font-semibold rounded-xl text-sm transition duration-150 ${isAvailable ? 'bg-blue-500 hover:bg-blue-600' : 'button-locked'}`;
+                    learnBtn.type = 'button';
+                    learnBtn.textContent = 'Учить';
+                    if (isAvailable) {
+                        learnBtn.addEventListener('click', () => this.selectAndRenderWeek(i));
+                    } else {
+                        learnBtn.disabled = true;
+                    }
+
+                    bottomRow.appendChild(detailsBtn);
+                    bottomRow.appendChild(learnBtn);
+
+                    weekContainer.appendChild(topRow);
+                    weekContainer.appendChild(bottomRow);
                     contentListDiv.appendChild(weekContainer);
                 });
                 
@@ -2002,7 +2097,42 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 contentListDiv.innerHTML = '';
                 
                 // 1. Ассоциации на неделю (Видео + Карусель)
-                const associationInstructionText = `<b>📌 Как учить слова:</b><br>
+                const associationInstructionText = `<b>📌 Как учить слова:</b><br>`;
+                // Render association video placeholder (lazy-load iframe on demand)
+                if (weekData.associationVideo) {
+                    const videoWrapper = document.createElement('div');
+                    videoWrapper.className = 'mb-4';
+
+                    // Poster wrapper keeps 16:9 aspect ratio
+                    const poster = document.createElement('div');
+                    poster.className = 'relative rounded-lg overflow-hidden bg-black';
+                    poster.style.paddingTop = '56.25%'; // 16:9 aspect
+
+                    const playBtn = document.createElement('button');
+                    playBtn.type = 'button';
+                    playBtn.className = 'absolute inset-0 w-full h-full flex items-center justify-center text-white';
+                    playBtn.setAttribute('aria-label', 'Play association video');
+                    playBtn.innerHTML = `<svg class="w-16 h-16 opacity-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v18l15-9L5 3z"/></svg>`;
+
+                    // Inject iframe only when user clicks play
+                    playBtn.addEventListener('click', () => {
+                        const iframe = document.createElement('iframe');
+                        iframe.style.position = 'absolute';
+                        iframe.style.top = '0';
+                        iframe.style.left = '0';
+                        iframe.style.width = '100%';
+                        iframe.style.height = '100%';
+                        iframe.src = weekData.associationVideo;
+                        iframe.setAttribute('frameborder', '0');
+                        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+                        iframe.setAttribute('allowfullscreen', '');
+                        poster.replaceWith(iframe);
+                    });
+
+                    poster.appendChild(playBtn);
+                    videoWrapper.appendChild(poster);
+                    contentListDiv.appendChild(videoWrapper);
+                }
 1. Просмотри видео ассоциаций для запоминания<br>
 2. После этого повтор с помощью карусели ассоциаций<br>
 3. Эти слова будут доступны в Сете за неделю`;
