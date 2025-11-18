@@ -596,7 +596,7 @@
                     <span id="carousel-word" class="text-2xl font-bold text-gray-800"></span>
                     <button onclick="window.App.speakGerman(window.App.carouselCards[window.App.currentCarouselIndex].word, event)" 
                             class="ml-2 text-blue-500 hover:text-blue-700">
-                        <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24" 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 6v12a1 1 0 01-1.707.707L5.586 15z"></path>
                         </svg>
                     </button>
@@ -2097,7 +2097,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 contentListDiv.innerHTML = '';
                 
                 // 1. Ассоциации на неделю (Видео + Карусель)
-                const associationInstructionText = `<b>📌 Как учить слова:</b><br>`;
+                const associationInstructionText = `<b>📌 Как учить слова:</b><br>
+1. Просмотри видео ассоциаций для запоминания<br>
+2. После этого повтор с помощью карусели ассоциаций<br>
+3. Эти слова будут доступны в Сете за неделю`;
                 // Render association video placeholder (lazy-load iframe on demand)
                 if (weekData.associationVideo) {
                     const videoWrapper = document.createElement('div');
