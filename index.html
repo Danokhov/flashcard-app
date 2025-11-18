@@ -703,11 +703,177 @@
             </div>
         </div>
 
-        <!-- Темы Block (always visible on main screen) -->
-        <section id="themes-block" class="mb-8">
-          <h2 class="text-xl font-bold mb-4">Темы</h2>
-          <div id="themes-list" class="grid grid-cols-2 gap-4"></div>
-        </section>
+                <!-- Темы: встроенная секция на главном экране -->
+                <section id="themes-block" class="mb-8">
+                    <h2 class="text-xl font-bold mb-4">Темы</h2>
+                    <!-- Темы/список тем -->
+                    <div id="themes-list" class="grid grid-cols-2 gap-4"></div>
+
+                    <!-- Секция списка слов (открывается при выборе темы) -->
+                    <div id="word-list-section" class="hidden mt-6">
+                        <button onclick="window.App.showThemes()" class="text-blue-500 underline mb-4">Назад к темам</button>
+                        <h1 id="word-list-title" class="text-2xl font-bold text-center text-gray-900 mb-4"></h1>
+                        <div id="word-list" class="space-y-4"></div>
+                    </div>
+
+                    <!-- Секция карточки слова -->
+                    <div id="word-card-section" class="hidden mt-6">
+                        <button onclick="window.App.showWordList({ title: document.getElementById('word-list-title').textContent, words: [] })" class="text-blue-500 underline mb-4">Назад к списку слов</button>
+                        <div id="word-card" class="rounded-xl shadow-xl overflow-hidden bg-white p-4">
+                            <img id="word-card-image" class="w-full h-48 object-cover mb-4" alt="Word Image" />
+                            <h1 id="word-card-word" class="text-2xl font-bold text-center text-gray-900 mb-2"></h1>
+                            <p id="word-card-translation" class="text-lg text-center text-gray-700"></p>
+                        </div>
+                    </div>
+                </section>
+
+                <script>
+                window.App = {
+                    async loadThemes() {
+                        try {
+                            const resp = await fetch('topics.json');
+                            if (!resp.ok) throw new Error('Failed to load topics.json');
+                            const topics = await resp.json();
+
+                            const themesList = document.getElementById('themes-list');
+                            themesList.innerHTML = '';
+
+                            if (!Array.isArray(topics) || topics.length === 0) {
+                                themesList.innerHTML = '<p class="text-red-500">Нет доступных тем для отображения</p>';
+                                return;
+                            }
+
+                            topics.forEach(topic => {
+                                const topicItem = document.createElement('div');
+                                topicItem.className = 'p-4 bg-white rounded-lg shadow text-center cursor-pointer flex flex-col items-center';
+
+                                const thumb = document.createElement('div');
+                                thumb.className = 'w-16 h-16 mb-2 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center';
+                                if (topic.image) {
+                                    const img = document.createElement('img');
+                                    img.src = topic.image;
+                                    img.alt = topic.title;
+                                    img.className = 'w-full h-full object-cover';
+                                    thumb.appendChild(img);
+                                }
+
+                                const title = document.createElement('div');
+                                title.className = 'text-sm font-semibold mt-1';
+                                title.textContent = topic.title;
+
+                                topicItem.appendChild(thumb);
+                                topicItem.appendChild(title);
+
+                                topicItem.onclick = async () => {
+                                    try {
+                                        const listContainer = document.getElementById('word-list');
+                                        const titleEl = document.getElementById('word-list-title');
+                                        titleEl.textContent = topic.title;
+                                        listContainer.innerHTML = '<p class="text-gray-500">Загрузка слов...</p>';
+
+                                        const fileResp = await fetch(topic.filepath);
+                                        if (!fileResp.ok) throw new Error('Failed to load ' + topic.filepath);
+                                        const words = await fileResp.json();
+                                        this.showWordList({ title: topic.title, words });
+                                    } catch (err) {
+                                        console.error('Error loading topic words:', err);
+                                        const listContainer = document.getElementById('word-list');
+                                        listContainer.innerHTML = '<p class="text-red-500">Ошибка загрузки списка слов</p>';
+                                        document.getElementById('word-list-section').classList.remove('hidden');
+                                        document.getElementById('themes-list').classList.add('hidden');
+                                    }
+                                };
+
+                                themesList.appendChild(topicItem);
+                            });
+                        } catch (error) {
+                            console.error('Error loading topics:', error);
+                            const themesList = document.getElementById('themes-list');
+                            themesList.innerHTML = '<p class="text-red-500">Ошибка загрузки данных</p>';
+                        }
+                    },
+
+                    showThemes() {
+                        document.getElementById('themes-list').classList.remove('hidden');
+                        document.getElementById('word-list-section').classList.add('hidden');
+                        document.getElementById('word-card-section').classList.add('hidden');
+                    },
+
+                    showWordList(topic) {
+                        document.getElementById('themes-list').classList.add('hidden');
+                        document.getElementById('word-list-section').classList.remove('hidden');
+                        document.getElementById('word-card-section').classList.add('hidden');
+
+                        const wordListTitle = document.getElementById('word-list-title');
+                        const wordList = document.getElementById('word-list');
+
+                        wordListTitle.textContent = topic.title;
+                        wordList.innerHTML = '';
+
+                        if (!Array.isArray(topic.words) || topic.words.length === 0) {
+                            wordList.innerHTML = '<p class="text-gray-500">Список слов пуст</p>';
+                            return;
+                        }
+
+                        topic.words.forEach(word => {
+                            const wordItem = document.createElement('div');
+                            wordItem.className = 'flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow';
+
+                            const left = document.createElement('div');
+                            left.className = 'flex items-center space-x-4';
+
+                            const imgWrap = document.createElement('div');
+                            imgWrap.className = 'w-14 h-14 rounded-md overflow-hidden bg-white border';
+                            if (word.image) {
+                                const i = document.createElement('img');
+                                i.src = word.image;
+                                i.alt = word.word;
+                                i.className = 'w-full h-full object-cover';
+                                imgWrap.appendChild(i);
+                            }
+
+                            const wordText = document.createElement('span');
+                            wordText.textContent = word.word;
+                            wordText.className = 'text-lg font-bold';
+                            wordText.style.cursor = 'pointer';
+                            wordText.onclick = () => this.showWordCard(word);
+
+                            left.appendChild(imgWrap);
+                            left.appendChild(wordText);
+
+                            const learnButton = document.createElement('button');
+                            learnButton.textContent = 'Учить';
+                            learnButton.className = 'px-4 py-2 bg-blue-500 text-white rounded';
+                            learnButton.onclick = () => {
+                                learnButton.textContent = 'В учебе';
+                                learnButton.className = 'px-4 py-2 bg-green-500 text-white rounded';
+                            };
+
+                            wordItem.appendChild(left);
+                            wordItem.appendChild(learnButton);
+                            wordList.appendChild(wordItem);
+                        });
+                    },
+
+                    showWordCard(word) {
+                        document.getElementById('themes-list').classList.add('hidden');
+                        document.getElementById('word-list-section').classList.add('hidden');
+                        document.getElementById('word-card-section').classList.remove('hidden');
+
+                        const wordCardImage = document.getElementById('word-card-image');
+                        const wordCardWord = document.getElementById('word-card-word');
+                        const wordCardTranslation = document.getElementById('word-card-translation');
+
+                        wordCardImage.src = word.image || '';
+                        wordCardWord.textContent = word.word || '';
+                        wordCardTranslation.textContent = word.translation || '';
+                    }
+                };
+
+                window.onload = () => {
+                    window.App.loadThemes();
+                };
+                </script>
 
     </div>
 
@@ -893,186 +1059,6 @@
     <!-- ===== КОНЕЦ: Модальное окно для Транскрипции ===== -->
 
 
-    <!-- Темы Section -->
-<div id="themes-section" class="hidden">
-  <h1 class="text-2xl font-bold text-center text-gray-900 mb-4">Темы</h1>
-  <div id="themes-list" class="grid grid-cols-2 gap-4">
-    <!-- Topics will be dynamically inserted here -->
-  </div>
-</div>
-
-<!-- Word List Section -->
-<div id="word-list-section" class="hidden">
-  <button onclick="window.App.showThemes()" class="text-blue-500 underline mb-4">Назад к темам</button>
-  <h1 id="word-list-title" class="text-2xl font-bold text-center text-gray-900 mb-4"></h1>
-  <div id="word-list" class="space-y-4">
-    <!-- Words will be dynamically inserted here -->
-  </div>
-</div>
-
-<!-- Word Card Section -->
-<div id="word-card-section" class="hidden">
-  <button onclick="window.App.showWordList()" class="text-blue-500 underline mb-4">Назад к списку слов</button>
-  <div id="word-card" class="rounded-xl shadow-xl overflow-hidden bg-white p-4">
-    <img id="word-card-image" class="w-full h-48 object-cover mb-4" alt="Word Image" />
-    <h1 id="word-card-word" class="text-2xl font-bold text-center text-gray-900 mb-2"></h1>
-    <p id="word-card-translation" class="text-lg text-center text-gray-700"></p>
-  </div>
-</div>
-
-<script>
-window.App = {
-    async loadThemes() {
-        try {
-            console.log('Loading topics list...');
-            const resp = await fetch('topics.json');
-            if (!resp.ok) throw new Error('Failed to load topics.json');
-            const topics = await resp.json();
-
-            const themesList = document.getElementById('themes-list');
-            themesList.innerHTML = '';
-
-            if (!Array.isArray(topics) || topics.length === 0) {
-                themesList.innerHTML = '<p class="text-red-500">Нет доступных тем для отображения</p>';
-                document.getElementById('themes-section').classList.remove('hidden');
-                return;
-            }
-
-            topics.forEach(topic => {
-                const topicItem = document.createElement('div');
-                topicItem.className = 'p-4 bg-white rounded-lg shadow text-center cursor-pointer flex flex-col items-center';
-
-                const thumb = document.createElement('div');
-                thumb.className = 'w-16 h-16 mb-2 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center';
-                if (topic.image) {
-                    const img = document.createElement('img');
-                    img.src = topic.image;
-                    img.alt = topic.title;
-                    img.className = 'w-full h-full object-cover';
-                    thumb.appendChild(img);
-                }
-
-                const title = document.createElement('div');
-                title.className = 'text-sm font-semibold mt-1';
-                title.textContent = topic.title;
-
-                topicItem.appendChild(thumb);
-                topicItem.appendChild(title);
-
-                topicItem.onclick = async () => {
-                    // fetch words for this topic when opened
-                    try {
-                        const listContainer = document.getElementById('word-list');
-                        const titleEl = document.getElementById('word-list-title');
-                        titleEl.textContent = topic.title;
-                        listContainer.innerHTML = '<p class="text-gray-500">Загрузка слов...</p>';
-
-                        const fileResp = await fetch(topic.filepath);
-                        if (!fileResp.ok) throw new Error('Failed to load ' + topic.filepath);
-                        const words = await fileResp.json();
-                        this.showWordList({ title: topic.title, words });
-                    } catch (err) {
-                        console.error('Error loading topic words:', err);
-                        const listContainer = document.getElementById('word-list');
-                        listContainer.innerHTML = '<p class="text-red-500">Ошибка загрузки списка слов</p>';
-                        document.getElementById('word-list-section').classList.remove('hidden');
-                        document.getElementById('themes-section').classList.add('hidden');
-                    }
-                };
-
-                themesList.appendChild(topicItem);
-            });
-
-            // make topics visible on main screen
-            document.getElementById('themes-section').classList.remove('hidden');
-        } catch (error) {
-            console.error('Error loading topics:', error);
-            const themesList = document.getElementById('themes-list');
-            themesList.innerHTML = '<p class="text-red-500">Ошибка загрузки данных</p>';
-            document.getElementById('themes-section').classList.remove('hidden');
-        }
-    },
-
-    showThemes() {
-        document.getElementById('themes-section').classList.remove('hidden');
-        document.getElementById('word-list-section').classList.add('hidden');
-        document.getElementById('word-card-section').classList.add('hidden');
-    },
-
-    showWordList(topic) {
-        document.getElementById('themes-section').classList.add('hidden');
-        document.getElementById('word-list-section').classList.remove('hidden');
-        document.getElementById('word-card-section').classList.add('hidden');
-
-        const wordListTitle = document.getElementById('word-list-title');
-        const wordList = document.getElementById('word-list');
-
-        wordListTitle.textContent = topic.title;
-        wordList.innerHTML = '';
-
-        if (!Array.isArray(topic.words) || topic.words.length === 0) {
-            wordList.innerHTML = '<p class="text-gray-500">Список слов пуст</p>';
-            return;
-        }
-
-        topic.words.forEach(word => {
-            const wordItem = document.createElement('div');
-            wordItem.className = 'flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow';
-
-            const left = document.createElement('div');
-            left.className = 'flex items-center space-x-4';
-
-            const imgWrap = document.createElement('div');
-            imgWrap.className = 'w-14 h-14 rounded-md overflow-hidden bg-white border';
-            if (word.image) {
-                const i = document.createElement('img');
-                i.src = word.image;
-                i.alt = word.word;
-                i.className = 'w-full h-full object-cover';
-                imgWrap.appendChild(i);
-            }
-
-            const wordText = document.createElement('span');
-            wordText.textContent = word.word;
-            wordText.className = 'text-lg font-bold';
-            wordText.style.cursor = 'pointer';
-            wordText.onclick = () => this.showWordCard(word);
-
-            left.appendChild(imgWrap);
-            left.appendChild(wordText);
-
-            const learnButton = document.createElement('button');
-            learnButton.textContent = 'Учить';
-            learnButton.className = 'px-4 py-2 bg-blue-500 text-white rounded';
-            learnButton.onclick = () => {
-                learnButton.textContent = 'В учебе';
-                learnButton.className = 'px-4 py-2 bg-green-500 text-white rounded';
-            };
-
-            wordItem.appendChild(left);
-            wordItem.appendChild(learnButton);
-            wordList.appendChild(wordItem);
-        });
-    },
-
-    showWordCard(word) {
-        document.getElementById('themes-section').classList.add('hidden');
-        document.getElementById('word-list-section').classList.add('hidden');
-        document.getElementById('word-card-section').classList.remove('hidden');
-
-        const wordCardImage = document.getElementById('word-card-image');
-        const wordCardWord = document.getElementById('word-card-word');
-        const wordCardTranslation = document.getElementById('word-card-translation');
-
-        wordCardImage.src = word.image || '';
-        wordCardWord.textContent = word.word || '';
-        wordCardTranslation.textContent = word.translation || '';
-    }
-};
-
-window.onload = () => {
-    window.App.loadThemes();
-};
-</script>
+    
 </body>
 </html>
