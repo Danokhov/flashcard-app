@@ -948,17 +948,17 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
          * Утилита для получения базового URL (корневой папки приложения)
          */
         function getBaseUrl() {
+            // Memoized — compute once per page load to avoid repeated work
+            if (getBaseUrl._cached) return getBaseUrl._cached;
             const path = window.location.pathname.split('/');
             // Удаляем имя файла (index.html)
             path.pop(); 
             // Получаем путь к папке (например, '/subfolder/')
             const folderPath = path.join('/') + (path.length > 1 ? '/' : ''); 
-            
-            // Собираем полный базовый URL: 'https://[your-site-name].netlify.app/subfolder/'
+            // Собираем полный базовый URL
             const base = window.location.origin + folderPath;
-            
-            // Убираем конечный слэш, если это корень, или оставляем, если есть путь
-            return base.endsWith('/') ? base : base + '/';
+            getBaseUrl._cached = base.endsWith('/') ? base : base + '/';
+            return getBaseUrl._cached;
         }
 
         /**
@@ -1224,8 +1224,19 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             };
 
-            window.addEventListener('scroll', checkPosition);
-            window.addEventListener('resize', checkPosition);
+            // Throttle scroll/resize using requestAnimationFrame to reduce work
+            let ticking = false;
+            const requestCheck = () => {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(() => {
+                        checkPosition();
+                        ticking = false;
+                    });
+                }
+            };
+            window.addEventListener('scroll', requestCheck, { passive: true });
+            window.addEventListener('resize', requestCheck);
             // Проверяем сразу при загрузке (на случай, если уже проскроллено)
             setTimeout(checkPosition, 100);
         },
