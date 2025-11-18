@@ -840,7 +840,7 @@
             <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
             <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
             <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
-            <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
+            <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Шлиммес sein könnte.</p>
             <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
             <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
             <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
@@ -874,7 +874,7 @@
             <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
             <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen.</p>
             <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und изgerуht.</p>
-            <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
+            <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war и die Medikamente gut wirken.</p>
         </div>
 
         <button onclick="window.App.closeModal('transcript-modal')"
@@ -915,10 +915,38 @@
 
 <script>
 window.App = {
-  showThemes() {
-    document.getElementById('themes-section').classList.remove('hidden');
-    document.getElementById('word-list-section').classList.add('hidden');
-    document.getElementById('word-card-section').classList.add('hidden');
+  async loadThemes() {
+    try {
+      const healthResponse = await fetch('carousel_health.json');
+      const cityResponse = await fetch('carousel_city.json');
+
+      if (!healthResponse.ok || !cityResponse.ok) {
+        throw new Error('Failed to load JSON files');
+      }
+
+      const healthData = await healthResponse.json();
+      const cityData = await cityResponse.json();
+
+      const themesList = document.getElementById('themes-list');
+
+      const topics = [
+        { id: 'health', title: 'Здоровье', words: healthData },
+        { id: 'city', title: 'Город', words: cityData }
+      ];
+
+      topics.forEach(topic => {
+        const topicItem = document.createElement('div');
+        topicItem.className = 'p-4 bg-blue-500 text-white rounded-lg shadow text-center cursor-pointer';
+        topicItem.textContent = topic.title;
+        topicItem.onclick = () => this.showWordList(topic);
+
+        themesList.appendChild(topicItem);
+      });
+    } catch (error) {
+      console.error('Error loading themes:', error);
+      const themesList = document.getElementById('themes-list');
+      themesList.innerHTML = '<p class="text-red-500">Ошибка загрузки данных</p>';
+    }
   },
 
   showWordList(topic) {
@@ -967,40 +995,6 @@ window.App = {
     wordCardImage.src = word.image;
     wordCardWord.textContent = word.word;
     wordCardTranslation.textContent = word.translation;
-  },
-
-  loadThemes() {
-    const themesList = document.getElementById('themes-list');
-
-    const topics = [
-      {
-        id: 'health',
-        title: 'Здоровье',
-        words: [
-          { word: 'das Antibiotikum', translation: 'антибиотик', image: 'https://placehold.co/400x200/F8D7DA/721C24?text=Antibiotikum' },
-          { word: 'die Beschwerde', translation: 'жалоба', image: 'https://placehold.co/400x200/FFE7A0/7C4B00?text=Beschwerde' },
-          // ...other words from carousel_health.json
-        ]
-      },
-      {
-        id: 'city',
-        title: 'Город',
-        words: [
-          { word: 'der Job', translation: 'работа, должность', image: 'https://placehold.co/300x200/3B82F6/FFFFFF?text=Job' },
-          { word: 'das Büro', translation: 'офис', image: 'https://placehold.co/300x200/1F2937/FFFFFF?text=Buero' },
-          // ...other words from carousel_city.json
-        ]
-      }
-    ];
-
-    topics.forEach(topic => {
-      const topicItem = document.createElement('div');
-      topicItem.className = 'p-4 bg-blue-500 text-white rounded-lg shadow text-center cursor-pointer';
-      topicItem.textContent = topic.title;
-      topicItem.onclick = () => this.showWordList(topic);
-
-      themesList.appendChild(topicItem);
-    });
   }
 };
 
