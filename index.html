@@ -596,8 +596,9 @@
                     <span id="carousel-word" class="text-2xl font-bold text-gray-800"></span>
                     <button onclick="window.App.speakGerman(window.App.carouselCards[window.App.currentCarouselIndex].word, event)" 
                             class="ml-2 text-blue-500 hover:text-blue-700">
-                        <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24" 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 6v12a1 1 0 01-1.707.707L5.586 15z"></path>
+                        <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>
                     </button>
                 </div>
@@ -701,6 +702,12 @@
                 </div>
             </div>
         </div>
+
+        <!-- Темы Block (always visible on main screen) -->
+        <section id="themes-block" class="mb-8">
+          <h2 class="text-xl font-bold mb-4">Темы</h2>
+          <div id="themes-list" class="grid grid-cols-2 gap-4"></div>
+        </section>
 
     </div>
 
@@ -837,44 +844,44 @@
             <!-- <p class="mb-4 font-bold text-gray-800">Der Termin beim Arzt</p> -->
             <p class="mb-3">Als Thomas an einem Montagmorgen aufwacht, merkt er sofort, dass etwas не stimmt.</p>
             <p class="mb-3">Er ist völlig verschwitzt, sein Kopf tut weh, der Rücken ist steif, und er hat Schmerzen im Magen.</p>
-            <p class="mb-3">Außerdem fühlt er sich müde und schwach.</p>
+            <p class="mb-3">Außerdem fühlt er sich müde и schwach.</p>
             <p class="mb-3">Seine Frau schaut ihn besorgt an:</p>
             <p class="mb-3">„Thomas, du siehst gar nicht gut aus. Ich mache mir Sorgen. Du solltest lieber zum Arzt gehen.“</p>
-            <p class="mb-3">Thomas nickt, aber er hat Angst, dass es etwas Schlimmes sein könnte.</p>
+            <p class="mb-3">Thomas nickt, aber er hat Angst, dass es что-то Шлиммес sein könnte.</p>
             <p class="mb-3">„Vielleicht ist es nur Stress“, murmelt er.</p>
             <p class="mb-3">„Vielleicht“, antwortet sie ruhig, „aber deine Gesundheit ist wichtiger.“</p>
             <p class="mb-3">Er ruft an der Rezeption der Praxis an.</p>
             <p class="mb-3">Die Mitarbeiterin hört ihm aufmerksam zu, als er seine Beschwerden beschreibt.</p>
-            <p class="mb-3">„Kommen Sie heute Nachmittag vorbei“, sagt sie. „Wenn Sie Schmerzen haben, bekommen Sie natürlich schnell einen Termin.“</p>
+            <p class="mb-3">„Kommen Sie сегодня Nachmittag vorbei“, sagt sie. „Если у вас болит, вы, конечно, быстро получите встречу.“</p>
             <p class="mb-3">Am Nachmittag sitzt Thomas im Wartezimmer.</p>
             <p class="mb-3">Es ist stickig, und er beginnt wieder zu schwitzen.</p>
-            <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, und jemand stöhnt leлеise vor Schmerzen.</p>
-            <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Magen brennt stärker, und ihm wird schwindlig.</p>
-            <p class="mb-3">Endlich ruft die Arzthelferin: „Herr Berger, bitte!“</p>
+            <p class="mb-3">Viele Menschen warten. Eine ältere Frau hustet, ein Kind hält sich das Auge, и кто-то стонет leлеise vor Schmerzen.</p>
+            <p class="mb-3">Thomas versucht ruhig zu atmen, doch der Мagen brennt stärker, и ему становится schwindlig.</p>
+            <p class="mb-3">Endlich ruft die Арзтехельферин: „Herr Berger, bitte!“</p>
             <p class="mb-3">Dr. Keller, ein freundlicher Hausarzt, begrüßt ihn:</p>
             <p class="mb-3">„Was fehlt Ihnen?“</p>
             <p class="mb-3">Thomas erzählt, dass er seit zwei Tagen kaum essen kann, sich schwach fühlt und nachts leidet.</p>
-            <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab und erklärt:</p>
-            <p class="mb-3">„Sie haben wahrscheinlich eine Magenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – drei Mal am Tag nach dem Essen. Hier ist außerdem ein Rezept, damit Sie die Medikamente in der Apotheke bekommen.“</p>
+            <p class="mb-3">Der Arzt misst den Blutdruck, hört den Körper ab и объясняет:</p>
+            <p class="mb-3">„Sie haben wahrscheinlich eine Мagenentzündung. Ich verschreibe Ihnen starke Antibiotika. Sie müssen sie regelmäßig einnehmen – три Mal ам Tag nach dem Essen. Hier ist außerdem ein Rezept, чтобы Sie die Medikamente in der Apotheke bekommen.“</p>
             <p class="mb-3">Dann fügt er hinzu:</p>
-            <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Magen sie besser verträgt. Und Sie sollen mindestens drei Tage zu Hause bleiben und sich ausruhen.“</p>
+            <p class="mb-3">„Sie sollen die Antibiotika immer nach dem Essen einnehmen, damit der Мagen sie besser verträgt. И вам нужно как минимум три дня оставаться дома и отдыхать.";</p>
             <p class="mb-3">Thomas fragt:</p>
             <p class="mb-3">„Wie lange soll ich die Tabletten nehmen?“</p>
             <p class="mb-3">Dr. Keller antwortet:</p>
-            <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.“</p>
-            <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Vermeiden Sie Kaffee und Alkohol.“</p>
+            <p class="mb-3">„Fünf Tage, dann sollte es Ihnen deutlich besser gehen.";</p>
+            <p class="mb-3">„Die Antibiotika wirken schnell, aber Sie brauchen Ruhe. Избегайте кофе и алкоголя.";</p>
             <p class="mb-3">Dann fragt er:</p>
             <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
             <p class="mb-3">Thomas antwortet:</p>
-            <p class="mb-3">„Ja, bitte – für drei Tage.“</p>
-            <p class="mb-3">Dr. Keller notiert es und lächelt:</p>
-            <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.“</p>
-            <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee und Suppe ans Bett:</p>
-            <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.“</p>
+            <p class="mb-3">„Ja, bitte – для три дня.";</p>
+            <p class="mb-3">Dr. Keller notiert es и lächelt:</p>
+            <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.";</p>
+            <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee и супpe ans Bett:</p>
+            <p class="mb-3">„Ich werde dich gut pflegen, bis es dir besser geht.";</p>
             <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
-            <p class="mb-3">Die Schmerzen sind fast weg, das Brennen im Magen ist vorbei, und er kann wieder schlafen.</p>
-            <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und изgeruht.</p>
-            <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war und die Medikamente gut wirken.</p>
+            <p class="mb-3">Die Schmerzen sind почти weg, das Brennen im Мagen ist vorbei, и он может снова спать.</p>
+            <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und изgerуht.</p>
+            <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos было и die Medikamente gut wirken.</p>
         </div>
 
         <button onclick="window.App.closeModal('transcript-modal')"
@@ -886,2134 +893,186 @@
     <!-- ===== КОНЕЦ: Модальное окно для Транскрипции ===== -->
 
 
-    <!-- "МАГИЯ" (JavaScript) -->
-<<script type="module">
-        // Импортируем необходимые модули Firebase (v9+)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-        
-        // ==========================================================
-        // !!! ВАШИ НАСТРОЙКИ FIREBASE !!!
-        // ЗАМЕНИТЕ ЭТИ ЗАГЛУШКИ НА ВАШИ РЕАЛЬНЫЕ ДАННЫЕ
-        // ==========================================================
-        
-        // 1. ВАШ ОБЪЕКТ КОНФИГУРАЦИИ
-        // Если у вас нет глобальных переменных Canvas, вы должны использовать свою:
-        const MY_FIREBASE_CONFIG = {
-apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
-  authDomain: "flash-app-19ddb.firebaseapp.com",
-  projectId: "flash-app-19ddb",
-  storageBucket: "flash-app-19ddb.firebasestorage.app",
-  messagingSenderId: "779096518661",
-  appId: "1:779096518661:web:397ba47299418261d56c6c"
-        };
-        
-        // 2. ВАШ ID ПРИЛОЖЕНИЯ (используется для пути к документу, если у вас своя структура)
-        const MY_APP_ID = "flash-app-19ddb"; // <-- ЗАМЕНИТЬ (Может быть любым ID, если вы не используете структуру Canvas)
+    <!-- Темы Section -->
+<div id="themes-section" class="hidden">
+  <h1 class="text-2xl font-bold text-center text-gray-900 mb-4">Темы</h1>
+  <div id="themes-list" class="grid grid-cols-2 gap-4">
+    <!-- Topics will be dynamically inserted here -->
+  </div>
+</div>
 
-        // 3. Имя вашей коллекции/путь: Если вы не используете путь Canvas (artifacts/{appId}/users/{userId}/progress/data),
-        //    Укажите здесь имя вашей коллекции, например: 'user_progress'
-        const MY_COLLECTION_NAME = "userProgress"; // <-- ЗАМЕНИТЬ (например: 'user_progress')
+<!-- Word List Section -->
+<div id="word-list-section" class="hidden">
+  <button onclick="window.App.showThemes()" class="text-blue-500 underline mb-4">Назад к темам</button>
+  <h1 id="word-list-title" class="text-2xl font-bold text-center text-gray-900 mb-4"></h1>
+  <div id="word-list" class="space-y-4">
+    <!-- Words will be dynamically inserted here -->
+  </div>
+</div>
 
-        // Используем Telegram ID как ID пользователя, т.к. мы отказываемся от Auth Canvas
-        const MY_USER_ID_SOURCE = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe?.user?.id?.toString()) 
-                                ? window.Telegram.WebApp.initDataUnsafe.user.id.toString()
-                                : "fallback_web_user_" + Math.random().toString(36).substring(7);
+<!-- Word Card Section -->
+<div id="word-card-section" class="hidden">
+  <button onclick="window.App.showWordList()" class="text-blue-500 underline mb-4">Назад к списку слов</button>
+  <div id="word-card" class="rounded-xl shadow-xl overflow-hidden bg-white p-4">
+    <img id="word-card-image" class="w-full h-48 object-cover mb-4" alt="Word Image" />
+    <h1 id="word-card-word" class="text-2xl font-bold text-center text-gray-900 mb-2"></h1>
+    <p id="word-card-translation" class="text-lg text-center text-gray-700"></p>
+  </div>
+</div>
 
-        // ==========================================================
-        // КОНЕЦ ВАШИХ НАСТРОЕК
-        // ==========================================================
+<script>
+window.App = {
+    async loadThemes() {
+        try {
+            console.log('Loading topics list...');
+            const resp = await fetch('topics.json');
+            if (!resp.ok) throw new Error('Failed to load topics.json');
+            const topics = await resp.json();
 
-        // Переменные для инициализации теперь используют ваши настройки
-        const firebaseConfig = MY_FIREBASE_CONFIG;
-        const appId = MY_APP_ID; 
-        const initialAuthToken = null; // Отключаем Auth Canvas
-        
-        // ==========================================================
-        // 1. КОНФИГУРАЦИЯ И ДАННЫЕ (Conceptual Data Module)
-        // ==========================================================
-        
-        // Интервалы повторения в днях (от 1 до 6 боксов)
-        const REPETITION_INTERVALS = {
-            1: 0,  // Первое повторение — в тот же день
-            2: 1,  // 1 день
-            3: 3,  // 3 дня
-            4: 7,  // 7 дней
-            5: 14, // 2 недели
-            6: 30  // 1 месяц
-        };
-        
-        /**
-         * Утилита для получения базового URL (корневой папки приложения)
-         */
-        function getBaseUrl() {
-            const path = window.location.pathname.split('/');
-            // Удаляем имя файла (index.html)
-            path.pop(); 
-            // Получаем путь к папке (например, '/subfolder/')
-            const folderPath = path.join('/') + (path.length > 1 ? '/' : ''); 
-            
-            // Собираем полный базовый URL: 'https://[your-site-name].netlify.app/subfolder/'
-            const base = window.location.origin + folderPath;
-            
-            // Убираем конечный слэш, если это корень, или оставляем, если есть путь
-            return base.endsWith('/') ? base : base + '/';
+            const themesList = document.getElementById('themes-list');
+            themesList.innerHTML = '';
+
+            if (!Array.isArray(topics) || topics.length === 0) {
+                themesList.innerHTML = '<p class="text-red-500">Нет доступных тем для отображения</p>';
+                document.getElementById('themes-section').classList.remove('hidden');
+                return;
+            }
+
+            topics.forEach(topic => {
+                const topicItem = document.createElement('div');
+                topicItem.className = 'p-4 bg-white rounded-lg shadow text-center cursor-pointer flex flex-col items-center';
+
+                const thumb = document.createElement('div');
+                thumb.className = 'w-16 h-16 mb-2 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center';
+                if (topic.image) {
+                    const img = document.createElement('img');
+                    img.src = topic.image;
+                    img.alt = topic.title;
+                    img.className = 'w-full h-full object-cover';
+                    thumb.appendChild(img);
+                }
+
+                const title = document.createElement('div');
+                title.className = 'text-sm font-semibold mt-1';
+                title.textContent = topic.title;
+
+                topicItem.appendChild(thumb);
+                topicItem.appendChild(title);
+
+                topicItem.onclick = async () => {
+                    // fetch words for this topic when opened
+                    try {
+                        const listContainer = document.getElementById('word-list');
+                        const titleEl = document.getElementById('word-list-title');
+                        titleEl.textContent = topic.title;
+                        listContainer.innerHTML = '<p class="text-gray-500">Загрузка слов...</p>';
+
+                        const fileResp = await fetch(topic.filepath);
+                        if (!fileResp.ok) throw new Error('Failed to load ' + topic.filepath);
+                        const words = await fileResp.json();
+                        this.showWordList({ title: topic.title, words });
+                    } catch (err) {
+                        console.error('Error loading topic words:', err);
+                        const listContainer = document.getElementById('word-list');
+                        listContainer.innerHTML = '<p class="text-red-500">Ошибка загрузки списка слов</p>';
+                        document.getElementById('word-list-section').classList.remove('hidden');
+                        document.getElementById('themes-section').classList.add('hidden');
+                    }
+                };
+
+                themesList.appendChild(topicItem);
+            });
+
+            // make topics visible on main screen
+            document.getElementById('themes-section').classList.remove('hidden');
+        } catch (error) {
+            console.error('Error loading topics:', error);
+            const themesList = document.getElementById('themes-list');
+            themesList.innerHTML = '<p class="text-red-500">Ошибка загрузки данных</p>';
+            document.getElementById('themes-section').classList.remove('hidden');
+        }
+    },
+
+    showThemes() {
+        document.getElementById('themes-section').classList.remove('hidden');
+        document.getElementById('word-list-section').classList.add('hidden');
+        document.getElementById('word-card-section').classList.add('hidden');
+    },
+
+    showWordList(topic) {
+        document.getElementById('themes-section').classList.add('hidden');
+        document.getElementById('word-list-section').classList.remove('hidden');
+        document.getElementById('word-card-section').classList.add('hidden');
+
+        const wordListTitle = document.getElementById('word-list-title');
+        const wordList = document.getElementById('word-list');
+
+        wordListTitle.textContent = topic.title;
+        wordList.innerHTML = '';
+
+        if (!Array.isArray(topic.words) || topic.words.length === 0) {
+            wordList.innerHTML = '<p class="text-gray-500">Список слов пуст</p>';
+            return;
         }
 
-        /**
-         * Данные наборов слов
-         */
-        const WORD_SETS = [
-            // Неделя 1
-            { id: "a1_nouns_1", week: 1, name: "Сущ. A1 (Часть 1)", cards: [
-                { id: "die_Beschwerde", front: "жалоба, недомогание", back: "die Beschwerde", hintImage: "images/beschwerden.png" },
-                { id: "brennen", front: "гореть, жечь", back: "brennen", hintImage: null },
-                { id: "das_Geschaeft", front: "магазин", back: "das Geschäft", hintImage: "https://placehold.co/300x200/22C55E/FFFFFF?text=Geschaeft" },
-                { id: "der_Park", front: "парк", back: "der Park", hintImage: "https://placehold.co/300x200/059669/FFFFFF?text=Park" },
-                { id: "die_Bruecke", front: "мост", back: "die Brücke", hintImage: "https://placehold.co/300x200/4F46E5/FFFFFF?text=Bruecke" },
-                { id: "das_Rathaus", front: "мэрия, ратуша", back: "das Rathaus", hintImage: "https://placehold.co/300x200/3B82F6/FFFFFF?text=Rathaus" },
-                { id: "die_Kirche", front: "церковь", back: "die Kirche", hintImage: "https://placehold.co/300x200/A855F7/FFFFFF?text=Kirche" },
-                { id: "der_Supermarkt", front: "супермаркет", back: "der Supermarkt", hintImage: "https://placehold.co/300x200/EC4899/FFFFFF?text=Supermarkt" },
-                { id: "das_Krankenhaus", front: "больница", back: "das Krankenhaus", hintImage: "https://placehold.co/300x200/F97316/FFFFFF?text=Krankenhaus" },
-                { id: "die_Apotheke", front: "аптека", back: "die Apotheke", hintImage: "https://placehold.co/300x200/10B981/FFFFFF?text=Apotheke" },
-                { id: "das_Museum", front: "музей", back: "das Museum", hintImage: "https://placehold.co/300x200/6B7280/FFFFFF?text=Museum" },
-                { id: "der_Platz", front: "площадь", back: "der Platz", hintImage: "https://placehold.co/300x200/EF4444/FFFFFF?text=Platz" },
-                { id: "die_Haltestelle", front: "остановка", back: "die Haltestelle", hintImage: "https://placehold.co/300x200/374151/FFFFFF?text=Haltestelle" },
-                { id: "das_Cafe", front: "кафе", back: "das Café", hintImage: "https://placehold.co/300x200/FBBF24/FFFFFF?text=Cafe" },
-                { id: "der_Flughafen", front: "аэропорт", back: "der Flughafen", hintImage: "https://placehold.co/300x200/6366F1/FFFFFF?text=Flughafen" }
-            ]},
-            // Неделя 2
-            { id: "a1_nouns_2", week: 2, name: "Сущ. A1 (Часть 2)", cards: [
-                { id: "das_Auto", front: "машина", back: "das Auto" },
-                { id: "das_Haus", front: "дом", back: "das Haus" }
-            ]},
-            // Неделя 3 (Пока заблокирована для новых пользователей)
-            { id: "a1_nouns_3", week: 3, name: "Сущ. A1 (Часть 3)", cards: [
-                { id: "der_Mann", front: "мужчина", back: "der Mann" },
-                { id: "die_Stadt", front: "город", back: "die Stadt" }
-            ]},
-            // Неделя 4 (Новый набор)
-            { id: "a1_verbs_1", week: 4, name: "Глаголы A1 (Часть 1)", cards: [
-                { id: "machen", front: "делать", back: "machen" },
-                { id: "gehen", front: "идти", back: "gehen" }
-            ]},
-        ];
+        topic.words.forEach(word => {
+            const wordItem = document.createElement('div');
+            wordItem.className = 'flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow';
 
-        /**
-         * Карта контента для каждой недели. 
-         * Добавлено поле 'description' для модального окна "Подробнее".
-         */
-        const WEEKLY_CONTENT_MAP = {
-            1: {
-                associationVideo: "https://www.youtube.com/embed/jNQXAC9IVRw?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для запоминания существительных A1",
-                storyLink: "text1.html", // Относительный путь для загрузки внутри SPA
-                wordSetId: "a1_nouns_1",
-                carouselId: "week1", 
-                description: "В этой подборке вы начнете изучение базовых существительных уровня А1, освоите артикли и получите видео-ассоциации для быстрого запоминания.",
-                // [ИЗМЕНЕНО]
-                dialoguesTitle: "Диалоги (Неделя 1): Знакомство",
-                dialoguesVideo: "https://www.youtube.com/embed/R-p9lq-E_OQ?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
-                dialoguesText: "<b>Диалог 1:</b><br>- Hallo! Wie heißt du?<br>- Ich heiße Anna. Und du?<br><br><b>Полезные фразы:</b><br>Guten Tag.<br>Wie geht's?"
-            },
-            2: {
-                associationVideo: "https://www.youtube.com/embed/2-nFz1WJ3vM?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для артикля 'Das' (средний род)",
-                storyLink: "https://your-domain.com/story/week2",
-                wordSetId: "a1_nouns_2",
-                carouselId: "week1", 
-                description: "Фокусируемся на существительных среднего рода (Das) и разбираем основные конструкции для описания дома и города.",
-                // [ИЗМЕНЕНО]
-                dialoguesTitle: "Диалоги (Неделя 2): В ресторане",
-                dialoguesVideo: "https://www.youtube.com/embed/example2?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
-                dialoguesText: "<b>Диалог 2:</b><br>- Ich hätte gern einen Kaffee, bitte.<br>- Sonst noch etwas?<br><br><b>Полезные фразы:</b><br>Die Speisekarte, bitte.<br>Zahlen, bitte."
-            },
-            3: {
-                associationVideo: "https://www.youtube.com/embed/M0TfQvX5X1o?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для существительных А1 (Часть 3)",
-                storyLink: "https://your-domain.com/story/week3",
-                wordSetId: "a1_nouns_3",
-                carouselId: "week1", 
-                description: "Продолжаем расширять словарный запас А1, изучая слова, связанные с людьми и местами. Доступно после 2-й недели подписки.",
-                // [ИЗМЕНЕНО]
-                dialoguesTitle: "Диалоги (Неделя 3): Покупки",
-                dialoguesVideo: "https://www.youtube.com/embed/example3?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
-                dialoguesText: "<b>Диалог 3:</b><br>- Was kostet das?<br>- Das kostet 10 Euro.<br><br><b>Полезные фразы:</b><br>Das ist zu teuer.<br>Ich nehme das."
-            },
-            4: {
-                associationVideo: "https://www.youtube.com/embed/example4?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для глаголов A1",
-                storyLink: "https://your-domain.com/story/week4",
-                wordSetId: "a1_verbs_1", 
-                carouselId: "week1",
-                description: "Изучение первых 10 важных глаголов уровня A1, их спряжения и использования в простых предложениях.",
-                // [ИЗМЕНЕНО]
-                dialoguesTitle: "Диалоги (Неделя 4): Планы",
-                dialoguesVideo: "https://www.youtube.com/embed/example4_dialog?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
-                dialoguesText: "<b>Диалог 4:</b><br>- Was machst du heute?<br>- Ich gehe ins Kino.<br><br><b>Полезные фразы:</b><br>Hast du Zeit?<br>Kommst du mit?"
-            },
-        };
+            const left = document.createElement('div');
+            left.className = 'flex items-center space-x-4';
 
-        // Вспомогательные массивы для фильтров
-        const ALL_WEEKS = Object.keys(WEEKLY_CONTENT_MAP).map(Number).sort((a, b) => a - b);
-
-
-        // ===== НАЧАЛО ИНТЕГРАЦИИ text1.html (JavaScript) =====
-        
-        // [ИЗМЕНЕНО] 
-        // Раньше здесь были жестко заданы QUIZ_DATA и ANALYSIS_SLIDES.
-        // Теперь они инициализируются как пустые и будут заполняться из JSON.
-        window.StoryApp = {
-          quizData: [], // [ИЗМЕНЕНО] Инициализируем как пустой массив
-          currentIndex: 0,
-          userAnswers: [],
-          analysisSlides: [], // [ИЗМЕНЕНО] Инициализируем как пустой массив
-          currentAnalysisIndex: 0,
-          
-          // [НОВОЕ] Хранилища для обработчиков, чтобы избежать дублирования
-          audioPlayHandler: null,
-          audioProgressHandler: null,
-
-          init() {
-            this.initAudioPlayback();
-            this.initAnalysisCarousel(); // Эта функция теперь будет использовать данные из quizData
-            this.initStickyAudioBar();
-            // ← Добавьте эту строку:
-            if (window.Telegram?.WebApp?.BackButton) {
-                window.Telegram.WebApp.BackButton.show();
-             }   
-          },
-
-          /* ====== АУДИО ====== */
-          initAudioPlayback() {
-            const audio = document.getElementById('story-audio-player');
-            const playBtn = document.getElementById('audio-main-button');
-            const progress = document.getElementById('audio-progress');
-            const curTimeEl = document.getElementById('audio-current-time');
-            const durEl = document.getElementById('audio-duration');
-
-            if (!audio) return;
-
-            // [ИЗМЕНЕНО] Удаляем старый обработчик, прежде чем добавить новый
-            if (playBtn) {
-              // 1. Удаляем *старый* обработчик, если он существует
-              if (this.audioPlayHandler) {
-                playBtn.removeEventListener('click', this.audioPlayHandler);
-              }
-              // 2. Создаем и сохраняем *новый* обработчик
-              this.audioPlayHandler = (e) => {
-                e.stopPropagation();
-                this.toggleAudioPlay();
-              };
-              // 3. Добавляем новый обработчик
-              playBtn.addEventListener('click', this.audioPlayHandler);
+            const imgWrap = document.createElement('div');
+            imgWrap.className = 'w-14 h-14 rounded-md overflow-hidden bg-white border';
+            if (word.image) {
+                const i = document.createElement('img');
+                i.src = word.image;
+                i.alt = word.word;
+                i.className = 'w-full h-full object-cover';
+                imgWrap.appendChild(i);
             }
 
-            audio.addEventListener('loadedmetadata', () => {
-              if (durEl && isFinite(audio.duration)) {
-                durEl.textContent = this.formatTime(audio.duration);
-              }
-            });
+            const wordText = document.createElement('span');
+            wordText.textContent = word.word;
+            wordText.className = 'text-lg font-bold';
+            wordText.style.cursor = 'pointer';
+            wordText.onclick = () => this.showWordCard(word);
 
-            audio.addEventListener('timeupdate', () => {
-              if (progress && isFinite(audio.duration) && audio.duration > 0) {
-                progress.value = (audio.currentTime / audio.duration) * 100;
-              }
-              if (curTimeEl) {
-                curTimeEl.textContent = this.formatTime(audio.currentTime);
-              }
-            });
+            left.appendChild(imgWrap);
+            left.appendChild(wordText);
 
-            // [ИЗМЕНЕНО] Та же логика для ползунка
-            if (progress) {
-              // 1. Удаляем *старый* обработчик
-              if (this.audioProgressHandler) {
-                progress.removeEventListener('input', this.audioProgressHandler);
-              }
-              // 2. Создаем и сохраняем *новый*
-              this.audioProgressHandler = (e) => {
-                if (!isFinite(audio.duration) || audio.duration <= 0) return;
-                const val = Number(e.target.value) || 0;
-                audio.currentTime = (val / 100) * audio.duration;
-              };
-              // 3. Добавляем новый
-              progress.addEventListener('input', this.audioProgressHandler);
-            }
-
-            audio.onplay = () => this.updateAudioUi(true);
-            audio.onpause = () => this.updateAudioUi(false);
-            audio.onended = () => this.updateAudioUi(false);
-          },
-
-          formatTime(sec) {
-            const s = Math.floor(sec % 60);
-            const m = Math.floor(sec / 60);
-            return `${m}:${s.toString().padStart(2, '0')}`;
-          },
-
-          toggleAudioPlay() {
-            const audio = document.getElementById('story-audio-player');
-            if (!audio) return;
-            if (audio.paused) audio.play(); else audio.pause();
-          },
-
-          updateAudioUi(isPlaying) {
-            const playIcon = document.getElementById('play-icon');
-            const pauseIcon = document.getElementById('pause-icon');
-            if (!playIcon || !pauseIcon) return;
-
-            if (isPlaying) {
-              playIcon.classList.add('hidden');
-              pauseIcon.classList.remove('hidden');
-            } else {
-              playIcon.classList.remove('hidden');
-              pauseIcon.classList.add('hidden');
-            }
-          },
-
-          /* ====== FIXED AUDIO BAR ====== */
-        initStickyAudioBar() {
-            const wrapper     = document.getElementById('audio-bar-wrapper');
-            const bar         = document.getElementById('audio-bar');
-            const placeholder = document.getElementById('audio-bar-placeholder');
-            if (!wrapper || !bar || !placeholder) return;
-
-            // Вычисляем высоту шапки Telegram
-            const getTelegramHeaderHeight = () => {
-                if (window.Telegram?.WebApp?.viewportStableHeight) {
-                    return window.innerHeight - window.Telegram.WebApp.viewportStableHeight;
-                }
-                return 56; // запасной вариант
+            const learnButton = document.createElement('button');
+            learnButton.textContent = 'Учить';
+            learnButton.className = 'px-4 py-2 bg-blue-500 text-white rounded';
+            learnButton.onclick = () => {
+                learnButton.textContent = 'В учебе';
+                learnButton.className = 'px-4 py-2 bg-green-500 text-white rounded';
             };
 
-            let barHeight = 0;
-            const headerHeight = getTelegramHeaderHeight();
-
-            const checkPosition = () => {
-                if (!wrapper || !bar || !placeholder) return; // Проверка на null
-                
-                const wrapperRect = wrapper.getBoundingClientRect();
-                
-                // Проверяем, что плеер не в модальном окне
-                const isInModal = bar.closest('#transcript-modal');
-                if (isInModal) {
-                    if (bar.classList.contains('fixed-audio-bar')) {
-                        bar.classList.remove('fixed-audio-bar');
-                        placeholder.style.height = '0px';
-                        bar.style.top = '';
-                    }
-                    return; // Не делаем "липким" в модальном окне
-                }
-
-
-                // Когда верхняя граница обёртки дошла до нижней границы шапки TG
-                if (wrapperRect.top <= headerHeight) {
-                    if (!bar.classList.contains('fixed-audio-bar')) {
-                        barHeight = bar.offsetHeight;
-                        bar.classList.add('fixed-audio-bar');
-                        placeholder.style.height = barHeight + 'px';
-                        bar.style.top = headerHeight + 'px';
-                    }
-                } else {
-                    if (bar.classList.contains('fixed-audio-bar')) {
-                        bar.classList.remove('fixed-audio-bar');
-                        placeholder.style.height = '0px';
-                        bar.style.top = '';
-                    }
-                }
-            };
-
-            window.addEventListener('scroll', checkPosition);
-            window.addEventListener('resize', checkPosition);
-            // Проверяем сразу при загрузке (на случай, если уже проскроллено)
-            setTimeout(checkPosition, 100);
-        },
-
-          /* ====== АККОРДЕОНЫ ====== */
-          toggleAccordion(contentId) {
-            const content = document.getElementById(contentId);
-            const arrow = document.getElementById(contentId.replace('-content', '-arrow'));
-            if (!content || !arrow) return;
-
-            const isOpen = content.classList.contains('is-open');
-            if (isOpen) {
-              content.classList.remove('is-open');
-              arrow.innerHTML = '&darr;';
-              setTimeout(() => content.classList.add('hidden'), 400);
-            } else {
-              content.classList.remove('hidden');
-              setTimeout(() => content.classList.add('is-open'), 10);
-              arrow.innerHTML = '&uarr;';
-            }
-          },
-
-          /* ====== КАРУСЕЛЬ РАЗБОРА ====== */
-          initAnalysisCarousel() {
-            // [ИЗМЕНЕНО] Проверяем, есть ли данные в this.analysisSlides
-            if (!this.analysisSlides || !this.analysisSlides.length) {
-                const slideContainer = document.getElementById('analysis-slide');
-                if (slideContainer) slideContainer.innerHTML = '<p class="text-gray-500 text-center">Нет данных для разбора.</p>';
-                return;
-            }
-            this.currentAnalysisIndex = 0;
-            this.renderAnalysisSlide();
-          },
-
-          renderAnalysisSlide() {
-            const slideContainer = document.getElementById('analysis-slide');
-            const progressEl = document.getElementById('analysis-progress');
-            if (!slideContainer) return;
-
-            const slide = this.analysisSlides[this.currentAnalysisIndex];
-            if (!slide) return;
-
-            slideContainer.innerHTML = `
-              <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">
-                ${slide.title || 'Разбор'}
-              </p>
-              <p class="mb-2 font-semibold text-gray-800">${slide.original}</p>
-              <p class="mb-3 text-gray-700">${slide.translation}</p>
-              ${
-                slide.notes && slide.notes.length
-                  ? `<ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                       ${slide.notes.map(n => `<li>${n}</li>`).join('')}
-                     </ul>`
-                  : ''
-              }
-            `;
-
-            if (progressEl) {
-              const total = this.analysisSlides.length;
-              const current = this.currentAnalysisIndex + 1;
-              progressEl.textContent = `${current} / ${total}`;
-            }
-          },
-
-          nextAnalysisSlide() {
-            if (!this.analysisSlides || !this.analysisSlides.length) return;
-            this.currentAnalysisIndex =
-              (this.currentAnalysisIndex + 1) % this.analysisSlides.length;
-            this.renderAnalysisSlide();
-          },
-
-          prevAnalysisSlide() {
-            if (!this.analysisSlides || !this.analysisSlides.length) return;
-            this.currentAnalysisIndex =
-              (this.currentAnalysisIndex - 1 + this.analysisSlides.length) % this.analysisSlides.length;
-            this.renderAnalysisSlide();
-          },
-
-          /* ====== КВИЗ ====== */
-          startStoryQuiz() {
-            // [ИЗМЕНЕНО] Проверяем, есть ли данные в this.quizData
-            if (!this.quizData || !this.quizData.length) {
-                console.error("Нет данных для квиза!");
-                // Можно показать alert или просто не открывать модалку
-                return;
-            }
-            this.currentIndex = 0;
-            this.userAnswers = [];
-            this.renderCurrentQuestion();
-            this.updateProgress();
-            this.resetControls();
-            window.App.openModal('quiz-modal'); // [ИЗМЕНЕНО] Используем App.openModal
-          },
-
-          renderCurrentQuestion() {
-            const q = this.quizData[this.currentIndex];
-            if (!q) return;
-
-            const questionEl = document.getElementById('quiz-question');
-            const optionsContainer = document.getElementById('quiz-options');
-            const feedbackEl = document.getElementById('quiz-feedback');
-            const questionBox = document.getElementById('question-box'); 
-
-            if (!questionEl || !optionsContainer || !feedbackEl || !questionBox) return; 
-
-            // --- ИЗМЕНЕНО: Показываем элементы при рендере вопроса ---
-            questionBox.classList.remove('hidden');
-            optionsContainer.classList.remove('hidden');
-            // --- КОНЕЦ ИЗМЕНЕНИЯ ---
-
-            questionEl.textContent = q.question;
-            optionsContainer.innerHTML = '';
-
-            q.options.forEach((opt, idx) => {
-              const btn = document.createElement('button');
-              btn.className =
-                'quiz-option w-full py-2 px-3 border border-gray-300 rounded-lg text-sm text-left bg-white text-gray-800 font-medium hover:bg-indigo-100';
-              btn.textContent = opt;
-              btn.onclick = () => this.selectOption(idx);
-              optionsContainer.appendChild(btn);
-            });
-
-            feedbackEl.classList.add('hidden');
-            feedbackEl.textContent = '';
-
-            const endControls = document.getElementById('quiz-end-controls');
-            if (endControls) endControls.classList.add('hidden');
-
-            const nextBtn = document.getElementById('quiz-next-button');
-            if (nextBtn) {
-              nextBtn.disabled = true;
-              nextBtn.classList.add('next-button-disabled');
-              nextBtn.classList.remove('next-button-active', 'hidden');
-            }
-          },
-
-          selectOption(idx) {
-            const q = this.quizData[this.currentIndex];
-            if (!q) return;
-
-            const chosen = q.options[idx];
-            this.userAnswers[this.currentIndex] = chosen;
-
-            document.querySelectorAll('#quiz-options .quiz-option').forEach(btn => {
-              btn.classList.remove('quiz-selected');
-              if (btn.textContent.trim() === chosen.trim()) {
-                btn.classList.add('quiz-selected');
-              }
-            });
-
-            const nextBtn = document.getElementById('quiz-next-button');
-            if (nextBtn) {
-              nextBtn.disabled = false;
-              nextBtn.classList.remove('next-button-disabled');
-              nextBtn.classList.add('next-button-active');
-            }
-          },
-
-          nextQuizQuestion() {
-            if (this.currentIndex < this.quizData.length - 1) {
-              this.currentIndex++;
-              this.renderCurrentQuestion();
-              this.updateProgress();
-            } else {
-              this.finishQuiz();
-            }
-          },
-
-          updateProgress() {
-            const progressEl = document.getElementById('quiz-progress');
-            if (!progressEl) return;
-
-            // --- ИЗМЕНЕНО: Показываем прогресс ---
-            progressEl.classList.remove('hidden');
-            // --- КОНЕЦ ИЗМЕНЕНИЯ ---
-
-            const total = this.quizData.length;
-            const current = this.currentIndex + 1;
-            progressEl.textContent = `Вопрос ${current} из ${total}`;
-          },
-
-          resetControls() {
-            const endControls = document.getElementById('quiz-end-controls');
-            if (endControls) endControls.classList.add('hidden');
-
-            const nextBtn = document.getElementById('quiz-next-button');
-            if (nextBtn) {
-              nextBtn.disabled = true;
-              nextBtn.classList.add('next-button-disabled');
-              nextBtn.classList.remove('next-button-active', 'hidden');
-            }
-
-            const feedbackEl = document.getElementById('quiz-feedback');
-            if (feedbackEl) {
-              feedbackEl.classList.add('hidden');
-              feedbackEl.textContent = '';
-            }
-          },
-
-          finishQuiz() {
-            const total = this.quizData.length;
-            let correct = 0;
-
-            this.quizData.forEach((q, i) => {
-              if (this.userAnswers[i] === q.answer) correct++;
-            });
-
-            const feedbackEl = document.getElementById('quiz-feedback');
-            if (feedbackEl) {
-              feedbackEl.textContent = `Вы ответили правильно на ${correct} из ${total} вопросов.`;
-              feedbackEl.classList.remove('hidden');
-            }
-
-            const nextBtn = document.getElementById('quiz-next-button');
-            if (nextBtn) nextBtn.classList.add('hidden');
-
-            const endControls = document.getElementById('quiz-end-controls');
-            if (endControls) endControls.classList.remove('hidden');
-
-            // --- ИЗМЕНЕНО: Скрываем вопрос, опции и прогресс при завершении ---
-            const questionBox = document.getElementById('question-box');
-            if (questionBox) questionBox.classList.add('hidden');
-            
-            const optionsContainer = document.getElementById('quiz-options');
-            if (optionsContainer) optionsContainer.classList.add('hidden');
-            
-            const progressEl = document.getElementById('quiz-progress');
-            if (progressEl) progressEl.classList.add('hidden');
-            // --- КОНЕЦ ИЗМЕНЕНИЯ ---
-          },
-
-          showCorrectAnswers() {
-            const optionsContainer = document.getElementById('quiz-options');
-            const feedbackEl = document.getElementById('quiz-feedback');
-            if (!optionsContainer) return;
-
-            // --- ИСПРАВЛЕНИЕ: Показываем контейнер перед заполнением ---
-            optionsContainer.classList.remove('hidden');
-            // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
-
-            optionsContainer.innerHTML = '';
-
-            this.quizData.forEach((q, i) => {
-              const block = document.createElement('div');
-              block.className = 'mb-3 p-3 bg-indigo-50 rounded-lg';
-              block.innerHTML = `
-                <p class="font-semibold mb-1">${i + 1}. ${q.question}</p>
-                <p class="text-green-700 font-bold">Правильный ответ: ${q.answer}</p>
-              `;
-              optionsContainer.appendChild(block);
-            });
-
-            if (feedbackEl) feedbackEl.classList.add('hidden');
-          },
-
-          /* ====== МОДАЛКИ (ВНУТРИ StoryApp) ====== */
-          // [ИЗМЕНЕНО] Эти функции теперь вызываются из App.openModal / App.closeModal
-          // поэтому мы можем их УДАЛИТЬ или оставить (пока оставим, но они не используются)
-          openModal(id) {
-            // ... (Этот код больше не используется, используется App.openModal)
-          },
-
-          closeModal(id) {
-            // ... (Этот код больше не используется, используется App.closeModal)
-          }
-        };
-        // ===== КОНЕЦ ИНТЕГРАЦИИ text1.html =====
-
-
-        // ==========================================================
-        // 2. ЛОГИКА ПРИЛОЖЕНИЯ (Conceptual App Module)
-        // ==========================================================
-
-        window.App = {
-            db: null,
-            auth: null, 
-            userId: null,
-            isAuthReady: false, 
-            userProgress: {}, 
-            audioPlayerOriginalParent: null, // [НОВОЕ] Для хранения родителя плеера
-            allStoryContent: {}, // [НОВОЕ] Для хранения загруженного JSON
-            
-            // ПОЛЯ ДЛЯ ПОДПИСКИ И АКТИВАЦИИ
-            isSubscriber: false, 
-            activationDate: null, 
-            selectedWeek: 0, 
-            
-            unlockedWeek: 1, 
-            sessionCards: [], 
-            currentCardIndex: 0,
-            isPracticeMode: false,
-            isAdvancing: false,
-            currentDirection: 'ru-de', 
-            tempSetId: null, 
-            tempMode: null,
-            tempSource: null,
-            currentScreenId: 'loading-screen', 
-            
-            // Состояние фильтров
-            currentWeekFilter: 'All', 
-            currentThemeFilter: 'All', 
-            
-            // --- НОВАЯ ЛОГИКА НАВИГАЦИИ ---
-            tg: null, // Объект Telegram Web App
-            navigationHistory: [], // Стек для хранения истории
-            // { renderFunc: 'renderHomeScreen', param: null }
-            // { renderFunc: 'renderWeekContent', param: 1 }
-            // { renderFunc: 'renderVideoContentScreen', param: { title: '...', videoUrl: '...' } }
-            // -------------------------------
-
-            // Данные карусели
-            carouselSetsMetadata: [],
-            carouselCards: [],
-            currentCarouselIndex: 0,
-            
-            /**
-             * ВАЖНО: Определяет путь к документу в Firestore, используя ВАШУ КОЛЛЕКЦИЮ И ID
-             */
-            getUserDocRef() {
-                 if (!this.db || !this.userId) return null;
-                 // Использование ВАШЕЙ КОЛЛЕКЦИИ (MY_COLLECTION_NAME) и Telegram ID (this.userId)
-                 return doc(this.db, MY_COLLECTION_NAME, this.userId);
-            },
-
-
-            // [НОВАЯ ФУНКЦИЯ] для (пере)установки обработчиков Telegram
-            setupTelegramHandlers() {
-                if (!this.tg) {
-                    this.tg = window.Telegram.WebApp;
-                    this.tg.ready(); 
-                }
-                // (Пере)назначаем наш главный обработчик "Назад"
-                this.tg.BackButton.onClick(() => this.handleTelegramBackClick());
-            },
-
-            async init() {
-                try {
-                    // --- ИНИЦИАЛИЗАЦИЯ TELEGRAM API ---
-                    // Делаем это *первым*, чтобы API было доступно
-                    // [ИЗМЕНЕНО] Вызываем новую функцию
-                    this.setupTelegramHandlers();
-                    // ------------------------------------
-
-                    // Инициализация Firebase
-                    if (Object.keys(firebaseConfig).length > 0 && firebaseConfig.apiKey !== "YOUR_FIREBASE_CONFIG_HERE") {
-                        const app = initializeApp(firebaseConfig);
-                        this.db = getFirestore(app);
-                        this.userId = MY_USER_ID_SOURCE;
-                        this.isAuthReady = true;
-                    } else {
-                         console.error("Firebase configuration not found or not set. Progress will not be saved.");
-                         this.isAuthReady = false;
-                         this.userId = MY_USER_ID_SOURCE; 
-                    }
-
-                    this.disableZoom();
-                    await this.loadCarouselMetadata(); 
-                    await this.loadStoryContent(); // [НОВОЕ] Загружаем контент историй
-
-                    if (this.isAuthReady) {
-                        await this.loadProgress();
-                    } else {
-                        // В локальном режиме
-                        this.isSubscriber = false; 
-                        this.selectedWeek = 0; 
-                        this.unlockedWeek = this.getMaxAvailableWeek(); 
-                        this.renderHomeScreen(); // <-- Первый вызов, который запустит showScreen
-                    }
-
-                } catch (error) {
-                    this.showError(`Ошибка инициализации/аутентификации: ${error.message}`);
-                    console.error(error);
-                }
-            },
-            
-            disableZoom() {
-                document.addEventListener('touchstart', (event) => {
-                    if (event.touches.length > 1) {
-                        event.preventDefault();
-                    }
-                }, { passive: false });
-
-                let lastTouchEnd = 0;
-                document.addEventListener('touchend', function (event) {
-                    const now = (new Date()).getTime();
-                    if (now - lastTouchEnd <= 300) {
-                        event.preventDefault();
-                    }
-                    lastTouchEnd = now;
-                }, false);
-            },
-
-
-            // [НОВОЕ] Загружает контент для историй (транскрипты, квизы и т.д.)
-            async loadStoryContent() {
-                try {
-                    const response = await fetch(getBaseUrl() + 'story_content.json');
-                    if (!response.ok) throw new Error('Не удалось загрузить story_content.json');
-                    this.allStoryContent = await response.json();
-                    console.log('Контент историй загружен:', this.allStoryContent);
-                } catch (error) {
-                    console.error("Ошибка загрузки контента историй:", error);
-                    this.showError('Не удалось загрузить контент историй.');
-                }
-            },
-
-            async loadProgress() {
-                this.showScreen('loading-screen'); // Показываем загрузку
-                if (!this.isAuthReady) return; 
-
-                try {
-                    const docRef = this.getUserDocRef();
-                    if (!docRef) {
-                        console.error("Не удалось получить ссылку на документ Firestore.");
-                        return;
-                    }
-                    const docSnap = await getDoc(docRef);
-
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        this.userProgress = data.cards || {};
-                        this.isSubscriber = data.isSubscriber || false;
-                        this.activationDate = data.activationDate; 
-                        this.selectedWeek = data.selectedWeek || 0; 
-                        this.unlockedWeek = this.getMaxAvailableWeek(); 
-                    } else {
-                        // Новый пользователь
-                        this.userProgress = {};
-                        this.isSubscriber = false;
-                        this.selectedWeek = 0; 
-                        this.unlockedWeek = 1; 
-                        await this.saveProgress(); 
-                    }
-                } catch (error) {
-                    console.error("Error loading progress:", error);
-                } finally {
-                    this.renderHomeScreen(); // <-- Первый рендер после загрузки
-                }
-            },
-            
-            async saveProgress() {
-                if (!this.isAuthReady) return; 
-                try {
-                    const docRef = this.getUserDocRef();
-                    if (!docRef) {
-                        console.error("Не удалось получить ссылку на документ Firestore.");
-                        return;
-                    }
-                    await setDoc(docRef, { 
-                        cards: this.userProgress,
-                        isSubscriber: this.isSubscriber,
-                        activationDate: this.activationDate,
-                        selectedWeek: this.selectedWeek
-                    }, { merge: true });
-                    console.log('Прогресс сохранен в Firebase');
-                } catch (error) {
-                    console.error('Ошибка сохранения прогресса:', error);
-                }
-            },
-
-            getMaxAvailableWeek() {
-                if (!this.isSubscriber || !this.activationDate) {
-                    return 1; 
-                }
-                const activationTime = new Date(this.activationDate).getTime();
-                const currentTime = new Date().getTime();
-                const daysDiff = Math.floor((currentTime - activationTime) / (1000 * 60 * 60 * 24));
-                let maxWeek = Math.floor(daysDiff / 7) + 1;
-                return Math.min(ALL_WEEKS.length, Math.max(1, maxWeek));
-            },
-            
-            async activateSubscription() {
-                if (this.isSubscriber) return; 
-                this.isSubscriber = true;
-                this.activationDate = this.getTodayDateString();
-                this.selectedWeek = 1; 
-                this.unlockedWeek = this.getMaxAvailableWeek(); 
-                await this.saveProgress();
-                this.renderHomeScreen(false, true); // Рендерим с очисткой стека
-            },
-
-            // ==================== НОВАЯ ЛОГИКА НАВИГАЦИИ ====================
-
-            /**
-             * [НОВЫЙ] Обработчик нажатия кнопки "Zurück" в хедере Telegram.
-             */
-            handleTelegramBackClick() {
-                // В стеке не может быть меньше 2 экранов (home + текущий)
-                if (this.navigationHistory.length < 2) {
-                    // Этого не должно случиться, так как кнопка "Назад" должна быть скрыта на home-screen
-                    return; 
-                }
-                
-                // 1. Удаляем *текущий* экран из истории
-                this.navigationHistory.pop();
-                
-                // 2. Получаем *предыдущее* состояние
-                const prevState = this.navigationHistory[this.navigationHistory.length - 1];
-                
-                // 3. Перерисовываем предыдущее состояние
-                // true = "это навигация назад", не нужно снова пушить в историю
-                this.reRenderState(prevState, true);
-            },
-
-            /**
-             * [НОВЫЙ] "Роутер", который перерисовывает экран из состояния в истории.
-             */
-            reRenderState(state, isBackNavigation = false) {
-                if (!state) {
-                    this.renderHomeScreen(isBackNavigation); // Безопасный возврат
-                    return;
-                }
-
-                const { renderFunc, param } = state;
-                
-                // Вызываем соответствующую функцию рендеринга
-                switch (renderFunc) {
-                    case 'renderHomeScreen':
-                        this.renderHomeScreen(isBackNavigation);
-                        break;
-                    case 'renderWeeklySelections':
-                        this.renderWeeklySelections(isBackNavigation);
-                        break;
-                    case 'renderWeekContent':
-                        this.renderWeekContent(param, isBackNavigation);
-                        break;
-                    case 'renderAllSetsScreen':
-                        this.renderAllSetsScreen(isBackNavigation);
-                        break;
-                    case 'renderVideoContentScreen':
-                        this.renderVideoContentScreen(param.title, param.videoUrl, param.textContent, isBackNavigation);
-                        break;
-                    case 'renderExternalLinkScreen':
-                        this.renderExternalLinkScreen(param.title, param.url, isBackNavigation);
-                        break;
-                    case 'renderStoryScreen':
-                        // [ИЗМЕНЕНО] param.url -> param.weekId
-                        this.renderStoryScreen(param.title, param.weekId, isBackNavigation);
-                        break;
-                    case 'renderCarouselListScreen':
-                        this.renderCarouselListScreen(isBackNavigation);
-                        break;
-                    case 'startCarouselSession':
-                        this.startCarouselSession(param.setId, param.setTitle, param.filepath, isBackNavigation);
-                        break;
-                    case 'startSession':
-                        this.startSession(param.setId, param.mode, isBackNavigation, param.source);
-                        break;
-                    default:
-                        this.renderHomeScreen(isBackNavigation); // По умолчанию
-                }
-            },
-
-
-            // ==================== РЕНДЕРИНГ ЭКРАНОВ (ИЗМЕНЕНО) ====================
-
-            // isBack - флаг, что мы пришли сюда по кнопке "Назад"
-            // clearStack - флаг, что нужно очистить всю историю (напр. при клике "Домой" в футере)
-            renderHomeScreen(isBack = false, clearStack = false) {
-                this.renderDueTodaySection();
-                
-                const mainBlock = document.getElementById('main-content-block');
-                mainBlock.innerHTML = '';
-                
-                if (!this.isSubscriber && this.selectedWeek === 0) { 
-                    mainBlock.innerHTML += `
-                        <button onclick="window.App.renderWeekContent(1)" class="w-full py-4 px-5 rounded-xl shadow-xl bg-gradient-to-r from-green-400 to-green-600 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
-                            <span>🚀 Пробный урок</span>
-                            <span>Начать &rarr;</span>
-                        </button>
-                    `;
-                } else {
-                    const activeWeek = this.selectedWeek;
-                    const weekTitle = activeWeek === 1 && !this.isSubscriber 
-                                    ? 'Пробный урок (Неделя 1)' 
-                                    : `Неделя ${activeWeek}`;
-                    
-                    if (activeWeek >= 1 && activeWeek <= ALL_WEEKS.length) {
-                        mainBlock.innerHTML += `
-                            <button onclick="window.App.renderWeekContent(${activeWeek})" class="w-full py-4 px-5 rounded-xl shadow-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
-                                <span>📅 Активная подборка: ${weekTitle}</span>
-                                <span>Продолжить &rarr;</span>
-                            </button>
-                        `;
-                    }
-                }
-                
-                mainBlock.innerHTML += `
-                    <button onclick="window.App.renderWeeklySelections()" class="w-full py-4 px-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-md text-left text-lg font-semibold text-indigo-900 hover:from-blue-100 hover:to-indigo-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-indigo-200">
-                        <span>📚 Подборки за неделю</span>
-                        <span>&rarr;</span>
-                    </button>
-                `;
-
-                mainBlock.innerHTML += `
-                    <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl shadow-md text-left text-lg font-semibold text-purple-900 hover:from-purple-100 hover:to-pink-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-purple-200">
-                        <span>📚 Все наборы слов</span>
-                        <span>&rarr;</span>
-                    </button>
-                `;
-                
-                this.renderDueTodaySection();
-                
-                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('home-screen', isBack, { renderFunc: 'renderHomeScreen', param: null }, clearStack);
-            },
-            
-            renderDueTodaySection() {
-                const section = document.getElementById('due-today-section');
-                const list = document.getElementById('due-today-list');
-                if (!section || !list) return;
-
-                const today = this.getTodayDateString();
-                let dueSetsCount = 0;
-                list.innerHTML = '';
-
-                WORD_SETS.forEach(set => {
-                    if (this.isSubscriber && set.week > this.unlockedWeek) return;
-                    if (!this.isSubscriber && set.week > 1) return;
-
-                    let dueCount = 0;
-                    set.cards.forEach(card => {
-                        const progress = this.userProgress[card.id];
-                        if (!progress || (progress.nextReview && progress.nextReview <= today)) {
-                            dueCount++;
-                        }
-                    });
-
-                    if (dueCount > 0) {
-                        dueSetsCount++;
-                        const setEl = document.createElement('div');
-                        setEl.className = "bg-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 flex justify-between items-center transform transition hover:-translate-y-1";
-                        setEl.innerHTML = `
-                            <div>
-                                <span class="font-bold text-gray-800">${set.name}</span>
-                                <span class="text-sm text-orange-600 font-medium block">Доступно для повторения: ${dueCount}</span>
-                            </div>
-                                <button onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')"
-                                    class="py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center">
-                                Начать
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </button>
-                        `;
-                        list.appendChild(setEl);
-                    }
-                });
-
-                if (dueSetsCount > 0) {
-                    section.classList.remove('hidden');
-                } else {
-                    section.classList.add('hidden');
-                }
-            },
-
-            renderWeeklySelections(isBack = false) {
-                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('list-title').innerText = '📚 Подборки за неделю';
-                document.getElementById('filter-controls').innerHTML = '';
-
-                const contentListDiv = document.getElementById('content-list');
-                contentListDiv.innerHTML = '';
-                this.unlockedWeek = this.getMaxAvailableWeek(); 
-
-                ALL_WEEKS.forEach(i => {
-                    const isSubscriber = this.isSubscriber;
-                    const maxAvailableWeek = this.unlockedWeek;
-                    const isCurrentSelected = i === this.selectedWeek; 
-                    const isAvailable = isSubscriber ? (i <= maxAvailableWeek) : (i === 1); 
-                    const weekData = WEEKLY_CONTENT_MAP[i];
-                    
-                    let statusText = 'Доступно';
-                    let buttonClass = 'bg-white hover:bg-gray-50';
-
-                    if (!isAvailable) {
-                        buttonClass = 'button-locked';
-                        if (!isSubscriber) {
-                            statusText = '🔒 Оформите подписку';
-                        } else {
-                            const activationTime = new Date(this.activationDate).getTime();
-                            const currentTime = new Date().getTime();
-                            const daysDiff = Math.floor((currentTime - activationTime) / (1000 * 60 * 60 * 24));
-                            const daysNeeded = (i - 1) * 7;
-                            const daysLeft = daysNeeded - daysDiff;
-                            statusText = `🔒 Доступно через ${daysLeft} дн.`;
-                        }
-                    } else if (i === 1 && !isSubscriber) {
-                        buttonClass = 'bg-green-100 border-2 border-green-500';
-                        statusText = 'Пробный урок';
-                    } else if (isCurrentSelected) {
-                        buttonClass = 'bg-yellow-100 border-2 border-yellow-500';
-                        statusText = 'Активно';
-                    }
-
-                    const weekContainer = document.createElement('div');
-                    weekContainer.className = `w-full p-4 rounded-xl shadow-md ${buttonClass}`;
-                    weekContainer.innerHTML = `
-                        <div class="flex justify-between items-center mb-3">
-                            <div>
-                                <span class="font-bold text-lg ${!isAvailable ? 'text-gray-500' : 'text-gray-800'}">Неделя ${i}</span>
-                                <span class="block text-sm ${!isAvailable ? 'text-orange-600' : 'text-gray-500'}">${statusText}</span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="window.App.showWeekDetails(${i}, '${weekData.description.replace(/'/g, "\\'")}')" 
-                                    class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150">
-                                Подробнее
-                            </button>
-                            <button id="week-learn-${i}" 
-                                    class="w-full py-2 px-3 text-white font-semibold rounded-xl text-sm transition duration-150 ${isAvailable ? 'bg-blue-500 hover:bg-blue-600' : 'button-locked'}"
-                                    onclick="${isAvailable ? `window.App.selectAndRenderWeek(${i})` : 'void(0)'}">
-                                Учить
-                            </button>
-                        </div>
-                    `;
-                    contentListDiv.appendChild(weekContainer);
-                });
-                
-                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('list-screen', isBack, { renderFunc: 'renderWeeklySelections', param: null });
-            },
-            
-            showWeekDetails(weekNum, description) {
-                document.getElementById('week-details-title').textContent = `Неделя ${weekNum}`;
-                document.getElementById('week-details-body').textContent = description;
-                this.openModal('week-details-modal');
-            },
-
-            async selectAndRenderWeek(weekNum) {
-                this.selectedWeek = weekNum;
-                await this.saveProgress();
-                this.renderWeekContent(weekNum); // Это уже не 'isBack'
-            },
-            
-            renderMenuCard(container, title, subtitle, onClickAction, style = 'bg-white hover:bg-gray-50') {
-                const button = document.createElement('button');
-                button.className = `w-full text-left p-4 ${style} rounded-xl shadow-md flex justify-between items-center transition duration-150`;
-                button.setAttribute('onclick', onClickAction);
-                button.innerHTML = `
-                    <div>
-                        <span class="font-semibold text-lg text-gray-800">${title}</span>
-                        <span class="block text-sm text-gray-500">${subtitle}</span>
-                    </div>
-                    <span>&rarr;</span>
-                `;
-                container.appendChild(button);
-            },
-            
-            renderWeekContent(weekNum, isBack = false) {
-                const weekData = WEEKLY_CONTENT_MAP[weekNum];
-                if (!weekData) return;
-                
-                const isTrialLesson = !this.isSubscriber && weekNum === 1;
-                
-                if (isTrialLesson) {
-                    document.getElementById('list-title').innerText = `🚀 Контент Пробного урока`;
-                } else {
-                    document.getElementById('list-title').innerText = `📚 Контент Недели ${weekNum}`;
-                }
-
-                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('filter-controls').innerHTML = '';
-                const contentListDiv = document.getElementById('content-list');
-                contentListDiv.innerHTML = '';
-                
-                // 1. Ассоциации на неделю (Видео + Карусель)
-                const associationInstructionText = `<b>📌 Как учить слова:</b><br>
-1. Просмотри видео ассоциаций для запоминания<br>
-2. После этого повтор с помощью карусели ассоциаций<br>
-3. Эти слова будут доступны в Сете за неделю`;
-                this.renderMenuCard(contentListDiv, 
-                    `🧠 Ассоциации: видео & визуальное обучение`, 
-                    weekData.associationTitle,
-                    `window.App.currentWeekCarouselData = {setId: '${weekData.carouselId}', setTitle: '${weekData.associationTitle.replace(/'/g, "\\'")}', filepath: 'carousel_week1.json'}; window.App.renderVideoContentScreen('${weekData.associationTitle.replace(/'/g, "\\'")}', '${weekData.associationVideo}', \`${associationInstructionText.replace(/`/g, '\\`')}\`)`
-                );
-
-                // Мантры полезных фраз — открывает модальное окно с карточками
-                this.renderMenuCard(contentListDiv,
-                    `🕯️ Мантры полезных фраз`,
-                    'Короткие полезные фразы для ежедневной практики',
-                    `window.App.currentWeekMantraData = { setId: 'mantra_week1', setTitle: 'Мантры полезных фраз', filepath: 'mantra_week1.json' }; window.App.startMantraSession('mantra_week1','Мантры полезных фраз','mantra_week1.json')`
-                );
-                
-                let storyAction;
-                // [ИЗМЕНЕНО] Проверяем по ID, а не по storyLink
-                const storyId = `week_${weekNum}`;
-                if (this.allStoryContent[storyId]) {
-                    storyAction = `window.App.renderStoryScreen('📖 История недели ${weekNum}', '${storyId}')`; 
-                } else if (weekData.storyLink) {
-                    // Оставляем как запасной вариант для внешних ссылок
-                    storyAction = `window.App.renderExternalLinkScreen('📖 История недели ${weekNum}', '${weekData.storyLink}')`; 
-                } else {
-                    storyAction = `void(0)`; // Блокируем, если нет контента
-                }
-                
-                this.renderMenuCard(contentListDiv, 
-                    `📖 История недели`, 
-                    `Видео + квиз`,
-                    storyAction,
-                    (this.allStoryContent[storyId] || weekData.storyLink) ? 'bg-white hover:bg-gray-50' : 'button-locked'
-                );
-
-
-                // 4. Слова на неделю
-                this.renderMenuCard(contentListDiv, 
-                    `📚 Слова на неделю`, 
-                    `Повторение ${WORD_SETS.find(s => s.id === weekData.wordSetId)?.cards.length || 0} слов`,
-                    `window.App.promptForDirection('${weekData.wordSetId}', 'practice', 'week')`,
-                    'bg-green-100 hover:bg-green-200'
-                );
-                
-                // 5. Полезные фразы
-                // [ИЗМЕНЕНО]
-                const dialoguesTextEscaped = (weekData.dialoguesText || '').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\r\n|\r|\n/g, '<br>');
-                const dialoguesTitleEscaped = (weekData.dialoguesTitle || `Диалоги Недели ${weekNum}`).replace(/'/g, "\\'");
-
-                this.renderMenuCard(contentListDiv, 
-                    `🗣️ Полезные фразы / Диалоги на тему`, 
-                    `Видео и текст`, // [ИЗМЕНЕНО]
-                    `window.App.renderVideoContentScreen('${dialoguesTitleEscaped}', '${weekData.dialoguesVideo || ''}', '${dialoguesTextEscaped}')` // [ИЗМЕНЕНО]
-                );
-
-                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('list-screen', isBack, { renderFunc: 'renderWeekContent', param: weekNum });
-                
-                if (this.carouselSetsMetadata.length === 0) {
-                     this.loadCarouselMetadata().then(() => {
-                         this.renderWeekContent(weekNum, true); // Перерисовываем, но отмечаем как isBack, чтобы не дублировать историю
-                     });
-                }
-            },
-            
-            renderVideoContentScreen(title, videoUrl, textContent, isBack = false, carouselData = null) {
-                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('video-title').textContent = title;
-                const videoIframe = document.getElementById('video-embed');
-                const extraTextDiv = document.getElementById('video-extra-text');
-                const carouselButtonContainer = document.getElementById('video-carousel-button-container');
-
-                videoIframe.src = videoUrl ? videoUrl : '';
-                
-                // [ИСПРАВЛЕНИЕ] Показываем/скрываем контейнер видео
-                const videoContainer = videoIframe.closest('.video-container');
-                if(videoContainer) {
-                    videoContainer.style.display = videoUrl ? 'block' : 'none';
-                }
-
-                extraTextDiv.innerHTML = textContent ? textContent : ''; // Используем innerHTML для поддержки <b>
-                extraTextDiv.style.display = textContent ? 'block' : 'none';
-                
-                // [НОВОЕ] Добавляем кнопку карусели если доступны данные
-                carouselButtonContainer.innerHTML = '';
-                const carouselDataToUse = carouselData || this.currentWeekCarouselData;
-                if (carouselDataToUse && carouselDataToUse.setId && carouselDataToUse.setTitle && carouselDataToUse.filepath) {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-success w-full py-4 px-6 text-lg font-semibold flex items-center justify-center gap-3 rounded-2xl shadow-lg hover:shadow-xl transition duration-150 hover:scale-105';
-                    btn.innerHTML = '🖼️ Карусель ассоциаций';
-                    btn.onclick = () => this.startCarouselSession(carouselDataToUse.setId, carouselDataToUse.setTitle, carouselDataToUse.filepath);
-                    carouselButtonContainer.appendChild(btn);
-                }
-                
-                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('video-content-screen', isBack, { 
-                    renderFunc: 'renderVideoContentScreen', 
-                    param: {title, videoUrl, textContent, carouselData} 
-                });
-            },
-            
-            renderExternalLinkScreen(title, url, isBack = false) {
-                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('external-link-title').textContent = title;
-                document.getElementById('external-link-button').href = url;
-                document.getElementById('external-link-url-display').textContent = url;
-                
-                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('external-link-screen', isBack, { 
-                    renderFunc: 'renderExternalLinkScreen', 
-                    param: {title, url} 
-                });
-
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
-                    window.Telegram.WebApp.openLink(url);
-                }
-            },
-
-            // [СИЛЬНО ИЗМЕНЕНО] 
-            // Эта функция больше не загружает HTML. Она читает данные из
-            // 'this.allStoryContent' и динамически заполняет страницу.
-            async renderStoryScreen(title, weekId, isBack = false) { // weekId = 'week_1'
-                
-                // 1. Получаем контент из загруженных данных
-                const content = this.allStoryContent[weekId];
-                if (!content) {
-                    this.showError(`Контент для '${weekId}' не найден.`);
-                    console.error(`Контент для '${weekId}' не найден в this.allStoryContent`);
-                    return; // Не показываем экран, если нет данных
-                }
-
-                // 2. Устанавливаем заголовок экрана
-                document.getElementById('content-viewer-title').textContent = title;
-                
-                // 3. Заполняем элементы истории (заголовок, аудио, картинка)
-                const storyBody = document.getElementById('content-viewer-body');
-                storyBody.querySelector('h1').textContent = content.title;
-                // (Если пути к аудио/картинкам тоже в JSON, их можно установить здесь)
-                // [ИЗМЕНЕНО] Устанавливаем пути к медиа из JSON
-                const imgEl = storyBody.querySelector('.story-visual-container img');
-                const audioEl = storyBody.querySelector('#story-audio-player');
-                
-                if (imgEl && content.imageSrc) imgEl.src = content.imageSrc;
-                if (audioEl && content.audioSrc) audioEl.src = content.audioSrc;
-
-
-                // 4. [НОВОЕ] Заполняем модальное окно транскрипции
-                const transcriptContainer = document.getElementById('transcript-scroll-area');
-                transcriptContainer.innerHTML = ''; // Очищаем старые данные
-                
-                if (content.transcript && Array.isArray(content.transcript)) {
-                    content.transcript.forEach(paragraph => {
-                        const p = document.createElement('p');
-                        p.className = 'mb-3';
-                        p.innerHTML = paragraph;
-                        transcriptContainer.appendChild(p);
-                    });
-                }
-
-                // 5. [НОВОЕ] Передаем данные о квизе и разборе в 'StoryApp'
-                window.StoryApp.quizData = content.quiz || [];
-                window.StoryApp.analysisSlides = content.analysis || [];
-                
-                // 6. Показываем экран и записываем в историю
-                this.showScreen('content-viewer-screen', isBack, { 
-                    renderFunc: 'renderStoryScreen', 
-                    param: {title, weekId} 
-                });
-
-                try {
-                    // 7. Инициализируем StoryApp (он подхватит новые данные)
-                    if (window.StoryApp && typeof window.StoryApp.init === 'function') {
-                         await window.StoryApp.init();
-                    } else {
-                        console.error("StoryApp не найден или не имеет .init()");
-                    }
-                    
-                    // 8. Восстанавливаем обработчик кнопки "Назад"
-                    this.setupTelegramHandlers();
-
-                } catch (error) {
-                    console.error('Error initializing story content:', error);
-                }
-            },
-
-            renderAllSetsScreen(isBack = false) {
-                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('list-title').innerText = '📚 Все наборы слов';
-                this.renderSetFilterControls();
-                
-                const filteredSets = WORD_SETS.filter(set => {
-                    const weekMatch = this.currentWeekFilter === 'All' || set.week.toString() === this.currentWeekFilter;
-                    // [ИСПРАВЛЕНИЕ] Проверяем подписку
-                    const unlockedMatch = (this.isSubscriber && set.week <= this.unlockedWeek) || (!this.isSubscriber && set.week === 1);
-                    return weekMatch && unlockedMatch;
-                });
-                
-                this.renderSetCards(filteredSets);
-                
-                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('list-screen', isBack, { renderFunc: 'renderAllSetsScreen', param: null });
-            },
-
-            // ==================== ФИЛЬТРЫ И КАРТОЧКИ (Без изменений) ====================
-
-            renderSetFilterControls() {
-                const filterControls = document.getElementById('filter-controls');
-                filterControls.innerHTML = `
-                    <div class="grid grid-cols-2 gap-3">
-                        <select id="week-filter" onchange="window.App.updateSetFilter('week', this.value)" 
-                                class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            <option value="All">Все Недели</option>
-                            ${ALL_WEEKS.map(w => `<option value="${w}" ${this.currentWeekFilter === w.toString() ? 'selected' : ''}>Неделя ${w}</option>`).join('')}
-                        </select>
-                    </div>
-                `;
-            },
-            
-            updateSetFilter(filterType, value) {
-                if (filterType === 'week') {
-                    this.currentWeekFilter = value;
-                }
-                this.renderAllSetsScreen(true); // true = isBack, не дублируем историю
-            },
-
-            renderSetCards(setsToRender) {
-                const contentListDiv = document.getElementById('content-list');
-                contentListDiv.innerHTML = '';
-                const today = this.getTodayDateString();
-
-                if (setsToRender.length === 0) {
-                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет наборов, удовлетворяющих условиям фильтрации.</p>';
-                    return;
-                }
-
-                setsToRender.forEach(set => {
-                    // Для экрана "Все наборы" показываем наборы с двумя кнопками: "К повтору (N)" и "Практика (Все)"
-                    let dueCount = 0;
-                    set.cards.forEach(card => {
-                        const progress = this.userProgress[card.id];
-                        if (!progress || (progress.nextReview && progress.nextReview <= today)) {
-                            dueCount++;
-                        }
-                    });
-
-                    const setContainer = document.createElement('div');
-                    setContainer.className = "w-full p-4 bg-white rounded-xl shadow-md";
-                    setContainer.innerHTML = `
-                        <div class="flex justify-between items-center mb-3">
-                            <div>
-                                <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
-                                <span class="block text-sm text-gray-500">Неделя ${set.week} | ${set.cards.length} слов</span>
-                            </div>
-                            ${dueCount > 0 ? 
-                                `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">${dueCount} к повтору</span>` :
-                                `<span class="text-green-500 font-semibold">✓</span>`
-                            }
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            ${dueCount > 0 ? 
-                                `<button class="w-full py-2 px-3 bg-blue-500 text-white font-semibold rounded-xl text-sm hover:bg-blue-600 transition duration-150" 
-                                        onclick="window.App.promptForDirection('${set.id}', 'review', 'allsets')">
-                                    К повтору (${dueCount})
-                                </button>` :
-                                `<button class="w-full py-2 px-3 bg-gray-300 text-gray-500 font-semibold rounded-xl text-sm cursor-not-allowed" disabled>
-                                    К повтору (0)
-                                </button>`
-                            }
-                            <button class="w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150" 
-                                    onclick="window.App.promptForDirection('${set.id}', 'practice-all', 'allsets')">
-                                Практика всех слов
-                            </button>
-                        </div>
-                    `;
-                    contentListDiv.appendChild(setContainer);
-                });
-            },
-            
-            // ==================== ЛОГИКА КАРУСЕЛИ (ИЗМЕНЕНО) ====================
-            
-            async loadCarouselMetadata() {
-                try {
-                    const response = await fetch(getBaseUrl() + 'carousel_sets.json');
-                    if (!response.ok) {
-                        throw new Error(`Ошибка HTTP: ${response.status} ${response.statusText}`);
-                    }
-                    let rawResponseText = await response.text(); 
-                    this.carouselSetsMetadata = JSON.parse(rawResponseText);
-                    return true;
-                } catch (error) {
-                    console.error('Carousel Metadata Load Error:', error);
-                    return false;
-                }
-            },
-
-            async renderCarouselListScreen(isBack = false) {
-                // [ИЗМЕНЕНО] Убраны this.carouselReturnContext и this.renderBackButton
-                document.getElementById('carousel-list-title').innerText = 'Карусель ассоциаций';
-                const listDiv = document.getElementById('carousel-sets-list');
-                listDiv.innerHTML = '<p class="text-center text-gray-500 py-6">Загрузка списка наборов...</p>';
-                
-                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('carousel-list-screen', isBack, { renderFunc: 'renderCarouselListScreen', param: null });
-                
-                if (this.carouselSetsMetadata.length === 0) {
-                   await this.loadCarouselMetadata();
-                }
-
-                if (this.carouselSetsMetadata.length === 0) {
-                     listDiv.innerHTML = '<p class="text-red-500 text-center py-6">Ошибка: Не удалось загрузить список наборов каруселей.</p>';
-                     return;
-                }
-                
-                listDiv.innerHTML = '';
-                this.carouselSetsMetadata.forEach(set => {
-                    const button = document.createElement('button');
-                    button.className = 'w-full py-4 px-5 bg-white rounded-xl shadow-md text-left text-lg font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center transition duration-150';
-                    button.innerHTML = `
-                        <span>${set.title}</span>
-                        <span class="text-sm text-gray-500">${set.wordCount} слов &rarr;</span>
-                    `;
-                    button.onclick = () => this.startCarouselSession(set.id, set.title, set.filepath);
-                    listDiv.appendChild(button);
-                });
-            },
-            
-            async startCarouselSession(setId, setTitle, filepath, isBack = false) {
-                // [ИЗМЕНЕНО] Убраны this.carouselReturnContext
-                this.showScreen('loading-screen', isBack); // Показываем загрузку (isBack, чтобы не записать 'loading' в историю)
-                
-                try {
-                    const response = await fetch(getBaseUrl() + filepath);
-                    if (!response.ok) throw new Error(`Не удалось загрузить данные набора: ${filepath}`);
-                    
-                    let rawResponseText = await response.text(); 
-                    this.carouselCards = JSON.parse(rawResponseText);
-
-                    if (this.carouselCards.length === 0) {
-                        throw new Error('Набор пуст.');
-                    }
-
-                    this.currentCarouselIndex = 0;
-                    this.showCarouselCard();
-                    
-                    // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                    this.showScreen('image-carousel-screen', isBack, { 
-                        renderFunc: 'startCarouselSession', 
-                        param: {setId, setTitle, filepath} 
-                    });
-                    
-                } catch (error) {
-                    this.showScreen('loading-screen', true); // true = не пишем в историю
-                    document.getElementById('loading-screen').innerHTML = `<p class="text-red-500 text-center py-6">Ошибка загрузки карусели: ${error.message}</p>`;
-                    console.error('Carousel Data Load Error:', error);
-                    // Автоматически вернем пользователя назад через 2 сек
-                    setTimeout(() => this.handleTelegramBackClick(), 2000);
-                }
-            },
-
-            showCarouselCard() {
-                const card = this.carouselCards[this.currentCarouselIndex];
-                document.getElementById('carousel-word-count').textContent = `Слово ${this.currentCarouselIndex + 1} из ${this.carouselCards.length}`;
-                document.getElementById('carousel-image').src = card.image;
-                document.getElementById('carousel-word').textContent = card.word;
-                document.getElementById('carousel-translation').textContent = card.translation;
-                
-                document.getElementById('carousel-translation').classList.add('hidden');
-                document.getElementById('toggle-translation-button').textContent = 'Показать перевод';
-                // [ИЗМЕНЕНО] Убран вызов renderBackButton
-            },
-
-            showNextWord() {
-                this.currentCarouselIndex = (this.currentCarouselIndex + 1) % this.carouselCards.length;
-                this.showCarouselCard();
-            },
-
-            showPrevWord() {
-                this.currentCarouselIndex = (this.currentCarouselIndex - 1 + this.carouselCards.length) % this.carouselCards.length;
-                this.showCarouselCard();
-            },
-            
-            toggleTranslation() {
-                const translationEl = document.getElementById('carousel-translation');
-                const button = document.getElementById('toggle-translation-button');
-                const isHidden = translationEl.classList.contains('hidden');
-                
-                if (isHidden) {
-                    translationEl.classList.remove('hidden');
-                    button.textContent = 'Скрыть перевод';
-                    this.speakGerman(this.carouselCards[this.currentCarouselIndex].word); 
-                } else {
-                    translationEl.classList.add('hidden');
-                    button.textContent = 'Показать перевод';
-                }
-            },
-
-            // ==================== ЛОГИКА МАНТР (НОВЫЙ БЛОК) ====================
-            async startMantraSession(setId, setTitle, filepath, isBack = false) {
-                this.openModal('mantra-modal');
-                try {
-                    const response = await fetch(getBaseUrl() + filepath);
-                    if (!response.ok) throw new Error('Не удалось загрузить мантры.');
-                    const raw = await response.text();
-                    this.mantraCards = JSON.parse(raw);
-                    if (!Array.isArray(this.mantraCards) || this.mantraCards.length === 0) {
-                        document.getElementById('mantra-modal-body').innerHTML = '<p class="text-center text-gray-500 py-6">Набор мантр пуст.</p>';
-                        return;
-                    }
-                    this.currentMantraIndex = 0;
-                    this.mantraKnownCount = 0;
-                    this.mantraUnknownCount = 0;
-                    this.mantraSeen = [];
-                    // Reset UI: show card area, hide summary, clear actions
-                    document.getElementById('mantra-card-area').classList.remove('hidden');
-                    document.getElementById('mantra-summary').classList.add('hidden');
-                    document.getElementById('mantra-summary-actions').innerHTML = '';
-                    this.showMantraCard();
-                } catch (err) {
-                    console.error('Mantra load error', err);
-                    document.getElementById('mantra-modal-body').innerHTML = `<p class="text-red-500 text-center py-6">Ошибка загрузки мантр: ${err.message}</p>`;
-                }
-            },
-
-            showMantraCard() {
-                const card = this.mantraCards[this.currentMantraIndex];
-                if (!card) return;
-                // Russian always visible
-                document.getElementById('mantra-russian').textContent = card.ru || '';
-                // German hidden by default
-                document.getElementById('mantra-german').textContent = card.de || '';
-                document.getElementById('mantra-german-hidden').classList.remove('hidden');
-                document.getElementById('mantra-german-shown').classList.add('hidden');
-                document.getElementById('mantra-progress').textContent = `${this.currentMantraIndex + 1} / ${this.mantraCards.length}`;
-            },
-
-            showMantraAnswer() {
-                document.getElementById('mantra-german-hidden').classList.add('hidden');
-                document.getElementById('mantra-german-shown').classList.remove('hidden');
-            },
-
-            flipMantraCard() {
-                // Deprecated - no longer used in new design
-            },
-
-            speakMantra(text) {
-                if (!text) return;
-                if (window.speechSynthesis) {
-                    const utter = new SpeechSynthesisUtterance(text);
-                    utter.lang = 'de-DE';
-                    window.speechSynthesis.cancel();
-                    window.speechSynthesis.speak(utter);
-                }
-            },
-
-            handleMantraAnswer(known) {
-                // record answer
-                if (known) this.mantraKnownCount++;
-                else this.mantraUnknownCount++;
-                this.mantraSeen.push({ index: this.currentMantraIndex, known });
-
-                // advance to next card or show summary
-                this.currentMantraIndex++;
-                if (this.currentMantraIndex >= this.mantraCards.length) {
-                    // finished session
-                    this.showMantraSummary();
-                } else {
-                    // reset UI for next card
-                    this.showMantraCard();
-                }
-            },
-
-            showMantraSummary() {
-                // hide card area, show summary
-                document.getElementById('mantra-card-area').classList.add('hidden');
-                const summaryEl = document.getElementById('mantra-summary');
-                summaryEl.classList.remove('hidden');
-                summaryEl.innerHTML = `
-                    <p class="text-lg font-semibold">Результат</p>
-                    <p class="mt-2">Пройдено: <b>${this.mantraKnownCount}</b></p>
-                    <p>Не пройдено: <b>${this.mantraUnknownCount}</b></p>
-                `;
-                // options: repeat not-known, retry all, close
-                document.getElementById('mantra-summary-actions').innerHTML = `
-                    <div class="flex gap-2 mt-4">
-                        <button class="btn-success flex-1" onclick="window.App.restartMantraWithFilter(false)">Повторить непроходные</button>
-                        <button class="btn-primary flex-1" onclick="window.App.restartMantraWithFilter(true)">Пройти заново все</button>
-                    </div>
-                    <div class="mt-3 text-center">
-                        <button class="py-2 px-4 text-sm text-gray-600" onclick="window.App.closeModal('mantra-modal')">Закрыть</button>
-                    </div>
-                `;
-            },
-
-            restartMantraWithFilter(restartAll) {
-                // rebuild mantraCards view
-                if (restartAll) {
-                    this.currentMantraIndex = 0;
-                    this.mantraKnownCount = 0;
-                    this.mantraUnknownCount = 0;
-                    document.getElementById('mantra-summary').classList.add('hidden');
-                    document.getElementById('mantra-summary-actions').innerHTML = '';
-                    document.getElementById('mantra-card-area').classList.remove('hidden');
-                    this.showMantraCard();
-                } else {
-                    // filter to unknowns
-                    const unknownIndexes = this.mantraSeen.filter(s => !s.known).map(s => s.index);
-                    if (unknownIndexes.length === 0) {
-                        // nothing to repeat
-                        alert('Нет непроходных карточек для повторения.');
-                        return;
-                    }
-                    this.mantraCards = unknownIndexes.map(i => this.mantraCards[i]);
-                    this.currentMantraIndex = 0;
-                    this.mantraKnownCount = 0;
-                    this.mantraUnknownCount = 0;
-                    this.mantraSeen = [];
-                    document.getElementById('mantra-summary').classList.add('hidden');
-                    document.getElementById('mantra-summary-actions').innerHTML = '';
-                    document.getElementById('mantra-card-area').classList.remove('hidden');
-                    this.showMantraCard();
-                }
-            },
-
-            // [ИЗМЕНЕНО] Функция УДАЛЕНА, так как HTML кнопка удалена
-            // returnToCarouselList() { ... }
-
-
-            // ==================== ЛОГИКА ПОВТОРЕНИЯ (ИЗМЕНЕНО) ====================
-
-            promptForDirection(setId, mode, source = 'allsets') {
-                this.tempSetId = setId;
-                this.tempMode = mode;
-                this.tempSource = source;
-                this.openModal('direction-modal');
-            },
-
-            closeDirectionModal() {
-                this.closeModal('direction-modal');
-            },
-
-            startSessionWithDirection(direction) {
-                this.currentDirection = direction;
-                this.closeDirectionModal();
-                // [ИЗМЕНЕНО] Передаем renderFunc и источник в startSession
-                this.startSession(this.tempSetId, this.tempMode, false, this.tempSource);
-            },
-            
-            startSession(setId, mode, isBack = false, source = 'allsets') {
-                const set = WORD_SETS.find(s => s.id === setId);
-                if (!set) return;
-
-                this.isPracticeMode = (mode === 'practice');
-                this.isPracticeAllMode = (mode === 'practice-all');
-
-                // Заполняем массив карточек для сессии в зависимости от режима
-                if (this.isPracticeAllMode) {
-                    // Практика всех слов: показываем ВСЕ карточки набора БЕЗ фильтрации
-                    this.sessionCards = set.cards.map(card => ({ ...card }));
-                } else if (this.isPracticeMode) {
-                    // В режиме Практика: если пришли из меню Недели - показываем все карточки недели,
-                    // если из раздела "Все наборы слов" - показываем только те карточки, которые пользователь пометил как "Учить"
-                    if (source === 'week') {
-                        this.sessionCards = set.cards.map(card => ({ ...card }));
-                    } else {
-                        this.sessionCards = set.cards.filter(card => (this.userProgress[card.id] && this.userProgress[card.id].isLearning === true));
-                    }
-                } else {
-                    // Повторение: только карточки, доступные к повторению сегодня (и помеченные как учатся)
-                    const today = this.getTodayDateString();
-                    this.sessionCards = set.cards.filter(card => {
-                        const progress = this.userProgress[card.id];
-                        const isVisible = progress && progress.isLearning === true;
-                        return isVisible && (!progress || (progress.nextReview && progress.nextReview <= today));
-                    });
-                }
-
-                // [ИЗМЕНЕНО] Меняем текст кнопок и видимость в зависимости от режима
-                const rateNoButton = document.querySelector('#controls-rate button:nth-child(1)');
-                const rateYesButton = document.querySelector('#controls-rate button:nth-child(2)');
-
-                if (this.isPracticeAllMode) {
-                    // Режим "Практика всех слов": показываем только навигационные кнопки (Назад, Подсказка, Вперед)
-                    document.getElementById('controls-show').classList.add('hidden');
-                    document.getElementById('controls-rate').classList.add('hidden');
-                    document.getElementById('controls-practice-all').classList.remove('hidden');
-                } else if (this.isPracticeMode) {
-                    // Режим "Практика": Учить (false) / Знаю (true)
-                    rateNoButton.innerHTML = 'Учить 🎓';
-                    rateYesButton.innerHTML = 'Знаю 👍';
-                    document.getElementById('controls-show').classList.add('hidden');
-                    document.getElementById('controls-rate').classList.remove('hidden');
-                    document.getElementById('controls-practice-all').classList.add('hidden');
-                } else {
-                    // Режим "Повторение": Не помню (false) / Помню (true)
-                    rateNoButton.innerHTML = 'Не помню ❌';
-                    rateYesButton.innerHTML = 'Помню ✅';
-                    document.getElementById('controls-show').classList.remove('hidden');
-                    document.getElementById('controls-rate').classList.add('hidden');
-                    document.getElementById('controls-practice-all').classList.add('hidden');
-                }
-
-                // [ИЗМЕНЕНО] Состояние для истории (включаем источник)
-                const historyState = { renderFunc: 'startSession', param: {setId, mode, source} };
-
-                if (this.sessionCards.length === 0) {
-                    this.showScreen('finish-screen', isBack, historyState); // Записываем в историю
-                    document.getElementById('finish-screen-text').textContent = this.isPracticeMode 
-                        ? 'В этом наборе нет карточек.' 
-                        : 'Для этого набора нет карточек к повторению на сегодня!';
-                    return;
-                }
-
-                this.sessionCards.sort(() => Math.random() - 0.5);
-                this.currentCardIndex = 0;
-
-                this.showScreen('study-screen', isBack, historyState); // Записываем в историю
-                this.showNextCard();
-            },
-
-            showAnswer() {
-                document.getElementById('card').classList.add('is-flipped');
-                // В режиме Practice кнопки видны сразу и не меняются при перевороте
-                // В режиме PracticeAll кнопки видны всегда (навигационные)
-                if (!this.isPracticeMode && !this.isPracticeAllMode) {
-                    document.getElementById('controls-show').classList.add('hidden');
-                    document.getElementById('controls-rate').classList.remove('hidden');
-                }
-
-                if (this.currentDirection === 'ru-de') {
-                     this.speakGerman(this.sessionCards[this.currentCardIndex].back);
-                }
-            },
-            
-            showNextCard() {
-                if (this.currentCardIndex >= this.sessionCards.length) {
-                    // [ИЗМЕНЕНО] Состояние для истории
-                    const historyState = this.navigationHistory[this.navigationHistory.length - 1];
-                    this.showScreen('finish-screen', false, historyState); // Переиспользуем состояние, но не пишем в историю
-                    document.getElementById('finish-screen-text').textContent = 'Вы прошли все карточки в этой сессии.';
-                    return;
-                }
-                
-                const cardEl = document.getElementById('card');
-                cardEl.classList.remove('is-flipped', 'slide-in');
-                void cardEl.offsetWidth; // Трюк для перезапуска анимации
-                cardEl.classList.add('slide-in');
-
-                const totalCards = this.sessionCards.length;
-                const percent = ((this.currentCardIndex + 1) / totalCards) * 100;
-                document.getElementById('progress-bar').style.width = `${percent}%`;
-
-                // Показ кнопок в зависимости от режима: Practice — сразу две кнопки, PracticeAll — навигационные, Review — кнопка "Показать ответ"
-                if (this.isPracticeAllMode) {
-                    document.getElementById('controls-show').classList.add('hidden');
-                    document.getElementById('controls-rate').classList.add('hidden');
-                    document.getElementById('controls-practice-all').classList.remove('hidden');
-                } else if (this.isPracticeMode) {
-                    document.getElementById('controls-show').classList.add('hidden');
-                    document.getElementById('controls-rate').classList.remove('hidden');
-                    document.getElementById('controls-practice-all').classList.add('hidden');
-                } else {
-                    document.getElementById('controls-show').classList.remove('hidden');
-                    document.getElementById('controls-rate').classList.add('hidden');
-                    document.getElementById('controls-practice-all').classList.add('hidden');
-                }
-
-                const card = this.sessionCards[this.currentCardIndex];
-                
-                const speakerIconSvg = `
-                    <svg class="w-6 h-6 text-blue-500 hover:text-blue-700 inline-block ml-2 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 6v12a1 1 0 01-1.707.707L5.586 15z"></path>
-                    </svg>
-                `;
-                
-                const germanHtml = `
-                    <div class="flex items-center justify-center gap-2">
-                        <span>${card.back}</span>
-                        <span onclick="window.App.speakGerman('${card.back}', event)">
-                            ${speakerIconSvg}
-                        </span>
-                    </div>
-                `;
-
-                if (this.currentDirection === 'ru-de') {
-                    document.getElementById('card-front-text').textContent = card.front;
-                    document.getElementById('card-back-text').innerHTML = germanHtml;
-                } else {
-                    document.getElementById('card-front-text').innerHTML = germanHtml;
-                    document.getElementById('card-back-text').textContent = card.front;
-                    this.speakGerman(card.back);
-                }
-                
-                document.getElementById('hint-button').classList.toggle('hidden', !card.hintImage);
-                // Показываем/скрываем кнопку подсказки в режиме practice-all
-                document.getElementById('hint-button-practice-all').classList.toggle('hidden', !card.hintImage);
-            },
-            
-async handleAnswer(knewIt) {
-                if (this.isAdvancing) return; 
-                this.isAdvancing = true;
-
-                // [ИЗМЕНЕНО] Новая логика для Practice Mode, PracticeAll Mode и Review Mode
-                const card = this.sessionCards[this.currentCardIndex];
-                let progress = this.userProgress[card.id] || { box: 0 };
-
-                // В режиме "Практика всех слов" не меняем userProgress, просто переходим к следующей карточке
-                if (this.isPracticeAllMode) {
-                    // Практика без изменения статусов
-                    document.getElementById('card').classList.add('slide-out');
-                    setTimeout(() => {
-                        document.getElementById('card').classList.remove('slide-out'); 
-                        this.currentCardIndex++; 
-                        this.isAdvancing = false; 
-                        this.showNextCard(); 
-                    }, 400);
-                    return;
-                }
-
-                if (this.isPracticeMode) {
-                    // В режиме "Практика": "Учить" vs "Знаю"
-                    if (knewIt) { // "Знаю 👍" - пользователь нажал "Знаю" (knewIt = true)
-                        // Пользователь знает слово. Ставим высокий бокс (например, 5 = 30 дней)
-                        progress.box = 5;
-                        // Если пользователь знает слово — помечаем его как не изучаемое (скрывать в 'Все наборы')
-                        progress.isLearning = false;
-                    } else { // "Учить 🎓" - пользователь нажал "Учить" (knewIt = false)
-                        // Пользователь хочет учить. Ставим бокс 1 (1 день)
-                        progress.box = 1;
-                        // Пользователь пометил слово для изучения — показываем в 'Все наборы'
-                        progress.isLearning = true;
-                    }
-                } else {
-                    // В режиме "Повторение": "Не помню" vs "Помню"
-                    if (knewIt) { // "Помню ✅"
-                        // Пользователь вспомнил. Продвигаем бокс.
-                        progress.box = Math.min(6, (progress.box || 0) + 1);
-                    } else { // "Не помню ❌"
-                        // Пользователь забыл. Сбрасываем на бокс 1.
-                        progress.box = 1;
-                    }
-                }
-
-                // Общая логика: установить дату след. повторения и сохранить
-                // Эта логика теперь выполняется для ОБЕИХ режимов (Практика и Повторение)
-                progress.nextReview = this.getFutureDateString(REPETITION_INTERVALS[progress.box]);
-                this.userProgress[card.id] = progress;
-
-                if (this.isAuthReady) { 
-                    this.saveProgress(); 
-                }
-                
-                document.getElementById('card').classList.add('slide-out');
-                setTimeout(() => {
-                    document.getElementById('card').classList.remove('slide-out'); 
-                    this.currentCardIndex++; 
-                    this.isAdvancing = false; 
-                    this.showNextCard(); 
-                }, 400); 
-            },
-            
-            speakGerman(textToSpeak, event) {
-                if (event) {
-                    event.stopPropagation(); 
-                }
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-                    utterance.lang = 'de-DE'; 
-                    const voices = window.speechSynthesis.getVoices().filter(v => v.lang.includes('de-'));
-                    if (voices.length > 0) {
-                        utterance.voice = voices.find(v => v.name.includes('Anna')) || voices.find(v => v.name.includes('Google')) || voices[0];
-                    }
-                    window.speechSynthesis.speak(utterance);
-                }
-            },
-
-            // ==================== УТИЛИТЫ ====================
-
-            openModal(modalId) {
-                // [ИЗМЕНЕНО] Логика для перемещения плеера
-                if (modalId === 'transcript-modal') {
-                    const player = document.getElementById('audio-bar');
-                    const placeholder = document.getElementById('transcript-audio-player-placeholder');
-                    if (player && placeholder) {
-                        if (!this.audioPlayerOriginalParent) {
-                             this.audioPlayerOriginalParent = player.parentElement; // Кешируем родителя
-                        }
-                        placeholder.appendChild(player); // Перемещаем плеер в модалку
-                        player.classList.remove('fixed-audio-bar'); // Убираем "липкость"
-                        
-                        // Сбрасываем высоту плейсхолдера на главной странице
-                        const mainPlaceholder = document.getElementById('audio-bar-placeholder');
-                        if (mainPlaceholder) mainPlaceholder.style.height = '0px';
-                    }
-                }
-
-                // [ИЗМЕНЕНО] Код StoryApp.openModal() УДАЛЕН, т.к. это разные системы
-                const modal = document.getElementById(modalId);
-                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
-                
-                if (modal) {
-                    modal.classList.remove('hidden');
-                    setTimeout(() => {
-                        modal.classList.add('is-open', 'opacity-100');
-                        if (modalContent) modalContent.classList.add('is-open');
-                    }, 10);
-                }
-            },
-            
-            closeModal(modalId) {
-                // [ИЗМЕНЕНО] Логика для возврата плеера
-                if (modalId === 'transcript-modal') {
-                    const player = document.getElementById('audio-bar');
-                    // Получаем родителя из кеша (или по ID, если кеш пуст)
-                    const originalParent = this.audioPlayerOriginalParent || document.getElementById('audio-bar-wrapper'); 
-                    if (player && originalParent) {
-                        originalParent.prepend(player); // Возвращаем плеер в начало его контейнера
-                    }
-                }
-
-                // [НОВОЕ] Очистка мантра-сессии при закрытии модала
-                if (modalId === 'mantra-modal') {
-                    this.mantraCards = [];
-                    this.currentMantraIndex = 0;
-                    this.mantraKnownCount = 0;
-                    this.mantraUnknownCount = 0;
-                    this.mantraSeen = [];
-                }
-
-                // [ИЗМЕНЕНО] Код StoryApp.closeModal() УДАЛЕН
-                const modal = document.getElementById(modalId);
-                const modalContent = document.getElementById(`${modalId}-content`) || document.getElementById(`${modalId}-modal-content`);
-                
-                if (modal) {
-                    modal.classList.remove('is-open', 'opacity-100');
-                    if (modalContent) modalContent.classList.remove('is-open');
-                    setTimeout(() => modal.classList.add('hidden'), 300);
-                }
-            },
-
-            // [ИЗМЕНЕНО] closeDirectionModal теперь тоже использует App.closeModal
-            closeDirectionModal() {
-                this.closeModal('direction-modal');
-            },
-            
-            showHint() {
-                const card = this.sessionCards[this.currentCardIndex];
-                if (!card || !card.hintImage) return;
-                document.getElementById('hint-image').src = card.hintImage; 
-                this.openModal('hint-modal');
-            },
-
-            // ========== Методы для экрана "Все наборы" (переключения без изменения isLearning) ==========
-            allSetsRemember(cardId) {
-                const entry = this.findCardById(cardId);
-                if (!entry) return;
-                let progress = this.userProgress[cardId] || { box: 0 };
-                progress.box = Math.min(6, (progress.box || 0) + 1);
-                progress.nextReview = this.getFutureDateString(REPETITION_INTERVALS[progress.box]);
-                // Не меняем isLearning
-                this.userProgress[cardId] = progress;
-                if (this.isAuthReady) this.saveProgress();
-                this.renderAllSetsScreen(true);
-            },
-
-            allSetsForgot(cardId) {
-                const entry = this.findCardById(cardId);
-                if (!entry) return;
-                let progress = this.userProgress[cardId] || { box: 0 };
-                progress.box = 1;
-                progress.nextReview = this.getFutureDateString(REPETITION_INTERVALS[progress.box]);
-                // Не меняем isLearning
-                this.userProgress[cardId] = progress;
-                if (this.isAuthReady) this.saveProgress();
-                this.renderAllSetsScreen(true);
-            },
-
-            showHintForAllSet(cardId) {
-                const entry = this.findCardById(cardId);
-                if (!entry) return;
-                const card = entry.card;
-                if (card && card.hintImage) {
-                    document.getElementById('hint-image').src = card.hintImage;
-                } else {
-                    document.getElementById('hint-image').src = 'https://placehold.co/400x150/FCA5A5/FFFFFF?text=Нет+Изображения';
-                }
-                this.openModal('hint-modal');
-            },
-
-            // Навигация для режима "Практика всех слов"
-            prevCard() {
-                if (this.currentCardIndex > 0) {
-                    document.getElementById('card').classList.add('slide-out');
-                    setTimeout(() => {
-                        document.getElementById('card').classList.remove('slide-out');
-                        this.currentCardIndex--;
-                        this.isAdvancing = false;
-                        this.showNextCard();
-                    }, 400);
-                }
-            },
-
-            nextCard() {
-                if (this.currentCardIndex < this.sessionCards.length - 1) {
-                    document.getElementById('card').classList.add('slide-out');
-                    setTimeout(() => {
-                        document.getElementById('card').classList.remove('slide-out');
-                        this.currentCardIndex++;
-                        this.isAdvancing = false;
-                        this.showNextCard();
-                    }, 400);
-                } else {
-                    // Если это последняя карточка, переходим на экран завершения
-                    const historyState = this.navigationHistory[this.navigationHistory.length - 1];
-                    this.showScreen('finish-screen', false, historyState);
-                    document.getElementById('finish-screen-text').textContent = 'Вы прошли все карточки в этой сессии.';
-                }
-            },
-
-            // Вспомогательная функция: найти карточку по id и вернуть {set, card}
-            findCardById(cardId) {
-                for (let s of WORD_SETS) {
-                    for (let c of s.cards) {
-                        if (c.id === cardId) return { set: s, card: c };
-                    }
-                }
-                return null;
-            },
-
-            /**
-             * [ГЛАВНАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ]
-             * @param {string} screenId - ID экрана для показа
-             * @param {boolean} isBackNavigation - true, если это возврат (не пишем в историю)
-             * @param {object} historyState - { renderFunc, param } для записи в историю
-             * @param {boolean} clearStack - true, если нужно очистить всю историю (напр. "Домой")
-             */
-            showScreen(screenId, isBackNavigation = false, historyState = null, clearStack = false) {
-                
-                // [НОВОЕ ИСПРАВЛЕНИЕ №2]
-                // Если мы уходим с экрана истории, ставим аудио на паузу.
-                if (this.currentScreenId === 'content-viewer-screen' && screenId !== 'content-viewer-screen') {
-                    const audio = document.getElementById('story-audio-player');
-                    if (audio && !audio.paused) {
-                        audio.pause();
-                        // Обновляем UI кнопки (Play/Pause), чтобы при возврате
-                        // она была в правильном состоянии
-                        window.StoryApp.updateAudioUi(false);
-                    }
-                }
-                
-                // 1. Логика истории навигации
-                if (clearStack) {
-                    this.navigationHistory = [];
-                }
-                if (!isBackNavigation && historyState) {
-                    this.navigationHistory.push(historyState);
-                }
-                // На home-screen всегда сбрасываем историю до одного элемента
-                if (screenId === 'home-screen' && historyState) {
-                     this.navigationHistory = [historyState];
-                }
-
-                // 2. Логика отображения Экрана
-                this.currentScreenId = screenId;
-                ['loading-screen', 'home-screen', 'list-screen', 'study-screen', 'finish-screen', 'video-content-screen', 'external-link-screen', 'content-viewer-screen', 'carousel-list-screen', 'image-carousel-screen'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.classList.add('hidden');
-                });
-                const screen = document.getElementById(screenId);
-                if (screen) {
-                    screen.classList.remove('hidden');
-                }
-
-                // 3. Логика кнопок Telegram
-                if (!this.tg) return; // Безопасность, если tg еще не готов
-                
-                if (screenId === 'home-screen') {
-                    // Главный экран: Показываем "Schließen", прячем "Zurück"
-                    this.tg.BackButton.hide();
-                    this.tg.MainButton.setText('Schließen'); // "Закрыть"
-                    this.tg.MainButton.onClick(() => this.tg.close());
-                    this.tg.MainButton.show();
-                } else {
-                    // Любой другой экран: Показываем "Zurück", прячем "Schließen"
-                    this.tg.BackButton.show();
-                    this.tg.MainButton.hide();
-                }
-            },
-            
-            showError(message) {
-                this.showScreen('loading-screen'); // Показываем на экране загрузки
-                document.getElementById('loading-screen').innerHTML = `<p class="text-red-500 font-semibold">${message}</p>`;
-            },
-            
-            getTodayDateString() {
-                return new Date().toISOString().split('T')[0];
-            },
-
-            getFutureDateString(daysToAdd) {
-                const date = new Date();
-                date.setDate(date.getDate() + daysToAdd);
-                return date.toISOString().split('T')[0];
-            }
-        };
-        
-        // ==========================================================
-        // 3. ЗАПУСК ПРИЛОЖЕНИЯ (Conceptual Bootstrap)
-        // ==========================================================
-
-        window.addEventListener('load', () => {
-            // Предзагрузка голосов для синтеза речи
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.getVoices(); 
-                if (window.speechSynthesis.onvoiceschanged !== undefined) {
-                    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-                }
-            }
-            // Запускаем приложение
-            window.App.init();
+            wordItem.appendChild(left);
+            wordItem.appendChild(learnButton);
+            wordList.appendChild(wordItem);
         });
+    },
 
-    </script>
-    
+    showWordCard(word) {
+        document.getElementById('themes-section').classList.add('hidden');
+        document.getElementById('word-list-section').classList.add('hidden');
+        document.getElementById('word-card-section').classList.remove('hidden');
+
+        const wordCardImage = document.getElementById('word-card-image');
+        const wordCardWord = document.getElementById('word-card-word');
+        const wordCardTranslation = document.getElementById('word-card-translation');
+
+        wordCardImage.src = word.image || '';
+        wordCardWord.textContent = word.word || '';
+        wordCardTranslation.textContent = word.translation || '';
+    }
+};
+
+window.onload = () => {
+    window.App.loadThemes();
+};
+</script>
 </body>
 </html>

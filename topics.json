@@ -1,0 +1,14 @@
+[
+  {
+    "id": "health",
+    "title": "Здоровье",
+    "filepath": "carousel_health.json",
+    "image": "images/health.jfif"
+  },
+  {
+    "id": "work",
+    "title": "Работа",
+    "filepath": "carousel_work.json",
+    "image": "images/work.jfif"
+  }
+]
