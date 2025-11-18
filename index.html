@@ -703,6 +703,12 @@
             </div>
         </div>
 
+        <!-- Темы Block (always visible on main screen) -->
+        <section id="themes-block" class="mb-8">
+          <h2 class="text-xl font-bold mb-4">Темы</h2>
+          <div id="themes-list" class="grid grid-cols-2 gap-4"></div>
+        </section>
+
     </div>
 
 <div id="navigation-footer" class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-500 to-blue-600 border-t border-blue-700 shadow-2xl z-40 max-w-xl mx-auto">
@@ -867,7 +873,7 @@
             <p class="mb-3">Dann fragt er:</p>
             <p class="mb-3">„Brauchen Sie auch ein Attest für die Arbeit?“</p>
             <p class="mb-3">Thomas antwortet:</p>
-            <p class="mb-3">„Ja, bitte – für три Tage.";</p>
+            <p class="mb-3">„Ja, bitte – для три дня.";</p>
             <p class="mb-3">Dr. Keller notiert es и lächelt:</p>
             <p class="mb-3">„In Ordnung. Dann ruhen Sie sich gut aus.";</p>
             <p class="mb-3">Zu Hause hilft ihm seine Frau, das Fenster zu öffnen, bringt Tee и супpe ans Bett:</p>
@@ -875,7 +881,7 @@
             <p class="mb-3">Nach zwei Tagen geht es ihm schon besser.</p>
             <p class="mb-3">Die Schmerzen sind почти weg, das Brennen im Мagen ist vorbei, и он может снова спать.</p>
             <p class="mb-3">Am dritten Tag fühlt sich Thomas stark und изgerуht.</p>
-            <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos war и die Medikamente gut wirken.</p>
+            <p class="mb-3">Er beschließt, am nächsten Morgen wieder zur Arbeit zu gehen – froh, dass alles harmlos было и die Medikamente gut wirken.</p>
         </div>
 
         <button onclick="window.App.closeModal('transcript-modal')"
@@ -954,12 +960,10 @@ window.App = {
 
         themesList.appendChild(topicItem);
       });
-      document.getElementById('themes-section').classList.remove('hidden');
     } catch (error) {
       console.error('Error loading themes:', error);
       const themesList = document.getElementById('themes-list');
       themesList.innerHTML = '<p class="text-red-500">Ошибка загрузки данных</p>';
-      document.getElementById('themes-section').classList.remove('hidden');
     }
   },
 
