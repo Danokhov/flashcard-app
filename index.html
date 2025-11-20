@@ -1805,8 +1805,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     case 'renderHomeScreen':
                         this.renderHomeScreen(isBackNavigation);
                         break;
-                    case 'renderWeeklySelections':
-                        this.renderWeeklySelections(isBackNavigation);
+                    case 'renderTopicSelection':
+                        this.renderTopicSelection(isBackNavigation);
                         break;
                     case 'renderWeekContent':
                         this.renderWeekContent(param, isBackNavigation);
@@ -1966,7 +1966,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
 
-            renderWeeklySelections(isBack = false) {
+            renderTopicSelection(isBack = false) {
                 // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
                 document.getElementById('list-title').innerText = '🗂️ Все Темы';
                 document.getElementById('filter-controls').innerHTML = '';
@@ -2050,7 +2050,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 });
                 
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('list-screen', isBack, { renderFunc: 'renderWeeklySelections', param: null });
+                this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicSelection', param: null });
             },
             
             showWeekDetails(weekNum, description) {
