@@ -2078,6 +2078,50 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 `;
                 container.appendChild(button);
             },
+
+            renderWordListScreen(setId, title, isBack = false) {
+                document.getElementById('list-title').innerText = title;
+                document.getElementById('filter-controls').innerHTML = '';
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '';
+
+                const wordSet = WORD_SETS.find(s => s.id === setId);
+                if (!wordSet) {
+                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Набор слов не найден.</p>';
+                    this.showScreen('list-screen', isBack, { renderFunc: 'renderWordListScreen', param: {setId, title} });
+                    return;
+                }
+
+                const wordsContainer = document.createElement('div');
+                wordsContainer.className = 'space-y-2';
+
+                wordSet.cards.forEach(card => {
+                    const wordButton = document.createElement('button');
+                    wordButton.className = 'w-full text-left p-4 bg-white hover:bg-blue-50 rounded-xl shadow-md transition duration-150 flex justify-between items-center';
+                    wordButton.innerHTML = `
+                        <div>
+                            <span class="font-semibold text-gray-800">${card.front}</span>
+                            <span class="block text-sm text-gray-500">${card.back || ''}</span>
+                        </div>
+                        <span class="text-blue-500">&rarr;</span>
+                    `;
+                    wordButton.addEventListener('click', () => {
+                        this.currentSetId = setId;
+                        const cardIndex = wordSet.cards.findIndex(c => c.id === card.id);
+                        if (cardIndex !== -1) {
+                            this.sessionCards = wordSet.cards.map(c => ({...c}));
+                            this.currentCardIndex = cardIndex;
+                            this.isPracticeMode = false;
+                            this.isPracticeAllMode = true;
+                            this.showNextCard(false);
+                        }
+                    });
+                    wordsContainer.appendChild(wordButton);
+                });
+
+                contentListDiv.appendChild(wordsContainer);
+                this.showScreen('list-screen', isBack, { renderFunc: 'renderWordListScreen', param: {setId, title} });
+            },
             
             renderWeekContent(weekNum, isBack = false) {
                 const weekData = WEEKLY_CONTENT_MAP[weekNum];
@@ -2096,64 +2140,64 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const contentListDiv = document.getElementById('content-list');
                 contentListDiv.innerHTML = '';
                 
+                // 1. Видео ассоциации
+                if (weekData.associationVideo) {
+                    const videoWrapper = document.createElement('div');
+                    videoWrapper.className = 'mb-4';
 
-                // 1. Список слов по теме
-                const wordSet = WORD_SETS.find(s => s.id === weekData.wordSetId);
-                if (wordSet) {
-                    const wordsSection = document.createElement('div');
-                    wordsSection.className = 'mb-4';
-                    const title = document.createElement('div');
-                    title.className = 'font-semibold text-lg mb-2 text-gray-800';
-                    title.textContent = 'Список слов';
-                    wordsSection.appendChild(title);
-                    const ul = document.createElement('ul');
-                    ul.className = 'list-disc pl-6';
-                    wordSet.cards.forEach(card => {
-                        const li = document.createElement('li');
-                        li.className = 'mb-1 cursor-pointer hover:text-blue-600 transition';
-                        li.textContent = card.front + (card.back ? ` — ${card.back}` : '');
-                        li.addEventListener('click', () => {
-                            window.App.openWordCard(card.id, wordSet.id);
-                        });
-                        ul.appendChild(li);
+                    const poster = document.createElement('div');
+                    poster.className = 'relative rounded-lg overflow-hidden bg-black';
+                    poster.style.paddingTop = '56.25%';
+
+                    const playBtn = document.createElement('button');
+                    playBtn.type = 'button';
+                    playBtn.className = 'absolute inset-0 w-full h-full flex items-center justify-center text-white';
+                    playBtn.setAttribute('aria-label', 'Play association video');
+                    playBtn.innerHTML = `<svg class="w-16 h-16 opacity-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v18l15-9L5 3z"/></svg>`;
+
+                    playBtn.addEventListener('click', () => {
+                        const iframe = document.createElement('iframe');
+                        iframe.style.position = 'absolute';
+                        iframe.style.top = '0';
+                        iframe.style.left = '0';
+                        iframe.style.width = '100%';
+                        iframe.style.height = '100%';
+                        iframe.src = weekData.associationVideo;
+                        iframe.setAttribute('frameborder', '0');
+                        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+                        iframe.setAttribute('allowfullscreen', '');
+                        poster.replaceWith(iframe);
                     });
-                    wordsSection.appendChild(ul);
-                    contentListDiv.appendChild(wordsSection);
+
+                    poster.appendChild(playBtn);
+                    videoWrapper.appendChild(poster);
+                    contentListDiv.appendChild(videoWrapper);
                 }
 
-                // Мантры полезных фраз — открывает модальное окно с карточками
+                // 2. Список слов по теме (как подраздел)
+                const wordSet = WORD_SETS.find(s => s.id === weekData.wordSetId);
+                if (wordSet) {
+                    this.renderMenuCard(contentListDiv, 
+                        `📝 Список слов`, 
+                        `${wordSet.cards.length} слов для изучения`,
+                        `window.App.renderWordListScreen('${weekData.wordSetId}', 'Список слов — Тема ${weekNum}')`,
+                        'bg-white hover:bg-gray-50'
+                    );
+                }
+
+                // 3. Упражнения
+                this.renderMenuCard(contentListDiv, 
+                    `✏️ Упражнения`, 
+                    `Практические задания`,
+                    `window.App.promptForDirection('${weekData.wordSetId}', 'practice', 'week')`,
+                    'bg-green-100 hover:bg-green-200'
+                );
+
+                // 4. Мантры полезных фраз
                 this.renderMenuCard(contentListDiv,
                     `🕯️ Мантры полезных фраз`,
                     'Короткие полезные фразы для ежедневной практики',
                     `window.App.currentWeekMantraData = { setId: 'mantra_week1', setTitle: 'Мантры полезных фраз', filepath: 'mantra_week1.json' }; window.App.startMantraSession('mantra_week1','Мантры полезных фраз','mantra_week1.json')`
-                );
-                
-                let storyAction;
-                // [ИЗМЕНЕНО] Проверяем по ID, а не по storyLink
-                const storyId = `week_${weekNum}`;
-                if (this.allStoryContent[storyId]) {
-                    storyAction = `window.App.renderStoryScreen('📖 История по теме ${weekNum}', '${storyId}')`; 
-                } else if (weekData.storyLink) {
-                    // Оставляем как запасной вариант для внешних ссылок
-                    storyAction = `window.App.renderExternalLinkScreen('📖 История по теме ${weekNum}', '${weekData.storyLink}')`; 
-                } else {
-                    storyAction = `void(0)`; // Блокируем, если нет контента
-                }
-                
-                this.renderMenuCard(contentListDiv, 
-                    `📖 История по теме`, 
-                    `Видео + квиз`,
-                    storyAction,
-                    (this.allStoryContent[storyId] || weekData.storyLink) ? 'bg-white hover:bg-gray-50' : 'button-locked'
-                );
-
-
-                // 4. Слова по теме
-                this.renderMenuCard(contentListDiv, 
-                    `📚 Слова по теме`, 
-                    `Повторение ${WORD_SETS.find(s => s.id === weekData.wordSetId)?.cards.length || 0} слов`,
-                    `window.App.promptForDirection('${weekData.wordSetId}', 'practice', 'week')`,
-                    'bg-green-100 hover:bg-green-200'
                 );
                 
                 // 5. Полезные фразы
