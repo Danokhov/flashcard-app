@@ -2096,51 +2096,30 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const contentListDiv = document.getElementById('content-list');
                 contentListDiv.innerHTML = '';
                 
-                // 1. Ассоциации на неделю (Видео + Карусель)
-                const associationInstructionText = `<b>📌 Как учить слова:</b><br>
-1. Просмотри видео ассоциаций для запоминания<br>
-2. После этого повтор с помощью карусели ассоциаций<br>
-3. Эти слова будут доступны в Сете за неделю`;
-                // Render association video placeholder (lazy-load iframe on demand)
-                if (weekData.associationVideo) {
-                    const videoWrapper = document.createElement('div');
-                    videoWrapper.className = 'mb-4';
 
-                    // Poster wrapper keeps 16:9 aspect ratio
-                    const poster = document.createElement('div');
-                    poster.className = 'relative rounded-lg overflow-hidden bg-black';
-                    poster.style.paddingTop = '56.25%'; // 16:9 aspect
-
-                    const playBtn = document.createElement('button');
-                    playBtn.type = 'button';
-                    playBtn.className = 'absolute inset-0 w-full h-full flex items-center justify-center text-white';
-                    playBtn.setAttribute('aria-label', 'Play association video');
-                    playBtn.innerHTML = `<svg class="w-16 h-16 opacity-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v18l15-9L5 3z"/></svg>`;
-
-                    // Inject iframe only when user clicks play
-                    playBtn.addEventListener('click', () => {
-                        const iframe = document.createElement('iframe');
-                        iframe.style.position = 'absolute';
-                        iframe.style.top = '0';
-                        iframe.style.left = '0';
-                        iframe.style.width = '100%';
-                        iframe.style.height = '100%';
-                        iframe.src = weekData.associationVideo;
-                        iframe.setAttribute('frameborder', '0');
-                        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-                        iframe.setAttribute('allowfullscreen', '');
-                        poster.replaceWith(iframe);
+                // 1. Список слов по теме
+                const wordSet = WORD_SETS.find(s => s.id === weekData.wordSetId);
+                if (wordSet) {
+                    const wordsSection = document.createElement('div');
+                    wordsSection.className = 'mb-4';
+                    const title = document.createElement('div');
+                    title.className = 'font-semibold text-lg mb-2 text-gray-800';
+                    title.textContent = 'Список слов';
+                    wordsSection.appendChild(title);
+                    const ul = document.createElement('ul');
+                    ul.className = 'list-disc pl-6';
+                    wordSet.cards.forEach(card => {
+                        const li = document.createElement('li');
+                        li.className = 'mb-1 cursor-pointer hover:text-blue-600 transition';
+                        li.textContent = card.front + (card.back ? ` — ${card.back}` : '');
+                        li.addEventListener('click', () => {
+                            window.App.openWordCard(card.id, wordSet.id);
+                        });
+                        ul.appendChild(li);
                     });
-
-                    poster.appendChild(playBtn);
-                    videoWrapper.appendChild(poster);
-                    contentListDiv.appendChild(videoWrapper);
+                    wordsSection.appendChild(ul);
+                    contentListDiv.appendChild(wordsSection);
                 }
-                this.renderMenuCard(contentListDiv, 
-                    `🧠 Ассоциации: видео & визуальное обучение`, 
-                    weekData.associationTitle,
-                    `window.App.currentWeekCarouselData = {setId: '${weekData.carouselId}', setTitle: '${weekData.associationTitle.replace(/'/g, "\\'")}', filepath: 'carousel_week1.json'}; window.App.renderVideoContentScreen('${weekData.associationTitle.replace(/'/g, "\\'")}', '${weekData.associationVideo}', \`${associationInstructionText.replace(/`/g, '\\`')}\`)`
-                );
 
                 // Мантры полезных фраз — открывает модальное окно с карточками
                 this.renderMenuCard(contentListDiv,
