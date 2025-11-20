@@ -2086,9 +2086,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const isTrialLesson = !this.isSubscriber && weekNum === 1;
                 
                 if (isTrialLesson) {
-                    document.getElementById('list-title').innerText = `🚀 Контент Пробного урока`;
+                    document.getElementById('list-title').innerText = `Тема ${weekNum}`;
                 } else {
-                    document.getElementById('list-title').innerText = `📚 Контент Недели ${weekNum}`;
+                    document.getElementById('list-title').innerText = `Тема ${weekNum}`;
                 }
 
                 // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
