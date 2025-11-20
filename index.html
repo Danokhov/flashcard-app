@@ -2106,14 +2106,25 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         <span class="text-blue-500">&rarr;</span>
                     `;
                     wordButton.addEventListener('click', () => {
-                        this.currentSetId = setId;
                         const cardIndex = wordSet.cards.findIndex(c => c.id === card.id);
                         if (cardIndex !== -1) {
                             this.sessionCards = wordSet.cards.map(c => ({...c}));
                             this.currentCardIndex = cardIndex;
                             this.isPracticeMode = false;
                             this.isPracticeAllMode = true;
-                            this.showNextCard(false);
+                            this.currentSetId = setId;
+                            
+                            // Настраиваем UI для режима просмотра всех слов
+                            document.getElementById('controls-rate').classList.add('hidden');
+                            document.getElementById('controls-practice').classList.add('hidden');
+                            document.getElementById('controls-practice-all').classList.remove('hidden');
+                            
+                            // Показываем экран и карточку
+                            this.showScreen('study-screen', false, { 
+                                renderFunc: 'renderWordListScreen', 
+                                param: {setId, title} 
+                            });
+                            this.showNextCard();
                         }
                     });
                     wordsContainer.appendChild(wordButton);
