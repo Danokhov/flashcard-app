@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Интервальное повторение</title>
     <!-- Подключаем Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,6 +20,11 @@
             min-height: 100vh;
             user-select: none;
             -webkit-user-select: none;
+            overflow-x: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            touch-action: pan-y;
         }
 
         /* Стили для анимации переворота карточки */
@@ -307,10 +312,10 @@
     </style>
 </head>
 
-<body class="min-h-screen bg-gray-100 font-sans p-4 pb-28">
+<body class="min-h-screen bg-gray-100 font-sans p-4 pb-28" style="overflow-y: auto; overflow-x: hidden;">
 
     <!-- Основной контейнер приложения -->
-    <div id="app" class="max-w-xl mx-auto">
+    <div id="app" class="max-w-xl mx-auto" style="touch-action: pan-y;">
         
         <!-- 1. Экран Загрузки (виден по умолчанию) -->
         <div id="loading-screen" class="text-center py-20">
