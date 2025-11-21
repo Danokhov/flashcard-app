@@ -1,0 +1,849 @@
+[
+  {
+    "id": "ex_antibiotikum_gap_fill_1",
+    "wordId": "das_antibiotikum",
+    "type": "gap_fill",
+    "question": "Вставьте правильное слово в предложение",
+    "sentence": "Der Arzt verschreibt mir ein ___.",
+    "answer": "Antibiotikum",
+    "options": ["Antibiotikum", "Medikament", "Rezept", "Apotheke"],
+    "explanation": "Antibiotikum (das) — антибиотик. Врач выписывает антибиотик."
+  },
+  {
+    "id": "ex_antibiotikum_translate_1",
+    "wordId": "das_antibiotikum",
+    "type": "translate",
+    "question": "Переведите на немецкий: Врач выписывает мне антибиотик",
+    "answer": "Der Arzt verschreibt mir ein Antibiotikum",
+    "explanation": "Используется артикль 'das' и слово 'Antibiotikum' (средний род)"
+  },
+  {
+    "id": "ex_antibiotikum_useful_phrase_1",
+    "wordId": "das_antibiotikum",
+    "type": "useful_phrase",
+    "phrase": "Ich brauche ein Antibiotikum gegen die Infektion.",
+    "question": "Повторите полезную фразу",
+    "audioUrl": null,
+    "explanation": "Фраза: Мне нужен антибиотик против инфекции"
+  },
+  {
+    "id": "ex_beschwerde_gap_fill_1",
+    "wordId": "die_beschwerde",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich habe ___ im Magen.",
+    "answer": "Beschwerden",
+    "options": ["Beschwerden", "Krankheit", "Schmerzen", "Gefühl"],
+    "explanation": "Beschwerden (die, мн.ч.) — жалобы. У меня жалобы на желудок."
+  },
+  {
+    "id": "ex_beschwerde_translate_1",
+    "wordId": "die_beschwerde",
+    "type": "translate",
+    "question": "Переведите на русский: Ich habe Beschwerden im Magen",
+    "answer": "У меня жалобы на желудок",
+    "explanation": "Beschwerde — жалоба (здоровье), используется во множественном числе"
+  },
+  {
+    "id": "ex_diagnose_gap_fill_1",
+    "wordId": "die_diagnose",
+    "type": "gap_fill",
+    "question": "Вставьте правильное слово",
+    "sentence": "Der Arzt stellt eine ___ .",
+    "answer": "Diagnose",
+    "options": ["Diagnose", "Behandlung", "Rezept", "Untersuchung"],
+    "explanation": "Diagnose stellen — поставить диагноз"
+  },
+  {
+    "id": "ex_diagnose_sentence_training_1",
+    "wordId": "die_diagnose",
+    "type": "sentence_training",
+    "sentence": "Der Arzt stellt eine Diagnose nach der Untersuchung.",
+    "question": "Составьте предложение из слов",
+    "explanation": "Врач ставит диагноз после обследования"
+  },
+  {
+    "id": "ex_erkältung_gap_fill_1",
+    "wordId": "die_erkältung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe eine starke ___.",
+    "answer": "Erkältung",
+    "options": ["Erkältung", "Grippe", "Fieber", "Husten"],
+    "explanation": "Erkältung (die) — простуда. У меня сильная простуда."
+  },
+  {
+    "id": "ex_erkältung_useful_phrase_1",
+    "wordId": "die_erkältung",
+    "type": "useful_phrase",
+    "phrase": "Bei einer Erkältung sollte man viel trinken und sich ausruhen.",
+    "question": "Запомните полезную фразу о простуде",
+    "explanation": "При простуде следует много пить и отдыхать"
+  },
+  {
+    "id": "ex_fieber_gap_fill_1",
+    "wordId": "das_fieber",
+    "type": "gap_fill",
+    "question": "Вставьте слово",
+    "sentence": "Das Kind hat hohes ___.",
+    "answer": "Fieber",
+    "options": ["Fieber", "Temperatur", "Hitze", "Krankheit"],
+    "explanation": "Fieber haben — иметь температуру/лихорадку"
+  },
+  {
+    "id": "ex_fieber_translate_1",
+    "wordId": "das_fieber",
+    "type": "translate",
+    "question": "Переведите: У ребенка высокая температура",
+    "answer": "Das Kind hat hohes Fieber",
+    "explanation": "Используется 'das Fieber' (средний род) и прилагательное 'hoch'"
+  },
+  {
+    "id": "ex_gesundheit_gap_fill_1",
+    "wordId": "die_gesundheit",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich achte auf meine ___.",
+    "answer": "Gesundheit",
+    "options": ["Gesundheit", "Fitness", "Körper", "Leben"],
+    "explanation": "Auf die Gesundheit achten — следить за здоровьем"
+  },
+  {
+    "id": "ex_gesundheit_useful_phrase_1",
+    "wordId": "die_gesundheit",
+    "type": "useful_phrase",
+    "phrase": "Gesundheit ist das wichtigste im Leben.",
+    "question": "Повторите поговорку",
+    "explanation": "Здоровье — самое важное в жизни"
+  },
+  {
+    "id": "ex_grippe_gap_fill_1",
+    "wordId": "die_grippe",
+    "type": "gap_fill",
+    "question": "Вставьте правильное слово",
+    "sentence": "Im Winter haben viele Menschen die ___.",
+    "answer": "Grippe",
+    "options": ["Grippe", "Erkältung", "Infektion", "Krankheit"],
+    "explanation": "Grippe (die) — грипп. Зимой многие болеют гриппом."
+  },
+  {
+    "id": "ex_husten_gap_fill_1",
+    "wordId": "der_husten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe starken ___.",
+    "answer": "Husten",
+    "options": ["Husten", "Schnupfen", "Hals", "Schmerz"],
+    "explanation": "Husten (der) — кашель. У меня сильный кашель."
+  },
+  {
+    "id": "ex_husten_sentence_training_1",
+    "wordId": "der_husten",
+    "type": "sentence_training",
+    "sentence": "Bei Husten hilft ein warmer Tee mit Honig.",
+    "question": "Составьте предложение",
+    "explanation": "При кашле помогает теплый чай с медом"
+  },
+  {
+    "id": "ex_körper_gap_fill_1",
+    "wordId": "der_körper",
+    "type": "gap_fill",
+    "question": "Вставьте слово",
+    "sentence": "Der menschliche ___ ist sehr komplex.",
+    "answer": "Körper",
+    "options": ["Körper", "Organismus", "System", "Mensch"],
+    "explanation": "Körper (der) — тело. Человеческое тело очень сложное."
+  },
+  {
+    "id": "ex_krankheit_gap_fill_1",
+    "wordId": "die_krankheit",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Diese ___ ist sehr ansteckend.",
+    "answer": "Krankheit",
+    "options": ["Krankheit", "Infektion", "Grippe", "Erkrankung"],
+    "explanation": "Krankheit (die) — болезнь. Эта болезнь очень заразная."
+  },
+  {
+    "id": "ex_medikament_gap_fill_1",
+    "wordId": "das_medikament",
+    "type": "gap_fill",
+    "question": "Вставьте правильное слово",
+    "sentence": "Der Arzt verschreibt mir ein neues ___.",
+    "answer": "Medikament",
+    "options": ["Medikament", "Antibiotikum", "Rezept", "Heilmittel"],
+    "explanation": "Medikament (das) — лекарство, медикамент"
+  },
+  {
+    "id": "ex_medikament_useful_phrase_1",
+    "wordId": "das_medikament",
+    "type": "useful_phrase",
+    "phrase": "Nehmen Sie dieses Medikament dreimal täglich nach dem Essen.",
+    "question": "Запомните фразу о приеме лекарств",
+    "explanation": "Принимайте это лекарство три раза в день после еды"
+  },
+  {
+    "id": "ex_patient_gap_fill_1",
+    "wordId": "der_patient",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Der ___ wartet im Wartezimmer.",
+    "answer": "Patient",
+    "options": ["Patient", "Arzt", "Kranke", "Besucher"],
+    "explanation": "Patient (der) — пациент. Пациент ждет в приемной."
+  },
+  {
+    "id": "ex_rezept_gap_fill_1",
+    "wordId": "das_rezept",
+    "type": "gap_fill",
+    "question": "Вставьте слово",
+    "sentence": "Für dieses Medikament brauchen Sie ein ___.",
+    "answer": "Rezept",
+    "options": ["Rezept", "Formular", "Dokument", "Papier"],
+    "explanation": "Rezept (das) — рецепт. Для этого лекарства нужен рецепт."
+  },
+  {
+    "id": "ex_rezept_translate_1",
+    "wordId": "das_rezept",
+    "type": "translate",
+    "question": "Переведите: Врач выписывает рецепт",
+    "answer": "Der Arzt schreibt ein Rezept aus",
+    "explanation": "Ein Rezept ausstellen/ausschreiben — выписать рецепт"
+  },
+  {
+    "id": "ex_schmerz_gap_fill_1",
+    "wordId": "der_schmerz",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe starke ___ im Rücken.",
+    "answer": "Schmerzen",
+    "options": ["Schmerzen", "Probleme", "Beschwerden", "Gefühle"],
+    "explanation": "Schmerz (der) — боль. У меня сильные боли в спине."
+  },
+  {
+    "id": "ex_schmerz_useful_phrase_1",
+    "wordId": "der_schmerz",
+    "type": "useful_phrase",
+    "phrase": "Wo tut es weh? Wo haben Sie Schmerzen?",
+    "question": "Полезная фраза для визита к врачу",
+    "explanation": "Где болит? Где у вас боли?"
+  },
+  {
+    "id": "ex_symptom_gap_fill_1",
+    "wordId": "das_symptom",
+    "type": "gap_fill",
+    "question": "Вставьте правильное слово",
+    "sentence": "Fieber ist ein ___ der Grippe.",
+    "answer": "Symptom",
+    "options": ["Symptom", "Zeichen", "Merkmal", "Grund"],
+    "explanation": "Symptom (das) — симптом. Температура — симптом гриппа."
+  },
+  {
+    "id": "ex_untersuchung_gap_fill_1",
+    "wordId": "die_untersuchung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ärztliche ___ dauert eine Stunde.",
+    "answer": "Untersuchung",
+    "options": ["Untersuchung", "Behandlung", "Konsultation", "Operation"],
+    "explanation": "Untersuchung (die) — обследование. Врачебное обследование длится час."
+  },
+  {
+    "id": "ex_untersuchung_sentence_training_1",
+    "wordId": "die_untersuchung",
+    "type": "sentence_training",
+    "sentence": "Vor der Behandlung muss eine gründliche Untersuchung durchgeführt werden.",
+    "question": "Составьте предложение",
+    "explanation": "Перед лечением должно быть проведено тщательное обследование"
+  },
+  {
+    "id": "ex_angst_gap_fill_1",
+    "wordId": "die_angst",
+    "type": "gap_fill",
+    "question": "Вставьте слово",
+    "sentence": "Ich habe ___ vor der Prüfung.",
+    "answer": "Angst",
+    "options": ["Angst", "Sorge", "Furcht", "Panik"],
+    "explanation": "Angst haben vor + Dat. — бояться чего-то"
+  },
+  {
+    "id": "ex_angst_useful_phrase_1",
+    "wordId": "die_angst",
+    "type": "useful_phrase",
+    "phrase": "Keine Angst! Alles wird gut.",
+    "question": "Фраза для успокоения",
+    "explanation": "Не бойся! Всё будет хорошо."
+  },
+  {
+    "id": "ex_erinnerung_gap_fill_1",
+    "wordId": "die_erinnerung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe schöne ___ an meine Kindheit.",
+    "answer": "Erinnerungen",
+    "options": ["Erinnerungen", "Gedanken", "Momente", "Bilder"],
+    "explanation": "Erinnerung (die) — воспоминание. У меня красивые воспоминания о детстве."
+  },
+  {
+    "id": "ex_freude_gap_fill_1",
+    "wordId": "die_freude",
+    "type": "gap_fill",
+    "question": "Вставьте слово",
+    "sentence": "Das Kind springt vor ___.",
+    "answer": "Freude",
+    "options": ["Freude", "Glück", "Spaß", "Lust"],
+    "explanation": "Vor Freude — от радости. Ребенок прыгает от радости."
+  },
+  {
+    "id": "ex_freude_translate_1",
+    "wordId": "die_freude",
+    "type": "translate",
+    "question": "Переведите: Я радуюсь встрече с тобой",
+    "answer": "Ich freue mich auf das Treffen mit dir",
+    "explanation": "Sich freuen auf + Akk. — радоваться предстоящему событию"
+  },
+  {
+    "id": "ex_fühlen_gap_fill_1",
+    "wordId": "fühlen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich ___ mich heute nicht gut.",
+    "answer": "fühle",
+    "options": ["fühle", "spüre", "bin", "habe"],
+    "explanation": "Sich fühlen — чувствовать себя. Сегодня я чувствую себя плохо."
+  },
+  {
+    "id": "ex_gefühl_gap_fill_1",
+    "wordId": "das_gefühl",
+    "type": "gap_fill",
+    "question": "Вставьте правильное слово",
+    "sentence": "Ich habe ein gutes ___.",
+    "answer": "Gefühl",
+    "options": ["Gefühl", "Gedanke", "Empfindung", "Eindruck"],
+    "explanation": "Gefühl (das) — чувство. У меня хорошее чувство."
+  },
+  {
+    "id": "ex_gefühl_useful_phrase_1",
+    "wordId": "das_gefühl",
+    "type": "useful_phrase",
+    "phrase": "Vertraue auf dein Gefühl!",
+    "question": "Фраза о доверии интуиции",
+    "explanation": "Доверяй своему чувству (интуиции)!"
+  },
+  {
+    "id": "ex_seele_gap_fill_1",
+    "wordId": "die_seele",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Musik ist gut für die ___.",
+    "answer": "Seele",
+    "options": ["Seele", "Psyche", "Stimmung", "Laune"],
+    "explanation": "Seele (die) — душа. Музыка полезна для души."
+  },
+  {
+    "id": "ex_sorge_gap_fill_1",
+    "wordId": "die_sorge",
+    "type": "gap_fill",
+    "question": "Вставьте слово",
+    "sentence": "Ich mache mir ___ um dich.",
+    "answer": "Sorgen",
+    "options": ["Sorgen", "Gedanken", "Angst", "Mühe"],
+    "explanation": "Sich Sorgen machen um + Akk. — беспокоиться о ком-то"
+  },
+  {
+    "id": "ex_sorge_translate_1",
+    "wordId": "die_sorge",
+    "type": "translate",
+    "question": "Переведите: Не беспокойся!",
+    "answer": "Mach dir keine Sorgen!",
+    "explanation": "Keine Sorgen machen — не беспокоиться"
+  },
+  {
+    "id": "ex_stimmung_gap_fill_1",
+    "wordId": "die_stimmung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ___ auf der Party war super!",
+    "answer": "Stimmung",
+    "options": ["Stimmung", "Atmosphäre", "Laune", "Freude"],
+    "explanation": "Stimmung (die) — настроение, атмосфера. Атмосфера на вечеринке была супер!"
+  },
+  {
+    "id": "ex_trauer_gap_fill_1",
+    "wordId": "die_trauer",
+    "type": "gap_fill",
+    "question": "Вставьте слово",
+    "sentence": "Die Familie steht unter großer ___.",
+    "answer": "Trauer",
+    "options": ["Trauer", "Sorge", "Schmerz", "Angst"],
+    "explanation": "Trauer (die) — скорбь, печаль. Семья находится в большой скорби."
+  },
+  {
+    "id": "ex_antibiotikum_audio_1",
+    "wordId": "das_antibiotikum",
+    "type": "guess_by_audio",
+    "question": "Прослушайте слово и выберите правильный вариант",
+    "audioText": "Antibiotikum",
+    "answer": "das Antibiotikum",
+    "options": ["das Antibiotikum", "das Medikament", "das Rezept"],
+    "explanation": "Antibiotikum — антибиотик (средний род)"
+  },
+  {
+    "id": "ex_gesundheit_audio_1",
+    "wordId": "die_gesundheit",
+    "type": "guess_by_audio",
+    "question": "Прослушайте слово и выберите правильный вариант",
+    "audioText": "Gesundheit",
+    "answer": "die Gesundheit",
+    "options": ["die Gesundheit", "die Krankheit", "die Ruhe"],
+    "explanation": "Gesundheit — здоровье (женский род)"
+  },
+  {
+    "id": "ex_fieber_audio_1",
+    "wordId": "das_fieber",
+    "type": "guess_by_audio",
+    "question": "Прослушайте слово и выберите правильный вариант",
+    "audioText": "Fieber",
+    "answer": "das Fieber",
+    "options": ["das Fieber", "der Husten", "der Schmerz"],
+    "explanation": "Fieber — температура, лихорадка (средний род)"
+  },
+  {
+    "id": "ex_schmerz_audio_1",
+    "wordId": "der_schmerz",
+    "type": "guess_by_audio",
+    "question": "Прослушайте слово и выберите правильный вариант",
+    "audioText": "Schmerz",
+    "answer": "der Schmerz",
+    "options": ["der Schmerz", "die Sorge", "die Angst"],
+    "explanation": "Schmerz — боль (мужской род)"
+  },
+  {
+    "id": "ex_angst_audio_1",
+    "wordId": "die_angst",
+    "type": "guess_by_audio",
+    "question": "Прослушайте слово и выберите правильный вариант",
+    "audioText": "Angst",
+    "answer": "die Angst",
+    "options": ["die Angst", "die Sorge", "die Furcht"],
+    "explanation": "Angst — страх (женский род)"
+  },
+  {
+    "id": "ex_freude_audio_1",
+    "wordId": "die_freude",
+    "type": "guess_by_audio",
+    "question": "Прослушайте слово и выберите правильный вариант",
+    "audioText": "Freude",
+    "answer": "die Freude",
+    "options": ["die Freude", "das Glück", "die Stimmung"],
+    "explanation": "Freude — радость (женский род)"
+  },
+  {
+    "id": "ex_körper_audio_1",
+    "wordId": "der_körper",
+    "type": "guess_by_audio",
+    "question": "Прослушайте слово и выберите правильный вариант",
+    "audioText": "Körper",
+    "answer": "der Körper",
+    "options": ["der Körper", "der Rücken", "der Magen"],
+    "explanation": "Körper — тело (мужской род)"
+  },
+  {
+    "id": "ex_seele_audio_1",
+    "wordId": "die_seele",
+    "type": "guess_by_audio",
+    "question": "Прослушайте слово и выберите правильный вариант",
+    "audioText": "Seele",
+    "answer": "die Seele",
+    "options": ["die Seele", "die Psyche", "das Gefühl"],
+    "explanation": "Seele — душа (женский род)"
+  },
+  {
+    "id": "ex_antibiotikum_article_1",
+    "wordId": "das_antibiotikum",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Antibiotikum",
+    "answer": "das",
+    "options": ["der", "die", "das"],
+    "explanation": "Antibiotikum — средний род (das). Большинство слов на -um среднего рода."
+  },
+  {
+    "id": "ex_gesundheit_article_1",
+    "wordId": "die_gesundheit",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Gesundheit",
+    "answer": "die",
+    "options": ["der", "die", "das"],
+    "explanation": "Gesundheit — женский род (die). Слова с окончанием -heit всегда женского рода."
+  },
+  {
+    "id": "ex_fieber_article_1",
+    "wordId": "das_fieber",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Fieber",
+    "answer": "das",
+    "options": ["der", "die", "das"],
+    "explanation": "Fieber — средний род (das). Многие болезни и симптомы среднего рода."
+  },
+  {
+    "id": "ex_husten_article_1",
+    "wordId": "der_husten",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Husten",
+    "answer": "der",
+    "options": ["der", "die", "das"],
+    "explanation": "Husten — мужской род (der). Слова на -en могут быть разного рода, нужно запоминать."
+  },
+  {
+    "id": "ex_körper_article_1",
+    "wordId": "der_körper",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Körper",
+    "answer": "der",
+    "options": ["der", "die", "das"],
+    "explanation": "Körper — мужской род (der). Слова с окончанием -er часто мужского рода."
+  },
+  {
+    "id": "ex_krankheit_article_1",
+    "wordId": "die_krankheit",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Krankheit",
+    "answer": "die",
+    "options": ["der", "die", "das"],
+    "explanation": "Krankheit — женский род (die). Слова с окончанием -keit всегда женского рода."
+  },
+  {
+    "id": "ex_medikament_article_1",
+    "wordId": "das_medikament",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Medikament",
+    "answer": "das",
+    "options": ["der", "die", "das"],
+    "explanation": "Medikament — средний род (das). Слова с окончанием -ment обычно среднего рода."
+  },
+  {
+    "id": "ex_patient_article_1",
+    "wordId": "der_patient",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Patient",
+    "answer": "der",
+    "options": ["der", "die", "das"],
+    "explanation": "Patient — мужской род (der). Слова с окончанием -ent часто мужского рода."
+  },
+  {
+    "id": "ex_rezept_article_1",
+    "wordId": "das_rezept",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Rezept",
+    "answer": "das",
+    "options": ["der", "die", "das"],
+    "explanation": "Rezept — средний род (das). Заимствованные слова часто среднего рода."
+  },
+  {
+    "id": "ex_schmerz_article_1",
+    "wordId": "der_schmerz",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Schmerz",
+    "answer": "der",
+    "options": ["der", "die", "das"],
+    "explanation": "Schmerz — мужской род (der). Односложные существительные на согласную часто мужского рода."
+  },
+  {
+    "id": "ex_angst_article_1",
+    "wordId": "die_angst",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Angst",
+    "answer": "die",
+    "options": ["der", "die", "das"],
+    "explanation": "Angst — женский род (die). Абстрактные существительные часто женского рода."
+  },
+  {
+    "id": "ex_freude_article_1",
+    "wordId": "die_freude",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Freude",
+    "answer": "die",
+    "options": ["der", "die", "das"],
+    "explanation": "Freude — женский род (die). Слова с окончанием -e часто женского рода."
+  },
+  {
+    "id": "ex_gefühl_article_1",
+    "wordId": "das_gefühl",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Gefühl",
+    "answer": "das",
+    "options": ["der", "die", "das"],
+    "explanation": "Gefühl — средний род (das). Слова с приставкой ge- и без окончания обычно среднего рода."
+  },
+  {
+    "id": "ex_seele_article_1",
+    "wordId": "die_seele",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Seele",
+    "answer": "die",
+    "options": ["der", "die", "das"],
+    "explanation": "Seele — женский род (die). Слова с окончанием -e часто женского рода."
+  },
+  {
+    "id": "ex_sorge_article_1",
+    "wordId": "die_sorge",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Sorge",
+    "answer": "die",
+    "options": ["der", "die", "das"],
+    "explanation": "Sorge — женский род (die). Слова с окончанием -e часто женского рода."
+  },
+  {
+    "id": "ex_stimmung_article_1",
+    "wordId": "die_stimmung",
+    "type": "guess_article",
+    "question": "Выберите правильный артикль для слова",
+    "word": "Stimmung",
+    "answer": "die",
+    "options": ["der", "die", "das"],
+    "explanation": "Stimmung — женский род (die). Слова с окончанием -ung всегда женского рода."
+  },
+  {
+    "id": "ex_antibiotikum_image_1",
+    "wordId": "das_antibiotikum",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "das Antibiotikum",
+    "options": ["das Antibiotikum", "das Medikament", "das Rezept", "die Gesundheit"],
+    "explanation": "Antibiotikum (das) — антибиотик. На изображении показан антибиотик."
+  },
+  {
+    "id": "ex_fieber_image_1",
+    "wordId": "das_fieber",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "das Fieber",
+    "options": ["das Fieber", "die Gesundheit", "die Krankheit", "der Husten"],
+    "explanation": "Fieber (das) — температура, лихорадка. На изображении показана лихорадка."
+  },
+  {
+    "id": "ex_gesundheit_image_1",
+    "wordId": "die_gesundheit",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "die Gesundheit",
+    "options": ["die Gesundheit", "die Krankheit", "das Fieber", "die Ruhe"],
+    "explanation": "Gesundheit (die) — здоровье. Изображение символизирует здоровье."
+  },
+  {
+    "id": "ex_körper_image_1",
+    "wordId": "der_körper",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "der Körper",
+    "options": ["der Körper", "der Magen", "der Rücken", "der Patient"],
+    "explanation": "Körper (der) — тело. На изображении показано человеческое тело."
+  },
+  {
+    "id": "ex_medikament_image_1",
+    "wordId": "das_medikament",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "das Medikament",
+    "options": ["das Medikament", "das Antibiotikum", "das Rezept", "die Apotheke"],
+    "explanation": "Medikament (das) — лекарство, медикамент. На изображении показано лекарство."
+  },
+  {
+    "id": "ex_rezept_image_1",
+    "wordId": "das_rezept",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "das Rezept",
+    "options": ["das Rezept", "das Medikament", "die Diagnose", "die Untersuchung"],
+    "explanation": "Rezept (das) — рецепт. На изображении показан медицинский рецепт."
+  },
+  {
+    "id": "ex_schmerz_image_1",
+    "wordId": "der_schmerz",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "der Schmerz",
+    "options": ["der Schmerz", "die Sorge", "die Angst", "die Krankheit"],
+    "explanation": "Schmerz (der) — боль. На изображении показана боль."
+  },
+  {
+    "id": "ex_angst_image_1",
+    "wordId": "die_angst",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "die Angst",
+    "options": ["die Angst", "die Sorge", "die Trauer", "die Furcht"],
+    "explanation": "Angst (die) — страх. На изображении показан страх."
+  },
+  {
+    "id": "ex_freude_image_1",
+    "wordId": "die_freude",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "die Freude",
+    "options": ["die Freude", "das Glück", "die Stimmung", "die Liebe"],
+    "explanation": "Freude (die) — радость. На изображении показана радость."
+  },
+  {
+    "id": "ex_gefühl_image_1",
+    "wordId": "das_gefühl",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "das Gefühl",
+    "options": ["das Gefühl", "die Freude", "die Angst", "die Seele"],
+    "explanation": "Gefühl (das) — чувство. На изображении показаны эмоции и чувства."
+  },
+  {
+    "id": "ex_seele_image_1",
+    "wordId": "die_seele",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "die Seele",
+    "options": ["die Seele", "das Gefühl", "die Psyche", "das Herz"],
+    "explanation": "Seele (die) — душа. На изображении символизируется душа."
+  },
+  {
+    "id": "ex_sorge_image_1",
+    "wordId": "die_sorge",
+    "type": "image_match",
+    "question": "Какое слово подходит к этой картинке?",
+    "answer": "die Sorge",
+    "options": ["die Sorge", "die Angst", "die Trauer", "der Stress"],
+    "explanation": "Sorge (die) — забота, беспокойство. На изображении показано беспокойство."
+  },
+  {
+    "id": "ex_antibiotikum_build_1",
+    "wordId": "das_antibiotikum",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Antibiotikum",
+    "scrambledLetters": ["A", "n", "t", "i", "b", "i", "o", "t", "i", "k", "u", "m"],
+    "hint": "das ___ (антибиотик)",
+    "explanation": "Antibiotikum (das) — антибиотик. Правильное написание с заглавной буквы."
+  },
+  {
+    "id": "ex_fieber_build_1",
+    "wordId": "das_fieber",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Fieber",
+    "scrambledLetters": ["F", "i", "e", "b", "e", "r"],
+    "hint": "das ___ (температура)",
+    "explanation": "Fieber (das) — температура, лихорадка."
+  },
+  {
+    "id": "ex_gesundheit_build_1",
+    "wordId": "die_gesundheit",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Gesundheit",
+    "scrambledLetters": ["G", "e", "s", "u", "n", "d", "h", "e", "i", "t"],
+    "hint": "die ___ (здоровье)",
+    "explanation": "Gesundheit (die) — здоровье. Слово с окончанием -heit."
+  },
+  {
+    "id": "ex_körper_build_1",
+    "wordId": "der_körper",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Körper",
+    "scrambledLetters": ["K", "ö", "r", "p", "e", "r"],
+    "hint": "der ___ (тело)",
+    "explanation": "Körper (der) — тело. Обратите внимание на умляут ö."
+  },
+  {
+    "id": "ex_medikament_build_1",
+    "wordId": "das_medikament",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Medikament",
+    "scrambledLetters": ["M", "e", "d", "i", "k", "a", "m", "e", "n", "t"],
+    "hint": "das ___ (лекарство)",
+    "explanation": "Medikament (das) — лекарство. Слово с окончанием -ment."
+  },
+  {
+    "id": "ex_rezept_build_1",
+    "wordId": "das_rezept",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Rezept",
+    "scrambledLetters": ["R", "e", "z", "e", "p", "t"],
+    "hint": "das ___ (рецепт)",
+    "explanation": "Rezept (das) — рецепт."
+  },
+  {
+    "id": "ex_schmerz_build_1",
+    "wordId": "der_schmerz",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Schmerz",
+    "scrambledLetters": ["S", "c", "h", "m", "e", "r", "z"],
+    "hint": "der ___ (боль)",
+    "explanation": "Schmerz (der) — боль. Обратите внимание на сочетание 'sch'."
+  },
+  {
+    "id": "ex_angst_build_1",
+    "wordId": "die_angst",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Angst",
+    "scrambledLetters": ["A", "n", "g", "s", "t"],
+    "hint": "die ___ (страх)",
+    "explanation": "Angst (die) — страх."
+  },
+  {
+    "id": "ex_freude_build_1",
+    "wordId": "die_freude",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Freude",
+    "scrambledLetters": ["F", "r", "e", "u", "d", "e"],
+    "hint": "die ___ (радость)",
+    "explanation": "Freude (die) — радость. Слово с окончанием -e."
+  },
+  {
+    "id": "ex_gefühl_build_1",
+    "wordId": "das_gefühl",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Gefühl",
+    "scrambledLetters": ["G", "e", "f", "ü", "h", "l"],
+    "hint": "das ___ (чувство)",
+    "explanation": "Gefühl (das) — чувство. Обратите внимание на умляут ü."
+  },
+  {
+    "id": "ex_seele_build_1",
+    "wordId": "die_seele",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Seele",
+    "scrambledLetters": ["S", "e", "e", "l", "e"],
+    "hint": "die ___ (душа)",
+    "explanation": "Seele (die) — душа. Две буквы 'e' подряд."
+  },
+  {
+    "id": "ex_sorge_build_1",
+    "wordId": "die_sorge",
+    "type": "word_building",
+    "question": "Соберите слово из букв",
+    "answer": "Sorge",
+    "scrambledLetters": ["S", "o", "r", "g", "e"],
+    "hint": "die ___ (забота)",
+    "explanation": "Sorge (die) — забота, беспокойство."
+  }
+]

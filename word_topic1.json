@@ -1,0 +1,262 @@
+[
+    { 
+        "word": "das Antibiotikum", 
+        "translation": "антибиотик", 
+        "transcription": "[antibiˈoːtikʊm]",
+        "transcriptionRu": "антибио́тикум",
+        "partOfSpeech": "существительное (ср.р.)",
+        "association": "Анти-био-тикум: против жизни микробов",
+        "example": "Der Arzt verschreibt mir ein Antibiotikum. — Врач выписывает мне антибиотик.",
+        "image": "https://placehold.co/400x200/F8D7DA/721C24?text=Antibiotikum" 
+    },
+    { 
+        "word": "die Beschwerde", 
+        "translation": "жалоба", 
+        "transcription": "[bəˈʃveːɐ̯də]",
+        "transcriptionRu": "бешве́рдэ",
+        "partOfSpeech": "существительное (ж.р.)",
+        "association": "Беш-верде: жалуешься, что беда",
+        "example": "Ich habe Beschwerden im Magen. — У меня жалобы на желудок.",
+        "image": "https://placehold.co/400x200/FFE7A0/7C4B00?text=Beschwerde" 
+    },
+    { 
+        "word": "gesund", 
+        "translation": "здоровый", 
+        "transcription": "[ɡəˈzʊnt]",
+        "transcriptionRu": "гезу́нт",
+        "partOfSpeech": "прилагательное",
+        "association": "Гезунд: будь здоров (Gesundheit!)",
+        "example": "Ich bin wieder gesund. — Я снова здоров.",
+        "image": "https://placehold.co/400x200/D4EDDA/155724?text=Gesundheit" 
+    },
+    { 
+        "word": "der Körper", 
+        "translation": "тело", 
+        "transcription": "[ˈkœʁpɐ]",
+        "transcriptionRu": "кёрпер",
+        "partOfSpeech": "существительное (м.р.)",
+        "association": "Кёрпер: корпус, тело человека",
+        "example": "Mein Körper braucht Ruhe. — Моему телу нужен отдых.",
+        "image": "https://placehold.co/400x200/D1ECF1/0C5460?text=Körper" 
+    },
+    { 
+        "word": "der Magen", 
+        "translation": "желудок", 
+        "transcription": "[ˈmaːɡn̩]",
+        "transcriptionRu": "ма́ген",
+        "partOfSpeech": "существительное (м.р.)",
+        "association": "Маген: магазин еды в животе",
+        "example": "Mein Magen tut weh. — У меня болит желудок.",
+        "image": "https://placehold.co/400x200/F5C6CB/721C24?text=Magen" 
+    },
+    { 
+        "word": "das Medikament", 
+        "translation": "лекарство", 
+        "transcription": "[medikaˈmɛnt]",
+        "transcriptionRu": "медикаме́нт",
+        "partOfSpeech": "существительное (ср.р.)",
+        "association": "Медикамент: медицинский препарат",
+        "example": "Ich nehme das Medikament dreimal täglich. — Я принимаю лекарство три раза в день.",
+        "image": "https://placehold.co/400x200/CCE5FF/004085?text=Medikament" 
+    },
+    { 
+        "word": "das Rezept", 
+        "translation": "рецепт (от врача)", 
+        "transcription": "[ʁeˈt͡sɛpt]",
+        "transcriptionRu": "рецэ́пт",
+        "partOfSpeech": "существительное (ср.р.)",
+        "association": "Рецепт: как в русском - рецепт от доктора",
+        "example": "Der Arzt gibt mir ein Rezept. — Врач дает мне рецепт.",
+        "image": "https://placehold.co/400x200/FFF3CD/856404?text=Rezept" 
+    },
+    { 
+        "word": "der Rücken", 
+        "translation": "спина", 
+        "transcription": "[ˈʁʏkn̩]",
+        "transcriptionRu": "рю́кен",
+        "partOfSpeech": "существительное (м.р.)",
+        "association": "Рюкен: рюкзак на спине",
+        "example": "Mein Rücken schmerzt. — У меня болит спина.",
+        "image": "https://placehold.co/400x200/E2E3E5/383D41?text=Rücken" 
+    },
+    { 
+        "word": "die Ruhe", 
+        "translation": "покой, отдых", 
+        "transcription": "[ˈʁuːə]",
+        "transcriptionRu": "ру́э",
+        "partOfSpeech": "существительное (ж.р.)",
+        "association": "Руэ: руки вниз, отдыхаем",
+        "example": "Ich brauche Ruhe. — Мне нужен покой.",
+        "image": "https://placehold.co/400x200/E8F5E9/388E3C?text=Ruhe" 
+    },
+    { 
+        "word": "der Schmerz", 
+        "translation": "боль", 
+        "transcription": "[ʃmɛʁt͡s]",
+        "transcriptionRu": "шме́рц",
+        "partOfSpeech": "существительное (м.р.)",
+        "association": "Шмерц: шмяк - больно упал",
+        "example": "Ich habe starke Schmerzen. — У меня сильные боли.",
+        "image": "https://placehold.co/400x200/F5C6CB/721C24?text=Schmerz" 
+    },
+    { 
+        "word": "die Sorge", 
+        "translation": "забота, беспокойство", 
+        "transcription": "[ˈzɔʁɡə]",
+        "transcriptionRu": "зо́ргэ",
+        "partOfSpeech": "существительное (ж.р.)",
+        "association": "Зорге: с заботой присматриваешь",
+        "example": "Mach dir keine Sorgen! — Не беспокойся!",
+        "image": "https://placehold.co/400x200/D6F5FF/008ECC?text=Sorge" 
+    },
+    { 
+        "word": "der Termin", 
+        "translation": "прием (у врача), встреча", 
+        "transcription": "[tɛʁˈmiːn]",
+        "transcriptionRu": "терми́н",
+        "partOfSpeech": "существительное (м.р.)",
+        "association": "Термин: время и место встречи",
+        "example": "Ich habe einen Termin beim Arzt. — У меня прием у врача.",
+        "image": "https://placehold.co/400x200/FBE1D8/D63384?text=Termin" 
+    },
+    { 
+        "word": "brennen", 
+        "translation": "гореть, жечь (о боли)", 
+        "transcription": "[ˈbʁɛnən]",
+        "transcriptionRu": "бре́ннен",
+        "partOfSpeech": "глагол",
+        "association": "Бреннен: брань жжет, больно",
+        "example": "Meine Augen brennen. — У меня жжет в глазах.",
+        "image": "https://placehold.co/400x200/FFCCBC/E64A19?text=brennen" 
+    },
+    { 
+        "word": "einnehmen", 
+        "translation": "принимать (лекарство)", 
+        "transcription": "[ˈaɪ̯nˌneːmən]",
+        "transcriptionRu": "а́йн-не́мен",
+        "partOfSpeech": "глагол",
+        "association": "Айн-немен: один раз принял таблетку",
+        "example": "Nehmen Sie die Tabletten dreimal täglich ein. — Принимайте таблетки три раза в день.",
+        "image": "https://placehold.co/400x200/A5D6A7/388E3C?text=einnehmen" 
+    },
+    { 
+        "word": "fühlen", 
+        "translation": "чувствовать", 
+        "transcription": "[ˈfyːlən]",
+        "transcriptionRu": "фю́лен",
+        "partOfSpeech": "глагол",
+        "association": "Фюлен: фу, какое чувство",
+        "example": "Wie fühlen Sie sich? — Как вы себя чувствуете?",
+        "image": "https://placehold.co/400x200/D1C4E9/5E35B1?text=fühlen" 
+    },
+    { 
+        "word": "leiden", 
+        "translation": "страдать", 
+        "transcription": "[ˈlaɪ̯dn̩]",
+        "transcriptionRu": "ля́йден",
+        "partOfSpeech": "глагол",
+        "association": "Ляйден: лежу и страдаю",
+        "example": "Er leidet an Kopfschmerzen. — Он страдает от головных болей.",
+        "image": "https://placehold.co/400x200/FFCDD2/C62828?text=leiden" 
+    },
+    { 
+        "word": "messen", 
+        "translation": "измерять", 
+        "transcription": "[ˈmɛsn̩]",
+        "transcriptionRu": "ме́ссен",
+        "partOfSpeech": "глагол",
+        "association": "Мессен: мерить, измерять",
+        "example": "Die Krankenschwester misst den Blutdruck. — Медсестра измеряет давление.",
+        "image": "https://placehold.co/400x200/B2EBF2/0097A7?text=messen" 
+    },
+    { 
+        "word": "sich kümmern um", 
+        "translation": "заботиться о", 
+        "transcription": "[zɪç ˈkʏmɐn ʊm]",
+        "transcriptionRu": "зих кю́мерн ум",
+        "partOfSpeech": "возвратный глагол",
+        "association": "Кюммерн: кум (друг) заботится",
+        "example": "Ich kümmere mich um meine Gesundheit. — Я забочусь о своем здоровье.",
+        "image": "https://placehold.co/400x200/C8E6C9/388E3C?text=sich+kümmern+um" 
+    },
+    { 
+        "word": "sollen", 
+        "translation": "долженствовать", 
+        "transcription": "[ˈzɔlən]",
+        "transcriptionRu": "зо́ллен",
+        "partOfSpeech": "модальный глагол",
+        "association": "Золлен: должен как соль земли",
+        "example": "Du sollst mehr Wasser trinken. — Ты должен пить больше воды.",
+        "image": "https://placehold.co/400x200/FFECB3/FFA000?text=sollen" 
+    },
+    { 
+        "word": "vermeiden", 
+        "translation": "избегать", 
+        "transcription": "[fɛɐ̯ˈmaɪ̯dn̩]",
+        "transcriptionRu": "ферма́йден",
+        "partOfSpeech": "глагол",
+        "association": "Фермайден: ферма - избегай опасности",
+        "example": "Vermeiden Sie Stress. — Избегайте стресса.",
+        "image": "https://placehold.co/400x200/FFCDD2/D32F2F?text=vermeiden" 
+    },
+    { 
+        "word": "verschreiben", 
+        "translation": "прописывать (лекарство)", 
+        "transcription": "[fɛɐ̯ˈʃʁaɪ̯bn̩]",
+        "transcriptionRu": "фершра́йбен",
+        "partOfSpeech": "глагол",
+        "association": "Фершрайбен: врач расписывает рецепт",
+        "example": "Der Arzt verschreibt Antibiotika. — Врач прописывает антибиотики.",
+        "image": "https://placehold.co/400x200/E3F2FD/1976D2?text=verschreiben" 
+    },
+    { 
+        "word": "verschwitzen", 
+        "translation": "вспотеть", 
+        "transcription": "[fɛɐ̯ˈʃvɪt͡sn̩]",
+        "transcriptionRu": "фершви́цен",
+        "partOfSpeech": "глагол",
+        "association": "Фершвицен: весь в швицах (каплях пота)",
+        "example": "Ich bin ganz verschwitzt. — Я весь вспотел.",
+        "image": "https://placehold.co/400x200/FFCCBC/E64A19?text=verschwitzen" 
+    },
+    { 
+        "word": "wirken", 
+        "translation": "действовать, влиять", 
+        "transcription": "[ˈvɪʁkn̩]",
+        "transcriptionRu": "ви́ркен",
+        "partOfSpeech": "глагол",
+        "association": "Виркен: работает, влияет эффективно",
+        "example": "Das Medikament wirkt schnell. — Лекарство действует быстро.",
+        "image": "https://placehold.co/400x200/E1BEE7/8E24AA?text=wirken" 
+    },
+    { 
+        "word": "ruhig", 
+        "translation": "спокойный", 
+        "transcription": "[ˈʁuːɪç]",
+        "transcriptionRu": "ру́иг",
+        "partOfSpeech": "прилагательное",
+        "association": "Руиг: руки вниз - спокоен",
+        "example": "Bleiben Sie ruhig. — Оставайтесь спокойны.",
+        "image": "https://placehold.co/400x200/C8E6C9/388E3C?text=ruhig" 
+    },
+    { 
+        "word": "schlimm", 
+        "translation": "плохой, скверный", 
+        "transcription": "[ʃlɪm]",
+        "transcriptionRu": "шлимм",
+        "partOfSpeech": "прилагательное",
+        "association": "Шлимм: шлем разбился - плохо",
+        "example": "Die Situation ist schlimm. — Ситуация плохая.",
+        "image": "https://placehold.co/400x200/FFCDD2/C62828?text=schlimm" 
+    },
+    { 
+        "word": "stickig", 
+        "translation": "душный", 
+        "transcription": "[ˈʃtɪkɪç]",
+        "transcriptionRu": "шти́киг",
+        "partOfSpeech": "прилагательное",
+        "association": "Штикиг: в стык набиты - душно",
+        "example": "Hier ist es sehr stickig. — Здесь очень душно.",
+        "image": "https://placehold.co/400x200/E0F7FA/00838F?text=stickig" 
+    }
+]

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
@@ -23,11 +23,16 @@
         }
 
         /* Стили для анимации переворота карточки */
-        .card { perspective: 1000px; }
+        .card { 
+            perspective: 1000px; 
+            min-height: 300px;
+            max-height: 400px;
+        }
         .card-inner {
             position: relative;
             transition: transform 0.6s;
             transform-style: preserve-3d;
+            min-height: 300px;
         }
         .card.is-flipped .card-inner {
             transform: rotateY(180deg);
@@ -35,7 +40,7 @@
         .card-front, .card-back {
             position: absolute;
             width: 100%;
-            height: 100%;
+            min-height: 300px;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
             top: 0; left: 0;
@@ -309,7 +314,7 @@
         
         <!-- 1. Экран Загрузки (виден по умолчанию) -->
         <div id="loading-screen" class="text-center py-20">
-            <p class="text-gray-500">Загрузка данных...</p>
+            <p class="text-white text-lg font-semibold">Загружаем ассоциации...</p>
         </div>
 
         <!-- МОДАЛЬНОЕ ОКНО: МАНТРЫ ПОЛЕЗНЫХ ФРАЗ -->
@@ -391,14 +396,21 @@
         <div id="list-screen" class="hidden main-content">
             <div class="max-w-2xl mx-auto px-4 pt-6">
                 <h1 id="list-title" class="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"></h1>
-                <p class="text-center text-gray-600 mb-6">Выберите набор для начала</p>
+                <p id="list-subtitle" class="text-center text-gray-600 mb-6">Выберите набор для начала</p>
                 
                 <!-- Кнопка "Назад" УДАЛЕНА. Будет использоваться Telegram.WebApp.BackButton -->
                 <div id="back-button-container" class="mb-4"></div>
                 
                 <!-- Динамические фильтры/поиск -->
                 <div id="filter-controls" class="mb-4 space-y-3">
-                    <!-- Фильтры или поиск будут вставлены здесь -->
+                    <select id="topic-dropdown" class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 mb-2 w-full">
+                        <option value="all">Все темы</option>
+                    </select>
+                    <div id="search-container" class="flex gap-2 mb-4 relative">
+                        <input type="text" id="search-input-weekly" placeholder="Поиск по слову (нем/рус)" class="p-2 border border-gray-300 rounded-lg flex-1">
+                        <button id="search-button" class="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition">Поиск</button>
+                        <div id="autocomplete-list" class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-50 hidden"></div>
+                    </div>
                 </div>
                 
                 <!-- Список содержимого -->
@@ -634,14 +646,16 @@
                 </div>
                 
                 <!-- Карточка -->
-                <div id="card" class="card h-80 w-full mb-6">
+                <div id="card" class="card w-full mb-6">
                     <div id="card-inner" class="card-inner h-full w-full" onclick="window.App.showAnswer()">
                         <!-- Передняя сторона -->
-                        <div id="card-front" class="card-front flex items-center justify-center p-6 rounded-2xl shadow-2xl text-center cursor-pointer hover:shadow-xl transition-shadow">
+                        <div id="card-front" class="card-front flex flex-col items-center justify-center p-6 rounded-2xl shadow-2xl text-center cursor-pointer hover:shadow-xl transition-shadow">
+                            <img id="card-front-image" src="" alt="" class="w-full h-auto object-contain rounded-lg mb-4 max-h-64 hidden">
                             <div id="card-front-text" class="text-3xl font-bold"></div>
                         </div>
                         <!-- Задняя сторона -->
-                        <div id="card-back" class="card-back flex items-center justify-center p-6 rounded-2xl shadow-2xl text-center cursor-pointer hover:shadow-xl transition-shadow">
+                        <div id="card-back" class="card-back flex flex-col items-center justify-center p-6 rounded-2xl shadow-2xl text-center cursor-pointer hover:shadow-xl transition-shadow">
+                            <img id="card-back-image" src="" alt="" class="w-full h-auto object-contain rounded-lg mb-4 max-h-64 hidden">
                             <div id="card-back-text" class="text-3xl font-bold"></div>
                         </div>
                     </div>
@@ -670,16 +684,16 @@
                 </button>
             </div>
             
-            <div id="controls-practice-all" class="hidden grid grid-cols-3 gap-3">
-                <button onclick="window.App.prevCard()" class="btn-secondary py-3 px-4 flex items-center justify-center gap-2 font-bold">
+            <div id="controls-practice-all" class="hidden flex justify-center gap-3">
+                <button onclick="window.App.prevCard()" class="btn-secondary py-3 px-6 flex items-center justify-center gap-2 font-bold">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"></path></svg>
                     Назад
                 </button>
-                <button id="hint-button-practice-all" onclick="window.App.showHint()" class="btn-secondary py-2 px-4 flex items-center justify-center gap-2 font-bold">
+                <button id="hint-button-practice-all" onclick="window.App.showHint()" class="btn-secondary py-3 px-6 flex items-center justify-center gap-2 font-bold">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>
                     Подсказка
                 </button>
-                <button onclick="window.App.nextCard()" class="btn-primary py-3 px-4 flex items-center justify-center gap-2 font-bold">
+                <button onclick="window.App.nextCard()" class="btn-primary py-3 px-6 flex items-center justify-center gap-2 font-bold">
                     Вперед
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"></path></svg>
                 </button>
@@ -718,7 +732,7 @@
             <span class="text-xs mt-1 font-semibold">Все слова</span>
         </button>
 
-        <button onclick="window.App.renderTopicSelection()" class="flex flex-col items-center justify-center text-white hover:text-blue-100 transition-colors w-1/3 py-2 group">
+        <button onclick="window.App.renderTopicSelection()" class="flex flex-col items-center justify-center text-white hover:text-blue-100 transition-colors w-1/3 py-2 group bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg">
             <svg class="w-7 h-7 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path></svg>
             <span class="text-xs mt-1 font-semibold">Все Темы</span>
         </button>
@@ -734,6 +748,55 @@
             <button onclick="window.App.closeModal('hint-modal')" class="btn-primary w-full py-2 px-4">
                 Закрыть
             </button>
+        </div>
+    </div>
+
+    <!-- Модальное окно для Карточки слова -->
+    <div id="word-card-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 overflow-y-auto" onclick="window.App.closeModal('word-card-modal')">
+        <div id="word-card-modal-content" class="modal-content bg-white p-6 rounded-2xl shadow-2xl max-w-lg w-full my-8" onclick="event.stopPropagation()">
+            <img id="word-card-image" src="" alt="" class="w-full h-48 object-contain rounded-lg mb-4">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-baseline gap-2">
+                    <span id="word-card-article" class="text-2xl font-semibold text-blue-600"></span>
+                    <h3 id="word-card-word" class="text-3xl font-bold text-gray-800"></h3>
+                </div>
+                <div class="flex gap-2">
+                    <button id="word-card-study-btn" onclick="window.App.toggleWordForStudyFromModal()" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition">
+                        Учить
+                    </button>
+                    <button id="word-card-speak" class="p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition">
+                        <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="word-card-transcription-ru" class="text-lg text-gray-600 mb-3"></div>
+            <div id="word-card-translation" class="text-xl text-gray-700 mb-3"></div>
+            <div class="flex items-center gap-2 mb-3">
+                <div id="word-card-part-of-speech" class="text-sm text-blue-600 font-semibold"></div>
+                <div id="word-card-plural" class="text-sm text-gray-600 italic"></div>
+            </div>
+            <div id="word-card-topics" class="flex flex-wrap gap-2 mb-3"></div>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3">
+                <p class="text-sm font-semibold text-yellow-800 mb-1">💡 Ассоциация:</p>
+                <p id="word-card-association" class="text-sm text-yellow-700"></p>
+            </div>
+            <div class="bg-green-50 border-l-4 border-green-400 p-3 mb-4">
+                <p class="text-sm font-semibold text-green-800 mb-1">📝 Пример использования:</p>
+                <p id="word-card-example" class="text-sm text-green-700"></p>
+            </div>
+            <div class="flex gap-2">
+                <button id="word-card-prev" onclick="window.App.navigateWordCard(-1)" class="flex-1 py-3 px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    ← Назад
+                </button>
+                <button onclick="window.App.closeModal('word-card-modal')" class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition">
+                    ✕
+                </button>
+                <button id="word-card-next" onclick="window.App.navigateWordCard(1)" class="flex-1 py-3 px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    Вперед →
+                </button>
+            </div>
         </div>
     </div>
     
@@ -887,7 +950,7 @@
 
 
     <!-- "МАГИЯ" (JavaScript) -->
-<<script type="module">
+<script type="module">
         // Импортируем необходимые модули Firebase (v9+)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
@@ -936,12 +999,13 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
         
         // Интервалы повторения в днях (от 1 до 6 боксов)
         const REPETITION_INTERVALS = {
-            1: 0,  // Первое повторение — в тот же день
-            2: 1,  // 1 день
-            3: 3,  // 3 дня
-            4: 7,  // 7 дней
-            5: 14, // 2 недели
-            6: 30  // 1 месяц
+            0: 0,  // Box 0: сегодня (для только что добавленных слов)
+            1: 1,  // Box 1: 1 день
+            2: 3,  // Box 2: 3 дня
+            3: 7,  // Box 3: 7 дней
+            4: 14, // Box 4: 2 недели
+            5: 30, // Box 5: 1 месяц
+            6: 60  // Box 6: 2 месяца
         };
         
         /**
@@ -1007,56 +1071,135 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
         const WEEKLY_CONTENT_MAP = {
             1: {
                 associationVideo: "https://www.youtube.com/embed/jNQXAC9IVRw?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для запоминания существительных A1",
-                storyLink: "text1.html", // Относительный путь для загрузки внутри SPA
+                associationTitle: "Ассоциации для запоминания слов по теме Эмоции",
+                storyLink: "text1.html",
                 wordSetId: "a1_nouns_1",
                 carouselId: "week1", 
-                description: "В этой подборке вы начнете изучение базовых существительных уровня А1, освоите артикли и получите видео-ассоциации для быстрого запоминания.",
-                // [ИЗМЕНЕНО]
-                dialoguesTitle: "Диалоги (Неделя 1): Знакомство",
-                dialoguesVideo: "https://www.youtube.com/embed/R-p9lq-E_OQ?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
-                dialoguesText: "<b>Диалог 1:</b><br>- Hallo! Wie heißt du?<br>- Ich heiße Anna. Und du?<br><br><b>Полезные фразы:</b><br>Guten Tag.<br>Wie geht's?"
+                description: "Чувства, эмоции, настроение, страх, злость, стыд, стресс, мотивация, психические состояния",
+                dialoguesTitle: "Диалоги: Эмоции",
+                dialoguesVideo: "https://www.youtube.com/embed/R-p9lq-E_OQ?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 1:</b><br>- Wie fühlst du dich?<br>- Ich bin glücklich!<br><br><b>Полезные фразы:</b><br>Ich bin traurig.<br>Das macht mich wütend."
             },
             2: {
                 associationVideo: "https://www.youtube.com/embed/2-nFz1WJ3vM?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для артикля 'Das' (средний род)",
+                associationTitle: "Ассоциации для темы Общение",
                 storyLink: "https://your-domain.com/story/week2",
                 wordSetId: "a1_nouns_2",
                 carouselId: "week1", 
-                description: "Фокусируемся на существительных среднего рода (Das) и разбираем основные конструкции для описания дома и города.",
-                // [ИЗМЕНЕНО]
-                dialoguesTitle: "Диалоги (Неделя 2): В ресторане",
-                dialoguesVideo: "https://www.youtube.com/embed/example2?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
-                dialoguesText: "<b>Диалог 2:</b><br>- Ich hätte gern einen Kaffee, bitte.<br>- Sonst noch etwas?<br><br><b>Полезные фразы:</b><br>Die Speisekarte, bitte.<br>Zahlen, bitte."
+                description: "Друзья, знакомые, коллеги, роли, вежливость, поддержка, конфликт, согласие и несогласие",
+                dialoguesTitle: "Диалоги: Общение",
+                dialoguesVideo: "https://www.youtube.com/embed/example2?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 2:</b><br>- Darf ich dir helfen?<br>- Ja, bitte!<br><br><b>Полезные фразы:</b><br>Entschuldigung.<br>Das stimmt."
             },
             3: {
                 associationVideo: "https://www.youtube.com/embed/M0TfQvX5X1o?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для существительных А1 (Часть 3)",
+                associationTitle: "Ассоциации для темы Жильё",
                 storyLink: "https://your-domain.com/story/week3",
                 wordSetId: "a1_nouns_3",
                 carouselId: "week1", 
-                description: "Продолжаем расширять словарный запас А1, изучая слова, связанные с людьми и местами. Доступно после 2-й недели подписки.",
-                // [ИЗМЕНЕНО]
-                dialoguesTitle: "Диалоги (Неделя 3): Покупки",
-                dialoguesVideo: "https://www.youtube.com/embed/example3?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
-                dialoguesText: "<b>Диалог 3:</b><br>- Was kostet das?<br>- Das kostet 10 Euro.<br><br><b>Полезные фразы:</b><br>Das ist zu teuer.<br>Ich nehme das."
+                description: "Жильё, комнаты, мебель, быт, домашние предметы",
+                dialoguesTitle: "Диалоги: Жильё",
+                dialoguesVideo: "https://www.youtube.com/embed/example3?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 3:</b><br>- Wo ist die Küche?<br>- Die Küche ist hier.<br><br><b>Полезные фразы:</b><br>Das Zimmer ist groß.<br>Ich brauche einen Tisch."
             },
             4: {
                 associationVideo: "https://www.youtube.com/embed/example4?autoplay=0&controls=1&showinfo=0&rel=0",
-                associationTitle: "Ассоциации для глаголов A1",
+                associationTitle: "Ассоциации для темы Карьера",
                 storyLink: "https://your-domain.com/story/week4",
                 wordSetId: "a1_verbs_1", 
                 carouselId: "week1",
-                description: "Изучение первых 10 важных глаголов уровня A1, их спряжения и использования в простых предложениях.",
-                // [ИЗМЕНЕНО]
-                dialoguesTitle: "Диалоги (Неделя 4): Планы",
-                dialoguesVideo: "https://www.youtube.com/embed/example4_dialog?autoplay=0&controls=1&showinfo=0&rel=0", // Placeholder
-                dialoguesText: "<b>Диалог 4:</b><br>- Was machst du heute?<br>- Ich gehe ins Kino.<br><br><b>Полезные фразы:</b><br>Hast du Zeit?<br>Kommst du mit?"
+                description: "Профессии, должности, обязанности, навыки, поиск работы, собеседование, контракт, карьерный рост",
+                dialoguesTitle: "Диалоги: Карьера",
+                dialoguesVideo: "https://www.youtube.com/embed/example4_dialog?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 4:</b><br>- Was sind Sie von Beruf?<br>- Ich bin Lehrer.<br><br><b>Полезные фразы:</b><br>Ich suche Arbeit.<br>Wann kann ich anfangen?"
             },
+            5: {
+                associationVideo: "https://www.youtube.com/embed/example5?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для темы Болезни",
+                storyLink: "https://your-domain.com/story/week5",
+                wordSetId: "a1_health",
+                carouselId: "week1",
+                description: "Симптомы, заболевания, обследования, анализы, лечение, врачи, лекарства, рецепты",
+                dialoguesTitle: "Диалоги: Болезни",
+                dialoguesVideo: "https://www.youtube.com/embed/example5_dialog?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 5:</b><br>- Mir geht es nicht gut.<br>- Was fehlt Ihnen?<br><br><b>Полезные фразы:</b><br>Ich habe Fieber.<br>Ich brauche ein Rezept."
+            },
+            6: {
+                associationVideo: "https://www.youtube.com/embed/example6?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для темы Учёба",
+                storyLink: "https://your-domain.com/story/week6",
+                wordSetId: "a1_study",
+                carouselId: "week1",
+                description: "Учебные процессы, школа, университет, курсы, экзамены, оценивание",
+                dialoguesTitle: "Диалоги: Учёба",
+                dialoguesVideo: "https://www.youtube.com/embed/example6_dialog?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 6:</b><br>- Wann ist die Prüfung?<br>- Am Montag.<br><br><b>Полезные фразы:</b><br>Ich lerne Deutsch.<br>Hast du das verstanden?"
+            },
+            7: {
+                associationVideo: "https://www.youtube.com/embed/example7?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для темы Тело",
+                storyLink: "https://your-domain.com/story/week7",
+                wordSetId: "a1_body",
+                carouselId: "week1",
+                description: "Части тела, органы, движения, физиология",
+                dialoguesTitle: "Диалоги: Тело",
+                dialoguesVideo: "https://www.youtube.com/embed/example7_dialog?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 7:</b><br>- Mein Kopf tut weh.<br>- Du sollst Pause machen.<br><br><b>Полезные фразы:</b><br>Das ist meine Hand.<br>Ich bewege den Arm."
+            },
+            8: {
+                associationVideo: "https://www.youtube.com/embed/example8?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для темы Природа и погода",
+                storyLink: "https://your-domain.com/story/week8",
+                wordSetId: "a1_nature",
+                carouselId: "week1",
+                description: "Ландшафты, реки, моря, климат, природные явления, время года, погода",
+                dialoguesTitle: "Диалоги: Природа и погода",
+                dialoguesVideo: "https://www.youtube.com/embed/example8_dialog?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 8:</b><br>- Wie ist das Wetter?<br>- Es regnet.<br><br><b>Полезные фразы:</b><br>Die Sonne scheint.<br>Es ist kalt."
+            },
+            9: {
+                associationVideo: "https://www.youtube.com/embed/example9?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для темы Личность, характер",
+                storyLink: "https://your-domain.com/story/week9",
+                wordSetId: "a1_personality",
+                carouselId: "week1",
+                description: "Черты характера, поведение, привычки, особенности личности",
+                dialoguesTitle: "Диалоги: Личность, характер",
+                dialoguesVideo: "https://www.youtube.com/embed/example9_dialog?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 9:</b><br>- Sie ist sehr freundlich.<br>- Ja, das stimmt!<br><br><b>Полезные фразы:</b><br>Er ist lustig.<br>Sie ist fleißig."
+            },
+            10: {
+                associationVideo: "https://www.youtube.com/embed/example10?autoplay=0&controls=1&showinfo=0&rel=0",
+                associationTitle: "Ассоциации для темы Внешность",
+                storyLink: "https://your-domain.com/story/week10",
+                wordSetId: "a1_appearance",
+                carouselId: "week1",
+                description: "Внешность, рост, вес, особенности тела, стиль",
+                dialoguesTitle: "Диалоги: Внешность",
+                dialoguesVideo: "https://www.youtube.com/embed/example10_dialog?autoplay=0&controls=1&showinfo=0&rel=0",
+                dialoguesText: "<b>Диалог 10:</b><br>- Wie siehst du aus?<br>- Ich bin groß und schlank.<br><br><b>Полезные фразы:</b><br>Er hat blaue Augen.<br>Sie trägt eine Brille."
+            }
         };
 
         // Вспомогательные массивы для фильтров
         const ALL_WEEKS = Object.keys(WEEKLY_CONTENT_MAP).map(Number).sort((a, b) => a - b);
+        
+        // Маппинг недель на темы из topics.json
+        const WEEK_TO_TOPIC_MAP = {
+            1: "emotions",          // Эмоции
+            2: "social_relations",  // Общение
+            3: "home",              // Жильё
+            4: "work",              // Карьера
+            5: "health",            // Болезни
+            6: "study",             // Учёба
+            7: "body",              // Тело
+            8: "nature",            // Природа и погода
+            9: "personality",       // Личность, характер
+            10: "appearance"        // Внешность
+        };
+        
+        // Темы, для которых существуют файлы word_topic{N}.json (deprecated, используется только для обратной совместимости)
+        const AVAILABLE_WORD_TOPICS = [1]; // Добавляйте сюда номера тем по мере создания файлов
 
 
         // ===== НАЧАЛО ИНТЕГРАЦИИ text1.html (JavaScript) =====
@@ -1552,6 +1695,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             carouselCards: [],
             currentCarouselIndex: 0,
             
+            // Новая система: все слова и темы
+            wrongExercises: [], // Массив для хранения неправильно отвеченных упражнений
+            allWords: [],
+            allTopics: [],
+            allExercises: [],
+            
             /**
              * ВАЖНО: Определяет путь к документу в Firestore, используя ВАШУ КОЛЛЕКЦИЮ И ID
              */
@@ -1593,6 +1742,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     }
 
                     this.disableZoom();
+                    this.loadSelectedWords(); // Загружаем выбранные слова
+                    await this.loadWordsAndTopics(); // [НОВОЕ] Загружаем слова и темы
+                    await this.loadExercises(); // [НОВОЕ] Загружаем упражнения
                     await this.loadCarouselMetadata(); 
                     await this.loadStoryContent(); // [НОВОЕ] Загружаем контент историй
 
@@ -1640,6 +1792,39 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 } catch (error) {
                     console.error("Ошибка загрузки контента историй:", error);
                     this.showError('Не удалось загрузить контент историй.');
+                }
+            },
+
+            // [НОВОЕ] Загружает все слова и темы из единых файлов
+            async loadWordsAndTopics() {
+                try {
+                    // Загружаем words.json
+                    const wordsResponse = await fetch(getBaseUrl() + 'words.json');
+                    if (!wordsResponse.ok) throw new Error('Не удалось загрузить words.json');
+                    this.allWords = await wordsResponse.json();
+                    console.log('Загружено слов:', this.allWords.length);
+                    
+                    // Загружаем topics.json
+                    const topicsResponse = await fetch(getBaseUrl() + 'topics.json');
+                    if (!topicsResponse.ok) throw new Error('Не удалось загрузить topics.json');
+                    this.allTopics = await topicsResponse.json();
+                    console.log('Загружено тем:', this.allTopics.length);
+                } catch (error) {
+                    console.error("Ошибка загрузки слов и тем:", error);
+                    this.showError('Не удалось загрузить словарь.');
+                }
+            },
+
+            // [НОВОЕ] Загружает упражнения
+            async loadExercises() {
+                try {
+                    const response = await fetch(getBaseUrl() + 'exercises.json');
+                    if (!response.ok) throw new Error('Не удалось загрузить exercises.json');
+                    this.allExercises = await response.json();
+                    console.log('Загружено упражнений:', this.allExercises.length);
+                } catch (error) {
+                    console.error("Ошибка загрузки упражнений:", error);
+                    this.allExercises = [];
                 }
             },
 
@@ -1851,22 +2036,24 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 if (!this.isSubscriber && this.selectedWeek === 0) { 
                     mainBlock.innerHTML += `
-                        <button onclick="window.App.renderWeekContent(1)" class="w-full py-4 px-5 rounded-xl shadow-xl bg-gradient-to-r from-green-400 to-green-600 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
-                            <span>🚀 Тема 1</span>
-                            <span>Начать &rarr;</span>
+                        <button onclick="window.App.renderTopicSelection()" class="w-full py-4 px-5 rounded-xl shadow-xl bg-gradient-to-r from-green-400 to-green-600 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
+                            <span>🚀 Пробная Тема</span>
+                            <span>Учить &rarr;</span>
                         </button>
                     `;
                 } else {
                     const activeWeek = this.selectedWeek;
-                    const weekTitle = activeWeek === 1 && !this.isSubscriber 
-                                    ? 'Тема 1' 
-                                    : `Тема ${activeWeek}`;
+                    
+                    // Получаем название темы
+                    const topicId = WEEK_TO_TOPIC_MAP[activeWeek];
+                    const topic = this.allTopics?.find(t => t.id === topicId);
+                    const weekTitle = topic ? topic.name : `Тема ${activeWeek}`;
                     
                     if (activeWeek >= 1 && activeWeek <= ALL_WEEKS.length) {
                         mainBlock.innerHTML += `
                             <button onclick="window.App.renderWeekContent(${activeWeek})" class="w-full py-4 px-5 rounded-xl shadow-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
-                                <span>📅 Активная подборка: ${weekTitle}</span>
-                                <span>Продолжить &rarr;</span>
+                                <span>📅 Актуальная тема: ${weekTitle}</span>
+                                <span>&rarr;</span>
                             </button>
                         `;
                     }
@@ -1874,7 +2061,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 mainBlock.innerHTML += `
                     <button onclick="window.App.renderTopicSelection()" class="w-full py-4 px-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-md text-left text-lg font-semibold text-indigo-900 hover:from-blue-100 hover:to-indigo-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-indigo-200">
-                        <span>🗂️ Все Темы</span>
+                        <span>📚 Все темы</span>
                         <span>&rarr;</span>
                     </button>
                 `;
@@ -1901,6 +2088,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 let dueSetsCount = 0;
                 list.innerHTML = '';
 
+                // Проверяем стандартные наборы WORD_SETS
                 WORD_SETS.forEach(set => {
                     if (this.isSubscriber && set.week > this.unlockedWeek) return;
                     if (!this.isSubscriber && set.week > 1) return;
@@ -1908,7 +2096,65 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     let dueCount = 0;
                     set.cards.forEach(card => {
                         const progress = this.userProgress[card.id];
-                        if (!progress || (progress.nextReview && progress.nextReview <= today)) {
+                        // Показываем только карточки, которые уже изучались И готовы к повторению
+                        if (progress && progress.isLearning && progress.nextReview && progress.nextReview <= today) {
+                            dueCount++;
+                        }
+                    });
+
+                    if (dueCount > 0) {
+                        dueSetsCount++;
+                        const setEl = document.createElement('div');
+                        setEl.className = "bg-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 flex justify-between items-center transform transition hover:-translate-y-1";
+
+                        const left = document.createElement('div');
+                        const title = document.createElement('span');
+                        title.className = 'font-bold text-gray-800';
+                        title.textContent = set.name;
+                        const info = document.createElement('span');
+                        info.className = 'text-sm text-orange-600 font-medium block';
+                        info.textContent = `Доступно для повторения: ${dueCount}`;
+                        left.appendChild(title);
+                        left.appendChild(info);
+
+                        const btn = document.createElement('button');
+                        btn.className = 'py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center';
+                        btn.type = 'button';
+                        btn.textContent = 'Начать';
+                        btn.addEventListener('click', () => this.promptForDirection(set.id, 'review', 'allsets'));
+
+                        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                        svg.setAttribute('class', 'w-4 h-4 ml-1');
+                        svg.setAttribute('fill', 'none');
+                        svg.setAttribute('stroke', 'currentColor');
+                        svg.setAttribute('viewBox', '0 0 24 24');
+                        const p1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        p1.setAttribute('stroke-linecap', 'round');
+                        p1.setAttribute('stroke-linejoin', 'round');
+                        p1.setAttribute('stroke-width', '2');
+                        p1.setAttribute('d', 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z');
+                        const p2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        p2.setAttribute('stroke-linecap', 'round');
+                        p2.setAttribute('stroke-linejoin', 'round');
+                        p2.setAttribute('stroke-width', '2');
+                        p2.setAttribute('d', 'M21 12a9 9 0 11-18 0 9 9 0 0118 0z');
+                        svg.appendChild(p1);
+                        svg.appendChild(p2);
+                        btn.appendChild(svg);
+
+                        setEl.appendChild(left);
+                        setEl.appendChild(btn);
+                        list.appendChild(setEl);
+                    }
+                });
+
+                // Проверяем выбранные наборы слов
+                const selectedSets = this.createSelectedWordsSets();
+                selectedSets.forEach(set => {
+                    let dueCount = 0;
+                    set.cards.forEach(card => {
+                        const progress = this.userProgress[card.id];
+                        if (progress && progress.isLearning && progress.nextReview && progress.nextReview <= today) {
                             dueCount++;
                         }
                     });
@@ -1967,96 +2213,391 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             },
 
             renderTopicSelection(isBack = false) {
-                // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('list-title').innerText = '🗂️ Все Темы';
-                document.getElementById('filter-controls').innerHTML = '';
-
+                console.log('🔍 renderTopicSelection called');
+                document.getElementById('list-title').innerText = 'ПОИСК СЛОВ';
+                const subtitleEl = document.getElementById('list-subtitle');
+                if (subtitleEl) subtitleEl.style.display = 'none';
+                
                 const contentListDiv = document.getElementById('content-list');
                 contentListDiv.innerHTML = '';
-                this.unlockedWeek = this.getMaxAvailableWeek(); 
+                
+                this.unlockedWeek = this.getMaxAvailableWeek();
+                
+                // ВАЖНО: Показываем экран СРАЗУ
+                this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicSelection', param: null });
 
-                ALL_WEEKS.forEach(i => {
-                    const isSubscriber = this.isSubscriber;
-                    const maxAvailableWeek = this.unlockedWeek;
-                    const isCurrentSelected = i === this.selectedWeek; 
-                    const isAvailable = isSubscriber ? (i <= maxAvailableWeek) : (i === 1); 
-                    const weekData = WEEKLY_CONTENT_MAP[i];
+                // Показываем filter-controls
+                const filterControls = document.getElementById('filter-controls');
+                if (filterControls) filterControls.style.display = 'block';
+
+                // Используем существующие статические элементы
+                const dropdown = document.getElementById('topic-dropdown');
+                const searchInput = document.getElementById('search-input-weekly');
+                const searchBtn = document.getElementById('search-button');
+                const autocompleteList = document.getElementById('autocomplete-list');
+                const searchDiv = document.getElementById('search-container');
+                
+                // Проверка на существование элементов
+                if (!dropdown || !searchInput || !searchBtn || !autocompleteList || !searchDiv) {
+                    console.error('Search elements not found!', {dropdown, searchInput, searchBtn, autocompleteList, searchDiv});
+                    return;
+                }
+                
+                // Заполняем dropdown опциями
+                dropdown.innerHTML = `<option value="all">Все темы</option>` +
+                    ALL_WEEKS.map(w => {
+                        const topicId = WEEK_TO_TOPIC_MAP[w];
+                        const topic = this.allTopics.find(t => t.id === topicId);
+                        const topicName = topic ? topic.name : `Тема ${w}`;
+                        return `<option value="week-${w}">${topicName}</option>`;
+                    }).join('');
+
+                // 3. Load all carousel data (for search)
+                const allCarouselData = {};
+                let loadedCount = 0;
+                let selectedFilter = 'all';
+                
+                // Autocomplete logic
+                let allWords = [];
+                
+                function updateAutocomplete(value) {
+                    const term = value.trim().toLowerCase();
+                    autocompleteList.innerHTML = '';
                     
-                    let statusText = 'Доступно';
-                    let buttonClass = 'bg-white hover:bg-gray-50';
-
-                    if (!isAvailable) {
-                        buttonClass = 'button-locked';
-                        if (!isSubscriber) {
-                            statusText = '🔒 Оформите подписку';
-                        } else {
-                            const activationTime = new Date(this.activationDate).getTime();
-                            const currentTime = new Date().getTime();
-                            const daysDiff = Math.floor((currentTime - activationTime) / (1000 * 60 * 60 * 24));
-                            const daysNeeded = (i - 1) * 7;
-                            const daysLeft = daysNeeded - daysDiff;
-                            statusText = `🔒 Доступно через ${daysLeft} дн.`;
-                        }
-                    } else if (i === 1 && !isSubscriber) {
-                        buttonClass = 'bg-green-100 border-2 border-green-500';
-                        statusText = 'Тема 1';
-                    } else if (isCurrentSelected) {
-                        buttonClass = 'bg-yellow-100 border-2 border-yellow-500';
-                        statusText = 'Активно';
+                    if (!term || term.length < 2) {
+                        autocompleteList.classList.add('hidden');
+                        return;
                     }
-
-                    const weekContainer = document.createElement('div');
-                    weekContainer.className = `w-full p-4 rounded-xl shadow-md ${buttonClass}`;
-
-                    const topRow = document.createElement('div');
-                    topRow.className = 'flex justify-between items-center mb-3';
-                    const leftCol = document.createElement('div');
-                    const titleSpan = document.createElement('span');
-                    titleSpan.className = `font-bold text-lg ${!isAvailable ? 'text-gray-500' : 'text-gray-800'}`;
-                    titleSpan.textContent = `Тема ${i}`;
-                    const statusSpan = document.createElement('span');
-                    statusSpan.className = `block text-sm ${!isAvailable ? 'text-orange-600' : 'text-gray-500'}`;
-                    statusSpan.textContent = statusText;
-                    leftCol.appendChild(titleSpan);
-                    leftCol.appendChild(statusSpan);
-                    topRow.appendChild(leftCol);
-
-                    const bottomRow = document.createElement('div');
-                    bottomRow.className = 'grid grid-cols-2 gap-3';
-
-                    const detailsBtn = document.createElement('button');
-                    detailsBtn.className = 'w-full py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-300 transition duration-150';
-                    detailsBtn.type = 'button';
-                    detailsBtn.textContent = 'Подробнее';
-                    detailsBtn.addEventListener('click', () => this.showWeekDetails(i, weekData.description));
-
-                    const learnBtn = document.createElement('button');
-                    learnBtn.id = `week-learn-${i}`;
-                    learnBtn.className = `w-full py-2 px-3 text-white font-semibold rounded-xl text-sm transition duration-150 ${isAvailable ? 'bg-blue-500 hover:bg-blue-600' : 'button-locked'}`;
-                    learnBtn.type = 'button';
-                    learnBtn.textContent = 'Учить';
-                    if (isAvailable) {
-                        learnBtn.addEventListener('click', () => this.selectAndRenderWeek(i));
-                    } else {
-                        learnBtn.disabled = true;
+                    // Показываем только слова, начинающиеся с term
+                    const matches = allWords.filter(item => 
+                        item.word.toLowerCase().startsWith(term) || 
+                        item.translation.toLowerCase().startsWith(term)
+                    ).slice(0, 10); // Limit to 10 suggestions
+                    
+                    if (matches.length === 0) {
+                        autocompleteList.classList.add('hidden');
+                        return;
                     }
-
-                    bottomRow.appendChild(detailsBtn);
-                    bottomRow.appendChild(learnBtn);
-
-                    weekContainer.appendChild(topRow);
-                    weekContainer.appendChild(bottomRow);
-                    contentListDiv.appendChild(weekContainer);
+                    // Display matches
+                    matches.forEach(item => {
+                        const suggestionDiv = document.createElement('div');
+                        suggestionDiv.className = 'p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 flex items-center gap-3';
+                        // Highlight matching part
+                        const wordHtml = highlightMatch(item.word, term);
+                        const translationHtml = highlightMatch(item.translation, term);
+                        suggestionDiv.innerHTML = `
+                            ${item.image ? `<img src="${item.image}" alt="${item.word}" class="w-12 h-8 object-cover rounded">` : ''}
+                            <div class="flex-1">
+                                <div class="font-semibold text-gray-800">${wordHtml}</div>
+                                <div class="text-sm text-gray-500">${translationHtml}</div>
+                            </div>
+                            <div class="text-xs text-gray-400">${item.themeName}</div>
+                        `;
+                        suggestionDiv.addEventListener('click', () => {
+                            searchInput.value = item.word;
+                            autocompleteList.classList.add('hidden');
+                            renderContent(selectedFilter, item.word);
+                        });
+                        autocompleteList.appendChild(suggestionDiv);
+                    });
+                    autocompleteList.classList.remove('hidden');
+                }
+                
+                function highlightMatch(text, term) {
+                    const index = text.toLowerCase().indexOf(term.toLowerCase());
+                    if (index === -1) return text;
+                    
+                    const before = text.substring(0, index);
+                    const match = text.substring(index, index + term.length);
+                    const after = text.substring(index + term.length);
+                    
+                    return `${before}<span class="bg-yellow-200 font-bold">${match}</span>${after}`;
+                }
+                
+                // Event listeners for autocomplete
+                searchInput.addEventListener('input', (e) => {
+                    updateAutocomplete(e.target.value);
                 });
                 
-                // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
-                this.showScreen('list-screen', isBack, { renderFunc: 'renderTopicSelection', param: null });
-            },
-            
-            showWeekDetails(weekNum, description) {
-                document.getElementById('week-details-title').textContent = `Тема ${weekNum}`;
-                document.getElementById('week-details-body').textContent = description;
-                this.openModal('week-details-modal');
+                searchInput.addEventListener('focus', (e) => {
+                    if (e.target.value.length >= 2) {
+                        updateAutocomplete(e.target.value);
+                    }
+                });
+                
+                // Close autocomplete when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!searchDiv.contains(e.target)) {
+                        autocompleteList.classList.add('hidden');
+                    }
+                });
+
+                // Render weeks (standard themes)
+                function renderWeeks(searchTerm, weekFilter) {
+                    contentListDiv.innerHTML = '';
+                    const term = (searchTerm || '').trim().toLowerCase();
+                    
+                    ALL_WEEKS.forEach(i => {
+                        // Filter by selected week
+                        if (weekFilter && weekFilter !== 'all' && i !== weekFilter) {
+                            return;
+                        }
+                        
+                        const isSubscriber = window.App.isSubscriber;
+                        const maxAvailableWeek = window.App.unlockedWeek;
+                        const isCurrentSelected = i === window.App.selectedWeek;
+                        const freeWeeks = [1, 2, 3, 5, 6, 8]; // emotions, social_relations, home, health, study, nature
+                        const isAvailable = isSubscriber ? (i <= maxAvailableWeek) : freeWeeks.includes(i);
+                        
+                        // If search term exists, skip weeks without matching words
+                        if (term && window.App.allWords) {
+                            // Получаем topicId для этой недели
+                            const topicId = WEEK_TO_TOPIC_MAP[i];
+                            if (!topicId) return;
+                            
+                            // Фильтруем слова по теме и проверяем совпадение с поисковым термином
+                            const wordsInTopic = window.App.allWords.filter(word => 
+                                word.topics && word.topics.includes(topicId)
+                            );
+                            const hasMatch = wordsInTopic.some(word => {
+                                const displayWord = word.article ? `${word.article} ${word.word}` : word.word;
+                                const translation = Array.isArray(word.translation) ? word.translation.join(' ') : word.translation;
+                                return displayWord.toLowerCase().includes(term) || 
+                                       translation.toLowerCase().includes(term);
+                            });
+                            if (!hasMatch) return;
+                        }
+                        
+                        let statusText = 'Доступно';
+                        let buttonClass = 'bg-white hover:bg-gray-50';
+
+                        if (!isAvailable) {
+                            buttonClass = 'button-locked';
+                            if (!isSubscriber) {
+                                statusText = '🔒 Оформите подписку';
+                            } else {
+                                const activationTime = new Date(window.App.activationDate).getTime();
+                                const currentTime = new Date().getTime();
+                                const daysDiff = Math.floor((currentTime - activationTime) / (1000 * 60 * 60 * 24));
+                                const daysNeeded = (i - 1) * 7;
+                                const daysLeft = daysNeeded - daysDiff;
+                                statusText = `🔒 Доступно через ${daysLeft} дн.`;
+                            }
+                        } else if ((i === 1 || i === 5) && !isSubscriber) {
+                            buttonClass = 'bg-green-100 border-2 border-green-500';
+                            statusText = 'Бесплатно';
+                        } else if (isCurrentSelected) {
+                            buttonClass = 'bg-yellow-100 border-2 border-yellow-500';
+                            statusText = 'Активно';
+                        }
+
+                        const weekContainer = document.createElement('div');
+                        weekContainer.className = `w-full p-4 rounded-xl shadow-md ${buttonClass} flex justify-between items-center transition-transform hover:scale-105 ${isAvailable ? 'cursor-pointer' : 'cursor-not-allowed'}`;
+
+                        const leftCol = document.createElement('div');
+                        leftCol.className = 'flex-1';
+                        
+                        // Получаем название темы
+                        const topicId = WEEK_TO_TOPIC_MAP[i];
+                        const topic = window.App.allTopics?.find(t => t.id === topicId);
+                        const topicName = topic ? topic.name : `Тема ${i}`;
+                        
+                        const titleSpan = document.createElement('span');
+                        titleSpan.className = `font-bold text-lg ${!isAvailable ? 'text-gray-500' : 'text-gray-800'}`;
+                        titleSpan.textContent = topicName;
+                        const statusSpan = document.createElement('span');
+                        statusSpan.className = `block text-sm ${!isAvailable ? 'text-orange-600' : 'text-gray-500'}`;
+                        statusSpan.textContent = statusText;
+                        leftCol.appendChild(titleSpan);
+                        leftCol.appendChild(statusSpan);
+
+                        // Добавляем стрелку вправо
+                        const arrowSpan = document.createElement('span');
+                        arrowSpan.className = `text-2xl ${!isAvailable ? 'text-gray-400' : 'text-blue-500'}`;
+                        arrowSpan.innerHTML = '&rarr;';
+
+                        weekContainer.appendChild(leftCol);
+                        weekContainer.appendChild(arrowSpan);
+                        
+                        // Весь контейнер становится кликабельным
+                        if (isAvailable) {
+                            weekContainer.addEventListener('click', () => window.App.selectAndRenderWeek(i));
+                        }
+                        
+                        contentListDiv.appendChild(weekContainer);
+                    });
+                }
+
+                // Render word list from carousel data (for search results)
+                function renderCarouselWordsTab(searchTerm, topicFilter) {
+                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Загрузка...</p>';
+                    const term = (searchTerm || '').trim().toLowerCase();
+                    
+                    if (!term) {
+                        contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Введите слово для поиска.</p>';
+                        return;
+                    }
+                    
+                    console.log('Searching for:', term);
+                    
+                    // Очищаем контейнер
+                    contentListDiv.innerHTML = '';
+                    
+                    // Фильтруем слова из allWords
+                    let filteredWords = window.App.allWords.filter(wordData => {
+                        // Показываем артикль только для существительных и если это не тире
+                        const displayWord = (wordData.article && wordData.article !== '—' && wordData.partOfSpeech && wordData.partOfSpeech.toLowerCase().includes('noun')) 
+                            ? `${wordData.article} ${wordData.word}` 
+                            : wordData.word;
+                        const translation = Array.isArray(wordData.translation) ? wordData.translation.join(' ') : wordData.translation;
+                        
+                        // Фильтр по теме если указан
+                        if (topicFilter && topicFilter !== 'all') {
+                            const topicId = window.App.allTopics.find(t => t.name === `Тема ${topicFilter}`)?.id;
+                            if (topicId && (!wordData.topics || !wordData.topics.includes(topicId))) {
+                                return false;
+                            }
+                        }
+                        
+                        // Поиск по началу слова
+                        return displayWord.toLowerCase().startsWith(term) || 
+                               translation.toLowerCase().startsWith(term);
+                    });
+                    
+                    if (filteredWords.length === 0) {
+                        contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет совпадений по вашему запросу.</p>';
+                        return;
+                    }
+                    
+                    // Отображаем найденные слова
+                    {
+                        const words = filteredWords;
+                                
+                        // Word list (без заголовка темы)
+                        filteredWords.forEach(wordData => {
+                            const wordId = wordData.id;
+                            // Показываем артикль только для существительных и если это не тире
+                            const displayWord = (wordData.article && wordData.article !== '—' && wordData.partOfSpeech && wordData.partOfSpeech.toLowerCase().includes('noun')) 
+                                ? `${wordData.article} ${wordData.word}` 
+                                : wordData.word;
+                            const translation = Array.isArray(wordData.translation) ? wordData.translation.join(', ') : wordData.translation;
+                            
+                            // Проверяем в какой теме это слово находится (берем первую)
+                            const topicId = wordData.topics && wordData.topics.length > 0 ? wordData.topics[0] : null;
+                            const isInStudy = topicId && window.App.selectedWordsForStudy[topicId] && 
+                                              window.App.selectedWordsForStudy[topicId].some(w => w.id === wordId);
+                            const wordItem = document.createElement('div');
+                            wordItem.className = 'p-4 bg-white rounded-xl shadow-md flex items-center justify-between gap-3 cursor-pointer hover:bg-gray-50 transition mb-2';
+                            wordItem.dataset.wordId = wordId;
+                            
+                            // Левая часть: немецкое слово и перевод
+                            const wordInfo = document.createElement('div');
+                            wordInfo.className = 'flex-1';
+                            wordInfo.innerHTML = `
+                                <div class="font-bold text-lg text-gray-800">${displayWord}</div>
+                                <div class="text-sm text-gray-500">${translation}</div>
+                            `;
+                                        // Кнопка озвучки
+                                        const speakBtn = document.createElement('button');
+                                        speakBtn.className = 'p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition';
+                                        speakBtn.innerHTML = `
+                                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                                            </svg>
+                                        `;
+                            speakBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const utterance = new SpeechSynthesisUtterance(wordData.word); // без артикля
+                                utterance.lang = 'de-DE';
+                                window.speechSynthesis.speak(utterance);
+                            });
+                                        // Клик на весь элемент открывает карточку
+                                        const currentIndex = filteredWords.indexOf(wordData);
+                                        wordItem.addEventListener('click', () => {
+                                            window.App.openWordCard(wordData, topicId, wordId, filteredWords, currentIndex);
+                                        });
+                            wordItem.appendChild(wordInfo);
+                            wordItem.appendChild(speakBtn);
+                            
+                            // Индикатор "В учебе" - только если слово в учебе
+                            if (isInStudy) {
+                                const studyIndicator = document.createElement('div');
+                                studyIndicator.className = 'px-4 py-2 bg-yellow-500 text-white text-sm font-bold rounded-lg shadow-sm';
+                                studyIndicator.textContent = '📚 В учебе';
+                                wordItem.appendChild(studyIndicator);
+                            }
+                            contentListDiv.appendChild(wordItem);
+                        });
+                    }
+                }
+
+                // Main render function
+                function renderContent(filter, searchTerm) {
+                    const term = (searchTerm || '').trim().toLowerCase();
+                    
+                    // If search term exists, show word list tab
+                    if (term) {
+                        const weekNum = filter.startsWith('week-') ? parseInt(filter.replace('week-', '')) : null;
+                        renderCarouselWordsTab(searchTerm, weekNum);
+                    } else {
+                        // Show week themes
+                        const weekNum = filter.startsWith('week-') ? parseInt(filter.replace('week-', '')) : null;
+                        renderWeeks(searchTerm, weekNum);
+                    }
+                }
+
+                // Load all carousel files for search
+                function loadAllCarouselFiles() {
+                    // Используем уже загруженные слова из window.App.allWords
+                    if (window.App.allWords && window.App.allWords.length > 0) {
+                        // Преобразуем формат для автокомплита
+                        window.App.allWords.forEach(wordData => {
+                            // Показываем артикль только для существительных и если это не тире
+                            const displayWord = (wordData.article && wordData.article !== '—' && wordData.partOfSpeech && wordData.partOfSpeech.toLowerCase().includes('noun')) 
+                                ? `${wordData.article} ${wordData.word}` 
+                                : wordData.word;
+                            const translation = Array.isArray(wordData.translation) ? wordData.translation.join(', ') : wordData.translation;
+                            const topicNames = wordData.topics ? wordData.topics.map(topicId => {
+                                const topic = window.App.allTopics.find(t => t.id === topicId);
+                                return topic ? topic.name : topicId;
+                            }).join(', ') : '';
+                            
+                            allWords.push({
+                                word: displayWord,
+                                translation: translation,
+                                image: wordData.image || null,
+                                themeName: topicNames,
+                                topicIds: wordData.topics || []
+                            });
+                        });
+                        console.log('Loaded', allWords.length, 'words for autocomplete');
+                        renderContent(selectedFilter, '');
+                    } else {
+                        console.error('Words not loaded yet');
+                        contentListDiv.innerHTML = '<p class="text-red-500 text-center py-6">Ошибка: слова не загружены</p>';
+                    }
+                }
+                
+                // Start loading word topic files
+                loadAllCarouselFiles();
+
+                // Dropdown change
+                dropdown.addEventListener('change', e => {
+                    selectedFilter = e.target.value;
+                    renderContent(selectedFilter, searchInput.value);
+                });
+                
+                // Search button click
+                searchBtn.addEventListener('click', () => {
+                    renderContent(selectedFilter, searchInput.value);
+                });
+                
+                // Enter key in search
+                searchInput.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') {
+                        renderContent(selectedFilter, searchInput.value);
+                    }
+                }); 
             },
 
             async selectAndRenderWeek(weekNum) {
@@ -2078,140 +2619,52 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 `;
                 container.appendChild(button);
             },
-
-            renderWordListScreen(setId, title, isBack = false) {
-                document.getElementById('list-title').innerText = title;
-                document.getElementById('filter-controls').innerHTML = '';
-                const contentListDiv = document.getElementById('content-list');
-                contentListDiv.innerHTML = '';
-
-                const wordSet = WORD_SETS.find(s => s.id === setId);
-                if (!wordSet) {
-                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Набор слов не найден.</p>';
-                    this.showScreen('list-screen', isBack, { renderFunc: 'renderWordListScreen', param: {setId, title} });
-                    return;
-                }
-
-                const wordsContainer = document.createElement('div');
-                wordsContainer.className = 'space-y-2';
-
-                wordSet.cards.forEach(card => {
-                    const wordButton = document.createElement('button');
-                    wordButton.className = 'w-full text-left p-4 bg-white hover:bg-blue-50 rounded-xl shadow-md transition duration-150 flex justify-between items-center';
-                    wordButton.innerHTML = `
-                        <div>
-                            <span class="font-semibold text-gray-800">${card.front}</span>
-                            <span class="block text-sm text-gray-500">${card.back || ''}</span>
-                        </div>
-                        <span class="text-blue-500">&rarr;</span>
-                    `;
-                    wordButton.addEventListener('click', () => {
-                        const cardIndex = wordSet.cards.findIndex(c => c.id === card.id);
-                        if (cardIndex !== -1) {
-                            this.sessionCards = wordSet.cards.map(c => ({...c}));
-                            this.currentCardIndex = cardIndex;
-                            this.isPracticeMode = false;
-                            this.isPracticeAllMode = true;
-                            this.currentSetId = setId;
-                            
-                            // Настраиваем UI для режима просмотра всех слов
-                            document.getElementById('controls-rate').classList.add('hidden');
-                            document.getElementById('controls-practice').classList.add('hidden');
-                            document.getElementById('controls-practice-all').classList.remove('hidden');
-                            
-                            // Показываем экран и карточку
-                            this.showScreen('study-screen', false, { 
-                                renderFunc: 'renderWordListScreen', 
-                                param: {setId, title} 
-                            });
-                            this.showNextCard();
-                        }
-                    });
-                    wordsContainer.appendChild(wordButton);
-                });
-
-                contentListDiv.appendChild(wordsContainer);
-                this.showScreen('list-screen', isBack, { renderFunc: 'renderWordListScreen', param: {setId, title} });
-            },
             
             renderWeekContent(weekNum, isBack = false) {
                 const weekData = WEEKLY_CONTENT_MAP[weekNum];
                 if (!weekData) return;
                 
-                const isTrialLesson = !this.isSubscriber && weekNum === 1;
+                // Получаем ID темы и название
+                const topicId = WEEK_TO_TOPIC_MAP[weekNum] || 'health';
+                const topic = this.allTopics?.find(t => t.id === topicId);
+                const topicName = topic ? topic.name : `Тема ${weekNum}`;
                 
-                if (isTrialLesson) {
-                    document.getElementById('list-title').innerText = `Тема ${weekNum}`;
-                } else {
-                    document.getElementById('list-title').innerText = `Тема ${weekNum}`;
-                }
+                document.getElementById('list-title').innerText = `📚 ${topicName}`;
 
                 // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('filter-controls').innerHTML = '';
+                const filterControls = document.getElementById('filter-controls');
+                if (filterControls) filterControls.style.display = 'none';
                 const contentListDiv = document.getElementById('content-list');
                 contentListDiv.innerHTML = '';
                 
-                // 1. Видео ассоциации
-                if (weekData.associationVideo) {
-                    const videoWrapper = document.createElement('div');
-                    videoWrapper.className = 'mb-4';
-
-                    const poster = document.createElement('div');
-                    poster.className = 'relative rounded-lg overflow-hidden bg-black';
-                    poster.style.paddingTop = '56.25%';
-
-                    const playBtn = document.createElement('button');
-                    playBtn.type = 'button';
-                    playBtn.className = 'absolute inset-0 w-full h-full flex items-center justify-center text-white';
-                    playBtn.setAttribute('aria-label', 'Play association video');
-                    playBtn.innerHTML = `<svg class="w-16 h-16 opacity-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v18l15-9L5 3z"/></svg>`;
-
-                    playBtn.addEventListener('click', () => {
-                        const iframe = document.createElement('iframe');
-                        iframe.style.position = 'absolute';
-                        iframe.style.top = '0';
-                        iframe.style.left = '0';
-                        iframe.style.width = '100%';
-                        iframe.style.height = '100%';
-                        iframe.src = weekData.associationVideo;
-                        iframe.setAttribute('frameborder', '0');
-                        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-                        iframe.setAttribute('allowfullscreen', '');
-                        poster.replaceWith(iframe);
-                    });
-
-                    poster.appendChild(playBtn);
-                    videoWrapper.appendChild(poster);
-                    contentListDiv.appendChild(videoWrapper);
-                }
-
-                // 2. Список слов по теме (как подраздел)
-                const wordSet = WORD_SETS.find(s => s.id === weekData.wordSetId);
-                if (wordSet) {
-                    this.renderMenuCard(contentListDiv, 
-                        `📝 Список слов`, 
-                        `${wordSet.cards.length} слов для изучения`,
-                        `window.App.renderWordListScreen('${weekData.wordSetId}', 'Список слов — Тема ${weekNum}')`,
-                        'bg-white hover:bg-gray-50'
-                    );
-                }
-
-                // 3. Упражнения
+                // Мантры полезных фраз — открывает модальное окно с карточками
+                
+                // 1. Слова по теме
+                // Считаем реальное количество слов из allWords по этой теме
+                const topicWordsCount = this.allWords?.filter(w => w.topics && w.topics.includes(topicId)).length || 0;
                 this.renderMenuCard(contentListDiv, 
-                    `✏️ Упражнения`, 
-                    `Практические задания`,
-                    `window.App.promptForDirection('${weekData.wordSetId}', 'practice', 'week')`,
+                    `📚 Слова по теме (${topicWordsCount})`, 
+                    ``,
+                    `window.App.renderWordList('${weekData.wordSetId}', '${topicId}')`,
                     'bg-green-100 hover:bg-green-200'
                 );
-
-                // 4. Мантры полезных фраз
+                
+                // 2. Упражнения с gap_fill
+                this.renderMenuCard(contentListDiv,
+                    `✏️ Упражнения`,
+                    'Различные типы упражнений для практики',
+                    `window.App.renderExercisesMenu('${topicId}', ${weekNum})`,
+                    'bg-purple-100 hover:bg-purple-200'
+                );
+                
+                // 3. Мантры полезных фраз
                 this.renderMenuCard(contentListDiv,
                     `🕯️ Мантры полезных фраз`,
                     'Короткие полезные фразы для ежедневной практики',
-                    `window.App.currentWeekMantraData = { setId: 'mantra_week1', setTitle: 'Мантры полезных фраз', filepath: 'mantra_week1.json' }; window.App.startMantraSession('mantra_week1','Мантры полезных фраз','mantra_week1.json')`
+                    `window.App.startMantraSessionFromExercises('${topicId}', ${weekNum})`
                 );
                 
-                // 5. Полезные фразы
+                // 4. Полезные фразы / Диалоги
                 // [ИЗМЕНЕНО]
                 const dialoguesTextEscaped = (weekData.dialoguesText || '').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\r\n|\r|\n/g, '<br>');
                 const dialoguesTitleEscaped = (weekData.dialoguesTitle || `Диалоги Недели ${weekNum}`).replace(/'/g, "\\'");
@@ -2220,6 +2673,26 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     `🗣️ Полезные фразы / Диалоги на тему`, 
                     `Видео и текст`, // [ИЗМЕНЕНО]
                     `window.App.renderVideoContentScreen('${dialoguesTitleEscaped}', '${weekData.dialoguesVideo || ''}', '${dialoguesTextEscaped}')` // [ИЗМЕНЕНО]
+                );
+                
+                // 5. Истории по теме
+                let storyAction;
+                // [ИЗМЕНЕНО] Проверяем по ID, а не по storyLink
+                const storyId = `week_${weekNum}`;
+                if (this.allStoryContent[storyId]) {
+                    storyAction = `window.App.renderStoryScreen('📖 Истории по теме', '${storyId}')`; 
+                } else if (weekData.storyLink) {
+                    // Оставляем как запасной вариант для внешних ссылок
+                    storyAction = `window.App.renderExternalLinkScreen('📖 Истории по теме', '${weekData.storyLink}')`; 
+                } else {
+                    storyAction = `void(0)`; // Блокируем, если нет контента
+                }
+                
+                this.renderMenuCard(contentListDiv, 
+                    `📖 Истории по теме`, 
+                    `Видео + квиз`,
+                    storyAction,
+                    (this.allStoryContent[storyId] || weekData.storyLink) ? 'bg-white hover:bg-gray-50' : 'button-locked'
                 );
 
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
@@ -2355,19 +2828,73 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             renderAllSetsScreen(isBack = false) {
                 // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
                 document.getElementById('list-title').innerText = '📚 Все наборы слов';
-                this.renderSetFilterControls();
                 
-                const filteredSets = WORD_SETS.filter(set => {
-                    const weekMatch = this.currentWeekFilter === 'All' || set.week.toString() === this.currentWeekFilter;
-                    // [ИСПРАВЛЕНИЕ] Проверяем подписку
-                    const unlockedMatch = (this.isSubscriber && set.week <= this.unlockedWeek) || (!this.isSubscriber && set.week === 1);
-                    return weekMatch && unlockedMatch;
-                });
+                // Скрываем фильтры
+                const filterControls = document.getElementById('filter-controls');
+                if (filterControls) filterControls.style.display = 'none';
                 
-                this.renderSetCards(filteredSets);
+                // Показываем только наборы из выбранных слов
+                const selectedSets = this.createSelectedWordsSets();
+                
+                this.renderSetCards(selectedSets);
                 
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
                 this.showScreen('list-screen', isBack, { renderFunc: 'renderAllSetsScreen', param: null });
+            },
+
+            createAllWordsSets() {
+                const sets = [];
+                
+                // Создаем наборы со ВСЕМИ словами по темам из allWords
+                if (this.allWords && this.allTopics) {
+                    this.allTopics.forEach(topic => {
+                        const topicWords = this.allWords.filter(w => w.topics && w.topics.includes(topic.id));
+                        if (topicWords.length > 0) {
+                            sets.push({
+                                id: `all_topic_${topic.id}`,
+                                week: 1,
+                                name: topic.name,
+                                cards: topicWords.map(w => ({
+                                    id: w.id,
+                                    front: Array.isArray(w.translation) ? w.translation.join(', ') : w.translation,
+                                    back: w.article ? `${w.article} ${w.word}` : w.word,
+                                    hintImage: w.image || null
+                                })),
+                                isAllWords: true
+                            });
+                        }
+                    });
+                }
+                
+                return sets;
+            },
+
+            createSelectedWordsSets() {
+                const sets = [];
+                if (!this.selectedWordsForStudy) return sets;
+                
+                // Создаем наборы из ВЫБРАННЫХ слов (те, что пользователь добавил в учебу)
+                Object.keys(this.selectedWordsForStudy).forEach(topicId => {
+                    const words = this.selectedWordsForStudy[topicId];
+                    if (words && words.length > 0) {
+                        const topic = this.allTopics.find(t => t.id === topicId);
+                        const topicName = topic ? topic.name : topicId;
+                        sets.push({
+                            id: `selected_topic_${topicId}`,
+                            week: 1,
+                            name: `${topicName}: выбранные слова`,
+                            cards: words.map(w => ({
+                                id: w.id,
+                                front: w.translation,
+                                back: w.word,
+                                hintImage: w.image || null
+                            })),
+                            isSelected: true
+                        });
+                    }
+                });
+                
+                return sets;
             },
 
             // ==================== ФИЛЬТРЫ И КАРТОЧКИ (Без изменений) ====================
@@ -2379,7 +2906,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         <select id="week-filter" onchange="window.App.updateSetFilter('week', this.value)" 
                                 class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             <option value="All">Все Недели</option>
-                            ${ALL_WEEKS.map(w => `<option value="${w}" ${this.currentWeekFilter === w.toString() ? 'selected' : ''}>Тема ${w}</option>`).join('')}
+                            ${ALL_WEEKS.map(w => `<option value="${w}" ${this.currentWeekFilter === w.toString() ? 'selected' : ''}>Неделя ${w}</option>`).join('')}
                         </select>
                     </div>
                 `;
@@ -2403,14 +2930,25 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
 
                 setsToRender.forEach(set => {
-                    // Для экрана "Все наборы" показываем наборы с двумя кнопками: "К повтору (N)" и "Практика (Все)"
+                    // Подсчитываем только карточки, которые уже изучались И готовы к повторению
                     let dueCount = 0;
                     set.cards.forEach(card => {
                         const progress = this.userProgress[card.id];
-                        if (!progress || (progress.nextReview && progress.nextReview <= today)) {
+                        // Карточка к повторению если: уже изучалась И пришло время повторения
+                        if (progress && progress.isLearning && progress.nextReview && progress.nextReview <= today) {
                             dueCount++;
                         }
                     });
+                    
+                    // Определяем подзаголовок: для выбранных слов показываем тему, для обычных - неделю
+                    let subtitle = '';
+                    if (set.isSelected) {
+                        // Для выбранных слов - только количество слов
+                        subtitle = `${set.cards.length} слов`;
+                    } else {
+                        // Для обычных наборов - неделя и количество
+                        subtitle = `Неделя ${set.week} | ${set.cards.length} слов`;
+                    }
 
                     const setContainer = document.createElement('div');
                     setContainer.className = "w-full p-4 bg-white rounded-xl shadow-md";
@@ -2418,7 +2956,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         <div class="flex justify-between items-center mb-3">
                             <div>
                                 <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
-                                <span class="block text-sm text-gray-500">Тема ${set.week} | ${set.cards.length} слов</span>
+                                <span class="block text-sm text-gray-500">${subtitle}</span>
                             </div>
                             ${dueCount > 0 ? 
                                 `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">${dueCount} к повтору</span>` :
@@ -2590,6 +3128,45 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
 
+            startMantraSessionFromExercises(topicId, weekNum) {
+                this.openModal('mantra-modal');
+                try {
+                    // Получаем слова темы
+                    const topicWords = this.allWords.filter(word => word.topics && word.topics.includes(topicId));
+                    const wordIds = topicWords.map(w => w.id);
+                    
+                    // Фильтруем упражнения типа useful_phrase для слов этой темы
+                    const usefulPhrases = this.allExercises.filter(ex => 
+                        ex.type === 'useful_phrase' && wordIds.includes(ex.wordId)
+                    );
+                    
+                    if (usefulPhrases.length === 0) {
+                        document.getElementById('mantra-modal-body').innerHTML = '<p class="text-center text-gray-500 py-6">Нет полезных фраз для этой темы.</p>';
+                        return;
+                    }
+                    
+                    // Конвертируем упражнения в формат мантр
+                    this.mantraCards = usefulPhrases.map(ex => ({
+                        ru: ex.explanation || '',
+                        de: ex.phrase || ''
+                    }));
+                    
+                    this.currentMantraIndex = 0;
+                    this.mantraKnownCount = 0;
+                    this.mantraUnknownCount = 0;
+                    this.mantraSeen = [];
+                    
+                    // Reset UI: show card area, hide summary, clear actions
+                    document.getElementById('mantra-card-area').classList.remove('hidden');
+                    document.getElementById('mantra-summary').classList.add('hidden');
+                    document.getElementById('mantra-summary-actions').innerHTML = '';
+                    this.showMantraCard();
+                } catch (err) {
+                    console.error('Mantra load error', err);
+                    document.getElementById('mantra-modal-body').innerHTML = `<p class="text-red-500 text-center py-6">Ошибка загрузки мантр: ${err.message}</p>`;
+                }
+            },
+
             showMantraCard() {
                 const card = this.mantraCards[this.currentMantraIndex];
                 if (!card) return;
@@ -2696,6 +3273,1454 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             // ==================== ЛОГИКА ПОВТОРЕНИЯ (ИЗМЕНЕНО) ====================
 
+            renderWordList(setId, topicId) {
+                // topicId теперь это ID темы из topics.json (например "health")
+                const topic = this.allTopics.find(t => t.id === topicId);
+                if (!topic) {
+                    console.error('Topic not found:', topicId);
+                    document.getElementById('list-title').innerText = `📚 Слова по теме`;
+                } else {
+                    document.getElementById('list-title').innerText = `📚 ${topic.name}`;
+                }
+                
+                const subtitleEl = document.getElementById('list-subtitle');
+                if (subtitleEl) subtitleEl.style.display = 'none';
+                
+                const filterControls = document.getElementById('filter-controls');
+                if (filterControls) filterControls.style.display = 'none';
+                
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Загрузка слов...</p>';
+                
+                this.showScreen('list-screen', false, { renderFunc: 'renderWordList', param: {setId, topicId} });
+                
+                // Инициализируем объект если его нет
+                if (!this.selectedWordsForStudy) {
+                    this.selectedWordsForStudy = {};
+                }
+                
+                // Фильтруем слова по теме из allWords
+                const words = this.allWords.filter(word => word.topics && word.topics.includes(topicId));
+                
+                if (words.length === 0) {
+                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет слов в этой теме.</p>';
+                    return;
+                }
+                
+                contentListDiv.innerHTML = '';
+                
+                // Создаем список слов
+                words.forEach(wordData => {
+                    const wordId = wordData.id;
+                    // Показываем артикль только для существительных и если это не тире
+                    const displayWord = (wordData.article && wordData.article !== '—' && wordData.partOfSpeech && wordData.partOfSpeech.toLowerCase().includes('noun')) 
+                        ? `${wordData.article} ${wordData.word}` 
+                        : wordData.word;
+                    const translation = Array.isArray(wordData.translation) ? wordData.translation.join(', ') : wordData.translation;
+                    const isInStudy = this.selectedWordsForStudy[topicId] && 
+                                      this.selectedWordsForStudy[topicId].some(w => w.id === wordId);
+                    
+                    const wordItem = document.createElement('div');
+                    wordItem.className = 'p-4 bg-white rounded-xl shadow-md flex items-center justify-between gap-3 cursor-pointer hover:bg-gray-50 transition';
+                    wordItem.dataset.wordId = wordId;
+                    
+                    // Левая часть: немецкое слово и перевод
+                    const wordInfo = document.createElement('div');
+                    wordInfo.className = 'flex-1';
+                    wordInfo.innerHTML = `
+                        <div class="font-bold text-lg text-gray-800">${displayWord}</div>
+                        <div class="text-sm text-gray-500">${translation}</div>
+                    `;
+                    
+                    // Кнопка озвучки
+                    const speakBtn = document.createElement('button');
+                    speakBtn.className = 'p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition';
+                    speakBtn.innerHTML = `
+                        <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                        </svg>
+                    `;
+                    speakBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const utterance = new SpeechSynthesisUtterance(wordData.word); // без артикля
+                        utterance.lang = 'de-DE';
+                        window.speechSynthesis.speak(utterance);
+                    });
+                    
+                    // Клик на весь элемент открывает карточку
+                    const currentIndex = words.indexOf(wordData);
+                    wordItem.addEventListener('click', () => {
+                        this.openWordCard(wordData, topicId, wordId, words, currentIndex);
+                    });
+                    
+                    wordItem.appendChild(wordInfo);
+                    wordItem.appendChild(speakBtn);
+                    
+                    // Индикатор "В учебе" - только если слово в учебе
+                    if (isInStudy) {
+                        const studyIndicator = document.createElement('div');
+                        studyIndicator.className = 'px-4 py-2 bg-yellow-500 text-white text-sm font-bold rounded-lg shadow-sm';
+                        studyIndicator.textContent = '📚 В учебе';
+                        wordItem.appendChild(studyIndicator);
+                    }
+                    contentListDiv.appendChild(wordItem);
+                });
+            },
+
+            renderExercisesMenu(topicId, weekNum) {
+                const topic = this.allTopics.find(t => t.id === topicId);
+                const topicName = topic ? topic.name : 'Упражнения';
+                
+                document.getElementById('list-title').innerText = `✏️ ${topicName}: Выберите тип`;
+                
+                const filterControls = document.getElementById('filter-controls');
+                if (filterControls) filterControls.style.display = 'none';
+                
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '';
+                
+                this.showScreen('list-screen', false, { renderFunc: 'renderExercisesMenu', param: {topicId, weekNum} });
+                
+                // Создаем карточки типов упражнений
+                this.renderMenuCard(contentListDiv,
+                    '📝 Заполнить пробел',
+                    'Вставьте правильное слово в предложение',
+                    `window.App.renderExercises('${topicId}', ${weekNum})`,
+                    'bg-blue-100 hover:bg-blue-200'
+                );
+                
+                this.renderMenuCard(contentListDiv,
+                    '🔊 Угадай по звучанию',
+                    'Прослушайте слово и выберите правильный вариант',
+                    `window.App.renderAudioExercises('${topicId}', ${weekNum})`,
+                    'bg-green-100 hover:bg-green-200'
+                );
+                
+                this.renderMenuCard(contentListDiv,
+                    '📚 Угадай артикль',
+                    'Выберите правильный артикль для существительного',
+                    `window.App.renderArticleExercises('${topicId}', ${weekNum})`,
+                    'bg-purple-100 hover:bg-purple-200'
+                );
+                
+                this.renderMenuCard(contentListDiv,
+                    '🖼️ Угадай по картинке',
+                    'Посмотрите на картинку и выберите правильное слово',
+                    `window.App.renderImageMatchExercises('${topicId}', ${weekNum})`,
+                    'bg-yellow-100 hover:bg-yellow-200'
+                );
+                
+                this.renderMenuCard(contentListDiv,
+                    '🔤 Собери слово',
+                    'Составьте слово из перемешанных букв',
+                    `window.App.renderWordBuildingExercises('${topicId}', ${weekNum})`,
+                    'bg-pink-100 hover:bg-pink-200'
+                );
+                
+                // Можно добавить другие типы упражнений позже
+                // this.renderMenuCard(contentListDiv,
+                //     '🗣️ Произношение',
+                //     'Проверка правильности произношения',
+                //     `window.App.renderPronunciationExercises('${topicId}', ${weekNum})`,
+                //     'bg-green-100 hover:bg-green-200'
+                // );
+            },
+
+            renderExercises(topicId, weekNum, exercisesToShow = null) {
+                const topic = this.allTopics.find(t => t.id === topicId);
+                const topicName = topic ? topic.name : 'Упражнения';
+                
+                const isRetry = exercisesToShow !== null;
+                const titleText = isRetry ? `📝 ${topicName}: Повтор ошибок` : `📝 ${topicName}: Заполнить пробел`;
+                document.getElementById('list-title').innerText = titleText;
+                
+                const filterControls = document.getElementById('filter-controls');
+                if (filterControls) filterControls.style.display = 'none';
+                
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Загрузка упражнений...</p>';
+                
+                this.showScreen('list-screen', false, { renderFunc: 'renderExercises', param: {topicId, weekNum} });
+                
+                let exercises;
+                
+                if (isRetry) {
+                    // Показываем только неправильные упражнения
+                    exercises = exercisesToShow;
+                    this.wrongExercises = []; // Очищаем для нового прохода
+                } else {
+                    // Обычный режим - загружаем все упражнения темы
+                    this.wrongExercises = []; // Очищаем при новом запуске
+                    
+                    // Получаем слова темы
+                    const topicWords = this.allWords.filter(word => word.topics && word.topics.includes(topicId));
+                    const wordIds = topicWords.map(w => w.id);
+                    
+                    // Фильтруем упражнения типа gap_fill для слов этой темы
+                    exercises = this.allExercises.filter(ex => 
+                        ex.type === 'gap_fill' && wordIds.includes(ex.wordId)
+                    );
+                }
+                
+                if (exercises.length === 0) {
+                    contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет упражнений для этой темы.</p>';
+                    return;
+                }
+                
+                contentListDiv.innerHTML = '';
+                
+                // Создаем карточки упражнений
+                exercises.forEach((exercise, index) => {
+                    const word = this.allWords.find(w => w.id === exercise.wordId);
+                    const displayWord = word ? (word.article ? `${word.article} ${word.word}` : word.word) : exercise.wordId;
+                    
+                    const exerciseCard = document.createElement('div');
+                    exerciseCard.className = 'p-5 bg-white rounded-xl shadow-md mb-4';
+                    exerciseCard.innerHTML = `
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-semibold text-purple-600">Упражнение ${index + 1}/${exercises.length}</span>
+                            <span class="text-xs text-gray-500">${displayWord}</span>
+                        </div>
+                        <p class="text-lg font-medium text-gray-800 mb-4">${exercise.question}</p>
+                        <div class="bg-blue-50 p-3 rounded-lg mb-4">
+                            <p class="text-gray-700 font-mono">${exercise.sentence}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-4" id="options-${exercise.id}"></div>
+                        <div id="result-${exercise.id}" class="hidden p-3 rounded-lg mb-3"></div>
+                        <div class="text-sm text-gray-600 italic" id="explanation-${exercise.id}" style="display: none;">
+                            💡 ${exercise.explanation}
+                        </div>
+                    `;
+                    
+                    // Добавляем варианты ответов
+                    const optionsDiv = exerciseCard.querySelector(`#options-${exercise.id}`);
+                    exercise.options.forEach(option => {
+                        const btn = document.createElement('button');
+                        btn.className = 'py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium';
+                        btn.textContent = option;
+                        btn.onclick = () => this.checkExerciseAnswer(exercise, option, btn, `result-${exercise.id}`, `explanation-${exercise.id}`, `options-${exercise.id}`);
+                        optionsDiv.appendChild(btn);
+                    });
+                    
+                    contentListDiv.appendChild(exerciseCard);
+                });
+                
+                // Добавляем кнопки управления в конце
+                const controlButtons = document.createElement('div');
+                controlButtons.className = 'flex gap-3 mt-6 mb-4';
+                controlButtons.innerHTML = `
+                    <button id="retry-wrong-btn" class="flex-1 py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        🔄 Пройти ошибки
+                    </button>
+                    <button onclick="window.App.handleTelegramBackClick()" class="flex-1 py-3 px-4 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition">
+                        ✕ Закрыть
+                    </button>
+                `;
+                contentListDiv.appendChild(controlButtons);
+                
+                // Обработчик для кнопки "Пройти ошибки"
+                document.getElementById('retry-wrong-btn').addEventListener('click', () => {
+                    if (this.wrongExercises.length > 0) {
+                        this.renderExercises(topicId, weekNum, this.wrongExercises);
+                    }
+                });
+            },
+
+            renderAudioExercises(topicId, weekNum) {
+                const topic = this.allTopics.find(t => t.id === topicId);
+                const topicName = topic ? topic.name : 'Упражнения';
+                
+                this.showScreen('loading-screen', false);
+                
+                // Получаем слова темы
+                const topicWords = this.allWords.filter(word => word.topics && word.topics.includes(topicId));
+                const wordIds = topicWords.map(w => w.id);
+                
+                // Фильтруем упражнения типа guess_by_audio для слов этой темы
+                const exercises = this.allExercises.filter(ex => 
+                    ex.type === 'guess_by_audio' && wordIds.includes(ex.wordId)
+                );
+                
+                if (exercises.length === 0) {
+                    document.getElementById('loading-screen').innerHTML = '<p class="text-gray-500 text-center py-6">Нет аудио-упражнений для этой темы.</p>';
+                    return;
+                }
+                
+                // Сохраняем данные для карусели
+                this.audioExercises = exercises.map(ex => {
+                    const word = this.allWords.find(w => w.id === ex.wordId);
+                    // Создаем варианты ответов из переводов слов
+                    const optionsWithTranslations = ex.options.map(opt => {
+                        const optWord = this.allWords.find(w => {
+                            const fullWord = w.article ? `${w.article} ${w.word}` : w.word;
+                            return fullWord === opt;
+                        });
+                        return {
+                            german: opt,
+                            russian: optWord ? optWord.translation.join(', ') : opt
+                        };
+                    });
+                    
+                    const correctWord = this.allWords.find(w => {
+                        const fullWord = w.article ? `${w.article} ${w.word}` : w.word;
+                        return fullWord === ex.answer;
+                    });
+                    
+                    return {
+                        ...ex,
+                        word: word,
+                        correctTranslation: correctWord ? correctWord.translation.join(', ') : ex.answer,
+                        optionsWithTranslations: optionsWithTranslations
+                    };
+                });
+                
+                this.currentAudioExerciseIndex = 0;
+                this.audioExerciseResults = {};
+                this.showAudioExerciseCard();
+                
+                this.showScreen('image-carousel-screen', false, { 
+                    renderFunc: 'renderAudioExercises', 
+                    param: {topicId, weekNum} 
+                });
+            },
+
+            showAudioExerciseCard() {
+                const exercise = this.audioExercises[this.currentAudioExerciseIndex];
+                const carouselScreen = document.getElementById('image-carousel-screen');
+                
+                carouselScreen.innerHTML = `
+                    <div class="mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800 text-center">
+                            Упражнение ${this.currentAudioExerciseIndex + 1} из ${this.audioExercises.length}
+                        </h2>
+                    </div>
+
+                    <!-- Карточка упражнения -->
+                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-6">
+                        <!-- Вопрос -->
+                        <div class="text-center mb-6">
+                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question}</p>
+                            <button onclick="window.App.playAudio('${exercise.audioText}')" 
+                                    class="flex items-center justify-center gap-2 py-3 px-6 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition mx-auto shadow-md">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                Воспроизвести
+                            </button>
+                        </div>
+                        
+                        <!-- Варианты ответов (русские переводы) -->
+                        <div class="space-y-3 mb-4" id="audio-options-${exercise.id}">
+                            ${exercise.optionsWithTranslations.map((opt, idx) => `
+                                <button onclick="window.App.checkAudioAnswer('${exercise.id}', '${opt.russian.replace(/'/g, "\\'")}', this)" 
+                                        class="w-full py-4 px-5 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-left text-lg">
+                                    ${opt.russian}
+                                </button>
+                            `).join('')}
+                        </div>
+                        
+                        <!-- Результат -->
+                        <div id="audio-result-${exercise.id}" class="hidden p-4 rounded-lg mb-4"></div>
+                        
+                        <!-- Пояснение -->
+                        <div id="audio-explanation-${exercise.id}" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                            <p class="text-sm text-blue-800">💡 ${exercise.explanation}</p>
+                        </div>
+                    </div>
+
+                    <!-- Навигация -->
+                    <div class="flex justify-center space-x-4">
+                        ${this.currentAudioExerciseIndex > 0 ? `
+                            <button onclick="window.App.prevAudioExercise()" 
+                                    class="py-3 px-6 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition">
+                                &larr; Назад
+                            </button>
+                        ` : ''}
+                        ${this.currentAudioExerciseIndex < this.audioExercises.length - 1 ? `
+                            <button onclick="window.App.nextAudioExercise()" 
+                                    class="py-3 px-6 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition">
+                                Далее &rarr;
+                            </button>
+                        ` : `
+                            <button onclick="window.App.finishAudioExercises()" 
+                                    class="py-3 px-6 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition">
+                                Завершить ✓
+                            </button>
+                        `}
+                    </div>
+                `;
+            },
+
+            checkAudioAnswer(exerciseId, selectedRussian, button) {
+                const exercise = this.audioExercises.find(ex => ex.id === exerciseId);
+                if (!exercise || this.audioExerciseResults[exerciseId]) return;
+                
+                const isCorrect = selectedRussian === exercise.correctTranslation;
+                this.audioExerciseResults[exerciseId] = isCorrect;
+                
+                const resultDiv = document.getElementById(`audio-result-${exerciseId}`);
+                const explanationDiv = document.getElementById(`audio-explanation-${exerciseId}`);
+                const optionsDiv = document.getElementById(`audio-options-${exerciseId}`);
+                
+                // Блокируем все кнопки
+                const allButtons = optionsDiv.querySelectorAll('button');
+                allButtons.forEach(btn => btn.disabled = true);
+                
+                // Подсвечиваем выбранный ответ
+                if (isCorrect) {
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-green-100', 'border-2', 'border-green-500');
+                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-green-100 border-2 border-green-500';
+                    resultDiv.innerHTML = `
+                        <div class="flex items-center gap-2 text-green-800 font-semibold">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
+                            </svg>
+                            Правильно!
+                        </div>
+                    `;
+                } else {
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-red-100', 'border-2', 'border-red-500');
+                    
+                    // Подсвечиваем правильный ответ
+                    allButtons.forEach(btn => {
+                        if (btn.textContent.trim() === exercise.correctTranslation) {
+                            btn.classList.remove('bg-gray-100');
+                            btn.classList.add('bg-green-100', 'border-2', 'border-green-500');
+                        }
+                    });
+                    
+                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-red-100 border-2 border-red-500';
+                    resultDiv.innerHTML = `
+                        <div class="flex items-center gap-2 text-red-800 font-semibold">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
+                            </svg>
+                            Неправильно. Правильный ответ: ${exercise.correctTranslation}
+                        </div>
+                    `;
+                }
+                
+                resultDiv.classList.remove('hidden');
+                explanationDiv.classList.remove('hidden');
+            },
+
+            prevAudioExercise() {
+                if (this.currentAudioExerciseIndex > 0) {
+                    this.currentAudioExerciseIndex--;
+                    this.showAudioExerciseCard();
+                }
+            },
+
+            nextAudioExercise() {
+                if (this.currentAudioExerciseIndex < this.audioExercises.length - 1) {
+                    this.currentAudioExerciseIndex++;
+                    this.showAudioExerciseCard();
+                }
+            },
+
+            finishAudioExercises() {
+                const total = this.audioExercises.length;
+                const correct = Object.values(this.audioExerciseResults).filter(r => r).length;
+                const percentage = Math.round((correct / total) * 100);
+                
+                const carouselScreen = document.getElementById('image-carousel-screen');
+                carouselScreen.innerHTML = `
+                    <div class="max-w-2xl mx-auto px-4 py-20">
+                        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center">
+                            <svg class="w-20 h-20 mx-auto mb-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
+                            </svg>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-4">Упражнение завершено! 🎉</h2>
+                            <div class="text-xl text-gray-700 mb-6">
+                                <p class="mb-2">Правильных ответов: <span class="font-bold text-green-600">${correct}</span> из ${total}</p>
+                                <p class="text-2xl font-bold ${percentage >= 80 ? 'text-green-600' : percentage >= 60 ? 'text-yellow-600' : 'text-red-600'}">
+                                    ${percentage}%
+                                </p>
+                            </div>
+                            <button onclick="window.App.handleTelegramBackClick()" 
+                                    class="btn-primary py-3 px-8 inline-flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V20a2 2 0 002 2h12a2 2 0 002-2v-9.586l.707.707a1 1 0 001.414-1.414l-7-7z"></path>
+                                </svg>
+                                В меню
+                            </button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderArticleExercises(topicId, weekNum) {
+                const topic = this.allTopics.find(t => t.id === topicId);
+                const topicName = topic ? topic.name : 'Упражнения';
+                
+                this.showScreen('loading-screen', false);
+                
+                // Получаем слова темы (только существительные)
+                const topicWords = this.allWords.filter(word => 
+                    word.topics && word.topics.includes(topicId) && word.partOfSpeech === 'noun' && word.article
+                );
+                const wordIds = topicWords.map(w => w.id);
+                
+                // Фильтруем упражнения типа guess_article для слов этой темы
+                const exercises = this.allExercises.filter(ex => 
+                    ex.type === 'guess_article' && wordIds.includes(ex.wordId)
+                );
+                
+                if (exercises.length === 0) {
+                    document.getElementById('loading-screen').innerHTML = '<p class="text-gray-500 text-center py-6">Нет упражнений на артикли для этой темы.</p>';
+                    return;
+                }
+                
+                // Сохраняем данные для карусели
+                this.articleExercises = exercises.map(ex => {
+                    const wordObj = this.allWords.find(w => w.id === ex.wordId);
+                    return { ...ex, wordObj: wordObj };
+                });
+                
+                this.currentArticleExerciseIndex = 0;
+                this.articleExerciseResults = {};
+                this.showArticleExerciseCard();
+                
+                this.showScreen('image-carousel-screen', false, { 
+                    renderFunc: 'renderArticleExercises', 
+                    param: {topicId, weekNum} 
+                });
+            },
+
+            showArticleExerciseCard() {
+                const exercise = this.articleExercises[this.currentArticleExerciseIndex];
+                const carouselScreen = document.getElementById('image-carousel-screen');
+                
+                carouselScreen.innerHTML = `
+                    <div class="mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800 text-center">
+                            Упражнение ${this.currentArticleExerciseIndex + 1} из ${this.articleExercises.length}
+                        </h2>
+                    </div>
+
+                    <!-- Карточка упражнения -->
+                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-6">
+                        <!-- Вопрос -->
+                        <div class="text-center mb-6">
+                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question}</p>
+                            <div class="text-4xl font-bold text-purple-600 mb-4">${exercise.word}</div>
+                            ${exercise.wordObj && exercise.wordObj.translation ? `
+                                <div class="text-lg text-gray-600 italic">(${exercise.wordObj.translation.join(', ')})</div>
+                            ` : ''}
+                        </div>
+                        
+                        <!-- Варианты артиклей -->
+                        <div class="grid grid-cols-3 gap-3 mb-4" id="article-options-${exercise.id}">
+                            ${exercise.options.map(article => `
+                                <button onclick="window.App.checkArticleAnswer('${exercise.id}', '${article}', this)" 
+                                        class="py-6 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-bold text-2xl">
+                                    ${article}
+                                </button>
+                            `).join('')}
+                        </div>
+                        
+                        <!-- Результат -->
+                        <div id="article-result-${exercise.id}" class="hidden p-4 rounded-lg mb-4"></div>
+                        
+                        <!-- Пояснение -->
+                        <div id="article-explanation-${exercise.id}" class="hidden bg-purple-50 border-l-4 border-purple-400 p-4 rounded">
+                            <p class="text-sm text-purple-800">💡 ${exercise.explanation}</p>
+                        </div>
+                    </div>
+
+                    <!-- Навигация -->
+                    <div class="flex justify-center space-x-4">
+                        ${this.currentArticleExerciseIndex > 0 ? `
+                            <button onclick="window.App.prevArticleExercise()" 
+                                    class="py-3 px-6 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition">
+                                &larr; Назад
+                            </button>
+                        ` : ''}
+                        ${this.currentArticleExerciseIndex < this.articleExercises.length - 1 ? `
+                            <button onclick="window.App.nextArticleExercise()" 
+                                    class="py-3 px-6 bg-purple-500 text-white font-bold rounded-xl shadow-md hover:bg-purple-600 transition">
+                                Далее &rarr;
+                            </button>
+                        ` : `
+                            <button onclick="window.App.finishArticleExercises()" 
+                                    class="py-3 px-6 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition">
+                                Завершить ✓
+                            </button>
+                        `}
+                    </div>
+                `;
+            },
+
+            checkArticleAnswer(exerciseId, selectedArticle, button) {
+                const exercise = this.articleExercises.find(ex => ex.id === exerciseId);
+                if (!exercise || this.articleExerciseResults[exerciseId]) return;
+                
+                const isCorrect = selectedArticle === exercise.answer;
+                this.articleExerciseResults[exerciseId] = isCorrect;
+                
+                const resultDiv = document.getElementById(`article-result-${exerciseId}`);
+                const explanationDiv = document.getElementById(`article-explanation-${exerciseId}`);
+                const optionsDiv = document.getElementById(`article-options-${exerciseId}`);
+                
+                // Блокируем все кнопки
+                const allButtons = optionsDiv.querySelectorAll('button');
+                allButtons.forEach(btn => btn.disabled = true);
+                
+                // Подсвечиваем выбранный ответ
+                if (isCorrect) {
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-green-100', 'border-2', 'border-green-500');
+                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-green-100 border-2 border-green-500';
+                    resultDiv.innerHTML = `
+                        <div class="flex items-center gap-2 text-green-800 font-semibold">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
+                            </svg>
+                            Правильно! ${exercise.answer} ${exercise.word}
+                        </div>
+                    `;
+                } else {
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-red-100', 'border-2', 'border-red-500');
+                    
+                    // Подсвечиваем правильный ответ
+                    allButtons.forEach(btn => {
+                        if (btn.textContent.trim() === exercise.answer) {
+                            btn.classList.remove('bg-gray-100');
+                            btn.classList.add('bg-green-100', 'border-2', 'border-green-500');
+                        }
+                    });
+                    
+                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-red-100 border-2 border-red-500';
+                    resultDiv.innerHTML = `
+                        <div class="flex items-center gap-2 text-red-800 font-semibold">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
+                            </svg>
+                            Неправильно. Правильный ответ: ${exercise.answer} ${exercise.word}
+                        </div>
+                    `;
+                }
+                
+                resultDiv.classList.remove('hidden');
+                explanationDiv.classList.remove('hidden');
+            },
+
+            prevArticleExercise() {
+                if (this.currentArticleExerciseIndex > 0) {
+                    this.currentArticleExerciseIndex--;
+                    this.showArticleExerciseCard();
+                }
+            },
+
+            nextArticleExercise() {
+                if (this.currentArticleExerciseIndex < this.articleExercises.length - 1) {
+                    this.currentArticleExerciseIndex++;
+                    this.showArticleExerciseCard();
+                }
+            },
+
+            finishArticleExercises() {
+                const total = this.articleExercises.length;
+                const correct = Object.values(this.articleExerciseResults).filter(r => r).length;
+                const percentage = Math.round((correct / total) * 100);
+                
+                const carouselScreen = document.getElementById('image-carousel-screen');
+                carouselScreen.innerHTML = `
+                    <div class="max-w-2xl mx-auto px-4 py-20">
+                        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center">
+                            <svg class="w-20 h-20 mx-auto mb-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
+                            </svg>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-4">Упражнение завершено! 🎉</h2>
+                            <div class="text-xl text-gray-700 mb-6">
+                                <p class="mb-2">Правильных ответов: <span class="font-bold text-green-600">${correct}</span> из ${total}</p>
+                                <p class="text-2xl font-bold ${percentage >= 80 ? 'text-green-600' : percentage >= 60 ? 'text-yellow-600' : 'text-red-600'}">
+                                    ${percentage}%
+                                </p>
+                            </div>
+                            <button onclick="window.App.handleTelegramBackClick()" 
+                                    class="btn-primary py-3 px-8 inline-flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V20a2 2 0 002 2h12a2 2 0 002-2v-9.586l.707.707a1 1 0 001.414-1.414l-7-7z"></path>
+                                </svg>
+                                В меню
+                            </button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderWordBuildingExercises(topicId, weekNum) {
+            const topic = this.allTopics.find(t => t.id === topicId);
+            
+            this.showScreen('loading-screen', false);
+            
+            const filteredExercises = this.allExercises.filter(ex => {
+                const word = this.allWords.find(w => w.id === ex.wordId);
+                if (!word) return false;
+                return ex.type === 'word_building' && 
+                       word.topics && word.topics.includes(topicId);
+            });
+
+            if (filteredExercises.length === 0) {
+                document.getElementById('loading-screen').innerHTML = '<p class="text-gray-500 text-center py-6">Нет доступных упражнений для составления слов в этой теме.</p>';
+                return;
+            }
+
+            // Shuffle letters for each exercise
+            this.wordBuildingExercises = filteredExercises.map(ex => {
+                const word = this.allWords.find(w => w.id === ex.wordId);
+                const shuffledLetters = [...ex.scrambledLetters].sort(() => Math.random() - 0.5);
+                return {
+                    ...ex,
+                    wordObj: word,
+                    shuffledLetters: shuffledLetters,
+                    userAnswer: []
+                };
+            });
+
+            this.currentWordBuildingIndex = 0;
+            this.wordBuildingResults = [];
+            this.showWordBuildingExerciseCard();
+        },
+
+        showWordBuildingExerciseCard() {
+            const exercise = this.wordBuildingExercises[this.currentWordBuildingIndex];
+            
+            // Reset user answer for this exercise
+            exercise.userAnswer = [];
+            
+            const progress = this.currentWordBuildingIndex + 1;
+            const total = this.wordBuildingExercises.length;
+
+            document.getElementById('loading-screen').innerHTML = `
+                <div class="max-w-3xl mx-auto">
+                    <div class="mb-4 flex justify-between items-center">
+                        <button onclick="window.App.renderExercisesMenu('${exercise.wordObj.topics[0].topicId}', ${exercise.wordObj.topics[0].weekNum})" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg">← К упражнениям</button>
+                        <span class="text-gray-600">Упражнение ${progress} из ${total}</span>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-8">
+                        <h2 class="text-2xl font-bold mb-2">${exercise.question}</h2>
+                        <p class="text-gray-600 mb-6">${exercise.hint}</p>
+                        
+                        <!-- User answer area -->
+                        <div id="answerArea" class="min-h-20 bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-6 flex flex-wrap gap-2 items-center justify-center">
+                            <span class="text-gray-400" id="emptyPlaceholder">Выберите буквы ниже</span>
+                        </div>
+
+                        <!-- Available letters -->
+                        <div id="lettersArea" class="flex flex-wrap gap-2 justify-center mb-6">
+                            ${exercise.shuffledLetters.map((letter, index) => `
+                                <button onclick="window.App.addLetterToAnswer(${index})" 
+                                        id="letter-${index}"
+                                        class="letter-btn w-12 h-12 bg-white border-2 border-gray-300 hover:border-blue-500 rounded-lg font-bold text-xl transition-all hover:shadow-md">
+                                    ${letter}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex gap-4 mb-6">
+                            <button onclick="window.App.clearWordBuildingAnswer()" class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 rounded-lg font-semibold">
+                                🗑️ Очистить
+                            </button>
+                            <button onclick="window.App.checkWordBuildingAnswer()" id="checkBtn" class="flex-1 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold">
+                                ✓ Проверить
+                            </button>
+                        </div>
+
+                        <div id="resultBox" class="hidden mb-6"></div>
+
+                        <div class="flex justify-between">
+                            <button onclick="window.App.prevWordBuildingExercise()" id="prevBtn" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg" ${this.currentWordBuildingIndex === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                ← Назад
+                            </button>
+                            <button onclick="window.App.nextWordBuildingExercise()" id="nextBtn" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg hidden">
+                                Далее →
+                            </button>
+                            <button onclick="window.App.finishWordBuildingExercises()" id="finishBtn" class="px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg hidden">
+                                Завершить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        },
+
+        addLetterToAnswer(letterIndex) {
+            const exercise = this.wordBuildingExercises[this.currentWordBuildingIndex];
+            const letter = exercise.shuffledLetters[letterIndex];
+            
+            // Add to user answer
+            exercise.userAnswer.push({letter, originalIndex: letterIndex});
+            
+            // Hide letter button
+            document.getElementById(`letter-${letterIndex}`).classList.add('hidden');
+            
+            // Update answer area
+            this.updateAnswerArea();
+        },
+
+        removeLetterFromAnswer(answerIndex) {
+            const exercise = this.wordBuildingExercises[this.currentWordBuildingIndex];
+            const removed = exercise.userAnswer.splice(answerIndex, 1)[0];
+            
+            // Show letter button again
+            document.getElementById(`letter-${removed.originalIndex}`).classList.remove('hidden');
+            
+            // Update answer area
+            this.updateAnswerArea();
+        },
+
+        updateAnswerArea() {
+            const exercise = this.wordBuildingExercises[this.currentWordBuildingIndex];
+            const answerArea = document.getElementById('answerArea');
+            
+            if (exercise.userAnswer.length === 0) {
+                answerArea.innerHTML = '<span class="text-gray-400" id="emptyPlaceholder">Выберите буквы ниже</span>';
+            } else {
+                answerArea.innerHTML = exercise.userAnswer.map((item, index) => `
+                    <button onclick="window.App.removeLetterFromAnswer(${index})" 
+                            class="w-12 h-12 bg-white border-2 border-blue-500 rounded-lg font-bold text-xl hover:bg-red-50 hover:border-red-500 transition-all">
+                        ${item.letter}
+                    </button>
+                `).join('');
+            }
+        },
+
+        clearWordBuildingAnswer() {
+            const exercise = this.wordBuildingExercises[this.currentWordBuildingIndex];
+            exercise.userAnswer = [];
+            
+            // Show all letter buttons and enable them
+            exercise.shuffledLetters.forEach((_, index) => {
+                const btn = document.getElementById(`letter-${index}`);
+                if (btn) {
+                    btn.classList.remove('hidden');
+                    btn.disabled = false;
+                }
+            });
+            
+            // Enable check button
+            const checkBtn = document.getElementById('checkBtn');
+            if (checkBtn) {
+                checkBtn.disabled = false;
+                checkBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+            
+            // Reset answer area styling
+            const answerArea = document.getElementById('answerArea');
+            if (answerArea) {
+                answerArea.classList.remove('border-green-500', 'bg-green-50', 'border-red-500', 'bg-red-50');
+                answerArea.classList.add('border-blue-300', 'bg-blue-50');
+            }
+            
+            // Hide result box
+            const resultBox = document.getElementById('resultBox');
+            if (resultBox) {
+                resultBox.classList.add('hidden');
+            }
+            
+            this.updateAnswerArea();
+        },
+
+        checkWordBuildingAnswer() {
+            const exercise = this.wordBuildingExercises[this.currentWordBuildingIndex];
+            const userWord = exercise.userAnswer.map(item => item.letter).join('');
+            const isCorrect = userWord === exercise.answer;
+
+            // Save result
+            this.wordBuildingResults.push({
+                exerciseId: exercise.id,
+                correct: isCorrect
+            });
+
+            const resultBox = document.getElementById('resultBox');
+            const checkBtn = document.getElementById('checkBtn');
+            const answerArea = document.getElementById('answerArea');
+            
+            // Disable check button and letter buttons
+            checkBtn.disabled = true;
+            checkBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            document.querySelectorAll('.letter-btn').forEach(btn => btn.disabled = true);
+            document.querySelectorAll('#answerArea button').forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                answerArea.classList.add('border-green-500', 'bg-green-50');
+                answerArea.classList.remove('border-blue-300', 'bg-blue-50');
+                resultBox.className = 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6';
+                resultBox.innerHTML = `
+                    <p class="font-bold">✓ Правильно!</p>
+                    <p class="text-sm mt-1">${exercise.explanation}</p>
+                `;
+            } else {
+                answerArea.classList.add('border-red-500', 'bg-red-50');
+                answerArea.classList.remove('border-blue-300', 'bg-blue-50');
+                resultBox.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6';
+                resultBox.innerHTML = `
+                    <p class="font-bold">✗ Неправильно!</p>
+                    <p class="text-sm mt-1">Правильный ответ: <strong>${exercise.answer}</strong></p>
+                    <p class="text-sm mt-1">${exercise.explanation}</p>
+                `;
+            }
+
+            resultBox.classList.remove('hidden');
+
+            // Show navigation buttons
+            const nextBtn = document.getElementById('nextBtn');
+            const finishBtn = document.getElementById('finishBtn');
+            
+            if (this.currentWordBuildingIndex < this.wordBuildingExercises.length - 1) {
+                nextBtn.classList.remove('hidden');
+            } else {
+                finishBtn.classList.remove('hidden');
+            }
+        },
+
+        prevWordBuildingExercise() {
+            if (this.currentWordBuildingIndex > 0) {
+                this.currentWordBuildingIndex--;
+                this.showWordBuildingExerciseCard();
+            }
+        },
+
+        nextWordBuildingExercise() {
+            if (this.currentWordBuildingIndex < this.wordBuildingExercises.length - 1) {
+                this.currentWordBuildingIndex++;
+                this.showWordBuildingExerciseCard();
+            }
+        },
+
+        finishWordBuildingExercises() {
+            const correctCount = this.wordBuildingResults.filter(r => r.correct).length;
+            const total = this.wordBuildingResults.length;
+            const percentage = Math.round((correctCount / total) * 100);
+
+            const exercise = this.wordBuildingExercises[0];
+            const topicId = exercise.wordObj.topics[0].topicId;
+            const weekNum = exercise.wordObj.topics[0].weekNum;
+
+            document.getElementById('loading-screen').innerHTML = `
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h2 class="text-3xl font-bold mb-4">Упражнение завершено! 🎉</h2>
+                        <p class="text-6xl mb-4">${percentage >= 70 ? '🌟' : '💪'}</p>
+                        <p class="text-2xl mb-6">Вы правильно собрали ${correctCount} из ${total} слов</p>
+                        <p class="text-4xl font-bold mb-8">${percentage}%</p>
+                        <div class="flex gap-4 justify-center">
+                            <button onclick="window.App.renderExercisesMenu('${topicId}', ${weekNum})" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold">
+                                ← К упражнениям
+                            </button>
+                            <button onclick="window.App.renderWordBuildingExercises('${topicId}', ${weekNum})" class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold">
+                                🔄 Повторить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        },
+
+        renderImageMatchExercises(topicId, weekNum) {
+                const topic = this.allTopics.find(t => t.id === topicId);
+                const topicName = topic ? topic.name : 'Упражнения';
+                
+                this.showScreen('loading-screen', false);
+                
+                // Получаем слова темы (только существительные с картинками)
+                const topicWords = this.allWords.filter(word => 
+                    word.topics && word.topics.includes(topicId) && 
+                    word.partOfSpeech === 'noun' && word.image
+                );
+                const wordIds = topicWords.map(w => w.id);
+                
+                // Фильтруем упражнения типа image_match для слов этой темы
+                const exercises = this.allExercises.filter(ex => 
+                    ex.type === 'image_match' && wordIds.includes(ex.wordId)
+                );
+                
+                if (exercises.length === 0) {
+                    document.getElementById('loading-screen').innerHTML = '<p class="text-gray-500 text-center py-6">Нет упражнений с картинками для этой темы.</p>';
+                    return;
+                }
+                
+                // Сохраняем данные для карусели
+                this.imageMatchExercises = exercises.map(ex => {
+                    const wordObj = this.allWords.find(w => w.id === ex.wordId);
+                    return { ...ex, wordObj: wordObj };
+                });
+                
+                this.currentImageMatchExerciseIndex = 0;
+                this.imageMatchExerciseResults = {};
+                this.showImageMatchExerciseCard();
+                
+                this.showScreen('image-carousel-screen', false, { 
+                    renderFunc: 'renderImageMatchExercises', 
+                    param: {topicId, weekNum} 
+                });
+            },
+
+            showImageMatchExerciseCard() {
+                const exercise = this.imageMatchExercises[this.currentImageMatchExerciseIndex];
+                const carouselScreen = document.getElementById('image-carousel-screen');
+                
+                carouselScreen.innerHTML = `
+                    <div class="mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800 text-center">
+                            Упражнение ${this.currentImageMatchExerciseIndex + 1} из ${this.imageMatchExercises.length}
+                        </h2>
+                    </div>
+
+                    <!-- Карточка упражнения -->
+                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-6">
+                        <!-- Вопрос -->
+                        <div class="text-center mb-4">
+                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question}</p>
+                        </div>
+                        
+                        <!-- Картинка -->
+                        <div class="mb-6" id="image-container-${exercise.id}">
+                            <img src="${exercise.wordObj.image}" 
+                                 alt="${exercise.wordObj.word}" 
+                                 class="w-full h-64 object-cover rounded-lg shadow-md"
+                                 onerror="this.onerror=null; this.src='https://placehold.co/400x300/E5E7EB/6B7280?text=Нет+изображения';">
+                        </div>
+                        
+                        <!-- Варианты слов -->
+                        <div class="space-y-3 mb-4" id="image-options-${exercise.id}">
+                            ${exercise.options.map(option => `
+                                <button onclick="window.App.checkImageMatchAnswer('${exercise.id}', '${option.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', this)" 
+                                        class="w-full py-4 px-5 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-bold text-lg">
+                                    ${option}
+                                </button>
+                            `).join('')}
+                        </div>
+                        
+                        <!-- Результат -->
+                        <div id="image-result-${exercise.id}" class="hidden p-4 rounded-lg mb-4"></div>
+                        
+                        <!-- Пояснение -->
+                        <div id="image-explanation-${exercise.id}" class="hidden bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                            <p class="text-sm text-yellow-800">💡 ${exercise.explanation}</p>
+                        </div>
+                    </div>
+
+                    <!-- Навигация -->
+                    <div class="flex justify-center space-x-4">
+                        ${this.currentImageMatchExerciseIndex > 0 ? `
+                            <button onclick="window.App.prevImageMatchExercise()" 
+                                    class="py-3 px-6 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition">
+                                &larr; Назад
+                            </button>
+                        ` : ''}
+                        ${this.currentImageMatchExerciseIndex < this.imageMatchExercises.length - 1 ? `
+                            <button onclick="window.App.nextImageMatchExercise()" 
+                                    class="py-3 px-6 bg-yellow-500 text-white font-bold rounded-xl shadow-md hover:bg-yellow-600 transition">
+                                Далее &rarr;
+                            </button>
+                        ` : `
+                            <button onclick="window.App.finishImageMatchExercises()" 
+                                    class="py-3 px-6 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition">
+                                Завершить ✓
+                            </button>
+                        `}
+                    </div>
+                `;
+            },
+
+            checkImageMatchAnswer(exerciseId, selectedOption, button) {
+                const exercise = this.imageMatchExercises.find(ex => ex.id === exerciseId);
+                if (!exercise || this.imageMatchExerciseResults[exerciseId]) return;
+                
+                const isCorrect = selectedOption === exercise.answer;
+                this.imageMatchExerciseResults[exerciseId] = isCorrect;
+                
+                const resultDiv = document.getElementById(`image-result-${exerciseId}`);
+                const explanationDiv = document.getElementById(`image-explanation-${exerciseId}`);
+                const optionsDiv = document.getElementById(`image-options-${exerciseId}`);
+                const imageContainer = document.getElementById(`image-container-${exerciseId}`);
+                
+                // Блокируем все кнопки
+                const allButtons = optionsDiv.querySelectorAll('button');
+                allButtons.forEach(btn => btn.disabled = true);
+                
+                // Подсвечиваем выбранный ответ
+                if (isCorrect) {
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-green-100', 'border-2', 'border-green-500');
+                    
+                    // Зеленая рамка вокруг картинки
+                    imageContainer.querySelector('img').classList.add('border-4', 'border-green-500');
+                    
+                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-green-100 border-2 border-green-500';
+                    resultDiv.innerHTML = `
+                        <div class="flex items-center gap-2 text-green-800 font-semibold">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
+                            </svg>
+                            Правильно! ${exercise.answer}
+                        </div>
+                    `;
+                } else {
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-red-100', 'border-2', 'border-red-500');
+                    
+                    // Красная рамка вокруг картинки
+                    imageContainer.querySelector('img').classList.add('border-4', 'border-red-500');
+                    
+                    // Подсвечиваем правильный ответ
+                    allButtons.forEach(btn => {
+                        if (btn.textContent.trim() === exercise.answer) {
+                            btn.classList.remove('bg-gray-100');
+                            btn.classList.add('bg-green-100', 'border-2', 'border-green-500');
+                        }
+                    });
+                    
+                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-red-100 border-2 border-red-500';
+                    resultDiv.innerHTML = `
+                        <div class="flex items-center gap-2 text-red-800 font-semibold">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
+                            </svg>
+                            Неправильно. Правильный ответ: ${exercise.answer}
+                        </div>
+                    `;
+                }
+                
+                resultDiv.classList.remove('hidden');
+                explanationDiv.classList.remove('hidden');
+            },
+
+            prevImageMatchExercise() {
+                if (this.currentImageMatchExerciseIndex > 0) {
+                    this.currentImageMatchExerciseIndex--;
+                    this.showImageMatchExerciseCard();
+                }
+            },
+
+            nextImageMatchExercise() {
+                if (this.currentImageMatchExerciseIndex < this.imageMatchExercises.length - 1) {
+                    this.currentImageMatchExerciseIndex++;
+                    this.showImageMatchExerciseCard();
+                }
+            },
+
+            finishImageMatchExercises() {
+                const total = this.imageMatchExercises.length;
+                const correct = Object.values(this.imageMatchExerciseResults).filter(r => r).length;
+                const percentage = Math.round((correct / total) * 100);
+                
+                const carouselScreen = document.getElementById('image-carousel-screen');
+                carouselScreen.innerHTML = `
+                    <div class="max-w-2xl mx-auto px-4 py-20">
+                        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center">
+                            <svg class="w-20 h-20 mx-auto mb-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
+                            </svg>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-4">Упражнение завершено! 🎉</h2>
+                            <div class="text-xl text-gray-700 mb-6">
+                                <p class="mb-2">Правильных ответов: <span class="font-bold text-green-600">${correct}</span> из ${total}</p>
+                                <p class="text-2xl font-bold ${percentage >= 80 ? 'text-green-600' : percentage >= 60 ? 'text-yellow-600' : 'text-red-600'}">
+                                    ${percentage}%
+                                </p>
+                            </div>
+                            <button onclick="window.App.handleTelegramBackClick()" 
+                                    class="btn-primary py-3 px-8 inline-flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V20a2 2 0 002 2h12a2 2 0 002-2v-9.586l.707.707a1 1 0 001.414-1.414l-7-7z"></path>
+                                </svg>
+                                В меню
+                            </button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            playAudio(text) {
+                if (!text) return;
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel(); // Останавливаем предыдущее воспроизведение
+                    const utter = new SpeechSynthesisUtterance(text);
+                    utter.lang = 'de-DE';
+                    utter.rate = 0.8; // Немного медленнее для лучшего понимания
+                    window.speechSynthesis.speak(utter);
+                }
+            },
+
+            checkExerciseAnswer(exercise, selectedAnswer, button, resultId, explanationId, optionsId) {
+                const resultDiv = document.getElementById(resultId);
+                const explanationDiv = document.getElementById(explanationId);
+                const optionsDiv = document.getElementById(optionsId);
+                
+                // Блокируем все кнопки
+                const allButtons = optionsDiv.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.remove('hover:bg-gray-200');
+                });
+                
+                // Проверяем ответ
+                const isCorrect = selectedAnswer === exercise.answer;
+                
+                if (isCorrect) {
+                    button.classList.remove('bg-gray-100');
+                    button.classList.add('bg-green-500', 'text-white');
+                    resultDiv.className = 'p-3 rounded-lg mb-3 bg-green-100 border-l-4 border-green-500';
+                    resultDiv.innerHTML = '<p class="text-green-800 font-semibold">✓ Правильно!</p>';
+                } else {
+                    button.classList.remove('bg-gray-100');
+                    button.classList.add('bg-red-500', 'text-white');
+                    resultDiv.className = 'p-3 rounded-lg mb-3 bg-red-100 border-l-4 border-red-500';
+                    resultDiv.innerHTML = `<p class="text-red-800 font-semibold">✗ Неправильно. Правильный ответ: <span class="font-bold">${exercise.answer}</span></p>`;
+                    
+                    // Добавляем упражнение в список ошибок
+                    if (!this.wrongExercises.find(ex => ex.id === exercise.id)) {
+                        this.wrongExercises.push(exercise);
+                    }
+                    
+                    // Активируем кнопку "Пройти ошибки"
+                    const retryBtn = document.getElementById('retry-wrong-btn');
+                    if (retryBtn) {
+                        retryBtn.disabled = false;
+                        retryBtn.innerHTML = `🔄 Пройти ошибки (${this.wrongExercises.length})`;
+                    }
+                    
+                    // Подсветим правильный ответ
+                    allButtons.forEach(btn => {
+                        if (btn.textContent === exercise.answer) {
+                            btn.classList.remove('bg-gray-100');
+                            btn.classList.add('bg-green-500', 'text-white');
+                        }
+                    });
+                }
+                
+                resultDiv.classList.remove('hidden');
+                explanationDiv.style.display = 'block';
+            },
+
+            toggleWordForStudy(topicId, wordId, wordData, button) {
+                if (!this.selectedWordsForStudy[topicId]) {
+                    this.selectedWordsForStudy[topicId] = [];
+                }
+                
+                const index = this.selectedWordsForStudy[topicId].findIndex(w => w.id === wordId);
+                
+                if (index === -1) {
+                    // Добавляем слово
+                    const displayWord = wordData.article ? `${wordData.article} ${wordData.word}` : wordData.word;
+                    const translation = Array.isArray(wordData.translation) ? wordData.translation[0] : wordData.translation;
+                    this.selectedWordsForStudy[topicId].push({
+                        id: wordId,
+                        word: displayWord,
+                        translation: translation
+                    });
+                    
+                    // Помечаем слово как готовое к повторению
+                    if (!this.userProgress[wordId]) {
+                        this.userProgress[wordId] = {};
+                    }
+                    this.userProgress[wordId].isLearning = true;
+                    this.userProgress[wordId].box = 0;
+                    this.userProgress[wordId].nextReview = this.getTodayDateString();
+                    this.saveProgress();
+                    
+                    button.textContent = 'В учебе';
+                    button.className = 'px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition';
+                } else {
+                    // Убираем слово
+                    this.selectedWordsForStudy[topicId].splice(index, 1);
+                    
+                    // Убираем прогресс для этого слова
+                    if (this.userProgress[wordId]) {
+                        delete this.userProgress[wordId];
+                        this.saveProgress();
+                    }
+                    
+                    button.textContent = 'Учить';
+                    button.className = 'px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition';
+                }
+                
+                // Сохраняем в localStorage
+                this.saveSelectedWords();
+            },
+
+            saveSelectedWords() {
+                try {
+                    localStorage.setItem('selectedWordsForStudy', JSON.stringify(this.selectedWordsForStudy));
+                } catch (e) {
+                    console.error('Error saving selected words:', e);
+                }
+            },
+
+            loadSelectedWords() {
+                try {
+                    const saved = localStorage.getItem('selectedWordsForStudy');
+                    if (saved) {
+                        this.selectedWordsForStudy = JSON.parse(saved);
+                    } else {
+                        this.selectedWordsForStudy = {};
+                    }
+                } catch (e) {
+                    console.error('Error loading selected words:', e);
+                    this.selectedWordsForStudy = {};
+                }
+            },
+
+            openWordCard(wordData, topicId, wordId, wordsList = null, currentIndex = null) {
+                // Сохраняем список слов и индекс для навигации
+                if (wordsList !== null) {
+                    this.currentWordsList = wordsList;
+                    this.currentWordIndex = currentIndex;
+                } else {
+                    // Если список не передан, получаем все слова темы
+                    this.currentWordsList = this.allWords.filter(word => word.topics && word.topics.includes(topicId));
+                    this.currentWordIndex = this.currentWordsList.findIndex(w => w.id === wordId);
+                }
+                
+                // Обновляем состояние кнопок навигации
+                this.updateNavigationButtons();
+                
+                // Заполняем модальное окно данными
+                document.getElementById('word-card-image').src = wordData.image || 'https://placehold.co/400x200/E5E7EB/6B7280?text=Нет+изображения';
+                
+                // Артикль и слово (артикль только для существительных)
+                const shouldShowArticle = wordData.article && wordData.article !== '—' && wordData.partOfSpeech && wordData.partOfSpeech.toLowerCase().includes('noun');
+                document.getElementById('word-card-article').textContent = shouldShowArticle ? wordData.article : '';
+                document.getElementById('word-card-word').textContent = wordData.word;
+                
+                // Транскрипция и перевод
+                document.getElementById('word-card-transcription-ru').textContent = wordData.transcriptionRu || '';
+                const translation = Array.isArray(wordData.translation) ? wordData.translation.join(', ') : wordData.translation;
+                document.getElementById('word-card-translation').textContent = translation;
+                
+                // Часть речи и множественное число
+                const partOfSpeech = wordData.partOfSpeech || '';
+                document.getElementById('word-card-part-of-speech').textContent = partOfSpeech;
+                
+                const pluralEl = document.getElementById('word-card-plural');
+                if (wordData.plural && wordData.partOfSpeech === 'noun') {
+                    pluralEl.textContent = `мн.ч.: ${wordData.plural}`;
+                    pluralEl.style.display = 'block';
+                } else {
+                    pluralEl.textContent = '';
+                    pluralEl.style.display = 'none';
+                }
+                
+                // Теги тем
+                const topicsEl = document.getElementById('word-card-topics');
+                topicsEl.innerHTML = '';
+                if (wordData.topics && wordData.topics.length > 0) {
+                    wordData.topics.forEach(topicId => {
+                        const topic = this.allTopics.find(t => t.id === topicId);
+                        if (topic) {
+                            const tag = document.createElement('span');
+                            tag.className = 'px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold';
+                            tag.textContent = topic.name;
+                            topicsEl.appendChild(tag);
+                        }
+                    });
+                }
+                
+                // Ассоциация и пример
+                document.getElementById('word-card-association').textContent = wordData.association || '';
+                const example = Array.isArray(wordData.examples) && wordData.examples.length > 0 ? wordData.examples[0] : (wordData.example || '');
+                document.getElementById('word-card-example').innerHTML = example;
+                
+                // Озвучка при клике на кнопку
+                const speakBtn = document.getElementById('word-card-speak');
+                speakBtn.onclick = () => {
+                    const utterance = new SpeechSynthesisUtterance(wordData.word);
+                    utterance.lang = 'de-DE';
+                    window.speechSynthesis.speak(utterance);
+                };
+                
+                // Сохраняем данные для кнопки "Учить"
+                this.currentModalWord = {
+                    topicId: topicId,
+                    wordId: wordId,
+                    wordData: wordData
+                };
+                
+                // Обновляем состояние кнопки "Учить"
+                this.updateStudyButtonState();
+                
+                // Открываем модальное окно
+                this.openModal('word-card-modal');
+            },
+
+            updateStudyButtonState() {
+                if (!this.currentModalWord) return;
+                
+                const { topicId, wordId } = this.currentModalWord;
+                const button = document.getElementById('word-card-study-btn');
+                
+                if (!button) return;
+                
+                const isInStudy = this.selectedWordsForStudy[topicId] && 
+                                  this.selectedWordsForStudy[topicId].some(w => w.id === wordId);
+                
+                if (isInStudy) {
+                    button.textContent = 'В учебе';
+                    button.className = 'px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition';
+                } else {
+                    button.textContent = 'Учить';
+                    button.className = 'px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition';
+                }
+            },
+
+            toggleWordForStudyFromModal() {
+                if (!this.currentModalWord) return;
+                
+                const { topicId, wordId, wordData } = this.currentModalWord;
+                const button = document.getElementById('word-card-study-btn');
+                
+                this.toggleWordForStudy(topicId, wordId, wordData, button);
+            },
+
+            navigateWordCard(direction) {
+                if (!this.currentWordsList || this.currentWordsList.length === 0) return;
+                
+                // Вычисляем новый индекс
+                const newIndex = this.currentWordIndex + direction;
+                
+                // Проверяем границы
+                if (newIndex < 0 || newIndex >= this.currentWordsList.length) return;
+                
+                // Получаем данные нового слова
+                const newWordData = this.currentWordsList[newIndex];
+                const newTopicId = newWordData.topics && newWordData.topics.length > 0 ? newWordData.topics[0] : null;
+                const newWordId = newWordData.id;
+                
+                // Открываем карточку нового слова
+                this.openWordCard(newWordData, newTopicId, newWordId, this.currentWordsList, newIndex);
+            },
+
+            updateNavigationButtons() {
+                const prevBtn = document.getElementById('word-card-prev');
+                const nextBtn = document.getElementById('word-card-next');
+                
+                if (!prevBtn || !nextBtn) return;
+                
+                // Отключаем кнопку "Назад" если это первое слово
+                if (this.currentWordIndex <= 0) {
+                    prevBtn.disabled = true;
+                    prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    prevBtn.disabled = false;
+                    prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                
+                // Отключаем кнопку "Вперед" если это последнее слово
+                if (!this.currentWordsList || this.currentWordIndex >= this.currentWordsList.length - 1) {
+                    nextBtn.disabled = true;
+                    nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    nextBtn.disabled = false;
+                    nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            },
+
             promptForDirection(setId, mode, source = 'allsets') {
                 this.tempSetId = setId;
                 this.tempMode = mode;
@@ -2715,8 +4740,23 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             },
             
             startSession(setId, mode, isBack = false, source = 'allsets') {
-                const set = WORD_SETS.find(s => s.id === setId);
-                if (!set) return;
+                // Проверяем, является ли это набором выбранных слов
+                let set;
+                if (setId.startsWith('selected_week_') || setId.startsWith('selected_topic_')) {
+                    const selectedSets = this.createSelectedWordsSets();
+                    set = selectedSets.find(s => s.id === setId);
+                    console.log('Selected set found:', set);
+                } else {
+                    set = WORD_SETS.find(s => s.id === setId);
+                }
+                
+                if (!set) {
+                    console.error('Set not found for id:', setId);
+                    return;
+                }
+                
+                console.log('Starting session with set:', set);
+                console.log('Mode:', mode, 'Source:', source);
 
                 this.isPracticeMode = (mode === 'practice');
                 this.isPracticeAllMode = (mode === 'practice-all');
@@ -2726,22 +4766,31 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     // Практика всех слов: показываем ВСЕ карточки набора БЕЗ фильтрации
                     this.sessionCards = set.cards.map(card => ({ ...card }));
                 } else if (this.isPracticeMode) {
-                    // В режиме Практика: если пришли из меню Недели - показываем все карточки недели,
-                    // если из раздела "Все наборы слов" - показываем только те карточки, которые пользователь пометил как "Учить"
-                    if (source === 'week') {
+                    // В режиме Практика: если пришли из меню Недели или это выбранный набор - показываем все карточки
+                    if (source === 'week' || set.isSelected) {
                         this.sessionCards = set.cards.map(card => ({ ...card }));
                     } else {
                         this.sessionCards = set.cards.filter(card => (this.userProgress[card.id] && this.userProgress[card.id].isLearning === true));
                     }
                 } else {
-                    // Повторение: только карточки, доступные к повторению сегодня (и помеченные как учатся)
+                    // Повторение: только карточки, доступные к повторению сегодня
                     const today = this.getTodayDateString();
-                    this.sessionCards = set.cards.filter(card => {
-                        const progress = this.userProgress[card.id];
-                        const isVisible = progress && progress.isLearning === true;
-                        return isVisible && (!progress || (progress.nextReview && progress.nextReview <= today));
-                    });
+                    if (set.isSelected) {
+                        // Для выбранных наборов показываем карточки к повторению
+                        this.sessionCards = set.cards.filter(card => {
+                            const progress = this.userProgress[card.id];
+                            return progress && progress.isLearning && progress.nextReview && progress.nextReview <= today;
+                        });
+                    } else {
+                        this.sessionCards = set.cards.filter(card => {
+                            const progress = this.userProgress[card.id];
+                            const isVisible = progress && progress.isLearning === true;
+                            return isVisible && progress.nextReview && progress.nextReview <= today;
+                        });
+                    }
                 }
+                
+                console.log('Session cards after filtering:', this.sessionCards.length, this.sessionCards);
 
                 // [ИЗМЕНЕНО] Меняем текст кнопок и видимость в зависимости от режима
                 const rateNoButton = document.querySelector('#controls-rate button:nth-child(1)');
@@ -2802,6 +4851,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             
             showNextCard() {
                 if (this.currentCardIndex >= this.sessionCards.length) {
+                    // Обновляем секцию "К повторению сегодня" после завершения сессии
+                    this.renderDueTodaySection();
+                    
                     // [ИЗМЕНЕНО] Состояние для истории
                     const historyState = this.navigationHistory[this.navigationHistory.length - 1];
                     this.showScreen('finish-screen', false, historyState); // Переиспользуем состояние, но не пишем в историю
@@ -2850,13 +4902,34 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     </div>
                 `;
 
+                // Управление изображениями
+                const frontImage = document.getElementById('card-front-image');
+                const backImage = document.getElementById('card-back-image');
+                
                 if (this.currentDirection === 'ru-de') {
                     document.getElementById('card-front-text').textContent = card.front;
                     document.getElementById('card-back-text').innerHTML = germanHtml;
+                    
+                    // Показываем изображение на задней стороне (немецкое слово)
+                    if (card.hintImage) {
+                        backImage.src = card.hintImage;
+                        backImage.classList.remove('hidden');
+                    } else {
+                        backImage.classList.add('hidden');
+                    }
+                    frontImage.classList.add('hidden');
                 } else {
                     document.getElementById('card-front-text').innerHTML = germanHtml;
                     document.getElementById('card-back-text').textContent = card.front;
-                    this.speakGerman(card.back);
+                    
+                    // Показываем изображение на передней стороне (немецкое слово)
+                    if (card.hintImage) {
+                        frontImage.src = card.hintImage;
+                        frontImage.classList.remove('hidden');
+                    } else {
+                        frontImage.classList.add('hidden');
+                    }
+                    backImage.classList.add('hidden');
                 }
                 
                 document.getElementById('hint-button').classList.toggle('hidden', !card.hintImage);
@@ -2904,19 +4977,23 @@ async handleAnswer(knewIt) {
                         // Пользователь вспомнил. Продвигаем бокс.
                         progress.box = Math.min(6, (progress.box || 0) + 1);
                     } else { // "Не помню ❌"
-                        // Пользователь забыл. Сбрасываем на бокс 1.
-                        progress.box = 1;
+                        // Пользователь забыл. Возвращаем к повторению сегодня.
+                        progress.box = 0;
                     }
                 }
 
                 // Общая логика: установить дату след. повторения и сохранить
                 // Эта логика теперь выполняется для ОБЕИХ режимов (Практика и Повторение)
                 progress.nextReview = this.getFutureDateString(REPETITION_INTERVALS[progress.box]);
+                console.log('Card rated:', card.id, 'knewIt:', knewIt, 'new box:', progress.box, 'nextReview:', progress.nextReview, 'today:', this.getTodayDateString());
                 this.userProgress[card.id] = progress;
 
                 if (this.isAuthReady) { 
                     this.saveProgress(); 
                 }
+                
+                // Обновляем секцию "К повторению сегодня" после оценки карточки
+                this.renderDueTodaySection();
                 
                 document.getElementById('card').classList.add('slide-out');
                 setTimeout(() => {
