@@ -577,7 +577,7 @@
                   <button onclick="window.StoryApp.startStoryQuiz()"
                           class="w-full py-4 px-5 bg-indigo-500 text-white rounded-xl shadow-xl text-left text-lg font-bold 
                                  hover:bg-indigo-600 transition flex justify-between items-center 
-                                 bg-gradient-to-r from-indigo-600 to-indigo-500 transform hover:scale-[1.01] hover:shadow-2xl">
+                                 bg-indigo-600 transform hover:scale-[1.01] hover:shadow-2xl">
                     <span><span class="mr-3 text-yellow-300">🧠</span>Квиз на помннимание текста</span>
                     <span>&rarr;</span>
                   </button>
@@ -684,7 +684,7 @@
             <div class="max-w-2xl mx-auto px-4 pt-6">
                 <!-- Прогресс-бар -->
                 <div class="bg-gray-300 rounded-full h-2.5 mb-6 shadow-lg">
-                    <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-2.5 rounded-full transition-all duration-500 shadow-lg" style="width: 0%"></div>
+                    <div id="progress-bar" class="bg-purple-500 h-2.5 rounded-full transition-all duration-500 shadow-lg" style="width: 0%"></div>
                 </div>
                 
                 <!-- Карточка -->
@@ -692,12 +692,12 @@
                     <div id="card-inner" class="card-inner h-full w-full" onclick="window.App.showAnswer()">
                         <!-- Передняя сторона -->
                         <div id="card-front" class="card-front flex flex-col items-center justify-center p-6 rounded-2xl shadow-2xl text-center cursor-pointer hover:shadow-xl transition-shadow">
-                            <img id="card-front-image" src="" alt="" class="w-full h-auto object-contain rounded-lg mb-4 max-h-64 hidden">
+                            <img id="card-front-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Картинка слова" class="w-full h-auto object-contain rounded-lg mb-4 max-h-64 hidden" style="display: none;">
                             <div id="card-front-text" class="text-3xl font-bold"></div>
                         </div>
                         <!-- Задняя сторона -->
                         <div id="card-back" class="card-back flex flex-col items-center justify-center p-6 rounded-2xl shadow-2xl text-center cursor-pointer hover:shadow-xl transition-shadow">
-                            <img id="card-back-image" src="" alt="" class="w-full h-auto object-contain rounded-lg mb-4 max-h-64 hidden">
+                            <img id="card-back-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Картинка слова" class="w-full h-auto object-contain rounded-lg mb-4 max-h-64 hidden" style="display: none;">
                             <div id="card-back-text" class="text-3xl font-bold"></div>
                         </div>
                     </div>
@@ -710,7 +710,6 @@
                     Показать ответ
                 </button>
                 <button id="hint-button" onclick="window.App.showHint()" class="btn-secondary w-full py-2 px-4 flex items-center justify-center gap-2 hidden">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>
                     💡 Подсказка
                 </button>
             </div>
@@ -732,7 +731,6 @@
                     Назад
                 </button>
                 <button id="hint-button-practice-all" onclick="window.App.showHint()" class="btn-secondary py-3 px-6 flex items-center justify-center gap-2 font-bold">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>
                     Подсказка
                 </button>
                 <button onclick="window.App.nextCard()" class="btn-primary py-3 px-6 flex items-center justify-center gap-2 font-bold">
@@ -766,7 +764,7 @@
 
     </div>
 
-<div id="navigation-footer" class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-500 to-blue-600 border-t border-blue-700 shadow-2xl z-40 max-w-xl mx-auto">
+<div id="navigation-footer" class="fixed bottom-0 left-0 right-0 bg-blue-500 border-t border-blue-700 shadow-2xl z-40 max-w-xl mx-auto">
     <div id="nav-content-container" class="flex justify-around items-center h-16">
 
         <!-- ИЗМЕНЕНО: onclick вызывает renderHomeScreen с clearStack=true, чтобы сбросить историю навигации -->
@@ -780,7 +778,7 @@
             <span class="text-xs mt-1 font-semibold">В учебе</span>
         </button>
 
-        <button onclick="window.App.renderTopicSelection()" class="flex flex-col items-center justify-center text-white hover:text-blue-100 transition-colors w-1/3 py-2 group bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg">
+        <button onclick="window.App.renderTopicSelection()" class="flex flex-col items-center justify-center text-white hover:text-blue-100 transition-colors w-1/3 py-2 group bg-purple-600 rounded-lg">
             <svg class="w-7 h-7 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path></svg>
             <span class="text-xs mt-1 font-semibold">Все Темы</span>
         </button>
@@ -1746,6 +1744,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             allWords: [],
             allTopics: [],
             allExercises: [],
+            tempSelectedWords: [], // Для временного хранения выбранных слов
             
             /**
              * ВАЖНО: Определяет путь к документу в Firestore, используя ВАШУ КОЛЛЕКЦИЮ И ID
@@ -2082,7 +2081,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 if (!this.isSubscriber && this.selectedWeek === 0) { 
                     mainBlock.innerHTML += `
-                        <button onclick="window.App.renderTopicSelection()" class="w-full py-4 px-5 rounded-xl shadow-xl bg-gradient-to-r from-green-400 to-green-600 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
+                        <button onclick="window.App.renderTopicSelection()" class="w-full py-4 px-5 rounded-xl shadow-xl bg-green-500 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
                             <span>🚀 Пробная Тема</span>
                             <span>Учить &rarr;</span>
                         </button>
@@ -2097,25 +2096,23 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     
                     if (activeWeek >= 1 && activeWeek <= ALL_WEEKS.length) {
                         mainBlock.innerHTML += `
-                            <button onclick="window.App.renderWeekContent(${activeWeek})" class="w-full py-4 px-5 rounded-xl shadow-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-left text-lg font-bold flex justify-between items-center transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
-                                <span>📅 Актуальная тема: ${weekTitle}</span>
-                                <span>&rarr;</span>
+                            <button onclick="window.App.renderWeekContent(${activeWeek})" class="w-full py-4 px-5 rounded-xl shadow-xl bg-orange-500 text-white text-left flex flex-col transition duration-150 hover:shadow-2xl transform hover:-translate-y-1">
+                                <span class="text-lg font-bold">📅 Актуальная тема</span>
+                                <span class="text-sm mt-1">${weekTitle}</span>
                             </button>
                         `;
                     }
                 }
                 
                 mainBlock.innerHTML += `
-                    <button onclick="window.App.renderTopicSelection()" class="w-full py-4 px-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-md text-left text-lg font-semibold text-indigo-900 hover:from-blue-100 hover:to-indigo-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-indigo-200">
+                    <button onclick="window.App.renderTopicSelection()" class="w-full py-4 px-5 bg-indigo-50 rounded-xl shadow-md text-left text-lg font-semibold text-indigo-900 hover:bg-indigo-100 transition duration-150 mt-3 border-2 border-indigo-200">
                         <span>📚 Все темы</span>
-                        <span>&rarr;</span>
                     </button>
                 `;
 
                 mainBlock.innerHTML += `
-                    <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl shadow-md text-left text-lg font-semibold text-purple-900 hover:from-purple-100 hover:to-pink-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-purple-200">
+                    <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-purple-50 rounded-xl shadow-md text-left text-lg font-semibold text-purple-900 hover:bg-purple-100 transition duration-150 mt-3 border-2 border-purple-200">
                         <span class="flex items-center gap-2"><img src="assets/icons/carrds.png" alt="" class="w-6 h-6"> В учебе</span>
-                        <span>&rarr;</span>
                     </button>
                 `;
                 
@@ -2156,12 +2153,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         const left = document.createElement('div');
                         const title = document.createElement('span');
                         title.className = 'font-bold text-gray-800';
-                        title.textContent = set.name;
-                        const info = document.createElement('span');
-                        info.className = 'text-sm text-orange-600 font-medium block';
-                        info.textContent = `Доступно для повторения: ${dueCount}`;
+                        title.textContent = `${set.name}: ${dueCount} слов к повторению`;
                         left.appendChild(title);
-                        left.appendChild(info);
 
                         const btn = document.createElement('button');
                         btn.className = 'py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center';
@@ -2213,12 +2206,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         const left = document.createElement('div');
                         const title = document.createElement('span');
                         title.className = 'font-bold text-gray-800';
-                        title.textContent = set.name;
-                        const info = document.createElement('span');
-                        info.className = 'text-sm text-orange-600 font-medium block';
-                        info.textContent = `Доступно для повторения: ${dueCount}`;
+                        title.textContent = `${set.name}: ${dueCount} слов к повторению`;
                         left.appendChild(title);
-                        left.appendChild(info);
 
                         const btn = document.createElement('button');
                         btn.className = 'py-2 px-4 bg-orange-100 text-orange-700 font-bold rounded-xl hover:bg-orange-200 transition duration-150 flex items-center';
@@ -2315,10 +2304,13 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         return;
                     }
                     // Показываем только слова, начинающиеся с term
-                    const matches = allWords.filter(item => 
-                        item.word.toLowerCase().startsWith(term) || 
-                        item.translation.toLowerCase().startsWith(term)
-                    ).slice(0, 10); // Limit to 10 suggestions
+                    const matches = window.App.allWords.filter(item => {
+                        const wordLower = item.word.toLowerCase();
+                        const translationText = Array.isArray(item.translation) ? item.translation.join(' ') : item.translation;
+                        const translationLower = translationText.toLowerCase();
+                        
+                        return wordLower.startsWith(term) || translationLower.startsWith(term);
+                    }).slice(0, 10); // Limit to 10 suggestions
                     
                     if (matches.length === 0) {
                         autocompleteList.classList.add('hidden');
@@ -2329,15 +2321,15 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         const suggestionDiv = document.createElement('div');
                         suggestionDiv.className = 'p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 flex items-center gap-3';
                         // Highlight matching part
+                        const translationText = Array.isArray(item.translation) ? item.translation.join(', ') : item.translation;
                         const wordHtml = highlightMatch(item.word, term);
-                        const translationHtml = highlightMatch(item.translation, term);
+                        const translationHtml = highlightMatch(translationText, term);
                         suggestionDiv.innerHTML = `
-                            ${item.image ? `<img src="${item.image}" alt="${item.word}" class="w-12 h-8 object-cover rounded">` : ''}
                             <div class="flex-1">
                                 <div class="font-semibold text-gray-800">${wordHtml}</div>
                                 <div class="text-sm text-gray-500">${translationHtml}</div>
                             </div>
-                            <div class="text-xs text-gray-400">${item.themeName}</div>
+                            <div class="text-xs text-gray-400">${item.themeName || ''}</div>
                         `;
                         suggestionDiv.addEventListener('click', () => {
                             searchInput.value = item.word;
@@ -2505,6 +2497,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     }
                     
                     console.log('Searching for:', term);
+                    console.log('Total words in allWords:', window.App.allWords.length);
                     
                     // Очищаем контейнер
                     contentListDiv.innerHTML = '';
@@ -2525,10 +2518,23 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                             }
                         }
                         
-                        // Поиск по началу слова
-                        return displayWord.toLowerCase().startsWith(term) || 
-                               translation.toLowerCase().startsWith(term);
+                        // Поиск по началу слова (ищем и в полном displayWord, и только в самом слове без артикля)
+                        const wordLower = wordData.word.toLowerCase();
+                        const displayLower = displayWord.toLowerCase();
+                        const translationLower = translation.toLowerCase();
+                        
+                        const matches = displayLower.startsWith(term) || 
+                               wordLower.startsWith(term) ||
+                               translationLower.startsWith(term);
+                               
+                        if (matches) {
+                            console.log('Match found:', wordData.word, 'wordLower:', wordLower, 'term:', term);
+                        }
+                        
+                        return matches;
                     });
+                    
+                    console.log('Filtered words count:', filteredWords.length);
                     
                     if (filteredWords.length === 0) {
                         contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет совпадений по вашему запросу.</p>';
@@ -2538,9 +2544,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     // Отображаем найденные слова
                     {
                         const words = filteredWords;
-                                
-                        // Word list (без заголовка темы)
-                        filteredWords.forEach(wordData => {
+                        
+                        // Убрана панель управления с кнопкой "Учить выбранные"
+                        // Пользователи могут добавить слова в учебу через детальную страницу
+                        
+                        // Word list
+                        words.forEach(wordData => {
                             const wordId = wordData.id;
                             // Показываем артикль только для существительных и если это не тире
                             const displayWord = (wordData.article && wordData.article !== '—' && wordData.partOfSpeech && wordData.partOfSpeech.toLowerCase().includes('noun')) 
@@ -2552,36 +2561,41 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                             const topicId = wordData.topics && wordData.topics.length > 0 ? wordData.topics[0] : null;
                             const isInStudy = topicId && window.App.selectedWordsForStudy[topicId] && 
                                               window.App.selectedWordsForStudy[topicId].some(w => w.id === wordId);
+                            
                             const wordItem = document.createElement('div');
-                            wordItem.className = 'p-4 bg-white rounded-xl shadow-md flex items-center justify-between gap-3 cursor-pointer hover:bg-gray-50 transition mb-2';
+                            wordItem.className = 'p-4 bg-white rounded-xl shadow-md flex items-center gap-3 hover:bg-gray-50 transition';
                             wordItem.dataset.wordId = wordId;
+                            
+                            // Чекбокс удалён из результатов поиска
                             
                             // Левая часть: немецкое слово и перевод
                             const wordInfo = document.createElement('div');
-                            wordInfo.className = 'flex-1';
+                            wordInfo.className = 'flex-1 cursor-pointer';
                             wordInfo.innerHTML = `
                                 <div class="font-bold text-lg text-gray-800">${displayWord}</div>
                                 <div class="text-sm text-gray-500">${translation}</div>
                             `;
-                                        // Кнопка озвучки
-                                        const speakBtn = document.createElement('button');
-                                        speakBtn.className = 'p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition';
-                                        speakBtn.innerHTML = `
-                                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                                            </svg>
-                                        `;
+                            
+            
+            // Клик на текст открывает детальный экран
+                            const currentIndex = words.indexOf(wordData);
+                            wordInfo.addEventListener('click', () => {
+                                window.App.openWordDetailScreen(wordData, topicId, wordId, words, currentIndex);
+                            });                            // Кнопка озвучки
+                            const speakBtn = document.createElement('button');
+                            speakBtn.className = 'p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition';
+                            speakBtn.innerHTML = `
+                                <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                                </svg>
+                            `;
                             speakBtn.addEventListener('click', (e) => {
                                 e.stopPropagation();
                                 const utterance = new SpeechSynthesisUtterance(wordData.word); // без артикля
                                 utterance.lang = 'de-DE';
                                 window.speechSynthesis.speak(utterance);
                             });
-                                        // Клик на весь элемент открывает карточку
-                                        const currentIndex = filteredWords.indexOf(wordData);
-                                        wordItem.addEventListener('click', () => {
-                                            window.App.openWordCard(wordData, topicId, wordId, filteredWords, currentIndex);
-                                        });
+                            
                             wordItem.appendChild(wordInfo);
                             wordItem.appendChild(speakBtn);
                             
@@ -2958,7 +2972,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         sets.push({
                             id: `selected_topic_${topicId}`,
                             week: 1,
-                            name: `${topicName}: выбранные слова`,
+                            name: `${topicName}: ${words.length} слов`,
                             cards: words.map(w => ({
                                 id: w.id,
                                 front: w.translation,
@@ -3019,25 +3033,21 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     // Определяем подзаголовок: для выбранных слов показываем тему, для обычных - неделю
                     let subtitle = '';
                     if (set.isSelected) {
-                        // Для выбранных слов - только количество слов
-                        subtitle = `${set.cards.length} слов`;
+                        // Для выбранных слов - пустая строка (количество уже в названии)
+                        subtitle = '';
                     } else {
-                        // Для обычных наборов - неделя и количество
-                        subtitle = `Неделя ${set.week} | ${set.cards.length} слов`;
+                        // Для обычных наборов - только неделя
+                        subtitle = `Неделя ${set.week}`;
                     }
 
                     const setContainer = document.createElement('div');
                     setContainer.className = "w-full p-4 bg-white rounded-xl shadow-md";
                     setContainer.innerHTML = `
-                        <div class="flex justify-between items-center mb-3">
+                        <div class="mb-3">
                             <div>
                                 <span class="font-semibold text-gray-800 text-lg">${set.name}</span>
-                                <span class="block text-sm text-gray-500">${subtitle}</span>
+                                ${subtitle ? `<span class="block text-sm text-gray-500">${subtitle}</span>` : ''}
                             </div>
-                            ${dueCount > 0 ? 
-                                `<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">${dueCount} к повтору</span>` :
-                                `<span class="text-green-500 font-semibold">✓</span>`
-                            }
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             ${dueCount > 0 ? 
@@ -4900,9 +4910,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const example = Array.isArray(wordData.examples) ? wordData.examples[0] : wordData.examples;
                 document.getElementById('word-detail-example').textContent = example || '';
 
-                // Кнопка Ассоциация - проверяем реальное существование картинки
+                // Кнопка Ассоциация - проверяем параметр mnemo
                 const assocBtn = document.getElementById('word-detail-association');
                 const assocText = wordData.association || '';
+                const mnemo = wordData.mnemo || 0;
                 
                 // Функция для проверки существования изображения
                 const checkImageExists = (imageUrl) => {
@@ -4918,20 +4929,34 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     });
                 };
                 
+                // Кнопка ассоциации всегда активна
+                assocBtn.disabled = false;
+                assocBtn.className = 'btn-secondary px-4 py-2';
+                
                 // Проверяем наличие картинки асинхронно
                 checkImageExists(wordData.image).then(imageExists => {
-                    const hasAssociation = imageExists || assocText;
-                    
-                    if (!hasAssociation) {
-                        assocBtn.disabled = true;
-                        assocBtn.className = 'px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed';
-                    } else {
-                        assocBtn.disabled = false;
-                        assocBtn.className = 'btn-secondary px-4 py-2';
-                        assocBtn.onclick = () => {
-                            let assocImg = imageExists ? wordData.image : '';
+                    assocBtn.onclick = () => {
+                        // Если association пустое - показываем сообщение о разработке
+                        if (!assocText || assocText.trim() === '') {
+                            const modalHtml = `
+                                <div class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" id="association-modal" onclick="this.classList.add('hidden')">
+                                    <div class="modal-content bg-white p-6 max-w-lg w-full rounded-2xl" onclick="event.stopPropagation()">
+                                        <div class="flex justify-end items-center mb-3">
+                                            <button onclick="document.getElementById('association-modal').remove()" class="text-gray-500 text-2xl">&times;</button>
+                                        </div>
+                                        <div style='text-align:center; padding: 20px;'>
+                                            <h3 style='font-size: 1.3em; font-weight: bold; margin-bottom: 15px;'>Ассоциация в разработке</h3>
+                                            <p style='font-size: 1em; line-height: 1.6;'>Если есть идеи по слову, пришли их в чат и мы опубликуем твою ассоциацию!!!</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            document.body.insertAdjacentHTML('beforeend', modalHtml);
+                        } else {
+                            // Показываем картинку только если mnemo = 1
+                            let assocImg = (mnemo === 1 && imageExists) ? wordData.image : '';
                             
-                            // Создаем простое модальное окно
+                            // Создаем простое модальное окно с ассоциацией
                             const modalHtml = `
                                 <div class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" id="association-modal" onclick="this.classList.add('hidden')">
                                     <div class="modal-content bg-white p-6 max-w-lg w-full rounded-2xl" onclick="event.stopPropagation()">
@@ -4946,8 +4971,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                                 </div>
                             `;
                             document.body.insertAdjacentHTML('beforeend', modalHtml);
-                        };
-                    }
+                        }
+                    };
                 });
                 
                 // Кнопка Учить
@@ -5227,28 +5252,24 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const backImage = document.getElementById('card-back-image');
                 
                 if (this.currentDirection === 'ru-de') {
+                    // RU → DE: показываем русский текст спереди, немецкий сзади
                     document.getElementById('card-front-text').textContent = card.front;
                     document.getElementById('card-back-text').innerHTML = germanHtml;
                     
-                    // Показываем изображение на задней стороне (немецкое слово)
-                    if (card.hintImage) {
-                        backImage.src = card.hintImage;
-                        backImage.classList.remove('hidden');
-                    } else {
-                        backImage.classList.add('hidden');
-                    }
+                    // НЕ показываем изображение на немецкой стороне (задняя сторона)
+                    backImage.style.display = 'none';
+                    backImage.classList.add('hidden');
+                    frontImage.style.display = 'none';
                     frontImage.classList.add('hidden');
                 } else {
+                    // DE → RU: показываем немецкий текст спереди, русский сзади
                     document.getElementById('card-front-text').innerHTML = germanHtml;
                     document.getElementById('card-back-text').textContent = card.front;
                     
-                    // Показываем изображение на передней стороне (немецкое слово)
-                    if (card.hintImage) {
-                        frontImage.src = card.hintImage;
-                        frontImage.classList.remove('hidden');
-                    } else {
-                        frontImage.classList.add('hidden');
-                    }
+                    // НЕ показываем изображение на немецкой стороне (передняя сторона)
+                    frontImage.style.display = 'none';
+                    frontImage.classList.add('hidden');
+                    backImage.style.display = 'none';
                     backImage.classList.add('hidden');
                 }
                 
