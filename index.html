@@ -394,6 +394,40 @@
             </div>
         </div>
 
+        <!-- МОДАЛЬНОЕ ОКНО: Карусель ассоциаций -->
+        <div id="associations-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="modal-content bg-white p-6 max-w-2xl w-full rounded-2xl relative">
+                <!-- Крестик закрыть в правом верхнем углу -->
+                <button onclick="window.App.closeModal('associations-modal')" class="absolute top-4 right-4 text-gray-500 text-2xl hover:text-gray-700">✕</button>
+                
+                <div id="associations-modal-body">
+                    <div id="associations-progress" class="text-sm text-gray-500 mb-4 text-center">Карточка 1 / 10</div>
+                    
+                    <!-- Картинка ассоциации -->
+                    <div class="mb-4">
+                        <img id="association-image" src="" alt="Association" class="w-full h-64 object-cover rounded-xl shadow-md">
+                    </div>
+                    
+                    <!-- Немецкое слово -->
+                    <div class="text-center mb-4">
+                        <h3 id="association-word" class="text-2xl font-bold text-gray-800">das Wort</h3>
+                        <p id="association-translation" class="text-lg text-gray-600">перевод</p>
+                    </div>
+                    
+                    <!-- Текст ассоциации -->
+                    <div class="bg-yellow-50 p-4 rounded-xl shadow-md mb-4">
+                        <p id="association-text" class="text-gray-700 leading-relaxed">Текст ассоциации будет здесь...</p>
+                    </div>
+                    
+                    <!-- Кнопки навигации -->
+                    <div class="flex gap-3 justify-center">
+                        <button onclick="window.App.showPrevAssociation()" class="btn-secondary px-6 py-2 rounded-lg">← Назад</button>
+                        <button onclick="window.App.showNextAssociation()" class="btn-primary px-6 py-2 rounded-lg">Вперед →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 2. ГЛАВНОЕ МЕНЮ (Home Screen) -->
         <div id="home-screen" class="hidden main-content">
             <div class="px-4 pt-2 pb-4 max-w-2xl mx-auto">
@@ -2733,7 +2767,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 this.renderMenuCard(contentListDiv,
                     `🖼️ Ассоциации`,
                     '',
-                    `window.App.startCarouselSession('${topicId}')`,
+                    `window.App.startAssociationsCarousel('${topicId}')`,
                     'bg-indigo-100 hover:bg-indigo-200'
                 );
                 
@@ -3355,6 +3389,75 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             // [ИЗМЕНЕНО] Функция УДАЛЕНА, так как HTML кнопка удалена
             // returnToCarouselList() { ... }
+
+            // ==================== ЛОГИКА КАРУСЕЛИ АССОЦИАЦИЙ ====================
+            startAssociationsCarousel(topicId) {
+                this.openModal('associations-modal');
+                try {
+                    // Получаем все слова темы с mnemo = 1
+                    const associationWords = this.allWords.filter(word => 
+                        word.topics && 
+                        word.topics.includes(topicId) && 
+                        word.mnemo === 1 &&
+                        word.association && 
+                        word.association.trim() !== ''
+                    );
+                    
+                    if (associationWords.length === 0) {
+                        document.getElementById('associations-modal-body').innerHTML = '<p class="text-center text-gray-500 py-6">Нет ассоциаций для этой темы.</p>';
+                        return;
+                    }
+                    
+                    this.associationCards = associationWords;
+                    this.currentAssociationIndex = 0;
+                    this.showAssociationCard();
+                } catch (err) {
+                    console.error('Associations load error', err);
+                    document.getElementById('associations-modal-body').innerHTML = `<p class="text-red-500 text-center py-6">Ошибка загрузки ассоциаций: ${err.message}</p>`;
+                }
+            },
+
+            showAssociationCard() {
+                if (!this.associationCards || this.associationCards.length === 0) return;
+                
+                const card = this.associationCards[this.currentAssociationIndex];
+                
+                // Обновляем прогресс
+                document.getElementById('associations-progress').textContent = 
+                    `Карточка ${this.currentAssociationIndex + 1} / ${this.associationCards.length}`;
+                
+                // Обновляем картинку
+                const imgElement = document.getElementById('association-image');
+                imgElement.src = card.image || '/images/placeholder.jpg';
+                imgElement.alt = card.word;
+                
+                // Обновляем слово с артиклем
+                const displayWord = (card.article && card.article !== '—' && card.partOfSpeech && card.partOfSpeech.toLowerCase().includes('noun')) 
+                    ? `${card.article} ${card.word}` 
+                    : card.word;
+                document.getElementById('association-word').textContent = displayWord;
+                
+                // Обновляем перевод
+                const translation = Array.isArray(card.translation) 
+                    ? card.translation.join(', ') 
+                    : card.translation;
+                document.getElementById('association-translation').textContent = translation;
+                
+                // Обновляем текст ассоциации
+                document.getElementById('association-text').textContent = card.association || 'Нет текста ассоциации';
+            },
+
+            showNextAssociation() {
+                if (!this.associationCards || this.associationCards.length === 0) return;
+                this.currentAssociationIndex = (this.currentAssociationIndex + 1) % this.associationCards.length;
+                this.showAssociationCard();
+            },
+
+            showPrevAssociation() {
+                if (!this.associationCards || this.associationCards.length === 0) return;
+                this.currentAssociationIndex = (this.currentAssociationIndex - 1 + this.associationCards.length) % this.associationCards.length;
+                this.showAssociationCard();
+            },
 
 
             // ==================== ЛОГИКА ПОВТОРЕНИЯ (ИЗМЕНЕНО) ====================
@@ -5412,6 +5515,12 @@ async handleAnswer(knewIt) {
                     this.mantraKnownCount = 0;
                     this.mantraUnknownCount = 0;
                     this.mantraSeen = [];
+                }
+
+                // [НОВОЕ] Очистка карусели ассоциаций при закрытии модала
+                if (modalId === 'associations-modal') {
+                    this.associationCards = [];
+                    this.currentAssociationIndex = 0;
                 }
 
                 // [ИЗМЕНЕНО] Код StoryApp.closeModal() УДАЛЕН
