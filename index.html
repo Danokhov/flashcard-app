@@ -3844,63 +3844,125 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     contentListDiv.innerHTML = '<p class="text-gray-500 text-center py-6">Нет упражнений для этой темы.</p>';
                     return;
                 }
-                
-                contentListDiv.innerHTML = '';
-                
-                // Создаем карточки упражнений
-                exercises.forEach((exercise, index) => {
-                    const word = this.allWords.find(w => w.id === exercise.wordId);
-                    const displayWord = word ? (word.article ? `${word.article} ${word.word}` : word.word) : exercise.wordId;
-                    
-                    const exerciseCard = document.createElement('div');
-                    exerciseCard.className = 'p-5 bg-white rounded-xl shadow-md mb-4';
-                    exerciseCard.innerHTML = `
-                        <div class="mb-3">
-                            <span class="text-sm font-semibold text-purple-600">Упражнение ${index + 1}/${exercises.length}</span>
+
+                // Новый покарточный режим для gap fill
+                this.gapFillExercises = exercises;
+                this.currentGapFillIndex = 0;
+                this.gapFillResults = {};
+                this.showGapFillExerciseCard();
+            },
+
+            showGapFillExerciseCard() {
+                const exercises = this.gapFillExercises;
+                const idx = this.currentGapFillIndex;
+                const exercise = exercises[idx];
+                const total = exercises.length;
+                const progress = Math.round(((idx + 1) / total) * 100);
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = `
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                            <span>${idx + 1} / ${total}</span>
+                            <span>${progress}%</span>
                         </div>
-                        <div class="bg-blue-50 p-3 rounded-lg mb-4">
-                            <p class="text-gray-700 font-mono mb-2">${exercise.sentence}</p>
-                            ${exercise.sentence_ru ? `<p class="text-gray-500 text-sm italic">${exercise.sentence_ru}</p>` : ''}
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
                         </div>
-                        <div class="grid grid-cols-2 gap-2 mb-4" id="options-${exercise.id}"></div>
-                        <div id="result-${exercise.id}" class="hidden p-3 rounded-lg mb-3"></div>
-                        <div class="text-sm text-gray-600 italic" id="explanation-${exercise.id}" style="display: none;">
-                            💡 ${exercise.explanation}
+                    </div>
+                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-4">
+                        <div class="text-center mb-6">
+                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question || 'Заполните пропуск'}</p>
+                            <p class="text-lg text-gray-700 font-mono mb-2">${exercise.sentence.replace('___', '<span class=\'underline\'>___</span>')}</p>
+                            ${exercise.sentence_ru ? `<p class='text-gray-500 text-sm italic'>${exercise.sentence_ru}</p>` : ''}
                         </div>
-                    `;
-                    
-                    // Добавляем варианты ответов
-                    const optionsDiv = exerciseCard.querySelector(`#options-${exercise.id}`);
-                    exercise.options.forEach(option => {
-                        const btn = document.createElement('button');
-                        btn.className = 'py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium';
-                        btn.textContent = option;
-                        btn.onclick = () => this.checkExerciseAnswer(exercise, option, btn, `result-${exercise.id}`, `explanation-${exercise.id}`, `options-${exercise.id}`);
-                        optionsDiv.appendChild(btn);
-                    });
-                    
-                    contentListDiv.appendChild(exerciseCard);
-                });
-                
-                // Добавляем кнопки управления в конце
-                const controlButtons = document.createElement('div');
-                controlButtons.className = 'flex gap-3 mt-6 mb-4';
-                controlButtons.innerHTML = `
-                    <button id="retry-wrong-btn" class="flex-1 py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                        🔄 Пройти ошибки
-                    </button>
-                    <button onclick="window.App.handleTelegramBackClick()" class="flex-1 py-3 px-4 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition">
-                        ✕ Закрыть
-                    </button>
+                        <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="gapfill-options">${exercise.options.map(option => `
+                                <button onclick="window.App.checkGapFillAnswer('${option}', this)" class="py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-center">${option}</button>
+                            `).join('')}
+                        </div>
+                        <div id="gapfill-explanation" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                            <p class="text-sm text-blue-800">💡 ${exercise.explanation || ''}</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-center space-x-4">
+                        ${idx > 0 ? `<button onclick="window.App.prevGapFillExercise()" class="py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition">&larr; Назад</button>` : ''}
+                        ${idx < total - 1 ? `<button onclick="window.App.nextGapFillExercise()" class="py-2 px-5 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition">Далее &rarr;</button>` : `<button onclick="window.App.finishGapFillExercises()" class="py-2 px-5 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition">Завершить ✓</button>`}
+                        <button onclick="window.App.handleTelegramBackClick()" class="py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition">✕ Закрыть</button>
+                    </div>
                 `;
-                contentListDiv.appendChild(controlButtons);
-                
-                // Обработчик для кнопки "Пройти ошибки"
-                document.getElementById('retry-wrong-btn').addEventListener('click', () => {
-                    if (this.wrongExercises.length > 0) {
-                        this.renderExercises(topicId, weekNum, this.wrongExercises);
-                    }
+            },
+
+            checkGapFillAnswer(selected, button) {
+                const exercise = this.gapFillExercises[this.currentGapFillIndex];
+                if (this.gapFillResults[exercise.id]) return;
+                if (button.disabled) return;
+                const isCorrect = selected === exercise.answer;
+                this.gapFillResults[exercise.id] = isCorrect;
+                const explanationDiv = document.getElementById('gapfill-explanation');
+                const optionsDiv = document.getElementById('gapfill-options');
+                const allButtons = optionsDiv.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.pointerEvents = 'none';
                 });
+                if (isCorrect) {
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-green-500', 'text-white', 'font-bold');
+                    this.playCorrectSound();
+                } else {
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-red-500', 'text-white', 'font-bold');
+                    allButtons.forEach(btn => {
+                        if (btn.textContent.trim() === exercise.answer) {
+                            btn.classList.remove('bg-gray-100');
+                            btn.classList.add('bg-green-500', 'text-white', 'font-bold');
+                        }
+                    });
+                    this.playIncorrectSound();
+                }
+                explanationDiv.classList.remove('hidden');
+            },
+
+            prevGapFillExercise() {
+                if (this.currentGapFillIndex > 0) {
+                    this.currentGapFillIndex--;
+                    this.showGapFillExerciseCard();
+                }
+            },
+
+            nextGapFillExercise() {
+                if (this.currentGapFillIndex < this.gapFillExercises.length - 1) {
+                    this.currentGapFillIndex++;
+                    this.showGapFillExerciseCard();
+                }
+            },
+
+            finishGapFillExercises() {
+                const total = this.gapFillExercises.length;
+                const correct = Object.values(this.gapFillResults).filter(r => r).length;
+                const percentage = Math.round((correct / total) * 100);
+                const contentListDiv = document.getElementById('content-list');
+                contentListDiv.innerHTML = `
+                    <div class="max-w-2xl mx-auto px-4 py-20">
+                        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center">
+                            <svg class="w-20 h-20 mx-auto mb-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
+                            </svg>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-4">Упражнение завершено! 🎉</h2>
+                            <div class="text-xl text-gray-700 mb-6">
+                                <p class="mb-2">Правильных ответов: <span class="font-bold text-green-600">${correct}</span> из ${total}</p>
+                                <p class="text-2xl font-bold ${percentage >= 80 ? 'text-green-600' : percentage >= 60 ? 'text-yellow-600' : 'text-red-600'}">
+                                    ${percentage}%
+                                </p>
+                            </div>
+                            <button onclick="window.App.handleTelegramBackClick()" class="btn-primary py-3 px-8 inline-flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V20a2 2 0 002 2h12a2 2 0 002-2v-9.586l.707.707a1 1 0 001.414-1.414l-7-7z"></path>
+                                </svg>
+                                В меню
+                            </button>
+                        </div>
+                    </div>
+                `;
             },
 
             renderAudioExercises(topicId, weekNum) {
