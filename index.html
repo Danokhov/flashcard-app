@@ -3734,6 +3734,108 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 // );
             },
 
+            // Звуковые эффекты
+            playCorrectSound() {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+                
+                // Второй тон для приятного звука
+                setTimeout(() => {
+                    const osc2 = audioContext.createOscillator();
+                    const gain2 = audioContext.createGain();
+                    osc2.connect(gain2);
+                    gain2.connect(audioContext.destination);
+                    osc2.frequency.value = 1000;
+                    osc2.type = 'sine';
+                    gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    osc2.start(audioContext.currentTime);
+                    osc2.stop(audioContext.currentTime + 0.2);
+                }, 50);
+            },
+            
+            playIncorrectSound() {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 200;
+                oscillator.type = 'sawtooth';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.4);
+            },
+
+            // Звуковые эффекты
+            playCorrectSound() {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+                
+                // Второй тон для приятного звука
+                setTimeout(() => {
+                    const osc2 = audioContext.createOscillator();
+                    const gain2 = audioContext.createGain();
+                    osc2.connect(gain2);
+                    gain2.connect(audioContext.destination);
+                    osc2.frequency.value = 1000;
+                    osc2.type = 'sine';
+                    gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    osc2.start(audioContext.currentTime);
+                    osc2.stop(audioContext.currentTime + 0.2);
+                }, 50);
+            },
+            
+            playIncorrectSound() {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 200;
+                oscillator.type = 'sawtooth';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.4);
+            },
+
             renderExercises(topicId, weekNum, exercisesToShow = null) {
                 const topic = this.allTopics.find(t => t.id === topicId);
                 const topicName = topic ? topic.name : 'Упражнения';
@@ -3785,13 +3887,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     const exerciseCard = document.createElement('div');
                     exerciseCard.className = 'p-5 bg-white rounded-xl shadow-md mb-4';
                     exerciseCard.innerHTML = `
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="mb-3">
                             <span class="text-sm font-semibold text-purple-600">Упражнение ${index + 1}/${exercises.length}</span>
-                            <span class="text-xs text-gray-500">${displayWord}</span>
                         </div>
-                        <p class="text-lg font-medium text-gray-800 mb-4">${exercise.question}</p>
                         <div class="bg-blue-50 p-3 rounded-lg mb-4">
-                            <p class="text-gray-700 font-mono">${exercise.sentence}</p>
+                            <p class="text-gray-700 font-mono mb-2">${exercise.sentence}</p>
+                            ${exercise.sentence_ru ? `<p class="text-gray-500 text-sm italic">${exercise.sentence_ru}</p>` : ''}
                         </div>
                         <div class="grid grid-cols-2 gap-2 mb-4" id="options-${exercise.id}"></div>
                         <div id="result-${exercise.id}" class="hidden p-3 rounded-lg mb-3"></div>
@@ -3895,40 +3996,41 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             showAudioExerciseCard() {
                 const exercise = this.audioExercises[this.currentAudioExerciseIndex];
                 const carouselScreen = document.getElementById('image-carousel-screen');
+                const progress = Math.round(((this.currentAudioExerciseIndex + 1) / this.audioExercises.length) * 100);
                 
                 carouselScreen.innerHTML = `
+                    <!-- Прогресс бар -->
                     <div class="mb-4">
-                        <h2 class="text-lg font-semibold text-gray-800 text-center">
-                            Упражнение ${this.currentAudioExerciseIndex + 1} из ${this.audioExercises.length}
-                        </h2>
+                        <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                            <span>${this.currentAudioExerciseIndex + 1} / ${this.audioExercises.length}</span>
+                            <span>${progress}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
+                        </div>
                     </div>
 
                     <!-- Карточка упражнения -->
-                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-4">
                         <!-- Вопрос -->
                         <div class="text-center mb-6">
                             <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question}</p>
                             <button onclick="window.App.playAudio('${exercise.audioText}')" 
-                                    class="flex items-center justify-center gap-2 py-3 px-6 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition mx-auto shadow-md">
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    class="w-16 h-16 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition mx-auto shadow-lg flex items-center justify-center">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M8 5v14l11-7z"/>
                                 </svg>
-                                Воспроизвести
                             </button>
                         </div>
                         
                         <!-- Варианты ответов (русские переводы) -->
-                        <div class="space-y-3 mb-4" id="audio-options-${exercise.id}">
-                            ${exercise.optionsWithTranslations.map((opt, idx) => `
+                        <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="audio-options-${exercise.id}">${exercise.optionsWithTranslations.map((opt, idx) => `
                                 <button onclick="window.App.checkAudioAnswer('${exercise.id}', '${opt.russian.replace(/'/g, "\\'")}', this)" 
-                                        class="w-full py-4 px-5 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-left text-lg">
+                                        class="py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-center">
                                     ${opt.russian}
                                 </button>
                             `).join('')}
                         </div>
-                        
-                        <!-- Результат -->
-                        <div id="audio-result-${exercise.id}" class="hidden p-4 rounded-lg mb-4"></div>
                         
                         <!-- Пояснение -->
                         <div id="audio-explanation-${exercise.id}" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
@@ -3940,21 +4042,25 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     <div class="flex justify-center space-x-4">
                         ${this.currentAudioExerciseIndex > 0 ? `
                             <button onclick="window.App.prevAudioExercise()" 
-                                    class="py-3 px-6 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition">
+                                    class="py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition">
                                 &larr; Назад
                             </button>
                         ` : ''}
                         ${this.currentAudioExerciseIndex < this.audioExercises.length - 1 ? `
                             <button onclick="window.App.nextAudioExercise()" 
-                                    class="py-3 px-6 bg-blue-500 text-white font-bold rounded-xl shadow-md hover:bg-blue-600 transition">
+                                    class="py-2 px-5 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition">
                                 Далее &rarr;
                             </button>
                         ` : `
                             <button onclick="window.App.finishAudioExercises()" 
-                                    class="py-3 px-6 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition">
+                                    class="py-2 px-5 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition">
                                 Завершить ✓
                             </button>
                         `}
+                        <button onclick="window.App.handleTelegramBackClick()" 
+                                class="py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition">
+                            ✕ Закрыть
+                        </button>
                     </div>
                 `;
             },
@@ -3966,7 +4072,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const isCorrect = selectedRussian === exercise.correctTranslation;
                 this.audioExerciseResults[exerciseId] = isCorrect;
                 
-                const resultDiv = document.getElementById(`audio-result-${exerciseId}`);
                 const explanationDiv = document.getElementById(`audio-explanation-${exerciseId}`);
                 const optionsDiv = document.getElementById(`audio-options-${exerciseId}`);
                 
@@ -3974,43 +4079,30 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const allButtons = optionsDiv.querySelectorAll('button');
                 allButtons.forEach(btn => btn.disabled = true);
                 
+                // Воспроизводим звук
+                if (isCorrect) {
+                    this.playCorrectSound();
+                } else {
+                    this.playIncorrectSound();
+                }
+                
                 // Подсвечиваем выбранный ответ
                 if (isCorrect) {
                     button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
-                    button.classList.add('bg-green-100', 'border-2', 'border-green-500');
-                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-green-100 border-2 border-green-500';
-                    resultDiv.innerHTML = `
-                        <div class="flex items-center gap-2 text-green-800 font-semibold">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
-                            </svg>
-                            Правильно!
-                        </div>
-                    `;
+                    button.classList.add('bg-green-500', 'text-white', 'font-bold');
                 } else {
                     button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
-                    button.classList.add('bg-red-100', 'border-2', 'border-red-500');
+                    button.classList.add('bg-red-500', 'text-white', 'font-bold');
                     
                     // Подсвечиваем правильный ответ
                     allButtons.forEach(btn => {
                         if (btn.textContent.trim() === exercise.correctTranslation) {
                             btn.classList.remove('bg-gray-100');
-                            btn.classList.add('bg-green-100', 'border-2', 'border-green-500');
+                            btn.classList.add('bg-green-500', 'text-white', 'font-bold');
                         }
                     });
-                    
-                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-red-100 border-2 border-red-500';
-                    resultDiv.innerHTML = `
-                        <div class="flex items-center gap-2 text-red-800 font-semibold">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
-                            </svg>
-                            Неправильно. Правильный ответ: ${exercise.correctTranslation}
-                        </div>
-                    `;
                 }
                 
-                resultDiv.classList.remove('hidden');
                 explanationDiv.classList.remove('hidden');
             },
 
@@ -4100,19 +4192,24 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             showArticleExerciseCard() {
                 const exercise = this.articleExercises[this.currentArticleExerciseIndex];
                 const carouselScreen = document.getElementById('image-carousel-screen');
+                const progress = Math.round(((this.currentArticleExerciseIndex + 1) / this.articleExercises.length) * 100);
                 
                 carouselScreen.innerHTML = `
+                    <!-- Прогресс бар -->
                     <div class="mb-4">
-                        <h2 class="text-lg font-semibold text-gray-800 text-center">
-                            Упражнение ${this.currentArticleExerciseIndex + 1} из ${this.articleExercises.length}
-                        </h2>
+                        <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                            <span>${this.currentArticleExerciseIndex + 1} / ${this.articleExercises.length}</span>
+                            <span>${progress}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-purple-500 h-2.5 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
+                        </div>
                     </div>
 
                     <!-- Карточка упражнения -->
-                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-4">
                         <!-- Вопрос -->
                         <div class="text-center mb-6">
-                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question}</p>
                             <div class="text-4xl font-bold text-purple-600 mb-4">${exercise.word}</div>
                             ${exercise.wordObj && exercise.wordObj.translation ? `
                                 <div class="text-lg text-gray-600 italic">(${exercise.wordObj.translation.join(', ')})</div>
@@ -4129,9 +4226,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                             `).join('')}
                         </div>
                         
-                        <!-- Результат -->
-                        <div id="article-result-${exercise.id}" class="hidden p-4 rounded-lg mb-4"></div>
-                        
                         <!-- Пояснение -->
                         <div id="article-explanation-${exercise.id}" class="hidden bg-purple-50 border-l-4 border-purple-400 p-4 rounded">
                             <p class="text-sm text-purple-800">💡 ${exercise.explanation}</p>
@@ -4139,24 +4233,28 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     </div>
 
                     <!-- Навигация -->
-                    <div class="flex justify-center space-x-4">
+                    <div class="flex justify-center space-x-3">
                         ${this.currentArticleExerciseIndex > 0 ? `
                             <button onclick="window.App.prevArticleExercise()" 
-                                    class="py-3 px-6 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition">
+                                    class="py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition">
                                 &larr; Назад
                             </button>
                         ` : ''}
                         ${this.currentArticleExerciseIndex < this.articleExercises.length - 1 ? `
                             <button onclick="window.App.nextArticleExercise()" 
-                                    class="py-3 px-6 bg-purple-500 text-white font-bold rounded-xl shadow-md hover:bg-purple-600 transition">
+                                    class="py-2 px-5 bg-purple-500 text-white font-semibold rounded-lg shadow-md hover:bg-purple-600 transition">
                                 Далее &rarr;
                             </button>
                         ` : `
                             <button onclick="window.App.finishArticleExercises()" 
-                                    class="py-3 px-6 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition">
+                                    class="py-2 px-5 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition">
                                 Завершить ✓
                             </button>
                         `}
+                        <button onclick="window.App.handleTelegramBackClick()" 
+                                class="py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition">
+                            ✕ Закрыть
+                        </button>
                     </div>
                 `;
             },
@@ -4168,7 +4266,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const isCorrect = selectedArticle === exercise.answer;
                 this.articleExerciseResults[exerciseId] = isCorrect;
                 
-                const resultDiv = document.getElementById(`article-result-${exerciseId}`);
                 const explanationDiv = document.getElementById(`article-explanation-${exerciseId}`);
                 const optionsDiv = document.getElementById(`article-options-${exerciseId}`);
                 
@@ -4176,43 +4273,30 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const allButtons = optionsDiv.querySelectorAll('button');
                 allButtons.forEach(btn => btn.disabled = true);
                 
+                // Воспроизводим звук
+                if (isCorrect) {
+                    this.playCorrectSound();
+                } else {
+                    this.playIncorrectSound();
+                }
+                
                 // Подсвечиваем выбранный ответ
                 if (isCorrect) {
                     button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
-                    button.classList.add('bg-green-100', 'border-2', 'border-green-500');
-                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-green-100 border-2 border-green-500';
-                    resultDiv.innerHTML = `
-                        <div class="flex items-center gap-2 text-green-800 font-semibold">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
-                            </svg>
-                            Правильно! ${exercise.answer} ${exercise.word}
-                        </div>
-                    `;
+                    button.classList.add('bg-green-500', 'text-white', 'font-bold');
                 } else {
                     button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
-                    button.classList.add('bg-red-100', 'border-2', 'border-red-500');
+                    button.classList.add('bg-red-500', 'text-white', 'font-bold');
                     
                     // Подсвечиваем правильный ответ
                     allButtons.forEach(btn => {
                         if (btn.textContent.trim() === exercise.answer) {
                             btn.classList.remove('bg-gray-100');
-                            btn.classList.add('bg-green-100', 'border-2', 'border-green-500');
+                            btn.classList.add('bg-green-500', 'text-white', 'font-bold');
                         }
                     });
-                    
-                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-red-100 border-2 border-red-500';
-                    resultDiv.innerHTML = `
-                        <div class="flex items-center gap-2 text-red-800 font-semibold">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
-                            </svg>
-                            Неправильно. Правильный ответ: ${exercise.answer} ${exercise.word}
-                        </div>
-                    `;
                 }
                 
-                resultDiv.classList.remove('hidden');
                 explanationDiv.classList.remove('hidden');
             },
 
@@ -4306,13 +4390,18 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             document.getElementById('loading-screen').innerHTML = `
                 <div class="max-w-3xl mx-auto">
-                    <div class="mb-4 flex justify-between items-center">
-                        <button onclick="window.App.renderExercisesMenu('${exercise.wordObj.topics[0].topicId}', ${exercise.wordObj.topics[0].weekNum})" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg">← К упражнениям</button>
-                        <span class="text-gray-600">Упражнение ${progress} из ${total}</span>
+                    <!-- Progress bar -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium text-pink-700">Прогресс</span>
+                            <span class="text-sm font-medium text-pink-700">${Math.round((progress / total) * 100)}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-pink-500 h-3 rounded-full transition-all duration-300" style="width: ${(progress / total) * 100}%"></div>
+                        </div>
                     </div>
                     <div class="bg-white rounded-lg shadow-lg p-8">
-                        <h2 class="text-2xl font-bold mb-2">${exercise.question}</h2>
-                        <p class="text-gray-600 mb-6">${exercise.hint}</p>
+                        <p class="text-3xl font-bold mb-6 text-center">${exercise.hint}</p>
                         
                         <!-- User answer area -->
                         <div id="answerArea" class="min-h-20 bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-6 flex flex-wrap gap-2 items-center justify-center">
@@ -4331,25 +4420,29 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         </div>
 
                         <div class="flex gap-4 mb-6">
-                            <button onclick="window.App.clearWordBuildingAnswer()" class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 rounded-lg font-semibold">
-                                🗑️ Очистить
+                            <button onclick="window.App.clearWordBuildingAnswer()" class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 rounded-lg font-semibold text-2xl">
+                                🗑️
                             </button>
-                            <button onclick="window.App.checkWordBuildingAnswer()" id="checkBtn" class="flex-1 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold">
-                                ✓ Проверить
+                            <button onclick="window.App.checkWordBuildingAnswer()" id="checkBtn" class="flex-1 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold text-2xl">
+                                ✓
                             </button>
                         </div>
 
-                        <div id="resultBox" class="hidden mb-6"></div>
-
-                        <div class="flex justify-between">
-                            <button onclick="window.App.prevWordBuildingExercise()" id="prevBtn" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg" ${this.currentWordBuildingIndex === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                ← Назад
-                            </button>
+                        <div class="flex justify-between items-center">
+                            ${this.currentWordBuildingIndex === 0 ? '' : `
+                                <button onclick="window.App.prevWordBuildingExercise()" id="prevBtn" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg">
+                                    ← Назад
+                                </button>
+                            `}
                             <button onclick="window.App.nextWordBuildingExercise()" id="nextBtn" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg hidden">
                                 Далее →
                             </button>
                             <button onclick="window.App.finishWordBuildingExercises()" id="finishBtn" class="px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg hidden">
                                 Завершить
+                            </button>
+                            <button onclick="window.App.handleTelegramBackClick()" 
+                                    class="py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition">
+                                ✕ Закрыть
                             </button>
                         </div>
                     </div>
@@ -4425,12 +4518,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 answerArea.classList.add('border-blue-300', 'bg-blue-50');
             }
             
-            // Hide result box
-            const resultBox = document.getElementById('resultBox');
-            if (resultBox) {
-                resultBox.classList.add('hidden');
-            }
-            
             this.updateAnswerArea();
         },
 
@@ -4455,26 +4542,21 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
             document.querySelectorAll('.letter-btn').forEach(btn => btn.disabled = true);
             document.querySelectorAll('#answerArea button').forEach(btn => btn.disabled = true);
 
+            // Воспроизводим звук
+            if (isCorrect) {
+                this.playCorrectSound();
+            } else {
+                this.playIncorrectSound();
+            }
+
+            // Цветовая индикация без блока результата
             if (isCorrect) {
                 answerArea.classList.add('border-green-500', 'bg-green-50');
                 answerArea.classList.remove('border-blue-300', 'bg-blue-50');
-                resultBox.className = 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6';
-                resultBox.innerHTML = `
-                    <p class="font-bold">✓ Правильно!</p>
-                    <p class="text-sm mt-1">${exercise.explanation}</p>
-                `;
             } else {
                 answerArea.classList.add('border-red-500', 'bg-red-50');
                 answerArea.classList.remove('border-blue-300', 'bg-blue-50');
-                resultBox.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6';
-                resultBox.innerHTML = `
-                    <p class="font-bold">✗ Неправильно!</p>
-                    <p class="text-sm mt-1">Правильный ответ: <strong>${exercise.answer}</strong></p>
-                    <p class="text-sm mt-1">${exercise.explanation}</p>
-                `;
             }
-
-            resultBox.classList.remove('hidden');
 
             // Show navigation buttons
             const nextBtn = document.getElementById('nextBtn');
