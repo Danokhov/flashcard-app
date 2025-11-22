@@ -2727,7 +2727,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 button.innerHTML = `
                     <div>
                         <span class="font-semibold text-lg text-gray-800">${title}</span>
-                        <span class="block text-sm text-gray-500">${subtitle}</span>
                     </div>
                     <span>&rarr;</span>
                 `;
@@ -3736,104 +3735,73 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             // Звуковые эффекты
             playCorrectSound() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.3);
-                
-                // Второй тон для приятного звука
-                setTimeout(() => {
-                    const osc2 = audioContext.createOscillator();
-                    const gain2 = audioContext.createGain();
-                    osc2.connect(gain2);
-                    gain2.connect(audioContext.destination);
-                    osc2.frequency.value = 1000;
-                    osc2.type = 'sine';
-                    gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
-                    gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                    osc2.start(audioContext.currentTime);
-                    osc2.stop(audioContext.currentTime + 0.2);
-                }, 50);
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    // iOS требует resume после пользовательского жеста
+                    if (audioContext.state === 'suspended') {
+                        audioContext.resume();
+                    }
+                    
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                    
+                    // Второй тон для приятного звука
+                    setTimeout(() => {
+                        const osc2 = audioContext.createOscillator();
+                        const gain2 = audioContext.createGain();
+                        osc2.connect(gain2);
+                        gain2.connect(audioContext.destination);
+                        osc2.frequency.value = 1000;
+                        osc2.type = 'sine';
+                        gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
+                        gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                        osc2.start(audioContext.currentTime);
+                        osc2.stop(audioContext.currentTime + 0.2);
+                    }, 50);
+                } catch (error) {
+                    console.log('Sound not supported:', error);
+                }
             },
             
             playIncorrectSound() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 200;
-                oscillator.type = 'sawtooth';
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.4);
-            },
-
-            // Звуковые эффекты
-            playCorrectSound() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.3);
-                
-                // Второй тон для приятного звука
-                setTimeout(() => {
-                    const osc2 = audioContext.createOscillator();
-                    const gain2 = audioContext.createGain();
-                    osc2.connect(gain2);
-                    gain2.connect(audioContext.destination);
-                    osc2.frequency.value = 1000;
-                    osc2.type = 'sine';
-                    gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
-                    gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                    osc2.start(audioContext.currentTime);
-                    osc2.stop(audioContext.currentTime + 0.2);
-                }, 50);
-            },
-            
-            playIncorrectSound() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 200;
-                oscillator.type = 'sawtooth';
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.4);
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    // iOS требует resume после пользовательского жеста
+                    if (audioContext.state === 'suspended') {
+                        audioContext.resume();
+                    }
+                    
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 200;
+                    oscillator.type = 'sawtooth';
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.4);
+                } catch (error) {
+                    console.log('Sound not supported:', error);
+                }
             },
 
             renderExercises(topicId, weekNum, exercisesToShow = null) {
@@ -4069,6 +4037,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const exercise = this.audioExercises.find(ex => ex.id === exerciseId);
                 if (!exercise || this.audioExerciseResults[exerciseId]) return;
                 
+                // Предотвращаем повторный клик
+                if (button.disabled) return;
+                
                 const isCorrect = selectedRussian === exercise.correctTranslation;
                 this.audioExerciseResults[exerciseId] = isCorrect;
                 
@@ -4077,7 +4048,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 // Блокируем все кнопки
                 const allButtons = optionsDiv.querySelectorAll('button');
-                allButtons.forEach(btn => btn.disabled = true);
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.pointerEvents = 'none';
+                });
                 
                 // Воспроизводим звук
                 if (isCorrect) {
@@ -4263,6 +4237,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const exercise = this.articleExercises.find(ex => ex.id === exerciseId);
                 if (!exercise || this.articleExerciseResults[exerciseId]) return;
                 
+                // Предотвращаем повторный клик
+                if (button.disabled) return;
+                
                 const isCorrect = selectedArticle === exercise.answer;
                 this.articleExerciseResults[exerciseId] = isCorrect;
                 
@@ -4271,7 +4248,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 // Блокируем все кнопки
                 const allButtons = optionsDiv.querySelectorAll('button');
-                allButtons.forEach(btn => btn.disabled = true);
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.pointerEvents = 'none';
+                });
                 
                 // Воспроизводим звук
                 if (isCorrect) {
@@ -4523,6 +4503,11 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
         checkWordBuildingAnswer() {
             const exercise = this.wordBuildingExercises[this.currentWordBuildingIndex];
+            const checkBtn = document.getElementById('checkBtn');
+            
+            // Предотвращаем повторный клик
+            if (checkBtn.disabled) return;
+            
             const userWord = exercise.userAnswer.map(item => item.letter).join('');
             const isCorrect = userWord === exercise.answer;
 
@@ -4532,15 +4517,19 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 correct: isCorrect
             });
 
-            const resultBox = document.getElementById('resultBox');
-            const checkBtn = document.getElementById('checkBtn');
             const answerArea = document.getElementById('answerArea');
             
             // Disable check button and letter buttons
             checkBtn.disabled = true;
             checkBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            document.querySelectorAll('.letter-btn').forEach(btn => btn.disabled = true);
-            document.querySelectorAll('#answerArea button').forEach(btn => btn.disabled = true);
+            document.querySelectorAll('.letter-btn').forEach(btn => {
+                btn.disabled = true;
+                btn.style.pointerEvents = 'none';
+            });
+            document.querySelectorAll('#answerArea button').forEach(btn => {
+                btn.disabled = true;
+                btn.style.pointerEvents = 'none';
+            });
 
             // Воспроизводим звук
             if (isCorrect) {
