@@ -1,0 +1,51 @@
+{
+  "Главная (home-screen)": {
+    "buttons": [
+      "📚 В учебе → renderAllSetsScreen()",
+      "Темы → renderTopicSelection()",
+      "Неделя N → renderWeekContent(N)"
+    ]
+  },
+  "В учебе (list-screen)": {
+    "buttons": [
+      "К повтору → promptForDirection() → startSession(mode='review')",
+      "Практика всех слов → promptForDirection() → startSession(mode='practice-all')"
+    ]
+  },
+  "Темы (topics-screen)": {
+    "buttons": [
+      "Тема → renderTopicWords(topicId)",
+      "Упражнения → openExercisesModal()"
+    ]
+  },
+  "Слова темы (list-screen)": {
+    "buttons": [
+      "Слово → openWordDetailScreen()",
+      "Учить → addToStudyList()"
+    ]
+  },
+  "Детали слова (word-detail-screen)": {
+    "buttons": [
+      "Ассоциация → открывает модальное окно",
+      "Учить → addToStudyList()",
+      "🔊 → speakGerman()"
+    ]
+  },
+  "Сессия обучения (study-screen)": {
+    "modes": [
+      "review: К повтору",
+      "practice-all: Практика всех слов"
+    ],
+    "buttons": [
+      "Показать ответ → showAnswer()",
+      "Помню/Не помню → handleAnswer()",
+      "Назад/Вперед → prevCard()/nextCard()"
+    ],
+    "завершение": "Возврат к list-screen (В учебе)"
+  },
+  "Модальные окна": {
+    "direction-modal": "Выбор направления: RU→DE или DE→RU",
+    "hint-modal": "Показ подсказки",
+    "association-modal": "Картинка + текст ассоциации"
+  }
+}

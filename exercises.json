@@ -6,7 +6,12 @@
     "question": "Вставьте правильное слово в предложение",
     "sentence": "Der Arzt verschreibt mir ein ___.",
     "answer": "Antibiotikum",
-    "options": ["Antibiotikum", "Medikament", "Rezept", "Apotheke"],
+    "options": [
+      "Antibiotikum",
+      "Medikament",
+      "Rezept",
+      "Apotheke"
+    ],
     "explanation": "Antibiotikum (das) — антибиотик. Врач выписывает антибиотик."
   },
   {
@@ -33,7 +38,12 @@
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich habe ___ im Magen.",
     "answer": "Beschwerden",
-    "options": ["Beschwerden", "Krankheit", "Schmerzen", "Gefühl"],
+    "options": [
+      "Beschwerden",
+      "Krankheit",
+      "Schmerzen",
+      "Gefühl"
+    ],
     "explanation": "Beschwerden (die, мн.ч.) — жалобы. У меня жалобы на желудок."
   },
   {
@@ -51,7 +61,12 @@
     "question": "Вставьте правильное слово",
     "sentence": "Der Arzt stellt eine ___ .",
     "answer": "Diagnose",
-    "options": ["Diagnose", "Behandlung", "Rezept", "Untersuchung"],
+    "options": [
+      "Diagnose",
+      "Behandlung",
+      "Rezept",
+      "Untersuchung"
+    ],
     "explanation": "Diagnose stellen — поставить диагноз"
   },
   {
@@ -69,7 +84,12 @@
     "question": "Заполните пропуск",
     "sentence": "Ich habe eine starke ___.",
     "answer": "Erkältung",
-    "options": ["Erkältung", "Grippe", "Fieber", "Husten"],
+    "options": [
+      "Erkältung",
+      "Grippe",
+      "Fieber",
+      "Husten"
+    ],
     "explanation": "Erkältung (die) — простуда. У меня сильная простуда."
   },
   {
@@ -87,7 +107,12 @@
     "question": "Вставьте слово",
     "sentence": "Das Kind hat hohes ___.",
     "answer": "Fieber",
-    "options": ["Fieber", "Temperatur", "Hitze", "Krankheit"],
+    "options": [
+      "Fieber",
+      "Temperatur",
+      "Hitze",
+      "Krankheit"
+    ],
     "explanation": "Fieber haben — иметь температуру/лихорадку"
   },
   {
@@ -105,7 +130,12 @@
     "question": "Заполните пропуск",
     "sentence": "Ich achte auf meine ___.",
     "answer": "Gesundheit",
-    "options": ["Gesundheit", "Fitness", "Körper", "Leben"],
+    "options": [
+      "Gesundheit",
+      "Fitness",
+      "Körper",
+      "Leben"
+    ],
     "explanation": "Auf die Gesundheit achten — следить за здоровьем"
   },
   {
@@ -123,7 +153,12 @@
     "question": "Вставьте правильное слово",
     "sentence": "Im Winter haben viele Menschen die ___.",
     "answer": "Grippe",
-    "options": ["Grippe", "Erkältung", "Infektion", "Krankheit"],
+    "options": [
+      "Grippe",
+      "Erkältung",
+      "Infektion",
+      "Krankheit"
+    ],
     "explanation": "Grippe (die) — грипп. Зимой многие болеют гриппом."
   },
   {
@@ -133,7 +168,12 @@
     "question": "Заполните пропуск",
     "sentence": "Ich habe starken ___.",
     "answer": "Husten",
-    "options": ["Husten", "Schnupfen", "Hals", "Schmerz"],
+    "options": [
+      "Husten",
+      "Schnupfen",
+      "Hals",
+      "Schmerz"
+    ],
     "explanation": "Husten (der) — кашель. У меня сильный кашель."
   },
   {
@@ -151,7 +191,12 @@
     "question": "Вставьте слово",
     "sentence": "Der menschliche ___ ist sehr komplex.",
     "answer": "Körper",
-    "options": ["Körper", "Organismus", "System", "Mensch"],
+    "options": [
+      "Körper",
+      "Organismus",
+      "System",
+      "Mensch"
+    ],
     "explanation": "Körper (der) — тело. Человеческое тело очень сложное."
   },
   {
@@ -161,7 +206,12 @@
     "question": "Заполните пропуск",
     "sentence": "Diese ___ ist sehr ansteckend.",
     "answer": "Krankheit",
-    "options": ["Krankheit", "Infektion", "Grippe", "Erkrankung"],
+    "options": [
+      "Krankheit",
+      "Infektion",
+      "Grippe",
+      "Erkrankung"
+    ],
     "explanation": "Krankheit (die) — болезнь. Эта болезнь очень заразная."
   },
   {
@@ -171,7 +221,12 @@
     "question": "Вставьте правильное слово",
     "sentence": "Der Arzt verschreibt mir ein neues ___.",
     "answer": "Medikament",
-    "options": ["Medikament", "Antibiotikum", "Rezept", "Heilmittel"],
+    "options": [
+      "Medikament",
+      "Antibiotikum",
+      "Rezept",
+      "Heilmittel"
+    ],
     "explanation": "Medikament (das) — лекарство, медикамент"
   },
   {
@@ -189,7 +244,12 @@
     "question": "Заполните пропуск",
     "sentence": "Der ___ wartet im Wartezimmer.",
     "answer": "Patient",
-    "options": ["Patient", "Arzt", "Kranke", "Besucher"],
+    "options": [
+      "Patient",
+      "Arzt",
+      "Kranke",
+      "Besucher"
+    ],
     "explanation": "Patient (der) — пациент. Пациент ждет в приемной."
   },
   {
@@ -199,7 +259,12 @@
     "question": "Вставьте слово",
     "sentence": "Für dieses Medikament brauchen Sie ein ___.",
     "answer": "Rezept",
-    "options": ["Rezept", "Formular", "Dokument", "Papier"],
+    "options": [
+      "Rezept",
+      "Formular",
+      "Dokument",
+      "Papier"
+    ],
     "explanation": "Rezept (das) — рецепт. Для этого лекарства нужен рецепт."
   },
   {
@@ -217,7 +282,12 @@
     "question": "Заполните пропуск",
     "sentence": "Ich habe starke ___ im Rücken.",
     "answer": "Schmerzen",
-    "options": ["Schmerzen", "Probleme", "Beschwerden", "Gefühle"],
+    "options": [
+      "Schmerzen",
+      "Probleme",
+      "Beschwerden",
+      "Gefühle"
+    ],
     "explanation": "Schmerz (der) — боль. У меня сильные боли в спине."
   },
   {
@@ -235,7 +305,12 @@
     "question": "Вставьте правильное слово",
     "sentence": "Fieber ist ein ___ der Grippe.",
     "answer": "Symptom",
-    "options": ["Symptom", "Zeichen", "Merkmal", "Grund"],
+    "options": [
+      "Symptom",
+      "Zeichen",
+      "Merkmal",
+      "Grund"
+    ],
     "explanation": "Symptom (das) — симптом. Температура — симптом гриппа."
   },
   {
@@ -245,7 +320,12 @@
     "question": "Заполните пропуск",
     "sentence": "Die ärztliche ___ dauert eine Stunde.",
     "answer": "Untersuchung",
-    "options": ["Untersuchung", "Behandlung", "Konsultation", "Operation"],
+    "options": [
+      "Untersuchung",
+      "Behandlung",
+      "Konsultation",
+      "Operation"
+    ],
     "explanation": "Untersuchung (die) — обследование. Врачебное обследование длится час."
   },
   {
@@ -263,7 +343,12 @@
     "question": "Вставьте слово",
     "sentence": "Ich habe ___ vor der Prüfung.",
     "answer": "Angst",
-    "options": ["Angst", "Sorge", "Furcht", "Panik"],
+    "options": [
+      "Angst",
+      "Sorge",
+      "Furcht",
+      "Panik"
+    ],
     "explanation": "Angst haben vor + Dat. — бояться чего-то"
   },
   {
@@ -281,7 +366,12 @@
     "question": "Заполните пропуск",
     "sentence": "Ich habe schöne ___ an meine Kindheit.",
     "answer": "Erinnerungen",
-    "options": ["Erinnerungen", "Gedanken", "Momente", "Bilder"],
+    "options": [
+      "Erinnerungen",
+      "Gedanken",
+      "Momente",
+      "Bilder"
+    ],
     "explanation": "Erinnerung (die) — воспоминание. У меня красивые воспоминания о детстве."
   },
   {
@@ -291,7 +381,12 @@
     "question": "Вставьте слово",
     "sentence": "Das Kind springt vor ___.",
     "answer": "Freude",
-    "options": ["Freude", "Glück", "Spaß", "Lust"],
+    "options": [
+      "Freude",
+      "Glück",
+      "Spaß",
+      "Lust"
+    ],
     "explanation": "Vor Freude — от радости. Ребенок прыгает от радости."
   },
   {
@@ -309,7 +404,12 @@
     "question": "Заполните пропуск",
     "sentence": "Ich ___ mich heute nicht gut.",
     "answer": "fühle",
-    "options": ["fühle", "spüre", "bin", "habe"],
+    "options": [
+      "fühle",
+      "spüre",
+      "bin",
+      "habe"
+    ],
     "explanation": "Sich fühlen — чувствовать себя. Сегодня я чувствую себя плохо."
   },
   {
@@ -319,7 +419,12 @@
     "question": "Вставьте правильное слово",
     "sentence": "Ich habe ein gutes ___.",
     "answer": "Gefühl",
-    "options": ["Gefühl", "Gedanke", "Empfindung", "Eindruck"],
+    "options": [
+      "Gefühl",
+      "Gedanke",
+      "Empfindung",
+      "Eindruck"
+    ],
     "explanation": "Gefühl (das) — чувство. У меня хорошее чувство."
   },
   {
@@ -337,7 +442,12 @@
     "question": "Заполните пропуск",
     "sentence": "Musik ist gut für die ___.",
     "answer": "Seele",
-    "options": ["Seele", "Psyche", "Stimmung", "Laune"],
+    "options": [
+      "Seele",
+      "Psyche",
+      "Stimmung",
+      "Laune"
+    ],
     "explanation": "Seele (die) — душа. Музыка полезна для души."
   },
   {
@@ -347,7 +457,12 @@
     "question": "Вставьте слово",
     "sentence": "Ich mache mir ___ um dich.",
     "answer": "Sorgen",
-    "options": ["Sorgen", "Gedanken", "Angst", "Mühe"],
+    "options": [
+      "Sorgen",
+      "Gedanken",
+      "Angst",
+      "Mühe"
+    ],
     "explanation": "Sich Sorgen machen um + Akk. — беспокоиться о ком-то"
   },
   {
@@ -365,7 +480,12 @@
     "question": "Заполните пропуск",
     "sentence": "Die ___ auf der Party war super!",
     "answer": "Stimmung",
-    "options": ["Stimmung", "Atmosphäre", "Laune", "Freude"],
+    "options": [
+      "Stimmung",
+      "Atmosphäre",
+      "Laune",
+      "Freude"
+    ],
     "explanation": "Stimmung (die) — настроение, атмосфера. Атмосфера на вечеринке была супер!"
   },
   {
@@ -375,7 +495,12 @@
     "question": "Вставьте слово",
     "sentence": "Die Familie steht unter großer ___.",
     "answer": "Trauer",
-    "options": ["Trauer", "Sorge", "Schmerz", "Angst"],
+    "options": [
+      "Trauer",
+      "Sorge",
+      "Schmerz",
+      "Angst"
+    ],
     "explanation": "Trauer (die) — скорбь, печаль. Семья находится в большой скорби."
   },
   {
@@ -385,7 +510,11 @@
     "question": "Прослушайте слово и выберите правильный вариант",
     "audioText": "Antibiotikum",
     "answer": "das Antibiotikum",
-    "options": ["das Antibiotikum", "das Medikament", "das Rezept"],
+    "options": [
+      "das Antibiotikum",
+      "das Medikament",
+      "das Rezept"
+    ],
     "explanation": "Antibiotikum — антибиотик (средний род)"
   },
   {
@@ -395,7 +524,11 @@
     "question": "Прослушайте слово и выберите правильный вариант",
     "audioText": "Gesundheit",
     "answer": "die Gesundheit",
-    "options": ["die Gesundheit", "die Krankheit", "die Ruhe"],
+    "options": [
+      "die Gesundheit",
+      "die Krankheit",
+      "die Ruhe"
+    ],
     "explanation": "Gesundheit — здоровье (женский род)"
   },
   {
@@ -405,7 +538,11 @@
     "question": "Прослушайте слово и выберите правильный вариант",
     "audioText": "Fieber",
     "answer": "das Fieber",
-    "options": ["das Fieber", "der Husten", "der Schmerz"],
+    "options": [
+      "das Fieber",
+      "der Husten",
+      "der Schmerz"
+    ],
     "explanation": "Fieber — температура, лихорадка (средний род)"
   },
   {
@@ -415,7 +552,11 @@
     "question": "Прослушайте слово и выберите правильный вариант",
     "audioText": "Schmerz",
     "answer": "der Schmerz",
-    "options": ["der Schmerz", "die Sorge", "die Angst"],
+    "options": [
+      "der Schmerz",
+      "die Sorge",
+      "die Angst"
+    ],
     "explanation": "Schmerz — боль (мужской род)"
   },
   {
@@ -425,7 +566,11 @@
     "question": "Прослушайте слово и выберите правильный вариант",
     "audioText": "Angst",
     "answer": "die Angst",
-    "options": ["die Angst", "die Sorge", "die Furcht"],
+    "options": [
+      "die Angst",
+      "die Sorge",
+      "die Furcht"
+    ],
     "explanation": "Angst — страх (женский род)"
   },
   {
@@ -435,7 +580,11 @@
     "question": "Прослушайте слово и выберите правильный вариант",
     "audioText": "Freude",
     "answer": "die Freude",
-    "options": ["die Freude", "das Glück", "die Stimmung"],
+    "options": [
+      "die Freude",
+      "das Glück",
+      "die Stimmung"
+    ],
     "explanation": "Freude — радость (женский род)"
   },
   {
@@ -445,7 +594,11 @@
     "question": "Прослушайте слово и выберите правильный вариант",
     "audioText": "Körper",
     "answer": "der Körper",
-    "options": ["der Körper", "der Rücken", "der Magen"],
+    "options": [
+      "der Körper",
+      "der Rücken",
+      "der Magen"
+    ],
     "explanation": "Körper — тело (мужской род)"
   },
   {
@@ -455,7 +608,11 @@
     "question": "Прослушайте слово и выберите правильный вариант",
     "audioText": "Seele",
     "answer": "die Seele",
-    "options": ["die Seele", "die Psyche", "das Gefühl"],
+    "options": [
+      "die Seele",
+      "die Psyche",
+      "das Gefühl"
+    ],
     "explanation": "Seele — душа (женский род)"
   },
   {
@@ -465,7 +622,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Antibiotikum",
     "answer": "das",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Antibiotikum — средний род (das). Большинство слов на -um среднего рода."
   },
   {
@@ -475,7 +636,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Gesundheit",
     "answer": "die",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Gesundheit — женский род (die). Слова с окончанием -heit всегда женского рода."
   },
   {
@@ -485,7 +650,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Fieber",
     "answer": "das",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Fieber — средний род (das). Многие болезни и симптомы среднего рода."
   },
   {
@@ -495,7 +664,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Husten",
     "answer": "der",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Husten — мужской род (der). Слова на -en могут быть разного рода, нужно запоминать."
   },
   {
@@ -505,7 +678,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Körper",
     "answer": "der",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Körper — мужской род (der). Слова с окончанием -er часто мужского рода."
   },
   {
@@ -515,7 +692,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Krankheit",
     "answer": "die",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Krankheit — женский род (die). Слова с окончанием -keit всегда женского рода."
   },
   {
@@ -525,7 +706,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Medikament",
     "answer": "das",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Medikament — средний род (das). Слова с окончанием -ment обычно среднего рода."
   },
   {
@@ -535,7 +720,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Patient",
     "answer": "der",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Patient — мужской род (der). Слова с окончанием -ent часто мужского рода."
   },
   {
@@ -545,7 +734,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Rezept",
     "answer": "das",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Rezept — средний род (das). Заимствованные слова часто среднего рода."
   },
   {
@@ -555,7 +748,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Schmerz",
     "answer": "der",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Schmerz — мужской род (der). Односложные существительные на согласную часто мужского рода."
   },
   {
@@ -565,7 +762,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Angst",
     "answer": "die",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Angst — женский род (die). Абстрактные существительные часто женского рода."
   },
   {
@@ -575,7 +776,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Freude",
     "answer": "die",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Freude — женский род (die). Слова с окончанием -e часто женского рода."
   },
   {
@@ -585,7 +790,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Gefühl",
     "answer": "das",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Gefühl — средний род (das). Слова с приставкой ge- и без окончания обычно среднего рода."
   },
   {
@@ -595,7 +804,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Seele",
     "answer": "die",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Seele — женский род (die). Слова с окончанием -e часто женского рода."
   },
   {
@@ -605,7 +818,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Sorge",
     "answer": "die",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Sorge — женский род (die). Слова с окончанием -e часто женского рода."
   },
   {
@@ -615,7 +832,11 @@
     "question": "Выберите правильный артикль для слова",
     "word": "Stimmung",
     "answer": "die",
-    "options": ["der", "die", "das"],
+    "options": [
+      "der",
+      "die",
+      "das"
+    ],
     "explanation": "Stimmung — женский род (die). Слова с окончанием -ung всегда женского рода."
   },
   {
@@ -624,7 +845,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "das Antibiotikum",
-    "options": ["das Antibiotikum", "das Medikament", "das Rezept", "die Gesundheit"],
+    "options": [
+      "das Antibiotikum",
+      "das Medikament",
+      "das Rezept",
+      "die Gesundheit"
+    ],
     "explanation": "Antibiotikum (das) — антибиотик. На изображении показан антибиотик."
   },
   {
@@ -633,7 +859,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "das Fieber",
-    "options": ["das Fieber", "die Gesundheit", "die Krankheit", "der Husten"],
+    "options": [
+      "das Fieber",
+      "die Gesundheit",
+      "die Krankheit",
+      "der Husten"
+    ],
     "explanation": "Fieber (das) — температура, лихорадка. На изображении показана лихорадка."
   },
   {
@@ -642,7 +873,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "die Gesundheit",
-    "options": ["die Gesundheit", "die Krankheit", "das Fieber", "die Ruhe"],
+    "options": [
+      "die Gesundheit",
+      "die Krankheit",
+      "das Fieber",
+      "die Ruhe"
+    ],
     "explanation": "Gesundheit (die) — здоровье. Изображение символизирует здоровье."
   },
   {
@@ -651,7 +887,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "der Körper",
-    "options": ["der Körper", "der Magen", "der Rücken", "der Patient"],
+    "options": [
+      "der Körper",
+      "der Magen",
+      "der Rücken",
+      "der Patient"
+    ],
     "explanation": "Körper (der) — тело. На изображении показано человеческое тело."
   },
   {
@@ -660,7 +901,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "das Medikament",
-    "options": ["das Medikament", "das Antibiotikum", "das Rezept", "die Apotheke"],
+    "options": [
+      "das Medikament",
+      "das Antibiotikum",
+      "das Rezept",
+      "die Apotheke"
+    ],
     "explanation": "Medikament (das) — лекарство, медикамент. На изображении показано лекарство."
   },
   {
@@ -669,7 +915,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "das Rezept",
-    "options": ["das Rezept", "das Medikament", "die Diagnose", "die Untersuchung"],
+    "options": [
+      "das Rezept",
+      "das Medikament",
+      "die Diagnose",
+      "die Untersuchung"
+    ],
     "explanation": "Rezept (das) — рецепт. На изображении показан медицинский рецепт."
   },
   {
@@ -678,7 +929,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "der Schmerz",
-    "options": ["der Schmerz", "die Sorge", "die Angst", "die Krankheit"],
+    "options": [
+      "der Schmerz",
+      "die Sorge",
+      "die Angst",
+      "die Krankheit"
+    ],
     "explanation": "Schmerz (der) — боль. На изображении показана боль."
   },
   {
@@ -687,7 +943,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "die Angst",
-    "options": ["die Angst", "die Sorge", "die Trauer", "die Furcht"],
+    "options": [
+      "die Angst",
+      "die Sorge",
+      "die Trauer",
+      "die Furcht"
+    ],
     "explanation": "Angst (die) — страх. На изображении показан страх."
   },
   {
@@ -696,7 +957,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "die Freude",
-    "options": ["die Freude", "das Glück", "die Stimmung", "die Liebe"],
+    "options": [
+      "die Freude",
+      "das Glück",
+      "die Stimmung",
+      "die Liebe"
+    ],
     "explanation": "Freude (die) — радость. На изображении показана радость."
   },
   {
@@ -705,7 +971,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "das Gefühl",
-    "options": ["das Gefühl", "die Freude", "die Angst", "die Seele"],
+    "options": [
+      "das Gefühl",
+      "die Freude",
+      "die Angst",
+      "die Seele"
+    ],
     "explanation": "Gefühl (das) — чувство. На изображении показаны эмоции и чувства."
   },
   {
@@ -714,7 +985,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "die Seele",
-    "options": ["die Seele", "das Gefühl", "die Psyche", "das Herz"],
+    "options": [
+      "die Seele",
+      "das Gefühl",
+      "die Psyche",
+      "das Herz"
+    ],
     "explanation": "Seele (die) — душа. На изображении символизируется душа."
   },
   {
@@ -723,7 +999,12 @@
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "die Sorge",
-    "options": ["die Sorge", "die Angst", "die Trauer", "der Stress"],
+    "options": [
+      "die Sorge",
+      "die Angst",
+      "die Trauer",
+      "der Stress"
+    ],
     "explanation": "Sorge (die) — забота, беспокойство. На изображении показано беспокойство."
   },
   {
@@ -732,7 +1013,20 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Antibiotikum",
-    "scrambledLetters": ["A", "n", "t", "i", "b", "i", "o", "t", "i", "k", "u", "m"],
+    "scrambledLetters": [
+      "A",
+      "n",
+      "t",
+      "i",
+      "b",
+      "i",
+      "o",
+      "t",
+      "i",
+      "k",
+      "u",
+      "m"
+    ],
     "hint": "das ___ (антибиотик)",
     "explanation": "Antibiotikum (das) — антибиотик. Правильное написание с заглавной буквы."
   },
@@ -742,7 +1036,14 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Fieber",
-    "scrambledLetters": ["F", "i", "e", "b", "e", "r"],
+    "scrambledLetters": [
+      "F",
+      "i",
+      "e",
+      "b",
+      "e",
+      "r"
+    ],
     "hint": "das ___ (температура)",
     "explanation": "Fieber (das) — температура, лихорадка."
   },
@@ -752,7 +1053,18 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Gesundheit",
-    "scrambledLetters": ["G", "e", "s", "u", "n", "d", "h", "e", "i", "t"],
+    "scrambledLetters": [
+      "G",
+      "e",
+      "s",
+      "u",
+      "n",
+      "d",
+      "h",
+      "e",
+      "i",
+      "t"
+    ],
     "hint": "die ___ (здоровье)",
     "explanation": "Gesundheit (die) — здоровье. Слово с окончанием -heit."
   },
@@ -762,7 +1074,14 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Körper",
-    "scrambledLetters": ["K", "ö", "r", "p", "e", "r"],
+    "scrambledLetters": [
+      "K",
+      "ö",
+      "r",
+      "p",
+      "e",
+      "r"
+    ],
     "hint": "der ___ (тело)",
     "explanation": "Körper (der) — тело. Обратите внимание на умляут ö."
   },
@@ -772,7 +1091,18 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Medikament",
-    "scrambledLetters": ["M", "e", "d", "i", "k", "a", "m", "e", "n", "t"],
+    "scrambledLetters": [
+      "M",
+      "e",
+      "d",
+      "i",
+      "k",
+      "a",
+      "m",
+      "e",
+      "n",
+      "t"
+    ],
     "hint": "das ___ (лекарство)",
     "explanation": "Medikament (das) — лекарство. Слово с окончанием -ment."
   },
@@ -782,7 +1112,14 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Rezept",
-    "scrambledLetters": ["R", "e", "z", "e", "p", "t"],
+    "scrambledLetters": [
+      "R",
+      "e",
+      "z",
+      "e",
+      "p",
+      "t"
+    ],
     "hint": "das ___ (рецепт)",
     "explanation": "Rezept (das) — рецепт."
   },
@@ -792,7 +1129,15 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Schmerz",
-    "scrambledLetters": ["S", "c", "h", "m", "e", "r", "z"],
+    "scrambledLetters": [
+      "S",
+      "c",
+      "h",
+      "m",
+      "e",
+      "r",
+      "z"
+    ],
     "hint": "der ___ (боль)",
     "explanation": "Schmerz (der) — боль. Обратите внимание на сочетание 'sch'."
   },
@@ -802,7 +1147,13 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Angst",
-    "scrambledLetters": ["A", "n", "g", "s", "t"],
+    "scrambledLetters": [
+      "A",
+      "n",
+      "g",
+      "s",
+      "t"
+    ],
     "hint": "die ___ (страх)",
     "explanation": "Angst (die) — страх."
   },
@@ -812,7 +1163,14 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Freude",
-    "scrambledLetters": ["F", "r", "e", "u", "d", "e"],
+    "scrambledLetters": [
+      "F",
+      "r",
+      "e",
+      "u",
+      "d",
+      "e"
+    ],
     "hint": "die ___ (радость)",
     "explanation": "Freude (die) — радость. Слово с окончанием -e."
   },
@@ -822,7 +1180,14 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Gefühl",
-    "scrambledLetters": ["G", "e", "f", "ü", "h", "l"],
+    "scrambledLetters": [
+      "G",
+      "e",
+      "f",
+      "ü",
+      "h",
+      "l"
+    ],
     "hint": "das ___ (чувство)",
     "explanation": "Gefühl (das) — чувство. Обратите внимание на умляут ü."
   },
@@ -832,7 +1197,13 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Seele",
-    "scrambledLetters": ["S", "e", "e", "l", "e"],
+    "scrambledLetters": [
+      "S",
+      "e",
+      "e",
+      "l",
+      "e"
+    ],
     "hint": "die ___ (душа)",
     "explanation": "Seele (die) — душа. Две буквы 'e' подряд."
   },
@@ -842,8 +1213,3899 @@
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Sorge",
-    "scrambledLetters": ["S", "o", "r", "g", "e"],
+    "scrambledLetters": [
+      "S",
+      "o",
+      "r",
+      "g",
+      "e"
+    ],
     "hint": "die ___ (забота)",
     "explanation": "Sorge (die) — забота, беспокойство."
+  },
+  {
+    "id": "ex_aerger_gap_fill_1",
+    "wordId": "der_aerger",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Er hat großen ___.",
+    "answer": "Ärger",
+    "options": [
+      "Ärger",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Ärger (der) — злость, раздражение"
+  },
+  {
+    "id": "ex_aufgeben_gap_fill_1",
+    "wordId": "aufgeben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich will nicht ___.",
+    "answer": "aufgeben",
+    "options": [
+      "aufgeben",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "aufgeben — сдаваться"
+  },
+  {
+    "id": "ex_empfinden_gap_fill_1",
+    "wordId": "empfinden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich empfinde Freude.",
+    "answer": "empfinden",
+    "options": [
+      "empfinden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "empfinden — ощущать, воспринимать"
+  },
+  {
+    "id": "ex_entspannen_gap_fill_1",
+    "wordId": "entspannen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich möchte mich ___.",
+    "answer": "entspannen",
+    "options": [
+      "entspannen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "entspannen — расслабляться"
+  },
+  {
+    "id": "ex_erschrecken_gap_fill_1",
+    "wordId": "erschrecken",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich erschrecke leicht.",
+    "answer": "erschrecken",
+    "options": [
+      "erschrecken",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "erschrecken — пугать(ся)"
+  },
+  {
+    "id": "ex_fuehlen_gap_fill_1",
+    "wordId": "fuehlen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich fühle nichts.",
+    "answer": "fühlen",
+    "options": [
+      "fühlen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "fühlen — чувствовать"
+  },
+  {
+    "id": "ex_geduld_gap_fill_1",
+    "wordId": "die_geduld",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Hab ___!",
+    "answer": "Geduld",
+    "options": [
+      "Geduld",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Geduld (die) — терпение"
+  },
+  {
+    "id": "ex_gefallen_gap_fill_1",
+    "wordId": "gefallen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Das gefällt mir.",
+    "answer": "gefallen",
+    "options": [
+      "gefallen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "gefallen — нравиться"
+  },
+  {
+    "id": "ex_geniessen_gap_fill_1",
+    "wordId": "geniessen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich genieße den Moment.",
+    "answer": "genießen",
+    "options": [
+      "genießen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "genießen — наслаждаться"
+  },
+  {
+    "id": "ex_glauben_gap_fill_1",
+    "wordId": "glauben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich glaube dir.",
+    "answer": "glauben",
+    "options": [
+      "glauben",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "glauben — верить"
+  },
+  {
+    "id": "ex_glueck_gap_fill_1",
+    "wordId": "das_glueck",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Viel ___!",
+    "answer": "Glück",
+    "options": [
+      "Glück",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Glück (das) — счастье, удача"
+  },
+  {
+    "id": "ex_hoffen_gap_fill_1",
+    "wordId": "hoffen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich hoffe auf dich.",
+    "answer": "hoffen",
+    "options": [
+      "hoffen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "hoffen — надеяться"
+  },
+  {
+    "id": "ex_hoffnung_gap_fill_1",
+    "wordId": "die_hoffnung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Es gibt ___.",
+    "answer": "Hoffnung",
+    "options": [
+      "Hoffnung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Hoffnung (die) — надежда"
+  },
+  {
+    "id": "ex_kuessen_gap_fill_1",
+    "wordId": "kuessen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich küsse dich.",
+    "answer": "küssen",
+    "options": [
+      "küssen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "küssen — целовать"
+  },
+  {
+    "id": "ex_lachen_gap_fill_1",
+    "wordId": "lachen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich lache viel.",
+    "answer": "lachen",
+    "options": [
+      "lachen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "lachen — смеяться"
+  },
+  {
+    "id": "ex_leiden_gap_fill_1",
+    "wordId": "leiden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich leide an Stress.",
+    "answer": "leiden",
+    "options": [
+      "leiden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "leiden — страдать"
+  },
+  {
+    "id": "ex_moegen_gap_fill_1",
+    "wordId": "moegen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich mag dich.",
+    "answer": "mögen",
+    "options": [
+      "mögen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "mögen — любить, нравиться"
+  },
+  {
+    "id": "ex_muede_gap_fill_1",
+    "wordId": "muede",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "müde",
+    "options": [
+      "müde",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "müde — усталый"
+  },
+  {
+    "id": "ex_peinlich_gap_fill_1",
+    "wordId": "peinlich",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ist mir ___.",
+    "answer": "peinlich",
+    "options": [
+      "peinlich",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "peinlich — неловкий, постыдный"
+  },
+  {
+    "id": "ex_sauer_gap_fill_1",
+    "wordId": "sauer",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___ auf dich.",
+    "answer": "sauer",
+    "options": [
+      "sauer",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sauer — сердитый"
+  },
+  {
+    "id": "ex_schreien_gap_fill_1",
+    "wordId": "schreien",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Er schreit laut.",
+    "answer": "schreien",
+    "options": [
+      "schreien",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "schreien — кричать"
+  },
+  {
+    "id": "ex_schwach_gap_fill_1",
+    "wordId": "schwach",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich fühle mich ___.",
+    "answer": "schwach",
+    "options": [
+      "schwach",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "schwach — слабый"
+  },
+  {
+    "id": "ex_sich_beschweren_gap_fill_1",
+    "wordId": "sich_beschweren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich beschwere mich über den Lärm.",
+    "answer": "sich beschweren",
+    "options": [
+      "sich beschweren",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich beschweren — жаловаться"
+  },
+  {
+    "id": "ex_sich_gewoehnen_gap_fill_1",
+    "wordId": "sich_gewoehnen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich gewöhne mich daran.",
+    "answer": "sich gewöhnen",
+    "options": [
+      "sich gewöhnen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich gewöhnen — привыкать"
+  },
+  {
+    "id": "ex_sich_wundern_gap_fill_1",
+    "wordId": "sich_wundern",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich wundere mich.",
+    "answer": "sich wundern",
+    "options": [
+      "sich wundern",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich wundern — удивляться"
+  },
+  {
+    "id": "ex_spass_gap_fill_1",
+    "wordId": "der_spass",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Viel ___!",
+    "answer": "Spaß",
+    "options": [
+      "Spaß",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Spaß (der) — удовольствие, веселье"
+  },
+  {
+    "id": "ex_spueren_gap_fill_1",
+    "wordId": "spueren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich spüre nichts.",
+    "answer": "spüren",
+    "options": [
+      "spüren",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "spüren — ощущать"
+  },
+  {
+    "id": "ex_traeumen_gap_fill_1",
+    "wordId": "traeumen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich träume viel.",
+    "answer": "träumen",
+    "options": [
+      "träumen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "träumen — мечтать, видеть сны"
+  },
+  {
+    "id": "ex_traum_gap_fill_1",
+    "wordId": "der_traum",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ war schön.",
+    "answer": "Traum",
+    "options": [
+      "Traum",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Traum (der) — сон, мечта"
+  },
+  {
+    "id": "ex_umarmen_gap_fill_1",
+    "wordId": "umarmen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich umarme dich.",
+    "answer": "umarmen",
+    "options": [
+      "umarmen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "umarmen — обнимать"
+  },
+  {
+    "id": "ex_vertrauen_gap_fill_1",
+    "wordId": "vertrauen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich vertraue dir.",
+    "answer": "vertrauen",
+    "options": [
+      "vertrauen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "vertrauen — доверять"
+  },
+  {
+    "id": "ex_wuetend_gap_fill_1",
+    "wordId": "wuetend",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Er ist ___.",
+    "answer": "wütend",
+    "options": [
+      "wütend",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "wütend — яростный"
+  },
+  {
+    "id": "ex_zweifel_gap_fill_1",
+    "wordId": "der_zweifel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich habe ___.",
+    "answer": "Zweifel",
+    "options": [
+      "Zweifel",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Zweifel (der) — сомнение"
+  },
+  {
+    "id": "ex_zweifeln_gap_fill_1",
+    "wordId": "zweifeln",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich zweifle daran.",
+    "answer": "zweifeln",
+    "options": [
+      "zweifeln",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "zweifeln — сомневаться"
+  },
+  {
+    "id": "ex_lustig_gap_fill_1",
+    "wordId": "lustig",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ist ___.",
+    "answer": "lustig",
+    "options": [
+      "lustig",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "lustig — смешной"
+  },
+  {
+    "id": "ex_sich_fuerchten_gap_fill_1",
+    "wordId": "sich_fuerchten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich fürchte mich.",
+    "answer": "sich fürchten",
+    "options": [
+      "sich fürchten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich fürchten — бояться"
+  },
+  {
+    "id": "ex_aerg ern_gap_fill_1",
+    "wordId": "aerg ern",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich ärgere mich.",
+    "answer": "ärgern",
+    "options": [
+      "ärgern",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "ärgern — злить, раздражать"
+  },
+  {
+    "id": "ex_lieben_gap_fill_1",
+    "wordId": "lieben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich liebe dich.",
+    "answer": "lieben",
+    "options": [
+      "lieben",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "lieben — любить"
+  },
+  {
+    "id": "ex_traurig_gap_fill_1",
+    "wordId": "traurig",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "traurig",
+    "options": [
+      "traurig",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "traurig — грустный"
+  },
+  {
+    "id": "ex_gluecklich_gap_fill_1",
+    "wordId": "gluecklich",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "glücklich",
+    "options": [
+      "glücklich",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "glücklich — счастливый"
+  },
+  {
+    "id": "ex_nervoes_gap_fill_1",
+    "wordId": "nervoes",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "nervös",
+    "options": [
+      "nervös",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "nervös — нервный"
+  },
+  {
+    "id": "ex_gestresst_gap_fill_1",
+    "wordId": "gestresst",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "gestresst",
+    "options": [
+      "gestresst",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "gestresst — в стрессе"
+  },
+  {
+    "id": "ex_ueberrascht_gap_fill_1",
+    "wordId": "ueberrascht",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "überrascht",
+    "options": [
+      "überrascht",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "überrascht — удивлённый"
+  },
+  {
+    "id": "ex_zufrieden_gap_fill_1",
+    "wordId": "zufrieden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "zufrieden",
+    "options": [
+      "zufrieden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "zufrieden — довольный"
+  },
+  {
+    "id": "ex_enttaeuscht_gap_fill_1",
+    "wordId": "enttaeuscht",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "enttäuscht",
+    "options": [
+      "enttäuscht",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "enttäuscht — разочарованный"
+  },
+  {
+    "id": "ex_einsam_gap_fill_1",
+    "wordId": "einsam",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "einsam",
+    "options": [
+      "einsam",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "einsam — одинокий"
+  },
+  {
+    "id": "ex_dankbar_gap_fill_1",
+    "wordId": "dankbar",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "dankbar",
+    "options": [
+      "dankbar",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "dankbar — благодарный"
+  },
+  {
+    "id": "ex_seufzen_gap_fill_1",
+    "wordId": "seufzen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Er seufzt laut.",
+    "answer": "seufzen",
+    "options": [
+      "seufzen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "seufzen — вздыхать"
+  },
+  {
+    "id": "ex_streiten_gap_fill_1",
+    "wordId": "streiten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir ___ oft. — Мы часто ссоримся.",
+    "answer": "streiten",
+    "options": [
+      "streiten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "streiten — ссориться, спорить"
+  },
+  {
+    "id": "ex_geben_gap_fill_1",
+    "wordId": "geben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich gebe dir das Buch.",
+    "answer": "geben",
+    "options": [
+      "geben",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "geben — давать"
+  },
+  {
+    "id": "ex_verzeihen_gap_fill_1",
+    "wordId": "verzeihen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich verzeihe dir.",
+    "answer": "verzeihen",
+    "options": [
+      "verzeihen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "verzeihen — прощать"
+  },
+  {
+    "id": "ex_nicken_gap_fill_1",
+    "wordId": "nicken",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Er nickt zustimmend.",
+    "answer": "nicken",
+    "options": [
+      "nicken",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "nicken — кивать"
+  },
+  {
+    "id": "ex_bieten_gap_fill_1",
+    "wordId": "bieten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Er bietet Hilfe an.",
+    "answer": "bieten",
+    "options": [
+      "bieten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "bieten — предлагать"
+  },
+  {
+    "id": "ex_empfangen_gap_fill_1",
+    "wordId": "empfangen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich empfange Gäste.",
+    "answer": "empfangen",
+    "options": [
+      "empfangen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "empfangen — принимать (людей, сигнал)"
+  },
+  {
+    "id": "ex_verabschieden_gap_fill_1",
+    "wordId": "verabschieden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich verabschiede mich.",
+    "answer": "verabschieden",
+    "options": [
+      "verabschieden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "verabschieden — прощаться"
+  },
+  {
+    "id": "ex_schenken_gap_fill_1",
+    "wordId": "schenken",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich schenke dir ein Buch.",
+    "answer": "schenken",
+    "options": [
+      "schenken",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "schenken — дарить"
+  },
+  {
+    "id": "ex_stoeren_gap_fill_1",
+    "wordId": "stoeren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Du störst mich.",
+    "answer": "stören",
+    "options": [
+      "stören",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "stören — мешать"
+  },
+  {
+    "id": "ex_helfen_gap_fill_1",
+    "wordId": "helfen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich helfe dir.",
+    "answer": "helfen",
+    "options": [
+      "helfen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "helfen — помогать"
+  },
+  {
+    "id": "ex_besuchen_gap_fill_1",
+    "wordId": "besuchen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich besuche meine Oma.",
+    "answer": "besuchen",
+    "options": [
+      "besuchen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "besuchen — посещать"
+  },
+  {
+    "id": "ex_loben_gap_fill_1",
+    "wordId": "loben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich lobe dich.",
+    "answer": "loben",
+    "options": [
+      "loben",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "loben — хвалить"
+  },
+  {
+    "id": "ex_sprechen_gap_fill_1",
+    "wordId": "sprechen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich spreche Deutsch.",
+    "answer": "sprechen",
+    "options": [
+      "sprechen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sprechen — говорить"
+  },
+  {
+    "id": "ex_sagen_gap_fill_1",
+    "wordId": "sagen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich sage die Wahrheit.",
+    "answer": "sagen",
+    "options": [
+      "sagen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sagen — сказать"
+  },
+  {
+    "id": "ex_fragen_gap_fill_1",
+    "wordId": "fragen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich frage dich.",
+    "answer": "fragen",
+    "options": [
+      "fragen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "fragen — спрашивать"
+  },
+  {
+    "id": "ex_antworten_gap_fill_1",
+    "wordId": "antworten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich antworte dir.",
+    "answer": "antworten",
+    "options": [
+      "antworten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "antworten — отвечать"
+  },
+  {
+    "id": "ex_erzaehlen_gap_fill_1",
+    "wordId": "erzaehlen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich erzähle dir alles.",
+    "answer": "erzählen",
+    "options": [
+      "erzählen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "erzählen — рассказывать"
+  },
+  {
+    "id": "ex_erklaeren_gap_fill_1",
+    "wordId": "erklaeren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich erkläre es dir.",
+    "answer": "erklären",
+    "options": [
+      "erklären",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "erklären — объяснять"
+  },
+  {
+    "id": "ex_zuhoeren_gap_fill_1",
+    "wordId": "zuhoeren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Hör mir zu!",
+    "answer": "zuhören",
+    "options": [
+      "zuhören",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "zuhören — слушать внимательно"
+  },
+  {
+    "id": "ex_rufen_gap_fill_1",
+    "wordId": "rufen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich rufe dich an.",
+    "answer": "rufen",
+    "options": [
+      "rufen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "rufen — звать, кричать"
+  },
+  {
+    "id": "ex_gruessen_gap_fill_1",
+    "wordId": "gruessen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich grüße dich.",
+    "answer": "grüßen",
+    "options": [
+      "grüßen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "grüßen — приветствовать"
+  },
+  {
+    "id": "ex_bitten_gap_fill_1",
+    "wordId": "bitten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich bitte dich um Hilfe.",
+    "answer": "bitten",
+    "options": [
+      "bitten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "bitten — просить"
+  },
+  {
+    "id": "ex_widersprechen_gap_fill_1",
+    "wordId": "widersprechen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich widerspreche dir.",
+    "answer": "widersprechen",
+    "options": [
+      "widersprechen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "widersprechen — возражать"
+  },
+  {
+    "id": "ex_sich_entschuldigen_gap_fill_1",
+    "wordId": "sich_entschuldigen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich entschuldige mich.",
+    "answer": "sich entschuldigen",
+    "options": [
+      "sich entschuldigen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich entschuldigen — извиняться"
+  },
+  {
+    "id": "ex_sich_bedanken_gap_fill_1",
+    "wordId": "sich_bedanken",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich bedanke mich bei dir.",
+    "answer": "sich bedanken",
+    "options": [
+      "sich bedanken",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich bedanken — благодарить"
+  },
+  {
+    "id": "ex_sich_vorstellen_gap_fill_1",
+    "wordId": "sich_vorstellen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich stelle mich vor.",
+    "answer": "sich vorstellen",
+    "options": [
+      "sich vorstellen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich vorstellen — представляться"
+  },
+  {
+    "id": "ex_kennenlernen_gap_fill_1",
+    "wordId": "kennenlernen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Wir lernen uns kennen.",
+    "answer": "kennenlernen",
+    "options": [
+      "kennenlernen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "kennenlernen — познакомиться"
+  },
+  {
+    "id": "ex_einladen_gap_fill_1",
+    "wordId": "einladen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich lade dich ein.",
+    "answer": "einladen",
+    "options": [
+      "einladen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "einladen — приглашать"
+  },
+  {
+    "id": "ex_vorschlagen_gap_fill_1",
+    "wordId": "vorschlagen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich schlage vor…",
+    "answer": "vorschlagen",
+    "options": [
+      "vorschlagen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "vorschlagen — предлагать"
+  },
+  {
+    "id": "ex_unterhalten_gap_fill_1",
+    "wordId": "unterhalten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir ___ uns.",
+    "answer": "unterhalten",
+    "options": [
+      "unterhalten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "unterhalten — общаться, развлекать"
+  },
+  {
+    "id": "ex_vergeben_gap_fill_1",
+    "wordId": "vergeben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich vergebe dir.",
+    "answer": "vergeben",
+    "options": [
+      "vergeben",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "vergeben — прощать; выдавать"
+  },
+  {
+    "id": "ex_verbieten_gap_fill_1",
+    "wordId": "verbieten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich verbiete es dir.",
+    "answer": "verbieten",
+    "options": [
+      "verbieten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "verbieten — запрещать"
+  },
+  {
+    "id": "ex_empfehlen_gap_fill_1",
+    "wordId": "empfehlen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich empfehle das Buch.",
+    "answer": "empfehlen",
+    "options": [
+      "empfehlen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "empfehlen — рекомендовать"
+  },
+  {
+    "id": "ex_teilnehmen_gap_fill_1",
+    "wordId": "teilnehmen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich nehme teil.",
+    "answer": "teilnehmen",
+    "options": [
+      "teilnehmen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "teilnehmen — участвовать"
+  },
+  {
+    "id": "ex_versprechen_gap_fill_1",
+    "wordId": "versprechen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich verspreche es dir.",
+    "answer": "versprechen",
+    "options": [
+      "versprechen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "versprechen — обещать"
+  },
+  {
+    "id": "ex_treffen_gap_fill_1",
+    "wordId": "treffen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir ___ uns morgen.",
+    "answer": "treffen",
+    "options": [
+      "treffen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "treffen — встречать(ся)"
+  },
+  {
+    "id": "ex_kommen_gap_fill_1",
+    "wordId": "kommen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Komm bitte zu mir.",
+    "answer": "kommen",
+    "options": [
+      "kommen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "kommen — приходить"
+  },
+  {
+    "id": "ex_bekommen_gap_fill_1",
+    "wordId": "bekommen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich bekomme eine Nachricht.",
+    "answer": "bekommen",
+    "options": [
+      "bekommen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "bekommen — получать"
+  },
+  {
+    "id": "ex_schweigen_gap_fill_1",
+    "wordId": "schweigen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Er schweigt lange.",
+    "answer": "schweigen",
+    "options": [
+      "schweigen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "schweigen — молчать"
+  },
+  {
+    "id": "ex_sich_kuemmern_um_gap_fill_1",
+    "wordId": "sich_kuemmern_um",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich kümmere mich um dich.",
+    "answer": "sich kümmern um",
+    "options": [
+      "sich kümmern um",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich kümmern um — заботиться о"
+  },
+  {
+    "id": "ex_unterstuetzen_gap_fill_1",
+    "wordId": "unterstuetzen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich unterstütze dich.",
+    "answer": "unterstützen",
+    "options": [
+      "unterstützen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "unterstützen — поддерживать"
+  },
+  {
+    "id": "ex_diskutieren_gap_fill_1",
+    "wordId": "diskutieren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir ___ das Thema.",
+    "answer": "diskutieren",
+    "options": [
+      "diskutieren",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "diskutieren — обсуждать, дискутировать"
+  },
+  {
+    "id": "ex_zustimmen_gap_fill_1",
+    "wordId": "zustimmen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich stimme dir zu.",
+    "answer": "zustimmen",
+    "options": [
+      "zustimmen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "zustimmen — соглашаться"
+  },
+  {
+    "id": "ex_ablehnen_gap_fill_1",
+    "wordId": "ablehnen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich lehne den Vorschlag ab.",
+    "answer": "ablehnen",
+    "options": [
+      "ablehnen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "ablehnen — отклонять, отказывать"
+  },
+  {
+    "id": "ex_kontakt_aufnehmen_gap_fill_1",
+    "wordId": "kontakt_aufnehmen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich nehme Kontakt auf.",
+    "answer": "Kontakt aufnehmen",
+    "options": [
+      "Kontakt aufnehmen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Kontakt aufnehmen — установить контакт"
+  },
+  {
+    "id": "ex_beziehung_gap_fill_1",
+    "wordId": "die_beziehung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir haben eine gute ___.",
+    "answer": "Beziehung",
+    "options": [
+      "Beziehung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Beziehung (die) — отношения"
+  },
+  {
+    "id": "ex_hilfe_gap_fill_1",
+    "wordId": "die_hilfe",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich brauche ___.",
+    "answer": "Hilfe",
+    "options": [
+      "Hilfe",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Hilfe (die) — помощь"
+  },
+  {
+    "id": "ex_haus_gap_fill_1",
+    "wordId": "das_haus",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist groß.",
+    "answer": "Haus",
+    "options": [
+      "Haus",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Haus (das) — дом"
+  },
+  {
+    "id": "ex_wohnung_gap_fill_1",
+    "wordId": "die_wohnung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist modern.",
+    "answer": "Wohnung",
+    "options": [
+      "Wohnung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Wohnung (die) — квартира"
+  },
+  {
+    "id": "ex_zimmer_gap_fill_1",
+    "wordId": "das_zimmer",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist hell.",
+    "answer": "Zimmer",
+    "options": [
+      "Zimmer",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Zimmer (das) — комната"
+  },
+  {
+    "id": "ex_altbau_gap_fill_1",
+    "wordId": "der_altbau",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich wohne in einem ___.",
+    "answer": "Altbau",
+    "options": [
+      "Altbau",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Altbau (der) — старый дом (дореволюционный, старой постройки)"
+  },
+  {
+    "id": "ex_neubau_gap_fill_1",
+    "wordId": "der_neubau",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist teuer.",
+    "answer": "Neubau",
+    "options": [
+      "Neubau",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Neubau (der) — новостройка"
+  },
+  {
+    "id": "ex_wg_gap_fill_1",
+    "wordId": "die_wg",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich wohne in einer WG.",
+    "answer": "WG (Wohngemeinschaft)",
+    "options": [
+      "WG (Wohngemeinschaft)",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "WG (Wohngemeinschaft) (die) — совместное жильё, коммуналка, квартира с соседями"
+  },
+  {
+    "id": "ex_dorf_gap_fill_1",
+    "wordId": "das_dorf",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich lebe in einem ___.",
+    "answer": "Dorf",
+    "options": [
+      "Dorf",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Dorf (das) — деревня"
+  },
+  {
+    "id": "ex_stadt_gap_fill_1",
+    "wordId": "die_stadt",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist groß.",
+    "answer": "Stadt",
+    "options": [
+      "Stadt",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Stadt (die) — город"
+  },
+  {
+    "id": "ex_nachbarschaft_gap_fill_1",
+    "wordId": "die_nachbarschaft",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist ruhig.",
+    "answer": "Nachbarschaft",
+    "options": [
+      "Nachbarschaft",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Nachbarschaft (die) — соседство, район"
+  },
+  {
+    "id": "ex_umgebung_gap_fill_1",
+    "wordId": "die_umgebung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist schön.",
+    "answer": "Umgebung",
+    "options": [
+      "Umgebung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Umgebung (die) — окрестности, окружение"
+  },
+  {
+    "id": "ex_hof_gap_fill_1",
+    "wordId": "der_hof",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die Kinder spielen im ___.",
+    "answer": "Hof",
+    "options": [
+      "Hof",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Hof (der) — двор"
+  },
+  {
+    "id": "ex_garten_gap_fill_1",
+    "wordId": "der_garten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist groß.",
+    "answer": "Garten",
+    "options": [
+      "Garten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Garten (der) — сад"
+  },
+  {
+    "id": "ex_treppenhaus_gap_fill_1",
+    "wordId": "das_treppenhaus",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist sauber.",
+    "answer": "Treppenhaus",
+    "options": [
+      "Treppenhaus",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Treppenhaus (das) — лестничная клетка"
+  },
+  {
+    "id": "ex_aufzug_gap_fill_1",
+    "wordId": "der_aufzug",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ funktioniert nicht.",
+    "answer": "Aufzug",
+    "options": [
+      "Aufzug",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Aufzug (der) — лифт"
+  },
+  {
+    "id": "ex_keller_gap_fill_1",
+    "wordId": "der_keller",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist kalt.",
+    "answer": "Keller",
+    "options": [
+      "Keller",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Keller (der) — подвал"
+  },
+  {
+    "id": "ex_dachboden_gap_fill_1",
+    "wordId": "der_dachboden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist staubig.",
+    "answer": "Dachboden",
+    "options": [
+      "Dachboden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Dachboden (der) — чердак"
+  },
+  {
+    "id": "ex_dach_gap_fill_1",
+    "wordId": "das_dach",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist neu.",
+    "answer": "Dach",
+    "options": [
+      "Dach",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Dach (das) — крыша"
+  },
+  {
+    "id": "ex_wand_gap_fill_1",
+    "wordId": "die_wand",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist weiß.",
+    "answer": "Wand",
+    "options": [
+      "Wand",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Wand (die) — стена (внутренняя)"
+  },
+  {
+    "id": "ex_boden_gap_fill_1",
+    "wordId": "der_boden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist sauber.",
+    "answer": "Boden",
+    "options": [
+      "Boden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Boden (der) — пол"
+  },
+  {
+    "id": "ex_decke_gap_fill_1",
+    "wordId": "die_decke",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist hoch.",
+    "answer": "Decke",
+    "options": [
+      "Decke",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Decke (die) — потолок / одеяло"
+  },
+  {
+    "id": "ex_flur_gap_fill_1",
+    "wordId": "der_flur",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist lang.",
+    "answer": "Flur",
+    "options": [
+      "Flur",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Flur (der) — коридор"
+  },
+  {
+    "id": "ex_tuer_gap_fill_1",
+    "wordId": "die_tuer",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist offen.",
+    "answer": "Tür",
+    "options": [
+      "Tür",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Tür (die) — дверь"
+  },
+  {
+    "id": "ex_fenster_gap_fill_1",
+    "wordId": "das_fenster",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist groß.",
+    "answer": "Fenster",
+    "options": [
+      "Fenster",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Fenster (das) — окно"
+  },
+  {
+    "id": "ex_balkon_gap_fill_1",
+    "wordId": "der_balkon",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist sonnig.",
+    "answer": "Balkon",
+    "options": [
+      "Balkon",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Balkon (der) — балкон"
+  },
+  {
+    "id": "ex_terrasse_gap_fill_1",
+    "wordId": "die_terrasse",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir sitzen auf der ___.",
+    "answer": "Terrasse",
+    "options": [
+      "Terrasse",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Terrasse (die) — терраса"
+  },
+  {
+    "id": "ex_garage_gap_fill_1",
+    "wordId": "die_garage",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist voll.",
+    "answer": "Garage",
+    "options": [
+      "Garage",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Garage (die) — гараж"
+  },
+  {
+    "id": "ex_stellplatz_gap_fill_1",
+    "wordId": "der_stellplatz",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich habe einen ___.",
+    "answer": "Stellplatz",
+    "options": [
+      "Stellplatz",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Stellplatz (der) — парковочное место"
+  },
+  {
+    "id": "ex_mieter_gap_fill_1",
+    "wordId": "der_mieter",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ zahlt die Miete.",
+    "answer": "Mieter",
+    "options": [
+      "Mieter",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Mieter (der) — арендатор"
+  },
+  {
+    "id": "ex_vermieter_gap_fill_1",
+    "wordId": "der_vermieter",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist freundlich.",
+    "answer": "Vermieter",
+    "options": [
+      "Vermieter",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Vermieter (der) — арендодатель"
+  },
+  {
+    "id": "ex_miete_gap_fill_1",
+    "wordId": "die_miete",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist hoch.",
+    "answer": "Miete",
+    "options": [
+      "Miete",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Miete (die) — аренда, квартплата"
+  },
+  {
+    "id": "ex_nebenkosten_gap_fill_1",
+    "wordId": "nebenkosten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ sind teuer.",
+    "answer": "Nebenkosten",
+    "options": [
+      "Nebenkosten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Nebenkosten (die (Pl.)) — коммунальные платежи"
+  },
+  {
+    "id": "ex_kaution_gap_fill_1",
+    "wordId": "die_kaution",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ beträgt 500 Euro.",
+    "answer": "Kaution",
+    "options": [
+      "Kaution",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Kaution (die) — залог"
+  },
+  {
+    "id": "ex_vertrag_gap_fill_1",
+    "wordId": "der_vertrag",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich unterschreibe den ___.",
+    "answer": "Vertrag",
+    "options": [
+      "Vertrag",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Vertrag (der) — договор"
+  },
+  {
+    "id": "ex_umzug_gap_fill_1",
+    "wordId": "der_umzug",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist stressig.",
+    "answer": "Umzug",
+    "options": [
+      "Umzug",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Umzug (der) — переезд"
+  },
+  {
+    "id": "ex_einziehen_gap_fill_1",
+    "wordId": "einziehen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich ziehe morgen ein.",
+    "answer": "einziehen",
+    "options": [
+      "einziehen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "einziehen — въезжать"
+  },
+  {
+    "id": "ex_ausziehen_gap_fill_1",
+    "wordId": "ausziehen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Er zieht nächste Woche aus.",
+    "answer": "ausziehen",
+    "options": [
+      "ausziehen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "ausziehen — выезжать"
+  },
+  {
+    "id": "ex_umziehen_gap_fill_1",
+    "wordId": "umziehen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Wir ziehen nach Berlin um.",
+    "answer": "umziehen",
+    "options": [
+      "umziehen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "umziehen — переезжать"
+  },
+  {
+    "id": "ex_renovieren_gap_fill_1",
+    "wordId": "renovieren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir ___ die Wohnung.",
+    "answer": "renovieren",
+    "options": [
+      "renovieren",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "renovieren — ремонтировать, обновлять"
+  },
+  {
+    "id": "ex_reparieren_gap_fill_1",
+    "wordId": "reparieren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich repariere die Tür.",
+    "answer": "reparieren",
+    "options": [
+      "reparieren",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "reparieren — чинить, ремонтировать"
+  },
+  {
+    "id": "ex_gross_gap_fill_1",
+    "wordId": "gross",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die Wohnung ist ___.",
+    "answer": "groß",
+    "options": [
+      "groß",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "groß — большой"
+  },
+  {
+    "id": "ex_klein_gap_fill_1",
+    "wordId": "klein",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das Zimmer ist ___.",
+    "answer": "klein",
+    "options": [
+      "klein",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "klein — маленький"
+  },
+  {
+    "id": "ex_gemuetlich_gap_fill_1",
+    "wordId": "gemuetlich",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die Wohnung ist ___.",
+    "answer": "gemütlich",
+    "options": [
+      "gemütlich",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "gemütlich — уютный"
+  },
+  {
+    "id": "ex_eng_gap_fill_1",
+    "wordId": "eng",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das Zimmer ist ___.",
+    "answer": "eng",
+    "options": [
+      "eng",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "eng — тесный, узкий"
+  },
+  {
+    "id": "ex_breit_gap_fill_1",
+    "wordId": "breit",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die Straße ist ___.",
+    "answer": "breit",
+    "options": [
+      "breit",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "breit — широкий"
+  },
+  {
+    "id": "ex_moebliert_gap_fill_1",
+    "wordId": "moebliert",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die Wohnung ist ___.",
+    "answer": "möbliert",
+    "options": [
+      "möbliert",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "möbliert — меблированный"
+  },
+  {
+    "id": "ex_haushalt_gap_fill_1",
+    "wordId": "der_haushalt",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist groß.",
+    "answer": "Haushalt",
+    "options": [
+      "Haushalt",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Haushalt (der) — хозяйство, домашние дела"
+  },
+  {
+    "id": "ex_bewohner_gap_fill_1",
+    "wordId": "der_bewohner",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ sind freundlich.",
+    "answer": "Bewohner",
+    "options": [
+      "Bewohner",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Bewohner (der) — житель"
+  },
+  {
+    "id": "ex_wohnen_gap_fill_1",
+    "wordId": "wohnen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich wohne in Berlin.",
+    "answer": "wohnen",
+    "options": [
+      "wohnen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "wohnen — жить, проживать"
+  },
+  {
+    "id": "ex_bewohnen_gap_fill_1",
+    "wordId": "bewohnen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Viele Menschen ___ das Haus.",
+    "answer": "bewohnen",
+    "options": [
+      "bewohnen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "bewohnen — заселять, населять"
+  },
+  {
+    "id": "ex_kueche_gap_fill_1",
+    "wordId": "die_kueche",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist modern.",
+    "answer": "Küche",
+    "options": [
+      "Küche",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Küche (die) — кухня"
+  },
+  {
+    "id": "ex_bad_gap_fill_1",
+    "wordId": "das_bad",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist klein.",
+    "answer": "Bad",
+    "options": [
+      "Bad",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Bad (das) — ванная"
+  },
+  {
+    "id": "ex_raum_gap_fill_1",
+    "wordId": "der_raum",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist groß.",
+    "answer": "Raum",
+    "options": [
+      "Raum",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Raum (der) — помещение, пространство"
+  },
+  {
+    "id": "ex_huette_gap_fill_1",
+    "wordId": "die_huette",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ steht im Wald.",
+    "answer": "Hütte",
+    "options": [
+      "Hütte",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Hütte (die) — хижина"
+  },
+  {
+    "id": "ex_einrichten_gap_fill_1",
+    "wordId": "einrichten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich richte die Wohnung ein.",
+    "answer": "einrichten",
+    "options": [
+      "einrichten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "einrichten — обустраивать, оформлять"
+  },
+  {
+    "id": "ex_montieren_gap_fill_1",
+    "wordId": "montieren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich montiere das Regal.",
+    "answer": "montieren",
+    "options": [
+      "montieren",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "montieren — монтировать, собирать"
+  },
+  {
+    "id": "ex_aufbauen_gap_fill_1",
+    "wordId": "aufbauen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich baue die Möbel auf.",
+    "answer": "aufbauen",
+    "options": [
+      "aufbauen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "aufbauen — собирать, строить"
+  },
+  {
+    "id": "ex_berg_gap_fill_1",
+    "wordId": "der_berg",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist hoch.",
+    "answer": "Berg",
+    "options": [
+      "Berg",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Berg (der) — гора"
+  },
+  {
+    "id": "ex_bewoelkt_gap_fill_1",
+    "wordId": "bewoelkt",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Es ist ___.",
+    "answer": "bewölkt",
+    "options": [
+      "bewölkt",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "bewölkt — облачно"
+  },
+  {
+    "id": "ex_blitz_gap_fill_1",
+    "wordId": "der_blitz",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist hell.",
+    "answer": "Blitz",
+    "options": [
+      "Blitz",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Blitz (der) — молния"
+  },
+  {
+    "id": "ex_brennen_gap_fill_1",
+    "wordId": "brennen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Das Feuer brennt.",
+    "answer": "brennen",
+    "options": [
+      "brennen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "brennen — гореть"
+  },
+  {
+    "id": "ex_donner_gap_fill_1",
+    "wordId": "der_donner",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist laut.",
+    "answer": "Donner",
+    "options": [
+      "Donner",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Donner (der) — гром"
+  },
+  {
+    "id": "ex_erdbeben_gap_fill_1",
+    "wordId": "das_erdbeben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ war stark.",
+    "answer": "Erdbeben",
+    "options": [
+      "Erdbeben",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Erdbeben (das) — землетрясение"
+  },
+  {
+    "id": "ex_feld_gap_fill_1",
+    "wordId": "das_feld",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist groß.",
+    "answer": "Feld",
+    "options": [
+      "Feld",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Feld (das) — поле"
+  },
+  {
+    "id": "ex_fliessen_gap_fill_1",
+    "wordId": "fliessen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Der Fluss fließt schnell.",
+    "answer": "fließen",
+    "options": [
+      "fließen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "fließen — течь"
+  },
+  {
+    "id": "ex_fluss_gap_fill_1",
+    "wordId": "der_fluss",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist breit.",
+    "answer": "Fluss",
+    "options": [
+      "Fluss",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Fluss (der) — река"
+  },
+  {
+    "id": "ex_flut_gap_fill_1",
+    "wordId": "die_flut",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist gefährlich.",
+    "answer": "Flut",
+    "options": [
+      "Flut",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Flut (die) — наводнение"
+  },
+  {
+    "id": "ex_frieren_gap_fill_1",
+    "wordId": "frieren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich friere.",
+    "answer": "frieren",
+    "options": [
+      "frieren",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "frieren — мёрзнуть"
+  },
+  {
+    "id": "ex_gewitter_gap_fill_1",
+    "wordId": "das_gewitter",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ kommt.",
+    "answer": "Gewitter",
+    "options": [
+      "Gewitter",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Gewitter (das) — гроза"
+  },
+  {
+    "id": "ex_grad_gap_fill_1",
+    "wordId": "der_grad",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Es sind 20 ___.",
+    "answer": "Grad",
+    "options": [
+      "Grad",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Grad (der) — градус"
+  },
+  {
+    "id": "ex_hagel_gap_fill_1",
+    "wordId": "der_hagel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Es ___t.",
+    "answer": "Hagel",
+    "options": [
+      "Hagel",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Hagel (der) — град (осадки)"
+  },
+  {
+    "id": "ex_insel_gap_fill_1",
+    "wordId": "die_insel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist klein.",
+    "answer": "Insel",
+    "options": [
+      "Insel",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Insel (die) — остров"
+  },
+  {
+    "id": "ex_klimawandel_gap_fill_1",
+    "wordId": "der_klimawandel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist real.",
+    "answer": "Klimawandel",
+    "options": [
+      "Klimawandel",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Klimawandel (der) — изменение климата"
+  },
+  {
+    "id": "ex_kueste_gap_fill_1",
+    "wordId": "die_kueste",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist schön.",
+    "answer": "Küste",
+    "options": [
+      "Küste",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Küste (die) — побережье"
+  },
+  {
+    "id": "ex_meer_gap_fill_1",
+    "wordId": "das_meer",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist ruhig.",
+    "answer": "Meer",
+    "options": [
+      "Meer",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Meer (das) — море"
+  },
+  {
+    "id": "ex_nass_gap_fill_1",
+    "wordId": "nass",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "nass",
+    "options": [
+      "nass",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "nass — мокрый"
+  },
+  {
+    "id": "ex_nebel_gap_fill_1",
+    "wordId": "der_nebel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist dicht.",
+    "answer": "Nebel",
+    "options": [
+      "Nebel",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Nebel (der) — туман"
+  },
+  {
+    "id": "ex_orkan_gap_fill_1",
+    "wordId": "der_orkan",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist stark.",
+    "answer": "Orkan",
+    "options": [
+      "Orkan",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Orkan (der) — ураган"
+  },
+  {
+    "id": "ex_regen_gap_fill_1",
+    "wordId": "der_regen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ fällt.",
+    "answer": "Regen",
+    "options": [
+      "Regen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Regen (der) — дождь"
+  },
+  {
+    "id": "ex_regnen_gap_fill_1",
+    "wordId": "regnen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "(regen → ___)",
+    "answer": "regnen",
+    "options": [
+      "regnen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "regnen — ре́гнен"
+  },
+  {
+    "id": "ex_scheinen_gap_fill_1",
+    "wordId": "scheinen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "(shine → ___)",
+    "answer": "scheinen",
+    "options": [
+      "scheinen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "scheinen — шай́нен"
+  },
+  {
+    "id": "ex_schnee_gap_fill_1",
+    "wordId": "der_schnee",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist weiß.",
+    "answer": "Schnee",
+    "options": [
+      "Schnee",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Schnee (der) — снег"
+  },
+  {
+    "id": "ex_schneien_gap_fill_1",
+    "wordId": "schneien",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "(Schnee → ___)",
+    "answer": "schneien",
+    "options": [
+      "schneien",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "schneien — шна́йен"
+  },
+  {
+    "id": "ex_see_gap_fill_1",
+    "wordId": "der_see",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist tief.",
+    "answer": "See",
+    "options": [
+      "See",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "See (der) — озеро"
+  },
+  {
+    "id": "ex_sturm_gap_fill_1",
+    "wordId": "der_sturm",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist gefährlich.",
+    "answer": "Sturm",
+    "options": [
+      "Sturm",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Sturm (der) — буря, шторм"
+  },
+  {
+    "id": "ex_tal_gap_fill_1",
+    "wordId": "das_tal",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist ruhig.",
+    "answer": "Tal",
+    "options": [
+      "Tal",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Tal (das) — долина"
+  },
+  {
+    "id": "ex_temperatur_gap_fill_1",
+    "wordId": "die_temperatur",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist niedrig.",
+    "answer": "Temperatur",
+    "options": [
+      "Temperatur",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Temperatur (die) — температура"
+  },
+  {
+    "id": "ex_trocken_gap_fill_1",
+    "wordId": "trocken",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (труха → сухое)",
+    "answer": "trocken",
+    "options": [
+      "trocken",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "trocken — тро́ккен"
+  },
+  {
+    "id": "ex_ueberfluten_gap_fill_1",
+    "wordId": "ueberfluten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (flood → fluten)",
+    "answer": "überfluten",
+    "options": [
+      "überfluten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "überfluten — ю́берфлутен"
+  },
+  {
+    "id": "ex_ufer_gap_fill_1",
+    "wordId": "das_ufer",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Am ___ sitzen Leute.",
+    "answer": "Ufer",
+    "options": [
+      "Ufer",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Ufer (das) — берег (реки/озера)"
+  },
+  {
+    "id": "ex_umwelt_gap_fill_1",
+    "wordId": "die_umwelt",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist wichtig.",
+    "answer": "Umwelt",
+    "options": [
+      "Umwelt",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Umwelt (die) — окружающая среда"
+  },
+  {
+    "id": "ex_wachsen_gap_fill_1",
+    "wordId": "wachsen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (wax — расти)",
+    "answer": "wachsen",
+    "options": [
+      "wachsen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "wachsen — ва́хсен"
+  },
+  {
+    "id": "ex_wald_gap_fill_1",
+    "wordId": "der_wald",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist dicht.",
+    "answer": "Wald",
+    "options": [
+      "Wald",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Wald (der) — лес"
+  },
+  {
+    "id": "ex_wehen_gap_fill_1",
+    "wordId": "wehen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "(веет → ___)",
+    "answer": "wehen",
+    "options": [
+      "wehen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "wehen — ве́эн"
+  },
+  {
+    "id": "ex_wetter_gap_fill_1",
+    "wordId": "das_wetter",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist schön.",
+    "answer": "Wetter",
+    "options": [
+      "Wetter",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Wetter (das) — погода"
+  },
+  {
+    "id": "ex_wetterbericht_gap_fill_1",
+    "wordId": "der_wetterbericht",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich höre den ___.",
+    "answer": "Wetterbericht",
+    "options": [
+      "Wetterbericht",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Wetterbericht (der) — прогноз погоды"
+  },
+  {
+    "id": "ex_wiese_gap_fill_1",
+    "wordId": "die_wiese",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist grün.",
+    "answer": "Wiese",
+    "options": [
+      "Wiese",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Wiese (die) — луг"
+  },
+  {
+    "id": "ex_zerstoeren_gap_fill_1",
+    "wordId": "zerstoeren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Das Feuer zerstört den Wald.",
+    "answer": "zerstören",
+    "options": [
+      "zerstören",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "zerstören — разрушать, уничтожать"
+  },
+  {
+    "id": "ex_welt_gap_fill_1",
+    "wordId": "die_welt",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist schön.",
+    "answer": "Welt",
+    "options": [
+      "Welt",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Welt (die) — мир, планета"
+  },
+  {
+    "id": "ex_wind_gap_fill_1",
+    "wordId": "der_wind",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ weht stark.",
+    "answer": "Wind",
+    "options": [
+      "Wind",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Wind (der) — ветер"
+  },
+  {
+    "id": "ex_luft_gap_fill_1",
+    "wordId": "die_luft",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist frisch.",
+    "answer": "Luft",
+    "options": [
+      "Luft",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Luft (die) — воздух"
+  },
+  {
+    "id": "ex_bach_gap_fill_1",
+    "wordId": "der_bach",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ fließt schnell.",
+    "answer": "Bach",
+    "options": [
+      "Bach",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Bach (der) — ручей"
+  },
+  {
+    "id": "ex_licht_gap_fill_1",
+    "wordId": "das_licht",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist hell.",
+    "answer": "Licht",
+    "options": [
+      "Licht",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Licht (das) — свет"
+  },
+  {
+    "id": "ex_himmel_gap_fill_1",
+    "wordId": "der_himmel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der ___ ist blau.",
+    "answer": "Himmel",
+    "options": [
+      "Himmel",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Himmel (der) — небо"
+  },
+  {
+    "id": "ex_wolke_gap_fill_1",
+    "wordId": "die_wolke",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist grau.",
+    "answer": "Wolke",
+    "options": [
+      "Wolke",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Wolke (die) — облако"
+  },
+  {
+    "id": "ex_sonne_gap_fill_1",
+    "wordId": "die_sonne",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ scheint.",
+    "answer": "Sonne",
+    "options": [
+      "Sonne",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Sonne (die) — солнце"
+  },
+  {
+    "id": "ex_schatten_gap_fill_1",
+    "wordId": "der_schatten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Im ___ ist es kühl.",
+    "answer": "Schatten",
+    "options": [
+      "Schatten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Schatten (der) — тень"
+  },
+  {
+    "id": "ex_blume_gap_fill_1",
+    "wordId": "die_blume",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist schön.",
+    "answer": "Blume",
+    "options": [
+      "Blume",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Blume (die) — цветок"
+  },
+  {
+    "id": "ex_stickig_gap_fill_1",
+    "wordId": "stickig",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Der Raum ist ___.",
+    "answer": "stickig",
+    "options": [
+      "stickig",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "stickig — душный"
+  },
+  {
+    "id": "ex_schwuel_gap_fill_1",
+    "wordId": "schwuel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Es ist ___ heute.",
+    "answer": "schwül",
+    "options": [
+      "schwül",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "schwül — влажный, душный (о погоде)"
+  },
+  {
+    "id": "ex_hitze_gap_fill_1",
+    "wordId": "die_hitze",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist stark.",
+    "answer": "Hitze",
+    "options": [
+      "Hitze",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Hitze (die) — жара"
+  },
+  {
+    "id": "ex_arbeit_gap_fill_1",
+    "wordId": "die_arbeit",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ macht Spaß.",
+    "answer": "Arbeit",
+    "options": [
+      "Arbeit",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Arbeit (die) — работа"
+  },
+  {
+    "id": "ex_beruf_gap_fill_1",
+    "wordId": "der_beruf",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Mein ___ ist Lehrer.",
+    "answer": "Beruf",
+    "options": [
+      "Beruf",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Beruf (der) — профессия"
+  },
+  {
+    "id": "ex_stelle_gap_fill_1",
+    "wordId": "die_stelle",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich suche eine ___.",
+    "answer": "Stelle",
+    "options": [
+      "Stelle",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Stelle (die) — должность"
+  },
+  {
+    "id": "ex_firma_gap_fill_1",
+    "wordId": "die_firma",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ wächst schnell.",
+    "answer": "Firma",
+    "options": [
+      "Firma",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Firma (die) — фирма, компания"
+  },
+  {
+    "id": "ex_abteilung_gap_fill_1",
+    "wordId": "die_abteilung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist groß.",
+    "answer": "Abteilung",
+    "options": [
+      "Abteilung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Abteilung (die) — отдел"
+  },
+  {
+    "id": "ex_team_gap_fill_1",
+    "wordId": "das_team",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir arbeiten im ___.",
+    "answer": "Team",
+    "options": [
+      "Team",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Team (das) — команда"
+  },
+  {
+    "id": "ex_kollege_gap_fill_1",
+    "wordId": "der_kollege",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Er ist mein ___.",
+    "answer": "Kollege",
+    "options": [
+      "Kollege",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Kollege (der) — коллега"
+  },
+  {
+    "id": "ex_mitarbeiter_gap_fill_1",
+    "wordId": "der_mitarbeiter",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ sind freundlich.",
+    "answer": "Mitarbeiter",
+    "options": [
+      "Mitarbeiter",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Mitarbeiter (der) — сотрудник"
+  },
+  {
+    "id": "ex_gehalt_gap_fill_1",
+    "wordId": "das_gehalt",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist hoch.",
+    "answer": "Gehalt",
+    "options": [
+      "Gehalt",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Gehalt (das) — зарплата"
+  },
+  {
+    "id": "ex_vertrag_gap_fill_1",
+    "wordId": "der_vertrag",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich unterschreibe den ___.",
+    "answer": "Vertrag",
+    "options": [
+      "Vertrag",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Vertrag (der) — контракт"
+  },
+  {
+    "id": "ex_bewerbung_gap_fill_1",
+    "wordId": "die_bewerbung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich schreibe eine ___.",
+    "answer": "Bewerbung",
+    "options": [
+      "Bewerbung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Bewerbung (die) — заявление на работу"
+  },
+  {
+    "id": "ex_lebenslauf_gap_fill_1",
+    "wordId": "der_lebenslauf",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Mein ___ ist aktuell.",
+    "answer": "Lebenslauf",
+    "options": [
+      "Lebenslauf",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Lebenslauf (der) — резюме"
+  },
+  {
+    "id": "ex_vorstellungsgespraech_gap_fill_1",
+    "wordId": "das_vorstellungsgespraech",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich habe ein ___.",
+    "answer": "Vorstellungsgespräch",
+    "options": [
+      "Vorstellungsgespräch",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Vorstellungsgespräch (das) — собеседование"
+  },
+  {
+    "id": "ex_projekt_gap_fill_1",
+    "wordId": "das_projekt",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist wichtig.",
+    "answer": "Projekt",
+    "options": [
+      "Projekt",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Projekt (das) — проект"
+  },
+  {
+    "id": "ex_aufgabe_gap_fill_1",
+    "wordId": "die_aufgabe",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich erledige die ___.",
+    "answer": "Aufgabe",
+    "options": [
+      "Aufgabe",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Aufgabe (die) — задание"
+  },
+  {
+    "id": "ex_ziel_gap_fill_1",
+    "wordId": "das_ziel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ___ ist klar.",
+    "answer": "Ziel",
+    "options": [
+      "Ziel",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Ziel (das) — цель"
+  },
+  {
+    "id": "ex_erfolg_gap_fill_1",
+    "wordId": "der_erfolg",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ ist wichtig.",
+    "answer": "Erfolg",
+    "options": [
+      "Erfolg",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Erfolg (der) — успех"
+  },
+  {
+    "id": "ex_erfahrung_gap_fill_1",
+    "wordId": "die_erfahrung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich habe viel ___.",
+    "answer": "Erfahrung",
+    "options": [
+      "Erfahrung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Erfahrung (die) — опыт"
+  },
+  {
+    "id": "ex_faehigkeit_gap_fill_1",
+    "wordId": "die_faehigkeit",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist wichtig.",
+    "answer": "Fähigkeit",
+    "options": [
+      "Fähigkeit",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Fähigkeit (die) — способность"
+  },
+  {
+    "id": "ex_kompetenz_gap_fill_1",
+    "wordId": "die_kompetenz",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ fehlt.",
+    "answer": "Kompetenz",
+    "options": [
+      "Kompetenz",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Kompetenz (die) — компетенция"
+  },
+  {
+    "id": "ex_verantwortung_gap_fill_1",
+    "wordId": "die_verantwortung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich habe viel ___.",
+    "answer": "Verantwortung",
+    "options": [
+      "Verantwortung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Verantwortung (die) — ответственность"
+  },
+  {
+    "id": "ex_voraussetzung_gap_fill_1",
+    "wordId": "die_voraussetzung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist wichtig.",
+    "answer": "Voraussetzung",
+    "options": [
+      "Voraussetzung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Voraussetzung (die) — требование, предпосылка"
+  },
+  {
+    "id": "ex_weiterbildung_gap_fill_1",
+    "wordId": "die_weiterbildung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich mache eine ___.",
+    "answer": "Weiterbildung",
+    "options": [
+      "Weiterbildung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Weiterbildung (die) — повышение квалификации"
+  },
+  {
+    "id": "ex_karriere_gap_fill_1",
+    "wordId": "die_karriere",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ läuft gut.",
+    "answer": "Karriere",
+    "options": [
+      "Karriere",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Karriere (die) — карьера"
+  },
+  {
+    "id": "ex_kuendigung_gap_fill_1",
+    "wordId": "die_kuendigung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bekomme eine ___.",
+    "answer": "Kündigung",
+    "options": [
+      "Kündigung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Kündigung (die) — увольнение"
+  },
+  {
+    "id": "ex_hilfe_gap_fill_1",
+    "wordId": "die_hilfe",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich brauche ___.",
+    "answer": "Hilfe",
+    "options": [
+      "Hilfe",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Hilfe (die) — помощь"
+  },
+  {
+    "id": "ex_kosten_gap_fill_1",
+    "wordId": "kosten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ sind hoch.",
+    "answer": "Kosten",
+    "options": [
+      "Kosten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Kosten (die (Pl.)) — расходы, издержки"
+  },
+  {
+    "id": "ex_fehler_gap_fill_1",
+    "wordId": "der_fehler",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich habe einen ___ gemacht.",
+    "answer": "Fehler",
+    "options": [
+      "Fehler",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Fehler (der) — ошибка"
+  },
+  {
+    "id": "ex_messe_gap_fill_1",
+    "wordId": "die_messe",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist international.",
+    "answer": "Messe",
+    "options": [
+      "Messe",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Messe (die) — выставка, ярмарка"
+  },
+  {
+    "id": "ex_verwendung_gap_fill_1",
+    "wordId": "die_verwendung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die ___ ist korrekt.",
+    "answer": "Verwendung",
+    "options": [
+      "Verwendung",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "Verwendung (die) — применение"
+  },
+  {
+    "id": "ex_machen_gap_fill_1",
+    "wordId": "machen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (мах — действие)",
+    "answer": "machen",
+    "options": [
+      "machen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "machen — ма́хен"
+  },
+  {
+    "id": "ex_tun_gap_fill_1",
+    "wordId": "tun",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "(do → ___)",
+    "answer": "tun",
+    "options": [
+      "tun",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "tun — тун"
+  },
+  {
+    "id": "ex_verwenden_gap_fill_1",
+    "wordId": "verwenden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (ВЕНДор — используешь товар)",
+    "answer": "verwenden",
+    "options": [
+      "verwenden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "verwenden — ферве́нден"
+  },
+  {
+    "id": "ex_suchen_gap_fill_1",
+    "wordId": "suchen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (зух — ищу)",
+    "answer": "suchen",
+    "options": [
+      "suchen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "suchen — зу́хен"
+  },
+  {
+    "id": "ex_erreichen_gap_fill_1",
+    "wordId": "erreichen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (reich — богат → достигать)",
+    "answer": "erreichen",
+    "options": [
+      "erreichen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "erreichen — эра́йхен"
+  },
+  {
+    "id": "ex_bieten_gap_fill_1",
+    "wordId": "bieten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "(offer → ___)",
+    "answer": "bieten",
+    "options": [
+      "bieten",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "bieten — би́тен"
+  },
+  {
+    "id": "ex_werben_gap_fill_1",
+    "wordId": "werben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "(вербовать → ___)",
+    "answer": "werben",
+    "options": [
+      "werben",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "werben — ве́рбен"
+  },
+  {
+    "id": "ex_helfen_gap_fill_1",
+    "wordId": "helfen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "(help → ___)",
+    "answer": "helfen",
+    "options": [
+      "helfen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "helfen — хе́льфен"
+  },
+  {
+    "id": "ex_sich_anstrengen_gap_fill_1",
+    "wordId": "sich_anstrengen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (strength → anstrengen)",
+    "answer": "sich anstrengen",
+    "options": [
+      "sich anstrengen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich anstrengen — зих а́нштренген"
+  },
+  {
+    "id": "ex_sich_bemuehen_gap_fill_1",
+    "wordId": "sich_bemuehen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (мю — мягко, усилие)",
+    "answer": "sich bemühen",
+    "options": [
+      "sich bemühen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich bemühen — зих бему́йен"
+  },
+  {
+    "id": "ex_verabreden_gap_fill_1",
+    "wordId": "verabreden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (abreden — обговорить)",
+    "answer": "verabreden",
+    "options": [
+      "verabreden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "verabreden — фера́бриден"
+  },
+  {
+    "id": "ex_sich_bewerben_um_gap_fill_1",
+    "wordId": "sich_bewerben_um",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (werben → привлекать → Bewerben)",
+    "answer": "sich bewerben um",
+    "options": [
+      "sich bewerben um",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "sich bewerben um — зих беве́рбен ум"
+  },
+  {
+    "id": "ex_anfangen_gap_fill_1",
+    "wordId": "anfangen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ (начать — an + fangen — хватать)",
+    "answer": "anfangen",
+    "options": [
+      "anfangen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "anfangen — а́нфанген"
+  },
+  {
+    "id": "ex_verschieben_gap_fill_1",
+    "wordId": "verschieben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir ___ den Termin.",
+    "answer": "verschieben",
+    "options": [
+      "verschieben",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "verschieben — переносить, откладывать"
+  },
+  {
+    "id": "ex_anwenden_gap_fill_1",
+    "wordId": "anwenden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich wende die Methode an.",
+    "answer": "anwenden",
+    "options": [
+      "anwenden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "anwenden — применять"
+  },
+  {
+    "id": "ex_empfehlen_gap_fill_1",
+    "wordId": "empfehlen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich empfehle das Buch.",
+    "answer": "empfehlen",
+    "options": [
+      "empfehlen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "empfehlen — рекомендовать"
+  },
+  {
+    "id": "ex_unternehmen_gap_fill_1",
+    "wordId": "unternehmen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Wir ___ etwas.",
+    "answer": "unternehmen",
+    "options": [
+      "unternehmen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "unternehmen — предпринимать"
+  },
+  {
+    "id": "ex_teilnehmen_gap_fill_1",
+    "wordId": "teilnehmen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich nehme an der Sitzung teil.",
+    "answer": "teilnehmen",
+    "options": [
+      "teilnehmen",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "teilnehmen — участвовать"
+  },
+  {
+    "id": "ex_entscheiden_gap_fill_1",
+    "wordId": "entscheiden",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "___ Ich entscheide das später.",
+    "answer": "entscheiden",
+    "options": [
+      "entscheiden",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "entscheiden — решать, принимать решение"
+  },
+  {
+    "id": "ex_schwierig_gap_fill_1",
+    "wordId": "schwierig",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Die Aufgabe ist ___.",
+    "answer": "schwierig",
+    "options": [
+      "schwierig",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "schwierig — трудный"
+  },
+  {
+    "id": "ex_wichtig_gap_fill_1",
+    "wordId": "wichtig",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Das ist ___.",
+    "answer": "wichtig",
+    "options": [
+      "wichtig",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "wichtig — важный"
+  },
+  {
+    "id": "ex_flexibel_gap_fill_1",
+    "wordId": "flexibel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "flexibel",
+    "options": [
+      "flexibel",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "flexibel — гибкий"
+  },
+  {
+    "id": "ex_puenktlich_gap_fill_1",
+    "wordId": "puenktlich",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Ich bin ___.",
+    "answer": "pünktlich",
+    "options": [
+      "pünktlich",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "pünktlich — пунктуальный"
+  },
+  {
+    "id": "ex_verlaesslich_gap_fill_1",
+    "wordId": "verlaesslich",
+    "type": "gap_fill",
+    "question": "Заполните пропуск правильным словом",
+    "sentence": "Er ist sehr ___.",
+    "answer": "verlässlich",
+    "options": [
+      "verlässlich",
+      "Option2",
+      "Option3",
+      "Option4"
+    ],
+    "explanation": "verlässlich — надёжный"
   }
 ]

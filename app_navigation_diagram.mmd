@@ -1,0 +1,67 @@
+flowchart TD
+    Start([Запуск приложения])
+    Start --> Home
+
+    %% Главный экран
+    Home[🏠 Главная<br/>home-screen<br/>━━━━━━━━━━━━━━<br/>div id='home-screen']
+    Home -->|📚 В учебе<br/>renderAllSetsScreen| AllSets
+    Home -->|📖 Темы<br/>renderTopicSelection| Topics
+
+    %% Экран В учебе
+    AllSets[📚 В учебе<br/>list-screen<br/>Все наборы слов<br/>━━━━━━━━━━━━━━<br/>div id='list-screen']
+    AllSets -->|К повтору<br/>promptForDirection| DirModal1[Выбор направления:<br/>RU→DE / DE→RU<br/>━━━━━━━━━━━━━━<br/>direction-modal]
+    AllSets -->|Практика всех слов<br/>promptForDirection| DirModal2[Выбор направления:<br/>RU→DE / DE→RU<br/>━━━━━━━━━━━━━━<br/>direction-modal]
+    DirModal1 -->|startSession<br/>mode='review'| Review[Сессия: К повтору<br/>study-screen<br/>━━━━━━━━━━━━━━<br/>div id='study-screen']
+    DirModal2 -->|startSession<br/>mode='practice-all'| Practice[Сессия: Практика<br/>study-screen<br/>━━━━━━━━━━━━━━<br/>div id='study-screen']
+
+    %% Экран Темы
+    Topics[📖 Темы<br/>topics-screen<br/>━━━━━━━━━━━━━━<br/>div id='topics-screen']
+    Topics -->|Выбор темы<br/>renderTopicWords| TopicWords[Слова по теме<br/>list-screen<br/>━━━━━━━━━━━━━━<br/>div id='list-screen']
+    Topics -->|Упражнения<br/>openExercisesModal| ExerciseModal[Модальное окно<br/>Упражнения<br/>━━━━━━━━━━━━━━<br/>exercise-modal]
+
+    %% Слова темы
+    TopicWords -->|Клик на слово<br/>openWordDetailScreen| WordDetail[Детали слова<br/>word-detail-screen<br/>━━━━━━━━━━━━━━<br/>div id='word-detail-screen']
+    TopicWords -->|Кнопка Учить<br/>addToStudyList| AddToStudy1[addToStudyList<br/>━━━━━━━━━━━━━━<br/>функция]
+
+    %% Детали слова
+    WordDetail[🔍 Детали слова<br/>word-detail-screen<br/>━━━━━━━━━━━━━━<br/>div id='word-detail-screen'<br/>Немецкое слово<br/>🔊 Произношение<br/>Транскрипция<br/>Перевод<br/>Часть речи<br/>Темы<br/>Пример]
+    WordDetail -->|Ассоциация<br/>showAssociationModal| AssocModal[Модальное окно:<br/>Картинка + текст<br/>━━━━━━━━━━━━━━<br/>association-modal]
+    WordDetail -->|Учить<br/>addToStudyList| AddToStudy2[addToStudyList<br/>━━━━━━━━━━━━━━<br/>функция]
+    WordDetail -->|🔊<br/>speakGerman| Speak[speakGerman<br/>━━━━━━━━━━━━━━<br/>функция]
+
+    %% Сессии обучения
+    Review -->|showNextCard| ReviewCard[Показ карточки<br/>━━━━━━━━━━━━━━<br/>div id='card-front'<br/>Слово / Перевод<br/>🔊 Аудио]
+    Practice -->|showNextCard| PracticeCard[Показ карточки<br/>━━━━━━━━━━━━━━<br/>div id='card-front'<br/>Слово / Перевод<br/>🔊 Аудио]
+    
+    ReviewCard -->|Показать ответ<br/>showAnswer| ShowAns1[Показ ответа<br/>━━━━━━━━━━━━━━<br/>div id='card-back']
+    PracticeCard -->|Показать ответ<br/>showAnswer| ShowAns2[Показ ответа<br/>━━━━━━━━━━━━━━<br/>div id='card-back']
+    
+    ShowAns1 -->|Помню ✓<br/>handleAnswer| Next1[Следующая карточка<br/>━━━━━━━━━━━━━━<br/>nextCard]
+    ShowAns1 -->|Не помню ✗<br/>handleAnswer| Next1
+    ShowAns2 -->|Помню ✓<br/>handleAnswer| Next2[Следующая карточка<br/>━━━━━━━━━━━━━━<br/>nextCard]
+    ShowAns2 -->|Не помню ✗<br/>handleAnswer| Next2
+    
+    Next1 -->|Ещё карточки<br/>showNextCard| ReviewCard
+    Next1 -->|Конец<br/>renderAllSetsScreen| ReturnAllSets1[Возврат в<br/>В учебе<br/>━━━━━━━━━━━━━━<br/>tempSource check]
+    Next2 -->|Ещё карточки<br/>showNextCard| PracticeCard
+    Next2 -->|Конец<br/>renderAllSetsScreen| ReturnAllSets2[Возврат в<br/>В учебе<br/>━━━━━━━━━━━━━━<br/>tempSource check]
+    
+    ReturnAllSets1 --> AllSets
+    ReturnAllSets2 --> AllSets
+
+    %% Навигационные функции
+    AddToStudy1 -.-> StudyList[(Список<br/>для изучения)]
+    AddToStudy2 -.-> StudyList
+
+    %% Стили
+    classDef screenClass fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
+    classDef modalClass fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    classDef sessionClass fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
+    classDef actionClass fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+    classDef dataClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+
+    class Home,AllSets,Topics,TopicWords,WordDetail screenClass
+    class DirModal1,DirModal2,ExerciseModal,AssocModal modalClass
+    class Review,Practice,ReviewCard,PracticeCard,ShowAns1,ShowAns2 sessionClass
+    class AddToStudy1,AddToStudy2,Speak,Next1,Next2,ReturnAllSets1,ReturnAllSets2 actionClass
+    class StudyList dataClass

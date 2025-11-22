@@ -16,7 +16,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ffffff;
             min-height: 100vh;
             user-select: none;
             -webkit-user-select: none;
@@ -161,7 +161,7 @@
 
         /* Главное содержимое */
         .main-content {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: #ffffff;
             min-height: 100vh;
             padding-bottom: 80px;
         }
@@ -310,14 +310,42 @@
     </style>
 </head>
 
-<body class="min-h-screen bg-gray-100 font-sans p-4 pb-28" style="overflow-y: auto; overflow-x: hidden;">
+<body class="min-h-screen bg-white font-sans p-4 pb-28" style="overflow-y: auto; overflow-x: hidden;">
+
+<div id="word-detail-screen" class="hidden fixed inset-0 z-50 flex flex-col items-center justify-start bg-white overflow-y-auto" style="padding-top: 32px;">
+    <div class="w-full max-w-xl mx-auto p-4">
+        <div class="flex flex-col items-center gap-4">
+            <!-- Немецкое слово с артиклем (если noun) -->
+            <div id="word-detail-german" class="text-3xl font-bold text-gray-900 text-center"></div>
+            <!-- Микрофон -->
+            <button id="word-detail-speak" class="p-2 bg-blue-100 hover:bg-blue-200 rounded-full">
+                <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            </button>
+            <!-- Транскрипция и перевод -->
+            <div id="word-detail-transcription" class="text-lg text-gray-500 text-center"></div>
+            <div id="word-detail-translation" class="text-xl text-gray-700 text-center font-semibold"></div>
+            <!-- Часть речи -->
+            <div id="word-detail-pos" class="text-base text-gray-500 text-center"></div>
+            <!-- Темы -->
+            <div id="word-detail-topics" class="text-base text-gray-400 text-center"></div>
+            <!-- Пример -->
+            <div id="word-detail-example" class="text-base text-gray-600 text-center italic"></div>
+            <!-- Кнопки -->
+            <div class="flex gap-4 justify-center mt-4">
+                <button id="word-detail-association" class="btn-secondary">Ассоциация</button>
+                <button id="word-detail-study" class="btn-success">Учить</button>
+            </div>
+            <button onclick="window.App.closeWordDetailScreen()" class="mt-6 text-gray-400 hover:text-gray-700">Закрыть</button>
+        </div>
+    </div>
+</div>
 
     <!-- Основной контейнер приложения -->
     <div id="app" class="max-w-xl mx-auto" style="touch-action: pan-y;">
         
         <!-- 1. Экран Загрузки (виден по умолчанию) -->
         <div id="loading-screen" class="text-center py-20">
-            <p class="text-white text-lg font-semibold">Загружаем ассоциации...</p>
+            <p class="text-blue-600 text-lg font-semibold">Загружаем ассоциации...</p>
         </div>
 
         <!-- МОДАЛЬНОЕ ОКНО: МАНТРЫ ПОЛЕЗНЫХ ФРАЗ -->
@@ -410,8 +438,19 @@
                         <option value="all">Все темы</option>
                     </select>
                     <div id="search-container" class="flex gap-2 mb-4 relative">
-                        <input type="text" id="search-input-weekly" placeholder="Поиск по слову (нем/рус)" class="p-2 border border-gray-300 rounded-lg flex-1">
-                        <button id="search-button" class="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition">Поиск</button>
+                        <div class="relative flex-1">
+                            <input type="text" id="search-input-weekly" placeholder="Поиск по слову (нем/рус)" class="p-2 pr-10 border border-gray-300 rounded-lg w-full">
+                            <button id="clear-search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition hidden">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <button id="search-button" class="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
                         <div id="autocomplete-list" class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-50 hidden"></div>
                     </div>
                 </div>
@@ -711,10 +750,16 @@
                     <svg class="w-20 h-20 mx-auto mb-4 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path></svg>
                     <h2 class="text-3xl font-bold text-gray-800 mb-2">Отлично! 🎉</h2>
                     <p id="finish-screen-text" class="text-gray-600 mb-6 text-lg">Вы прошли все карточки в этой сессии.</p>
-                    <button onclick="window.App.renderHomeScreen(false, true)" class="btn-primary py-3 px-8 inline-flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V20a2 2 0 002 2h12a2 2 0 002-2v-9.586l.707.707a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                        В меню
-                    </button>
+                    <div class="flex flex-col gap-3">
+                        <button id="finish-return-to-sets-btn" onclick="window.App.renderAllSetsScreen()" class="hidden btn-secondary py-3 px-8 inline-flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+                            К наборам слов
+                        </button>
+                        <button onclick="window.App.renderHomeScreen(false, true)" class="btn-primary py-3 px-8 inline-flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V20a2 2 0 002 2h12a2 2 0 002-2v-9.586l.707.707a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                            В меню
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -731,8 +776,8 @@
         </button>
 
         <button onclick="window.App.renderAllSetsScreen()" class="flex flex-col items-center justify-center text-white hover:text-blue-100 transition-colors w-1/3 py-2 group">
-            <svg class="w-7 h-7 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
-            <span class="text-xs mt-1 font-semibold">Все слова</span>
+            <img src="assets/icons/carrds.png" alt="" class="w-7 h-7 group-hover:scale-110 transition-transform">
+            <span class="text-xs mt-1 font-semibold">В учебе</span>
         </button>
 
         <button onclick="window.App.renderTopicSelection()" class="flex flex-col items-center justify-center text-white hover:text-blue-100 transition-colors w-1/3 py-2 group bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg">
@@ -805,19 +850,17 @@
     
     <!-- Модальное окно для Выбора направления -->
     <div id="direction-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0" onclick="window.App.closeDirectionModal()">
-        <div id="direction-modal-content" class="modal-content bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full" onclick="event.stopPropagation()">
-            <h3 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 text-center">🌍 Направление обучения</h3>
+        <div id="direction-modal-content" class="modal-content bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full relative" onclick="event.stopPropagation()">
+            <button onclick="window.App.closeDirectionModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl leading-none">
+                ✕
+            </button>
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Направление</h3>
             <div class="space-y-3">
-                <button onclick="window.App.startSessionWithDirection('ru-de')" class="btn-primary w-full py-3 px-4 flex items-center justify-center gap-2">
-                    <span>🇷🇺</span>
-                    Русский → Немецкий
+                <button onclick="window.App.startSessionWithDirection('de-ru')" class="w-full py-4 px-4 bg-blue-500 text-white font-semibold rounded-xl shadow hover:bg-blue-600 transition">
+                    DE → RU
                 </button>
-                <button onclick="window.App.startSessionWithDirection('de-ru')" class="btn-success w-full py-3 px-4 flex items-center justify-center gap-2">
-                    <span>🇩🇪</span>
-                    Немецкий → Русский
-                </button>
-                <button onclick="window.App.closeDirectionModal()" class="btn-secondary w-full mt-4 py-2 px-4">
-                    ✕ Отмена
+                <button onclick="window.App.startSessionWithDirection('ru-de')" class="w-full py-4 px-4 bg-blue-500 text-white font-semibold rounded-xl shadow hover:bg-blue-600 transition">
+                    RU → DE
                 </button>
             </div>
         </div>
@@ -2071,7 +2114,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
                 mainBlock.innerHTML += `
                     <button onclick="window.App.renderAllSetsScreen()" class="w-full py-4 px-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl shadow-md text-left text-lg font-semibold text-purple-900 hover:from-purple-100 hover:to-pink-100 flex justify-between items-center transition duration-150 mt-3 border-2 border-purple-200">
-                        <span>📚 Все наборы слов</span>
+                        <span class="flex items-center gap-2"><img src="assets/icons/carrds.png" alt="" class="w-6 h-6"> В учебе</span>
                         <span>&rarr;</span>
                     </button>
                 `;
@@ -2217,7 +2260,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             renderTopicSelection(isBack = false) {
                 console.log('🔍 renderTopicSelection called');
-                document.getElementById('list-title').innerText = 'ПОИСК СЛОВ';
+                document.getElementById('list-title').innerText = '';
                 const subtitleEl = document.getElementById('list-subtitle');
                 if (subtitleEl) subtitleEl.style.display = 'none';
                 
@@ -2317,10 +2360,30 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     return `${before}<span class="bg-yellow-200 font-bold">${match}</span>${after}`;
                 }
                 
-                // Event listeners for autocomplete
+                
+                // Clear button functionality
+                const clearBtn = document.getElementById('clear-search-button');
+                
                 searchInput.addEventListener('input', (e) => {
                     updateAutocomplete(e.target.value);
+                    // Show/hide clear button
+                    if (clearBtn) {
+                        if (e.target.value.length > 0) {
+                            clearBtn.classList.remove('hidden');
+                        } else {
+                            clearBtn.classList.add('hidden');
+                        }
+                    }
                 });
+                
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => {
+                        searchInput.value = '';
+                        clearBtn.classList.add('hidden');
+                        autocompleteList.classList.add('hidden');
+                        renderContent(selectedFilter, '');
+                    });
+                }
                 
                 searchInput.addEventListener('focus', (e) => {
                     if (e.target.value.length >= 2) {
@@ -2526,7 +2589,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                             if (isInStudy) {
                                 const studyIndicator = document.createElement('div');
                                 studyIndicator.className = 'px-4 py-2 bg-yellow-500 text-white text-sm font-bold rounded-lg shadow-sm';
-                                studyIndicator.textContent = '📚 В учебе';
+                                studyIndicator.innerHTML = '<img src="assets/icons/carrds.png" alt="" class="inline-block w-5 h-5 mr-1 align-text-bottom">В учебе';
                                 wordItem.appendChild(studyIndicator);
                             }
                             contentListDiv.appendChild(wordItem);
@@ -2652,30 +2715,40 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     'bg-green-100 hover:bg-green-200'
                 );
                 
-                // 2. Упражнения с gap_fill
+                // 2. Ассоциации
+                this.renderMenuCard(contentListDiv,
+                    `🖼️ Ассоциации`,
+                    '',
+                    `window.App.startCarouselSession('${topicId}')`,
+                    'bg-indigo-100 hover:bg-indigo-200'
+                );
+                
+                // 3. Упражнения с gap_fill
                 this.renderMenuCard(contentListDiv,
                     `✏️ Упражнения`,
-                    'Различные типы упражнений для практики',
+                    '',
                     `window.App.renderExercisesMenu('${topicId}', ${weekNum})`,
-                    'bg-purple-100 hover:bg-purple-200'
+                    'bg-blue-100 hover:bg-blue-200'
                 );
                 
                 // 3. Мантры полезных фраз
                 this.renderMenuCard(contentListDiv,
                     `🕯️ Мантры полезных фраз`,
-                    'Короткие полезные фразы для ежедневной практики',
-                    `window.App.startMantraSessionFromExercises('${topicId}', ${weekNum})`
+                    '',
+                    `window.App.startMantraSessionFromExercises('${topicId}', ${weekNum})`,
+                    'bg-yellow-100 hover:bg-yellow-200'
                 );
                 
-                // 4. Полезные фразы / Диалоги
+                // 4. Фразы и диалоги
                 // [ИЗМЕНЕНО]
                 const dialoguesTextEscaped = (weekData.dialoguesText || '').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\r\n|\r|\n/g, '<br>');
                 const dialoguesTitleEscaped = (weekData.dialoguesTitle || `Диалоги Недели ${weekNum}`).replace(/'/g, "\\'");
 
                 this.renderMenuCard(contentListDiv, 
-                    `🗣️ Полезные фразы / Диалоги на тему`, 
-                    `Видео и текст`, // [ИЗМЕНЕНО]
-                    `window.App.renderVideoContentScreen('${dialoguesTitleEscaped}', '${weekData.dialoguesVideo || ''}', '${dialoguesTextEscaped}')` // [ИЗМЕНЕНО]
+                    `🗣️ Фразы и диалоги`, 
+                    '',
+                    `window.App.renderVideoContentScreen('${dialoguesTitleEscaped}', '${weekData.dialoguesVideo || ''}', '${dialoguesTextEscaped}')`,
+                    'bg-pink-100 hover:bg-pink-200'
                 );
                 
                 // 5. Истории по теме
@@ -2693,9 +2766,9 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 
                 this.renderMenuCard(contentListDiv, 
                     `📖 Истории по теме`, 
-                    `Видео + квиз`,
+                    '',
                     storyAction,
-                    (this.allStoryContent[storyId] || weekData.storyLink) ? 'bg-white hover:bg-gray-50' : 'button-locked'
+                    (this.allStoryContent[storyId] || weekData.storyLink) ? 'bg-orange-100 hover:bg-orange-200' : 'button-locked'
                 );
 
                 // [ИЗМЕНЕНО] Вызываем showScreen с состоянием для истории
@@ -2830,7 +2903,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             renderAllSetsScreen(isBack = false) {
                 // [ИЗМЕНЕНО] Убраны this.returnContext и this.renderBackButton
-                document.getElementById('list-title').innerText = '📚 Все наборы слов';
+                document.getElementById('list-title').innerHTML = '<img src="assets/icons/carrds.png" alt="" class="inline-block w-7 h-7 mr-2 align-text-bottom">В учебе';
                 
                 // Скрываем фильтры
                 const filterControls = document.getElementById('filter-controls');
@@ -3302,6 +3375,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     this.selectedWordsForStudy = {};
                 }
                 
+                // Временный массив для выбранных слов (только для этого экрана)
+                if (!this.tempSelectedWords) {
+                    this.tempSelectedWords = [];
+                }
+                this.tempSelectedWords = [];
+                
                 // Фильтруем слова по теме из allWords
                 const words = this.allWords.filter(word => word.topics && word.topics.includes(topicId));
                 
@@ -3311,6 +3390,100 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
                 
                 contentListDiv.innerHTML = '';
+                
+                // Создаем панель управления с галочкой "Выбрать все" и кнопкой "Учить"
+                const controlPanel = document.createElement('div');
+                controlPanel.id = 'word-selection-controls';
+                controlPanel.className = 'mb-4 p-4 bg-white rounded-xl shadow-md flex items-center justify-between gap-3';
+                controlPanel.innerHTML = `
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="select-all-words" class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="font-semibold text-gray-700">Выбрать все</span>
+                    </label>
+                    <button id="add-selected-to-study" class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition hidden">
+                        Учить выбранные
+                    </button>
+                `;
+                contentListDiv.appendChild(controlPanel);
+                
+                const selectAllCheckbox = controlPanel.querySelector('#select-all-words');
+                const addToStudyBtn = controlPanel.querySelector('#add-selected-to-study');
+                
+                // Функция обновления кнопки "Учить"
+                const updateStudyButton = () => {
+                    if (this.tempSelectedWords.length > 0) {
+                        addToStudyBtn.textContent = `Учить выбранные (${this.tempSelectedWords.length})`;
+                        addToStudyBtn.classList.remove('hidden');
+                    } else {
+                        addToStudyBtn.classList.add('hidden');
+                    }
+                };
+                
+                // Обработчик "Выбрать все"
+                selectAllCheckbox.addEventListener('change', (e) => {
+                    const isChecked = e.target.checked;
+                    const checkboxes = contentListDiv.querySelectorAll('.word-checkbox');
+                    checkboxes.forEach(cb => {
+                        cb.checked = isChecked;
+                    });
+                    
+                    if (isChecked) {
+                        this.tempSelectedWords = words.map(w => w.id);
+                    } else {
+                        this.tempSelectedWords = [];
+                    }
+                    updateStudyButton();
+                });
+                
+                // Обработчик кнопки "Учить выбранные"
+                addToStudyBtn.addEventListener('click', () => {
+                    if (this.tempSelectedWords.length === 0) return;
+                    
+                    const selectedCount = this.tempSelectedWords.length;
+                    const today = this.getTodayDateString();
+                    
+                    // Добавляем выбранные слова в selectedWordsForStudy
+                    if (!this.selectedWordsForStudy[topicId]) {
+                        this.selectedWordsForStudy[topicId] = [];
+                    }
+                    
+                    let addedCount = 0;
+                    this.tempSelectedWords.forEach(wordId => {
+                        const wordData = words.find(w => w.id === wordId);
+                        if (wordData && !this.selectedWordsForStudy[topicId].some(w => w.id === wordId)) {
+                            this.selectedWordsForStudy[topicId].push(wordData);
+                            addedCount++;
+                            
+                            // Инициализируем прогресс для системы интервального повторения
+                            if (!this.userProgress[wordId]) {
+                                this.userProgress[wordId] = {
+                                    isLearning: true,
+                                    box: 0, // Начинаем с Box 0
+                                    nextReview: today, // Доступно к повтору сегодня
+                                    lastReviewed: today
+                                };
+                            } else if (!this.userProgress[wordId].isLearning) {
+                                // Если слово было, но не в обучении - активируем
+                                this.userProgress[wordId].isLearning = true;
+                                this.userProgress[wordId].box = 0;
+                                this.userProgress[wordId].nextReview = today;
+                                this.userProgress[wordId].lastReviewed = today;
+                            }
+                        }
+                    });
+                    
+                    this.saveProgress();
+                    
+                    // Сбрасываем выбор
+                    this.tempSelectedWords = [];
+                    selectAllCheckbox.checked = false;
+                    
+                    // Перерисовываем список
+                    this.renderWordList(setId, topicId);
+                    
+                    // Показываем уведомление
+                    alert(`Добавлено ${addedCount} слов в обучение!`);
+                });
                 
                 // Создаем список слов
                 words.forEach(wordData => {
@@ -3324,17 +3497,41 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                                       this.selectedWordsForStudy[topicId].some(w => w.id === wordId);
                     
                     const wordItem = document.createElement('div');
-                    wordItem.className = 'p-4 bg-white rounded-xl shadow-md flex items-center justify-between gap-3 cursor-pointer hover:bg-gray-50 transition';
+                    wordItem.className = 'p-4 bg-white rounded-xl shadow-md flex items-center gap-3 hover:bg-gray-50 transition';
                     wordItem.dataset.wordId = wordId;
                     
-                    // Левая часть: немецкое слово и перевод
+                    // Чекбокс для выбора
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'word-checkbox w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500';
+                    checkbox.checked = this.tempSelectedWords.includes(wordId);
+                    checkbox.addEventListener('change', (e) => {
+                        e.stopPropagation();
+                        if (e.target.checked) {
+                            if (!this.tempSelectedWords.includes(wordId)) {
+                                this.tempSelectedWords.push(wordId);
+                            }
+                        } else {
+                            this.tempSelectedWords = this.tempSelectedWords.filter(id => id !== wordId);
+                            selectAllCheckbox.checked = false;
+                        }
+                        updateStudyButton();
+                    });
+
+                    // Левая часть: немецкое слово и перевод (без картинки)
                     const wordInfo = document.createElement('div');
-                    wordInfo.className = 'flex-1';
+                    wordInfo.className = 'flex-1 cursor-pointer';
                     wordInfo.innerHTML = `
                         <div class="font-bold text-lg text-gray-800">${displayWord}</div>
                         <div class="text-sm text-gray-500">${translation}</div>
                     `;
                     
+                    // Клик на текст открывает новый экран слова
+                    const currentIndex = words.indexOf(wordData);
+                    wordInfo.addEventListener('click', () => {
+                        this.openWordDetailScreen(wordData, topicId, wordId, words, currentIndex);
+                    });
+
                     // Кнопка озвучки
                     const speakBtn = document.createElement('button');
                     speakBtn.className = 'p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition';
@@ -3349,13 +3546,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         utterance.lang = 'de-DE';
                         window.speechSynthesis.speak(utterance);
                     });
-                    
-                    // Клик на весь элемент открывает карточку
-                    const currentIndex = words.indexOf(wordData);
-                    wordItem.addEventListener('click', () => {
-                        this.openWordCard(wordData, topicId, wordId, words, currentIndex);
-                    });
-                    
+
+                    wordItem.appendChild(checkbox);
                     wordItem.appendChild(wordInfo);
                     wordItem.appendChild(speakBtn);
                     
@@ -3363,7 +3555,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     if (isInStudy) {
                         const studyIndicator = document.createElement('div');
                         studyIndicator.className = 'px-4 py-2 bg-yellow-500 text-white text-sm font-bold rounded-lg shadow-sm';
-                        studyIndicator.textContent = '📚 В учебе';
+                        studyIndicator.innerHTML = '<img src="assets/icons/carrds.png" alt="" class="inline-block w-5 h-5 mr-1 align-text-bottom">В учебе';
                         wordItem.appendChild(studyIndicator);
                     }
                     contentListDiv.appendChild(wordItem);
@@ -4672,6 +4864,112 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 }
             },
 
+            openWordDetailScreen(wordData, topicId, wordId, wordsList, currentIndex) {
+                // Сохраняем topicId для возврата к списку слов
+                this.currentDetailTopicId = topicId;
+                
+                // Скрыть все основные экраны
+                document.querySelectorAll('.main-content').forEach(el => el.classList.add('hidden'));
+                document.getElementById('word-detail-screen').classList.remove('hidden');
+
+                // Немецкое слово с артиклем (если noun)
+                const shouldShowArticle = wordData.article && wordData.article !== '—' && wordData.partOfSpeech && wordData.partOfSpeech.toLowerCase().includes('noun');
+                document.getElementById('word-detail-german').textContent = shouldShowArticle ? `${wordData.article} ${wordData.word}` : wordData.word;
+
+                // Микрофон
+                document.getElementById('word-detail-speak').onclick = () => {
+                    const utterance = new SpeechSynthesisUtterance(wordData.word);
+                    utterance.lang = 'de-DE';
+                    window.speechSynthesis.speak(utterance);
+                };
+
+                // Транскрипция
+                document.getElementById('word-detail-transcription').textContent = wordData.transcriptionRu || '';
+                // Перевод
+                const translation = Array.isArray(wordData.translation) ? wordData.translation.join(', ') : wordData.translation;
+                document.getElementById('word-detail-translation').textContent = translation;
+                // Часть речи
+                document.getElementById('word-detail-pos').textContent = wordData.partOfSpeech || '';
+                // Темы
+                const topicNames = wordData.topics && this.allTopics ? wordData.topics.map(tid => {
+                    const t = this.allTopics.find(tt => tt.id === tid);
+                    return t ? t.name : tid;
+                }).join(', ') : '';
+                document.getElementById('word-detail-topics').textContent = topicNames;
+                // Пример
+                const example = Array.isArray(wordData.examples) ? wordData.examples[0] : wordData.examples;
+                document.getElementById('word-detail-example').textContent = example || '';
+
+                // Кнопка Ассоциация - проверяем реальное существование картинки
+                const assocBtn = document.getElementById('word-detail-association');
+                const assocText = wordData.association || '';
+                
+                // Функция для проверки существования изображения
+                const checkImageExists = (imageUrl) => {
+                    return new Promise((resolve) => {
+                        if (!imageUrl) {
+                            resolve(false);
+                            return;
+                        }
+                        const img = new Image();
+                        img.onload = () => resolve(true);
+                        img.onerror = () => resolve(false);
+                        img.src = imageUrl;
+                    });
+                };
+                
+                // Проверяем наличие картинки асинхронно
+                checkImageExists(wordData.image).then(imageExists => {
+                    const hasAssociation = imageExists || assocText;
+                    
+                    if (!hasAssociation) {
+                        assocBtn.disabled = true;
+                        assocBtn.className = 'px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed';
+                    } else {
+                        assocBtn.disabled = false;
+                        assocBtn.className = 'btn-secondary px-4 py-2';
+                        assocBtn.onclick = () => {
+                            let assocImg = imageExists ? wordData.image : '';
+                            
+                            // Создаем простое модальное окно
+                            const modalHtml = `
+                                <div class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" id="association-modal" onclick="this.classList.add('hidden')">
+                                    <div class="modal-content bg-white p-6 max-w-lg w-full rounded-2xl" onclick="event.stopPropagation()">
+                                        <div class="flex justify-end items-center mb-3">
+                                            <button onclick="document.getElementById('association-modal').remove()" class="text-gray-500 text-2xl">&times;</button>
+                                        </div>
+                                        <div style='text-align:center;'>
+                                            ${assocImg ? `<img src='${assocImg}' alt='Ассоциация' style='max-width:100%; margin:0 auto 1em; border-radius:8px;'/>` : ''}
+                                            <div style='font-size:1.1em;'>${assocText}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            document.body.insertAdjacentHTML('beforeend', modalHtml);
+                        };
+                    }
+                });
+                
+                // Кнопка Учить
+                const studyBtn = document.getElementById('word-detail-study');
+                const isInStudy = this.selectedWordsForStudy[topicId] && this.selectedWordsForStudy[topicId].some(w => w.id === wordId);
+                studyBtn.textContent = isInStudy ? 'В учебе' : 'Учить';
+                studyBtn.className = isInStudy ? 'px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition' : 'btn-success px-4 py-2';
+                studyBtn.onclick = () => {
+                    this.toggleWordForStudy(topicId, wordId, wordData, studyBtn);
+                };
+            },
+
+            closeWordDetailScreen() {
+                document.getElementById('word-detail-screen').classList.add('hidden');
+                document.getElementById('list-screen').classList.remove('hidden');
+                
+                // Возвращаемся к списку слов темы, если была сохранена тема
+                if (this.currentDetailTopicId) {
+                    this.renderTopicWords(this.currentDetailTopicId);
+                }
+            },
+
             toggleWordForStudyFromModal() {
                 if (!this.currentModalWord) return;
                 
@@ -4824,10 +5122,20 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const historyState = { renderFunc: 'startSession', param: {setId, mode, source} };
 
                 if (this.sessionCards.length === 0) {
-                    this.showScreen('finish-screen', isBack, historyState); // Записываем в историю
+                    // Если пришли из "Все наборы слов" - возвращаемся туда
+                    if (source === 'allsets') {
+                        this.renderAllSetsScreen();
+                        return;
+                    }
+                    
+                    // Иначе показываем финальный экран
+                    this.showScreen('finish-screen', isBack, historyState);
                     document.getElementById('finish-screen-text').textContent = this.isPracticeMode 
                         ? 'В этом наборе нет карточек.' 
                         : 'Для этого набора нет карточек к повторению на сегодня!';
+                    
+                    const returnToSetsBtn = document.getElementById('finish-return-to-sets-btn');
+                    returnToSetsBtn.classList.add('hidden');
                     return;
                 }
 
@@ -4857,10 +5165,19 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     // Обновляем секцию "К повторению сегодня" после завершения сессии
                     this.renderDueTodaySection();
                     
-                    // [ИЗМЕНЕНО] Состояние для истории
+                    // Если пришли из "Все наборы слов" - возвращаемся туда
+                    if (this.tempSource === 'allsets') {
+                        this.renderAllSetsScreen();
+                        return;
+                    }
+                    
+                    // Иначе показываем финальный экран
                     const historyState = this.navigationHistory[this.navigationHistory.length - 1];
-                    this.showScreen('finish-screen', false, historyState); // Переиспользуем состояние, но не пишем в историю
+                    this.showScreen('finish-screen', false, historyState);
                     document.getElementById('finish-screen-text').textContent = 'Вы прошли все карточки в этой сессии.';
+                    
+                    const returnToSetsBtn = document.getElementById('finish-return-to-sets-btn');
+                    returnToSetsBtn.classList.add('hidden');
                     return;
                 }
                 
@@ -5159,10 +5476,23 @@ async handleAnswer(knewIt) {
                         this.showNextCard();
                     }, 400);
                 } else {
-                    // Если это последняя карточка, переходим на экран завершения
+                    // Если это последняя карточка
+                    // Обновляем секцию "К повторению сегодня"
+                    this.renderDueTodaySection();
+                    
+                    // Если пришли из "Все наборы слов" - возвращаемся туда
+                    if (this.tempSource === 'allsets') {
+                        this.renderAllSetsScreen();
+                        return;
+                    }
+                    
+                    // Иначе показываем финальный экран
                     const historyState = this.navigationHistory[this.navigationHistory.length - 1];
                     this.showScreen('finish-screen', false, historyState);
                     document.getElementById('finish-screen-text').textContent = 'Вы прошли все карточки в этой сессии.';
+                    
+                    const returnToSetsBtn = document.getElementById('finish-return-to-sets-btn');
+                    returnToSetsBtn.classList.add('hidden');
                 }
             },
 
