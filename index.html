@@ -1499,6 +1499,8 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             const slide = this.analysisSlides[this.currentAnalysisIndex];
             if (!slide) return;
+          },
+          
           /* ====== КВИЗ ====== */
           startStoryQuiz() {
             // [ИЗМЕНЕНО] Проверяем, есть ли данные в this.quizData
@@ -3479,41 +3481,63 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const controlPanel = document.createElement('div');
                 controlPanel.id = 'word-selection-controls';
                 controlPanel.className = 'mb-4 p-4 bg-white rounded-xl shadow-md flex items-center justify-between gap-3';
-                contentListDiv.innerHTML = `
-                    <div class="mb-4">
-                        <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
-                            <span>${idx + 1} / ${total}</span>
-                            <span>${progress}%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
-                        </div>
-                    </div>
-                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-4">
-                        <div class="text-center mb-6">
-                            <p class="text-lg text-gray-700 font-mono mb-2">${exercise.sentence.replace('___', '<span class=\'underline\'>___</span>')}</p>
-                            ${exercise.sentence_ru ? `<p class='text-gray-500 text-sm italic'>${exercise.sentence_ru}</p>` : ''}
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="gapfill-options">${exercise.options.map(option => `
-                                <button onclick=\"window.App.checkGapFillAnswer('${option}', this)\" class=\"py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-center\">${option}</button>
-                            `).join('')}
-                        </div>
-                        <div id="gapfill-explanation" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-                            <p class="text-sm text-blue-800">💡 ${exercise.explanation || ''}</p>
-                        </div>
-                    </div>
-                    <div class="flex justify-center space-x-4">
-                        ${idx > 0 ? `<button onclick=\"window.App.prevGapFillExercise()\" class=\"py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition\">&larr; Назад</button>` : ''}
-                        ${idx < total - 1 ? `<button onclick=\"window.App.nextGapFillExercise()\" class=\"py-2 px-5 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition\">Далее &rarr;</button>` : `<button onclick=\"window.App.finishGapFillExercises()\" class=\"py-2 px-5 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition\">Завершить ✓</button>`}
-                        <button onclick=\"window.App.handleTelegramBackClick()\" class=\"py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition\">✕ Закрыть</button>
-                    </div>
-                `;
-                    
-                    if (isChecked) {
-                        this.tempSelectedWords = words.map(w => w.id);
+                
+                // Чекбокс "Выбрать все"
+                const selectAllCheckbox = document.createElement('input');
+                selectAllCheckbox.type = 'checkbox';
+                selectAllCheckbox.id = 'select-all-words';
+                selectAllCheckbox.className = 'w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500';
+                
+                const selectAllLabel = document.createElement('label');
+                selectAllLabel.htmlFor = 'select-all-words';
+                selectAllLabel.className = 'text-gray-700 font-semibold cursor-pointer';
+                selectAllLabel.textContent = 'Выбрать все';
+                
+                const selectAllContainer = document.createElement('div');
+                selectAllContainer.className = 'flex items-center gap-2';
+                selectAllContainer.appendChild(selectAllCheckbox);
+                selectAllContainer.appendChild(selectAllLabel);
+                
+                // Кнопка "Учить выбранные"
+                const addToStudyBtn = document.createElement('button');
+                addToStudyBtn.className = 'btn-success px-6 py-2';
+                addToStudyBtn.textContent = `Учить выбранные (0)`;
+                addToStudyBtn.id = 'add-to-study-btn';
+                
+                controlPanel.appendChild(selectAllContainer);
+                controlPanel.appendChild(addToStudyBtn);
+                contentListDiv.appendChild(controlPanel);
+                
+                // Функция обновления кнопки "Учить выбранные"
+                const updateStudyButton = () => {
+                    const count = this.tempSelectedWords.length;
+                    addToStudyBtn.textContent = `Учить выбранные (${count})`;
+                    addToStudyBtn.disabled = count === 0;
+                    if (count === 0) {
+                        addToStudyBtn.classList.add('button-locked');
                     } else {
-                        this.tempSelectedWords = [];
+                        addToStudyBtn.classList.remove('button-locked');
                     }
+                };
+                
+                // Обработчик чекбокса "Выбрать все"
+                selectAllCheckbox.addEventListener('change', (e) => {
+                    const isChecked = e.target.checked;
+                    
+                    // Очищаем массив выбранных слов
+                    if (!isChecked) {
+                        this.tempSelectedWords = [];
+                    } else {
+                        // Добавляем все слова из списка
+                        this.tempSelectedWords = words.map(w => w.id);
+                    }
+                    
+                    // Обновляем все чекбоксы
+                    const checkboxes = contentListDiv.querySelectorAll('.word-checkbox');
+                    checkboxes.forEach(cb => {
+                        cb.checked = isChecked;
+                    });
+                    
                     updateStudyButton();
                 });
                 
@@ -3828,6 +3852,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const exercise = exercises[idx];
                 const total = exercises.length;
                 const progress = Math.round(((idx + 1) / total) * 100);
+                
+                // Перемешиваем варианты ответов в случайном порядке
+                const shuffledOptions = [...exercise.options].sort(() => Math.random() - 0.5);
+                
                 const contentListDiv = document.getElementById('content-list');
                 contentListDiv.innerHTML = `
                     <div class="mb-4">
@@ -3841,11 +3869,10 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     </div>
                     <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-4">
                         <div class="text-center mb-6">
-                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question || 'Заполните пропуск'}</p>
                             <p class="text-lg text-gray-700 font-mono mb-2">${exercise.sentence.replace('___', '<span class=\'underline\'>___</span>')}</p>
-                            ${exercise.sentence_ru ? `<p class='text-gray-500 text-sm italic'>${exercise.sentence_ru}</p>` : ''}
+                            ${exercise.sentence_ru ? `<p class='text-gray-500 text-sm italic mt-2'>${exercise.sentence_ru}</p>` : ''}
                         </div>
-                        <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="gapfill-options">${exercise.options.map(option => `
+                        <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="gapfill-options">${shuffledOptions.map(option => `
                                 <button onclick="window.App.checkGapFillAnswer('${option}', this)" class="py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-center">${option}</button>
                             `).join('')}
                         </div>
@@ -4014,7 +4041,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-4">
                         <!-- Вопрос -->
                         <div class="text-center mb-6">
-                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question}</p>
+                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question || ''}</p>
                             <button onclick="window.App.playAudio('${exercise.audioText}')" 
                                     class="w-16 h-16 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition mx-auto shadow-lg flex items-center justify-center">
                                 <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
@@ -4024,7 +4051,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         </div>
                         
                         <!-- Варианты ответов (русские переводы) -->
-                        <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="audio-options-${exercise.id}">${exercise.optionsWithTranslations.map((opt, idx) => `
+                        <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="audio-options-${exercise.id}">${[...exercise.optionsWithTranslations].sort(() => Math.random() - 0.5).map((opt, idx) => `
                                 <button onclick="window.App.checkAudioAnswer('${exercise.id}', '${opt.russian.replace(/'/g, "\\'")}', this)" 
                                         class="py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-center">
                                     ${opt.russian}
@@ -4034,7 +4061,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         
                         <!-- Пояснение -->
                         <div id="audio-explanation-${exercise.id}" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-                            <p class="text-sm text-blue-800">💡 ${exercise.explanation}</p>
+                            <p class="text-sm text-blue-800">💡 ${exercise.explanation || ''}</p>
                         </div>
                     </div>
 
@@ -4217,14 +4244,11 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         <!-- Вопрос -->
                         <div class="text-center mb-6">
                             <div class="text-4xl font-bold text-purple-600 mb-4">${exercise.word}</div>
-                            ${exercise.wordObj && exercise.wordObj.translation ? `
-                                <div class="text-lg text-gray-600 italic">(${exercise.wordObj.translation.join(', ')})</div>
-                            ` : ''}
                         </div>
                         
                         <!-- Варианты артиклей -->
                         <div class="grid grid-cols-3 gap-3 mb-4" id="article-options-${exercise.id}">
-                            ${exercise.options.map(article => `
+                            ${[...exercise.options].sort(() => Math.random() - 0.5).map(article => `
                                 <button onclick="window.App.checkArticleAnswer('${exercise.id}', '${article}', this)" 
                                         class="py-6 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-bold text-2xl">
                                     ${article}
@@ -4234,7 +4258,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         
                         <!-- Пояснение -->
                         <div id="article-explanation-${exercise.id}" class="hidden bg-purple-50 border-l-4 border-purple-400 p-4 rounded">
-                            <p class="text-sm text-purple-800">💡 ${exercise.explanation}</p>
+                            <p class="text-sm text-purple-800">💡 ${exercise.explanation || ''}</p>
                         </div>
                     </div>
 
@@ -4413,7 +4437,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         </div>
                     </div>
                     <div class="bg-white rounded-lg shadow-lg p-8">
-                        <p class="text-3xl font-bold mb-6 text-center">${exercise.hint}</p>
+                        <p class="text-3xl font-bold mb-6 text-center">${exercise.hint || exercise.question || 'Соберите слово из букв'}</p>
                         
                         <!-- User answer area -->
                         <div id="answerArea" class="min-h-20 bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-6 flex flex-wrap gap-2 items-center justify-center">
@@ -4687,7 +4711,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-6">
                         <!-- Вопрос -->
                         <div class="text-center mb-4">
-                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question}</p>
+                            <p class="text-xl font-bold text-gray-800 mb-4">${exercise.question || ''}</p>
                         </div>
                         
                         <!-- Картинка -->
@@ -4700,7 +4724,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         
                         <!-- Варианты слов -->
                         <div class="space-y-3 mb-4" id="image-options-${exercise.id}">
-                            ${exercise.options.map(option => `
+                            ${[...exercise.options].sort(() => Math.random() - 0.5).map(option => `
                                 <button onclick="window.App.checkImageMatchAnswer('${exercise.id}', '${option.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', this)" 
                                         class="w-full py-4 px-5 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-bold text-lg">
                                     ${option}
@@ -4713,7 +4737,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                         
                         <!-- Пояснение -->
                         <div id="image-explanation-${exercise.id}" class="hidden bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-                            <p class="text-sm text-yellow-800">💡 ${exercise.explanation}</p>
+                            <p class="text-sm text-yellow-800">💡 ${exercise.explanation || ''}</p>
                         </div>
                     </div>
 
@@ -4765,38 +4789,16 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     imageContainer.querySelector('img').classList.add('border-4', 'border-green-500');
                     
                     resultDiv.className = 'p-4 rounded-lg mb-4 bg-green-100 border-2 border-green-500';
-                    contentListDiv.innerHTML = `
-                        <div class="mb-4">
-                            <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
-                                <span>${idx + 1} / ${total}</span>
-                                <span>${progress}%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-4">
-                            <div class="text-center mb-6">
-                                <p class="text-lg text-gray-700 font-mono mb-2">${exercise.sentence.replace('___', '<span class=\'underline\'>___</span>')}</p>
-                                ${exercise.sentence_ru ? `<p class='text-gray-500 text-sm italic'>${exercise.sentence_ru}</p>` : ''}
-                            </div>
-                            <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="gapfill-options">${exercise.options.map(option => `
-                                    <button onclick=\"window.App.checkGapFillAnswer('${option}', this)\" class=\"py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-center\">${option}</button>
-                                `).join('')}
-                            </div>
-                            <div id="gapfill-explanation" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-                                <p class="text-sm text-blue-800">💡 ${exercise.explanation || ''}</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-center space-x-4">
-                            ${idx > 0 ? `<button onclick=\"window.App.prevGapFillExercise()\" class=\"py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition\">&larr; Назад</button>` : ''}
-                            ${idx < total - 1 ? `<button onclick=\"window.App.nextGapFillExercise()\" class=\"py-2 px-5 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition\">Далее &rarr;</button>` : `<button onclick=\"window.App.finishGapFillExercises()\" class=\"py-2 px-5 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition\">Завершить ✓</button>`}
-                            <button onclick=\"window.App.handleTelegramBackClick()\" class=\"py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition\">✕ Закрыть</button>
-                        </div>
-                    `;
-                            Неправильно. Правильный ответ: ${exercise.answer}
-                        </div>
-                    `;
+                    resultDiv.innerHTML = `<p class="text-green-800 font-semibold">✓ Правильно!</p>`;
+                } else {
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-red-100', 'border-2', 'border-red-500');
+                    
+                    // Красная рамка вокруг картинки
+                    imageContainer.querySelector('img').classList.add('border-4', 'border-red-500');
+                    
+                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-red-100 border-2 border-red-500';
+                    resultDiv.innerHTML = `<p class="text-red-800 font-semibold">✗ Неправильно. Правильный ответ: ${exercise.answer}</p>`;
                 }
                 
                 resultDiv.classList.remove('hidden');

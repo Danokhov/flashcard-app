@@ -1,7 +1,7 @@
 [
   {
     "id": "ex_antibiotikum_gap_fill_1",
-    "wordId": "das_antibiotikum",
+    "wordId": "antibiotikum",
     "type": "gap_fill",
     "question": "Вставьте правильное слово в предложение",
     "sentence": "Der Arzt verschreibt mir ein ___.",
@@ -17,7 +17,7 @@
   },
   {
     "id": "ex_antibiotikum_translate_1",
-    "wordId": "das_antibiotikum",
+    "wordId": "antibiotikum",
     "type": "translate",
     "question": "Переведите на немецкий: Врач выписывает мне антибиотик",
     "answer": "Der Arzt verschreibt mir ein Antibiotikum",
@@ -25,7 +25,7 @@
   },
   {
     "id": "ex_antibiotikum_useful_phrase_1",
-    "wordId": "das_antibiotikum",
+    "wordId": "antibiotikum",
     "type": "useful_phrase",
     "phrase": "Ich brauche ein Antibiotikum gegen die Infektion.",
     "question": "Повторите полезную фразу",
@@ -34,7 +34,7 @@
   },
   {
     "id": "ex_beschwerde_gap_fill_1",
-    "wordId": "die_beschwerde",
+    "wordId": "beschwerde",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich habe ___ im Magen.",
@@ -50,7 +50,7 @@
   },
   {
     "id": "ex_beschwerde_translate_1",
-    "wordId": "die_beschwerde",
+    "wordId": "beschwerde",
     "type": "translate",
     "question": "Переведите на русский: Ich habe Beschwerden im Magen",
     "answer": "У меня жалобы на желудок",
@@ -58,7 +58,7 @@
   },
   {
     "id": "ex_diagnose_gap_fill_1",
-    "wordId": "die_diagnose",
+    "wordId": "diagnose",
     "type": "gap_fill",
     "question": "Вставьте правильное слово",
     "sentence": "Der Arzt stellt eine ___ .",
@@ -74,7 +74,7 @@
   },
   {
     "id": "ex_diagnose_sentence_training_1",
-    "wordId": "die_diagnose",
+    "wordId": "diagnose",
     "type": "sentence_training",
     "sentence": "Der Arzt stellt eine Diagnose nach der Untersuchung.",
     "question": "Составьте предложение из слов",
@@ -82,7 +82,7 @@
   },
   {
     "id": "ex_erkältung_gap_fill_1",
-    "wordId": "die_erkältung",
+    "wordId": "erkältung",
     "type": "gap_fill",
     "question": "Заполните пропуск",
     "sentence": "Ich habe eine starke ___.",
@@ -98,7 +98,7 @@
   },
   {
     "id": "ex_erkältung_useful_phrase_1",
-    "wordId": "die_erkältung",
+    "wordId": "erkältung",
     "type": "useful_phrase",
     "phrase": "Bei einer Erkältung sollte man viel trinken und sich ausruhen.",
     "question": "Запомните полезную фразу о простуде",
@@ -106,7 +106,7 @@
   },
   {
     "id": "ex_fieber_gap_fill_1",
-    "wordId": "das_fieber",
+    "wordId": "fieber",
     "type": "gap_fill",
     "question": "Вставьте слово",
     "sentence": "Das Kind hat hohes ___.",
@@ -122,7 +122,7 @@
   },
   {
     "id": "ex_fieber_translate_1",
-    "wordId": "das_fieber",
+    "wordId": "fieber",
     "type": "translate",
     "question": "Переведите: У ребенка высокая температура",
     "answer": "Das Kind hat hohes Fieber",
@@ -130,7 +130,7 @@
   },
   {
     "id": "ex_gesundheit_gap_fill_1",
-    "wordId": "die_gesundheit",
+    "wordId": "gesundheit",
     "type": "gap_fill",
     "question": "Заполните пропуск",
     "sentence": "Ich achte auf meine ___.",
@@ -146,7 +146,7 @@
   },
   {
     "id": "ex_gesundheit_useful_phrase_1",
-    "wordId": "die_gesundheit",
+    "wordId": "gesundheit",
     "type": "useful_phrase",
     "phrase": "Gesundheit ist das wichtigste im Leben.",
     "question": "Повторите поговорку",
@@ -170,7 +170,7 @@
   },
   {
     "id": "ex_husten_gap_fill_1",
-    "wordId": "der_husten",
+    "wordId": "husten",
     "type": "gap_fill",
     "question": "Заполните пропуск",
     "sentence": "Ich habe starken ___.",
@@ -186,7 +186,7 @@
   },
   {
     "id": "ex_husten_sentence_training_1",
-    "wordId": "der_husten",
+    "wordId": "husten",
     "type": "sentence_training",
     "sentence": "Bei Husten hilft ein warmer Tee mit Honig.",
     "question": "Составьте предложение",
@@ -210,7 +210,7 @@
   },
   {
     "id": "ex_krankheit_gap_fill_1",
-    "wordId": "die_krankheit",
+    "wordId": "krankheit",
     "type": "gap_fill",
     "question": "Заполните пропуск",
     "sentence": "Diese ___ ist sehr ansteckend.",
@@ -226,7 +226,7 @@
   },
   {
     "id": "ex_medikament_gap_fill_1",
-    "wordId": "das_medikament",
+    "wordId": "medikament",
     "type": "gap_fill",
     "question": "Вставьте правильное слово",
     "sentence": "Der Arzt verschreibt mir ein neues ___.",
@@ -242,7 +242,7 @@
   },
   {
     "id": "ex_medikament_useful_phrase_1",
-    "wordId": "das_medikament",
+    "wordId": "medikament",
     "type": "useful_phrase",
     "phrase": "Nehmen Sie dieses Medikament dreimal täglich nach dem Essen.",
     "question": "Запомните фразу о приеме лекарств",
@@ -266,7 +266,7 @@
   },
   {
     "id": "ex_rezept_gap_fill_1",
-    "wordId": "das_rezept",
+    "wordId": "rezept",
     "type": "gap_fill",
     "question": "Вставьте слово",
     "sentence": "Für dieses Medikament brauchen Sie ein ___.",
@@ -282,7 +282,7 @@
   },
   {
     "id": "ex_rezept_translate_1",
-    "wordId": "das_rezept",
+    "wordId": "rezept",
     "type": "translate",
     "question": "Переведите: Врач выписывает рецепт",
     "answer": "Der Arzt schreibt ein Rezept aus",
@@ -290,7 +290,7 @@
   },
   {
     "id": "ex_schmerz_gap_fill_1",
-    "wordId": "der_schmerz",
+    "wordId": "schmerz",
     "type": "gap_fill",
     "question": "Заполните пропуск",
     "sentence": "Ich habe starke ___ im Rücken.",
@@ -306,7 +306,7 @@
   },
   {
     "id": "ex_schmerz_useful_phrase_1",
-    "wordId": "der_schmerz",
+    "wordId": "schmerz",
     "type": "useful_phrase",
     "phrase": "Wo tut es weh? Wo haben Sie Schmerzen?",
     "question": "Полезная фраза для визита к врачу",
@@ -314,7 +314,7 @@
   },
   {
     "id": "ex_symptom_gap_fill_1",
-    "wordId": "das_symptom",
+    "wordId": "symptom",
     "type": "gap_fill",
     "question": "Вставьте правильное слово",
     "sentence": "Fieber ist ein ___ der Grippe.",
@@ -330,7 +330,7 @@
   },
   {
     "id": "ex_untersuchung_gap_fill_1",
-    "wordId": "die_untersuchung",
+    "wordId": "untersuchung",
     "type": "gap_fill",
     "question": "Заполните пропуск",
     "sentence": "Die ärztliche ___ dauert eine Stunde.",
@@ -346,7 +346,7 @@
   },
   {
     "id": "ex_untersuchung_sentence_training_1",
-    "wordId": "die_untersuchung",
+    "wordId": "untersuchung",
     "type": "sentence_training",
     "sentence": "Vor der Behandlung muss eine gründliche Untersuchung durchgeführt werden.",
     "question": "Составьте предложение",
@@ -354,7 +354,7 @@
   },
   {
     "id": "ex_angst_gap_fill_1",
-    "wordId": "die_angst",
+    "wordId": "angst",
     "type": "gap_fill",
     "question": "Вставьте слово",
     "sentence": "Ich habe ___ vor der Prüfung.",
@@ -370,7 +370,7 @@
   },
   {
     "id": "ex_angst_useful_phrase_1",
-    "wordId": "die_angst",
+    "wordId": "angst",
     "type": "useful_phrase",
     "phrase": "Keine Angst! Alles wird gut.",
     "question": "Фраза для успокоения",
@@ -394,7 +394,7 @@
   },
   {
     "id": "ex_freude_gap_fill_1",
-    "wordId": "die_freude",
+    "wordId": "freude",
     "type": "gap_fill",
     "question": "Вставьте слово",
     "sentence": "Das Kind springt vor ___.",
@@ -410,7 +410,7 @@
   },
   {
     "id": "ex_freude_translate_1",
-    "wordId": "die_freude",
+    "wordId": "freude",
     "type": "translate",
     "question": "Переведите: Я радуюсь встрече с тобой",
     "answer": "Ich freue mich auf das Treffen mit dir",
@@ -474,7 +474,7 @@
   },
   {
     "id": "ex_sorge_gap_fill_1",
-    "wordId": "die_sorge",
+    "wordId": "sorge",
     "type": "gap_fill",
     "question": "Вставьте слово",
     "sentence": "Ich mache mir ___ um dich.",
@@ -490,7 +490,7 @@
   },
   {
     "id": "ex_sorge_translate_1",
-    "wordId": "die_sorge",
+    "wordId": "sorge",
     "type": "translate",
     "question": "Переведите: Не беспокойся!",
     "answer": "Mach dir keine Sorgen!",
@@ -498,7 +498,7 @@
   },
   {
     "id": "ex_stimmung_gap_fill_1",
-    "wordId": "die_stimmung",
+    "wordId": "stimmung",
     "type": "gap_fill",
     "question": "Заполните пропуск",
     "sentence": "Die ___ auf der Party war super!",
@@ -530,7 +530,7 @@
   },
   {
     "id": "ex_antibiotikum_audio_1",
-    "wordId": "das_antibiotikum",
+    "wordId": "antibiotikum",
     "type": "guess_by_audio",
     "question": "Прослушайте и выберите",
     "audioText": "Antibiotikum",
@@ -544,7 +544,7 @@
   },
   {
     "id": "ex_gesundheit_audio_1",
-    "wordId": "die_gesundheit",
+    "wordId": "gesundheit",
     "type": "guess_by_audio",
     "question": "Прослушайте и выберите",
     "audioText": "Gesundheit",
@@ -558,7 +558,7 @@
   },
   {
     "id": "ex_fieber_audio_1",
-    "wordId": "das_fieber",
+    "wordId": "fieber",
     "type": "guess_by_audio",
     "question": "Прослушайте и выберите",
     "audioText": "Fieber",
@@ -572,7 +572,7 @@
   },
   {
     "id": "ex_schmerz_audio_1",
-    "wordId": "der_schmerz",
+    "wordId": "schmerz",
     "type": "guess_by_audio",
     "question": "Прослушайте и выберите",
     "audioText": "Schmerz",
@@ -586,7 +586,7 @@
   },
   {
     "id": "ex_angst_audio_1",
-    "wordId": "die_angst",
+    "wordId": "angst",
     "type": "guess_by_audio",
     "question": "Прослушайте и выберите",
     "audioText": "Angst",
@@ -600,7 +600,7 @@
   },
   {
     "id": "ex_freude_audio_1",
-    "wordId": "die_freude",
+    "wordId": "freude",
     "type": "guess_by_audio",
     "question": "Прослушайте и выберите",
     "audioText": "Freude",
@@ -642,7 +642,7 @@
   },
   {
     "id": "ex_antibiotikum_article_1",
-    "wordId": "das_antibiotikum",
+    "wordId": "antibiotikum",
     "type": "guess_article",
     "question": "",
     "word": "Antibiotikum",
@@ -656,7 +656,7 @@
   },
   {
     "id": "ex_gesundheit_article_1",
-    "wordId": "die_gesundheit",
+    "wordId": "gesundheit",
     "type": "guess_article",
     "question": "",
     "word": "Gesundheit",
@@ -670,7 +670,7 @@
   },
   {
     "id": "ex_fieber_article_1",
-    "wordId": "das_fieber",
+    "wordId": "fieber",
     "type": "guess_article",
     "question": "",
     "word": "Fieber",
@@ -684,7 +684,7 @@
   },
   {
     "id": "ex_husten_article_1",
-    "wordId": "der_husten",
+    "wordId": "husten",
     "type": "guess_article",
     "question": "",
     "word": "Husten",
@@ -712,7 +712,7 @@
   },
   {
     "id": "ex_krankheit_article_1",
-    "wordId": "die_krankheit",
+    "wordId": "krankheit",
     "type": "guess_article",
     "question": "",
     "word": "Krankheit",
@@ -726,7 +726,7 @@
   },
   {
     "id": "ex_medikament_article_1",
-    "wordId": "das_medikament",
+    "wordId": "medikament",
     "type": "guess_article",
     "question": "",
     "word": "Medikament",
@@ -754,7 +754,7 @@
   },
   {
     "id": "ex_rezept_article_1",
-    "wordId": "das_rezept",
+    "wordId": "rezept",
     "type": "guess_article",
     "question": "",
     "word": "Rezept",
@@ -768,7 +768,7 @@
   },
   {
     "id": "ex_schmerz_article_1",
-    "wordId": "der_schmerz",
+    "wordId": "schmerz",
     "type": "guess_article",
     "question": "",
     "word": "Schmerz",
@@ -782,7 +782,7 @@
   },
   {
     "id": "ex_angst_article_1",
-    "wordId": "die_angst",
+    "wordId": "angst",
     "type": "guess_article",
     "question": "",
     "word": "Angst",
@@ -796,7 +796,7 @@
   },
   {
     "id": "ex_freude_article_1",
-    "wordId": "die_freude",
+    "wordId": "freude",
     "type": "guess_article",
     "question": "",
     "word": "Freude",
@@ -838,7 +838,7 @@
   },
   {
     "id": "ex_sorge_article_1",
-    "wordId": "die_sorge",
+    "wordId": "sorge",
     "type": "guess_article",
     "question": "",
     "word": "Sorge",
@@ -852,7 +852,7 @@
   },
   {
     "id": "ex_stimmung_article_1",
-    "wordId": "die_stimmung",
+    "wordId": "stimmung",
     "type": "guess_article",
     "question": "",
     "word": "Stimmung",
@@ -866,7 +866,7 @@
   },
   {
     "id": "ex_antibiotikum_image_1",
-    "wordId": "das_antibiotikum",
+    "wordId": "antibiotikum",
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "das Antibiotikum",
@@ -880,7 +880,7 @@
   },
   {
     "id": "ex_fieber_image_1",
-    "wordId": "das_fieber",
+    "wordId": "fieber",
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "das Fieber",
@@ -894,7 +894,7 @@
   },
   {
     "id": "ex_gesundheit_image_1",
-    "wordId": "die_gesundheit",
+    "wordId": "gesundheit",
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "die Gesundheit",
@@ -922,7 +922,7 @@
   },
   {
     "id": "ex_medikament_image_1",
-    "wordId": "das_medikament",
+    "wordId": "medikament",
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "das Medikament",
@@ -936,7 +936,7 @@
   },
   {
     "id": "ex_rezept_image_1",
-    "wordId": "das_rezept",
+    "wordId": "rezept",
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "das Rezept",
@@ -950,7 +950,7 @@
   },
   {
     "id": "ex_schmerz_image_1",
-    "wordId": "der_schmerz",
+    "wordId": "schmerz",
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "der Schmerz",
@@ -964,7 +964,7 @@
   },
   {
     "id": "ex_angst_image_1",
-    "wordId": "die_angst",
+    "wordId": "angst",
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "die Angst",
@@ -978,7 +978,7 @@
   },
   {
     "id": "ex_freude_image_1",
-    "wordId": "die_freude",
+    "wordId": "freude",
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "die Freude",
@@ -1020,7 +1020,7 @@
   },
   {
     "id": "ex_sorge_image_1",
-    "wordId": "die_sorge",
+    "wordId": "sorge",
     "type": "image_match",
     "question": "Какое слово подходит к этой картинке?",
     "answer": "die Sorge",
@@ -1034,7 +1034,7 @@
   },
   {
     "id": "ex_antibiotikum_build_1",
-    "wordId": "das_antibiotikum",
+    "wordId": "antibiotikum",
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Antibiotikum",
@@ -1057,7 +1057,7 @@
   },
   {
     "id": "ex_fieber_build_1",
-    "wordId": "das_fieber",
+    "wordId": "fieber",
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Fieber",
@@ -1074,7 +1074,7 @@
   },
   {
     "id": "ex_gesundheit_build_1",
-    "wordId": "die_gesundheit",
+    "wordId": "gesundheit",
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Gesundheit",
@@ -1112,7 +1112,7 @@
   },
   {
     "id": "ex_medikament_build_1",
-    "wordId": "das_medikament",
+    "wordId": "medikament",
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Medikament",
@@ -1133,7 +1133,7 @@
   },
   {
     "id": "ex_rezept_build_1",
-    "wordId": "das_rezept",
+    "wordId": "rezept",
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Rezept",
@@ -1150,7 +1150,7 @@
   },
   {
     "id": "ex_schmerz_build_1",
-    "wordId": "der_schmerz",
+    "wordId": "schmerz",
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Schmerz",
@@ -1168,7 +1168,7 @@
   },
   {
     "id": "ex_angst_build_1",
-    "wordId": "die_angst",
+    "wordId": "angst",
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Angst",
@@ -1184,7 +1184,7 @@
   },
   {
     "id": "ex_freude_build_1",
-    "wordId": "die_freude",
+    "wordId": "freude",
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Freude",
@@ -1234,7 +1234,7 @@
   },
   {
     "id": "ex_sorge_build_1",
-    "wordId": "die_sorge",
+    "wordId": "sorge",
     "type": "word_building",
     "question": "Соберите слово из букв",
     "answer": "Sorge",
@@ -1250,7 +1250,7 @@
   },
   {
     "id": "ex_aerger_gap_fill_1",
-    "wordId": "der_aerger",
+    "wordId": "aerger",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Er hat großen ___.",
@@ -1278,7 +1278,7 @@
       "Option4"
     ],
     "explanation": "aufgeben — сдаваться",
-    "sentence_ru": ""
+    "sentence_ru": "Я не хочу сдаваться."
   },
   {
     "id": "ex_empfinden_gap_fill_1",
@@ -1346,7 +1346,7 @@
   },
   {
     "id": "ex_geduld_gap_fill_1",
-    "wordId": "die_geduld",
+    "wordId": "geduld",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Hab ___!",
@@ -1410,7 +1410,7 @@
   },
   {
     "id": "ex_glueck_gap_fill_1",
-    "wordId": "das_glueck",
+    "wordId": "glueck",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Viel ___!",
@@ -1442,7 +1442,7 @@
   },
   {
     "id": "ex_hoffnung_gap_fill_1",
-    "wordId": "die_hoffnung",
+    "wordId": "hoffnung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Es gibt ___.",
@@ -1650,7 +1650,7 @@
   },
   {
     "id": "ex_spass_gap_fill_1",
-    "wordId": "der_spass",
+    "wordId": "spass",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Viel ___!",
@@ -1698,7 +1698,7 @@
   },
   {
     "id": "ex_traum_gap_fill_1",
-    "wordId": "der_traum",
+    "wordId": "traum",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ war schön.",
@@ -1762,7 +1762,7 @@
   },
   {
     "id": "ex_zweifel_gap_fill_1",
-    "wordId": "der_zweifel",
+    "wordId": "zweifel",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich habe ___.",
@@ -2738,7 +2738,7 @@
   },
   {
     "id": "ex_beziehung_gap_fill_1",
-    "wordId": "die_beziehung",
+    "wordId": "beziehung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Wir haben eine gute ___.",
@@ -2754,7 +2754,7 @@
   },
   {
     "id": "ex_hilfe_gap_fill_1",
-    "wordId": "die_hilfe",
+    "wordId": "hilfe",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich brauche ___.",
@@ -2770,7 +2770,7 @@
   },
   {
     "id": "ex_haus_gap_fill_1",
-    "wordId": "das_haus",
+    "wordId": "haus",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist groß.",
@@ -2786,7 +2786,7 @@
   },
   {
     "id": "ex_wohnung_gap_fill_1",
-    "wordId": "die_wohnung",
+    "wordId": "wohnung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist modern.",
@@ -2802,7 +2802,7 @@
   },
   {
     "id": "ex_zimmer_gap_fill_1",
-    "wordId": "das_zimmer",
+    "wordId": "zimmer",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist hell.",
@@ -2818,7 +2818,7 @@
   },
   {
     "id": "ex_altbau_gap_fill_1",
-    "wordId": "der_altbau",
+    "wordId": "altbau",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich wohne in einem ___.",
@@ -2834,7 +2834,7 @@
   },
   {
     "id": "ex_neubau_gap_fill_1",
-    "wordId": "der_neubau",
+    "wordId": "neubau",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist teuer.",
@@ -2850,7 +2850,7 @@
   },
   {
     "id": "ex_wg_gap_fill_1",
-    "wordId": "die_wg",
+    "wordId": "wg",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "___ Ich wohne in einer WG.",
@@ -2866,7 +2866,7 @@
   },
   {
     "id": "ex_dorf_gap_fill_1",
-    "wordId": "das_dorf",
+    "wordId": "dorf",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich lebe in einem ___.",
@@ -2882,7 +2882,7 @@
   },
   {
     "id": "ex_stadt_gap_fill_1",
-    "wordId": "die_stadt",
+    "wordId": "stadt",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist groß.",
@@ -2898,7 +2898,7 @@
   },
   {
     "id": "ex_nachbarschaft_gap_fill_1",
-    "wordId": "die_nachbarschaft",
+    "wordId": "nachbarschaft",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist ruhig.",
@@ -2914,7 +2914,7 @@
   },
   {
     "id": "ex_umgebung_gap_fill_1",
-    "wordId": "die_umgebung",
+    "wordId": "umgebung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist schön.",
@@ -2930,7 +2930,7 @@
   },
   {
     "id": "ex_hof_gap_fill_1",
-    "wordId": "der_hof",
+    "wordId": "hof",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die Kinder spielen im ___.",
@@ -2946,7 +2946,7 @@
   },
   {
     "id": "ex_garten_gap_fill_1",
-    "wordId": "der_garten",
+    "wordId": "garten",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist groß.",
@@ -2962,7 +2962,7 @@
   },
   {
     "id": "ex_treppenhaus_gap_fill_1",
-    "wordId": "das_treppenhaus",
+    "wordId": "treppenhaus",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist sauber.",
@@ -2978,7 +2978,7 @@
   },
   {
     "id": "ex_aufzug_gap_fill_1",
-    "wordId": "der_aufzug",
+    "wordId": "aufzug",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ funktioniert nicht.",
@@ -2994,7 +2994,7 @@
   },
   {
     "id": "ex_keller_gap_fill_1",
-    "wordId": "der_keller",
+    "wordId": "keller",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist kalt.",
@@ -3010,7 +3010,7 @@
   },
   {
     "id": "ex_dachboden_gap_fill_1",
-    "wordId": "der_dachboden",
+    "wordId": "dachboden",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist staubig.",
@@ -3026,7 +3026,7 @@
   },
   {
     "id": "ex_dach_gap_fill_1",
-    "wordId": "das_dach",
+    "wordId": "dach",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist neu.",
@@ -3042,7 +3042,7 @@
   },
   {
     "id": "ex_wand_gap_fill_1",
-    "wordId": "die_wand",
+    "wordId": "wand",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist weiß.",
@@ -3058,7 +3058,7 @@
   },
   {
     "id": "ex_boden_gap_fill_1",
-    "wordId": "der_boden",
+    "wordId": "boden",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist sauber.",
@@ -3074,7 +3074,7 @@
   },
   {
     "id": "ex_decke_gap_fill_1",
-    "wordId": "die_decke",
+    "wordId": "decke",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist hoch.",
@@ -3090,7 +3090,7 @@
   },
   {
     "id": "ex_flur_gap_fill_1",
-    "wordId": "der_flur",
+    "wordId": "flur",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist lang.",
@@ -3106,7 +3106,7 @@
   },
   {
     "id": "ex_tuer_gap_fill_1",
-    "wordId": "die_tuer",
+    "wordId": "tuer",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist offen.",
@@ -3122,7 +3122,7 @@
   },
   {
     "id": "ex_fenster_gap_fill_1",
-    "wordId": "das_fenster",
+    "wordId": "fenster",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist groß.",
@@ -3138,7 +3138,7 @@
   },
   {
     "id": "ex_balkon_gap_fill_1",
-    "wordId": "der_balkon",
+    "wordId": "balkon",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist sonnig.",
@@ -3154,7 +3154,7 @@
   },
   {
     "id": "ex_terrasse_gap_fill_1",
-    "wordId": "die_terrasse",
+    "wordId": "terrasse",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Wir sitzen auf der ___.",
@@ -3170,7 +3170,7 @@
   },
   {
     "id": "ex_garage_gap_fill_1",
-    "wordId": "die_garage",
+    "wordId": "garage",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist voll.",
@@ -3186,7 +3186,7 @@
   },
   {
     "id": "ex_stellplatz_gap_fill_1",
-    "wordId": "der_stellplatz",
+    "wordId": "stellplatz",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich habe einen ___.",
@@ -3202,7 +3202,7 @@
   },
   {
     "id": "ex_mieter_gap_fill_1",
-    "wordId": "der_mieter",
+    "wordId": "mieter",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ zahlt die Miete.",
@@ -3218,7 +3218,7 @@
   },
   {
     "id": "ex_vermieter_gap_fill_1",
-    "wordId": "der_vermieter",
+    "wordId": "vermieter",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist freundlich.",
@@ -3234,7 +3234,7 @@
   },
   {
     "id": "ex_miete_gap_fill_1",
-    "wordId": "die_miete",
+    "wordId": "miete",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist hoch.",
@@ -3266,7 +3266,7 @@
   },
   {
     "id": "ex_kaution_gap_fill_1",
-    "wordId": "die_kaution",
+    "wordId": "kaution",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ beträgt 500 Euro.",
@@ -3282,7 +3282,7 @@
   },
   {
     "id": "ex_vertrag_gap_fill_1",
-    "wordId": "der_vertrag",
+    "wordId": "vertrag",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich unterschreibe den ___.",
@@ -3298,7 +3298,7 @@
   },
   {
     "id": "ex_umzug_gap_fill_1",
-    "wordId": "der_umzug",
+    "wordId": "umzug",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist stressig.",
@@ -3490,7 +3490,7 @@
   },
   {
     "id": "ex_haushalt_gap_fill_1",
-    "wordId": "der_haushalt",
+    "wordId": "haushalt",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist groß.",
@@ -3506,7 +3506,7 @@
   },
   {
     "id": "ex_bewohner_gap_fill_1",
-    "wordId": "der_bewohner",
+    "wordId": "bewohner",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ sind freundlich.",
@@ -3554,7 +3554,7 @@
   },
   {
     "id": "ex_kueche_gap_fill_1",
-    "wordId": "die_kueche",
+    "wordId": "kueche",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist modern.",
@@ -3570,7 +3570,7 @@
   },
   {
     "id": "ex_bad_gap_fill_1",
-    "wordId": "das_bad",
+    "wordId": "bad",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist klein.",
@@ -3586,7 +3586,7 @@
   },
   {
     "id": "ex_raum_gap_fill_1",
-    "wordId": "der_raum",
+    "wordId": "raum",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist groß.",
@@ -3602,7 +3602,7 @@
   },
   {
     "id": "ex_huette_gap_fill_1",
-    "wordId": "die_huette",
+    "wordId": "huette",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ steht im Wald.",
@@ -3666,7 +3666,7 @@
   },
   {
     "id": "ex_berg_gap_fill_1",
-    "wordId": "der_berg",
+    "wordId": "berg",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist hoch.",
@@ -3698,7 +3698,7 @@
   },
   {
     "id": "ex_blitz_gap_fill_1",
-    "wordId": "der_blitz",
+    "wordId": "blitz",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist hell.",
@@ -3730,7 +3730,7 @@
   },
   {
     "id": "ex_donner_gap_fill_1",
-    "wordId": "der_donner",
+    "wordId": "donner",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist laut.",
@@ -3746,7 +3746,7 @@
   },
   {
     "id": "ex_erdbeben_gap_fill_1",
-    "wordId": "das_erdbeben",
+    "wordId": "erdbeben",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ war stark.",
@@ -3762,7 +3762,7 @@
   },
   {
     "id": "ex_feld_gap_fill_1",
-    "wordId": "das_feld",
+    "wordId": "feld",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist groß.",
@@ -3794,7 +3794,7 @@
   },
   {
     "id": "ex_fluss_gap_fill_1",
-    "wordId": "der_fluss",
+    "wordId": "fluss",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist breit.",
@@ -3810,7 +3810,7 @@
   },
   {
     "id": "ex_flut_gap_fill_1",
-    "wordId": "die_flut",
+    "wordId": "flut",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist gefährlich.",
@@ -3842,7 +3842,7 @@
   },
   {
     "id": "ex_gewitter_gap_fill_1",
-    "wordId": "das_gewitter",
+    "wordId": "gewitter",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ kommt.",
@@ -3858,7 +3858,7 @@
   },
   {
     "id": "ex_grad_gap_fill_1",
-    "wordId": "der_grad",
+    "wordId": "grad",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Es sind 20 ___.",
@@ -3874,7 +3874,7 @@
   },
   {
     "id": "ex_hagel_gap_fill_1",
-    "wordId": "der_hagel",
+    "wordId": "hagel",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Es ___t.",
@@ -3890,7 +3890,7 @@
   },
   {
     "id": "ex_insel_gap_fill_1",
-    "wordId": "die_insel",
+    "wordId": "insel",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist klein.",
@@ -3906,7 +3906,7 @@
   },
   {
     "id": "ex_klimawandel_gap_fill_1",
-    "wordId": "der_klimawandel",
+    "wordId": "klimawandel",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist real.",
@@ -3922,7 +3922,7 @@
   },
   {
     "id": "ex_kueste_gap_fill_1",
-    "wordId": "die_kueste",
+    "wordId": "kueste",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist schön.",
@@ -3938,7 +3938,7 @@
   },
   {
     "id": "ex_meer_gap_fill_1",
-    "wordId": "das_meer",
+    "wordId": "meer",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist ruhig.",
@@ -3970,7 +3970,7 @@
   },
   {
     "id": "ex_nebel_gap_fill_1",
-    "wordId": "der_nebel",
+    "wordId": "nebel",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist dicht.",
@@ -3986,7 +3986,7 @@
   },
   {
     "id": "ex_orkan_gap_fill_1",
-    "wordId": "der_orkan",
+    "wordId": "orkan",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist stark.",
@@ -4002,7 +4002,7 @@
   },
   {
     "id": "ex_regen_gap_fill_1",
-    "wordId": "der_regen",
+    "wordId": "regen",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ fällt.",
@@ -4050,7 +4050,7 @@
   },
   {
     "id": "ex_schnee_gap_fill_1",
-    "wordId": "der_schnee",
+    "wordId": "schnee",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist weiß.",
@@ -4082,7 +4082,7 @@
   },
   {
     "id": "ex_see_gap_fill_1",
-    "wordId": "der_see",
+    "wordId": "see",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist tief.",
@@ -4098,7 +4098,7 @@
   },
   {
     "id": "ex_sturm_gap_fill_1",
-    "wordId": "der_sturm",
+    "wordId": "sturm",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist gefährlich.",
@@ -4114,7 +4114,7 @@
   },
   {
     "id": "ex_tal_gap_fill_1",
-    "wordId": "das_tal",
+    "wordId": "tal",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist ruhig.",
@@ -4130,7 +4130,7 @@
   },
   {
     "id": "ex_temperatur_gap_fill_1",
-    "wordId": "die_temperatur",
+    "wordId": "temperatur",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist niedrig.",
@@ -4178,7 +4178,7 @@
   },
   {
     "id": "ex_ufer_gap_fill_1",
-    "wordId": "das_ufer",
+    "wordId": "ufer",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Am ___ sitzen Leute.",
@@ -4194,7 +4194,7 @@
   },
   {
     "id": "ex_umwelt_gap_fill_1",
-    "wordId": "die_umwelt",
+    "wordId": "umwelt",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist wichtig.",
@@ -4226,7 +4226,7 @@
   },
   {
     "id": "ex_wald_gap_fill_1",
-    "wordId": "der_wald",
+    "wordId": "wald",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist dicht.",
@@ -4258,7 +4258,7 @@
   },
   {
     "id": "ex_wetter_gap_fill_1",
-    "wordId": "das_wetter",
+    "wordId": "wetter",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist schön.",
@@ -4274,7 +4274,7 @@
   },
   {
     "id": "ex_wetterbericht_gap_fill_1",
-    "wordId": "der_wetterbericht",
+    "wordId": "wetterbericht",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich höre den ___.",
@@ -4290,7 +4290,7 @@
   },
   {
     "id": "ex_wiese_gap_fill_1",
-    "wordId": "die_wiese",
+    "wordId": "wiese",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist grün.",
@@ -4322,7 +4322,7 @@
   },
   {
     "id": "ex_welt_gap_fill_1",
-    "wordId": "die_welt",
+    "wordId": "welt",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist schön.",
@@ -4338,7 +4338,7 @@
   },
   {
     "id": "ex_wind_gap_fill_1",
-    "wordId": "der_wind",
+    "wordId": "wind",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ weht stark.",
@@ -4354,7 +4354,7 @@
   },
   {
     "id": "ex_luft_gap_fill_1",
-    "wordId": "die_luft",
+    "wordId": "luft",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist frisch.",
@@ -4370,7 +4370,7 @@
   },
   {
     "id": "ex_bach_gap_fill_1",
-    "wordId": "der_bach",
+    "wordId": "bach",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ fließt schnell.",
@@ -4386,7 +4386,7 @@
   },
   {
     "id": "ex_licht_gap_fill_1",
-    "wordId": "das_licht",
+    "wordId": "licht",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist hell.",
@@ -4402,7 +4402,7 @@
   },
   {
     "id": "ex_himmel_gap_fill_1",
-    "wordId": "der_himmel",
+    "wordId": "himmel",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Der ___ ist blau.",
@@ -4418,7 +4418,7 @@
   },
   {
     "id": "ex_wolke_gap_fill_1",
-    "wordId": "die_wolke",
+    "wordId": "wolke",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist grau.",
@@ -4434,7 +4434,7 @@
   },
   {
     "id": "ex_sonne_gap_fill_1",
-    "wordId": "die_sonne",
+    "wordId": "sonne",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ scheint.",
@@ -4450,7 +4450,7 @@
   },
   {
     "id": "ex_schatten_gap_fill_1",
-    "wordId": "der_schatten",
+    "wordId": "schatten",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Im ___ ist es kühl.",
@@ -4466,7 +4466,7 @@
   },
   {
     "id": "ex_blume_gap_fill_1",
-    "wordId": "die_blume",
+    "wordId": "blume",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist schön.",
@@ -4514,7 +4514,7 @@
   },
   {
     "id": "ex_hitze_gap_fill_1",
-    "wordId": "die_hitze",
+    "wordId": "hitze",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist stark.",
@@ -4530,7 +4530,7 @@
   },
   {
     "id": "ex_arbeit_gap_fill_1",
-    "wordId": "die_arbeit",
+    "wordId": "arbeit",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ macht Spaß.",
@@ -4546,7 +4546,7 @@
   },
   {
     "id": "ex_beruf_gap_fill_1",
-    "wordId": "der_beruf",
+    "wordId": "beruf",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Mein ___ ist Lehrer.",
@@ -4562,7 +4562,7 @@
   },
   {
     "id": "ex_stelle_gap_fill_1",
-    "wordId": "die_stelle",
+    "wordId": "stelle",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich suche eine ___.",
@@ -4578,7 +4578,7 @@
   },
   {
     "id": "ex_firma_gap_fill_1",
-    "wordId": "die_firma",
+    "wordId": "firma",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ wächst schnell.",
@@ -4594,7 +4594,7 @@
   },
   {
     "id": "ex_abteilung_gap_fill_1",
-    "wordId": "die_abteilung",
+    "wordId": "abteilung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist groß.",
@@ -4610,7 +4610,7 @@
   },
   {
     "id": "ex_team_gap_fill_1",
-    "wordId": "das_team",
+    "wordId": "team",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Wir arbeiten im ___.",
@@ -4626,7 +4626,7 @@
   },
   {
     "id": "ex_kollege_gap_fill_1",
-    "wordId": "der_kollege",
+    "wordId": "kollege",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Er ist mein ___.",
@@ -4642,7 +4642,7 @@
   },
   {
     "id": "ex_mitarbeiter_gap_fill_1",
-    "wordId": "der_mitarbeiter",
+    "wordId": "mitarbeiter",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ sind freundlich.",
@@ -4658,7 +4658,7 @@
   },
   {
     "id": "ex_gehalt_gap_fill_1",
-    "wordId": "das_gehalt",
+    "wordId": "gehalt",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist hoch.",
@@ -4674,7 +4674,7 @@
   },
   {
     "id": "ex_vertrag_gap_fill_1",
-    "wordId": "der_vertrag",
+    "wordId": "vertrag",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich unterschreibe den ___.",
@@ -4690,7 +4690,7 @@
   },
   {
     "id": "ex_bewerbung_gap_fill_1",
-    "wordId": "die_bewerbung",
+    "wordId": "bewerbung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich schreibe eine ___.",
@@ -4706,7 +4706,7 @@
   },
   {
     "id": "ex_lebenslauf_gap_fill_1",
-    "wordId": "der_lebenslauf",
+    "wordId": "lebenslauf",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Mein ___ ist aktuell.",
@@ -4722,7 +4722,7 @@
   },
   {
     "id": "ex_vorstellungsgespraech_gap_fill_1",
-    "wordId": "das_vorstellungsgespraech",
+    "wordId": "vorstellungsgespraech",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich habe ein ___.",
@@ -4738,7 +4738,7 @@
   },
   {
     "id": "ex_projekt_gap_fill_1",
-    "wordId": "das_projekt",
+    "wordId": "projekt",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist wichtig.",
@@ -4754,7 +4754,7 @@
   },
   {
     "id": "ex_aufgabe_gap_fill_1",
-    "wordId": "die_aufgabe",
+    "wordId": "aufgabe",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich erledige die ___.",
@@ -4770,7 +4770,7 @@
   },
   {
     "id": "ex_ziel_gap_fill_1",
-    "wordId": "das_ziel",
+    "wordId": "ziel",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Das ___ ist klar.",
@@ -4786,7 +4786,7 @@
   },
   {
     "id": "ex_erfolg_gap_fill_1",
-    "wordId": "der_erfolg",
+    "wordId": "erfolg",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "___ ist wichtig.",
@@ -4802,7 +4802,7 @@
   },
   {
     "id": "ex_erfahrung_gap_fill_1",
-    "wordId": "die_erfahrung",
+    "wordId": "erfahrung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich habe viel ___.",
@@ -4818,7 +4818,7 @@
   },
   {
     "id": "ex_faehigkeit_gap_fill_1",
-    "wordId": "die_faehigkeit",
+    "wordId": "faehigkeit",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist wichtig.",
@@ -4834,7 +4834,7 @@
   },
   {
     "id": "ex_kompetenz_gap_fill_1",
-    "wordId": "die_kompetenz",
+    "wordId": "kompetenz",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ fehlt.",
@@ -4850,7 +4850,7 @@
   },
   {
     "id": "ex_verantwortung_gap_fill_1",
-    "wordId": "die_verantwortung",
+    "wordId": "verantwortung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich habe viel ___.",
@@ -4866,7 +4866,7 @@
   },
   {
     "id": "ex_voraussetzung_gap_fill_1",
-    "wordId": "die_voraussetzung",
+    "wordId": "voraussetzung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist wichtig.",
@@ -4882,7 +4882,7 @@
   },
   {
     "id": "ex_weiterbildung_gap_fill_1",
-    "wordId": "die_weiterbildung",
+    "wordId": "weiterbildung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich mache eine ___.",
@@ -4898,7 +4898,7 @@
   },
   {
     "id": "ex_karriere_gap_fill_1",
-    "wordId": "die_karriere",
+    "wordId": "karriere",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ läuft gut.",
@@ -4914,7 +4914,7 @@
   },
   {
     "id": "ex_kuendigung_gap_fill_1",
-    "wordId": "die_kuendigung",
+    "wordId": "kuendigung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich bekomme eine ___.",
@@ -4930,7 +4930,7 @@
   },
   {
     "id": "ex_hilfe_gap_fill_1",
-    "wordId": "die_hilfe",
+    "wordId": "hilfe",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich brauche ___.",
@@ -4962,7 +4962,7 @@
   },
   {
     "id": "ex_fehler_gap_fill_1",
-    "wordId": "der_fehler",
+    "wordId": "fehler",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Ich habe einen ___ gemacht.",
@@ -4978,7 +4978,7 @@
   },
   {
     "id": "ex_messe_gap_fill_1",
-    "wordId": "die_messe",
+    "wordId": "messe",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist international.",
@@ -4994,7 +4994,7 @@
   },
   {
     "id": "ex_verwendung_gap_fill_1",
-    "wordId": "die_verwendung",
+    "wordId": "verwendung",
     "type": "gap_fill",
     "question": "Заполните пропуск правильным словом",
     "sentence": "Die ___ ist korrekt.",
@@ -11991,5 +11991,917 @@
     ],
     "hint": "___ (тошнить, рвать)",
     "explanation": "sich übergeben — тошнить, рвать"
+  },
+  {
+    "id": "ex_krankheit_gap_fill_1",
+    "wordId": "krankheit",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ___ ist ernst.",
+    "sentence_ru": "Болезнь серьёзная.",
+    "answer": "die Krankheit",
+    "options": [
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz",
+      "die Beschwerde"
+    ],
+    "explanation": "Krankheit (die) — болезнь. Болезнь серьёзная."
+  },
+  {
+    "id": "ex_gesundheit_gap_fill_1",
+    "wordId": "gesundheit",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ___ ist wichtig.",
+    "sentence_ru": "Здоровье важно.",
+    "answer": "die Gesundheit",
+    "options": [
+      "die Gesundheit",
+      "die Krankheit",
+      "der Schmerz",
+      "die Beschwerde"
+    ],
+    "explanation": "Gesundheit (die) — здоровье. Здоровье важно."
+  },
+  {
+    "id": "ex_schmerz_gap_fill_1",
+    "wordId": "schmerz",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe starke ___en.",
+    "sentence_ru": "У меня сильная боль.",
+    "answer": "der Schmerz",
+    "options": [
+      "der Schmerz",
+      "die Krankheit",
+      "die Gesundheit",
+      "die Beschwerde"
+    ],
+    "explanation": "Schmerz (der) — боль. У меня сильная боль."
+  },
+  {
+    "id": "ex_schwindel_gap_fill_1",
+    "wordId": "schwindel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Mir wird schwindlig ___.",
+    "sentence_ru": "У меня кружится голова.",
+    "answer": "der Schwindel",
+    "options": [
+      "der Schwindel",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Schwindel (der) — головокружение. У меня кружится голова."
+  },
+  {
+    "id": "ex_medikament_gap_fill_1",
+    "wordId": "medikament",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich nehme ein ___ ein.",
+    "sentence_ru": "лекарство",
+    "answer": "das Medikament",
+    "options": [
+      "das Medikament",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Medikament (das) — лекарство. лекарство"
+  },
+  {
+    "id": "ex_rezept_gap_fill_1",
+    "wordId": "rezept",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich brauche ein ___.",
+    "sentence_ru": "рецепт (мед.)",
+    "answer": "das Rezept",
+    "options": [
+      "das Rezept",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Rezept (das) — рецепт (мед.). рецепт (мед.)"
+  },
+  {
+    "id": "ex_krankenhaus_gap_fill_1",
+    "wordId": "krankenhaus",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich muss ins ___.",
+    "sentence_ru": "больница",
+    "answer": "das Krankenhaus",
+    "options": [
+      "das Krankenhaus",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Krankenhaus (das) — больница. больница"
+  },
+  {
+    "id": "ex_termin_gap_fill_1",
+    "wordId": "termin",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe einen ___ beim Arzt.",
+    "sentence_ru": "запись, приём",
+    "answer": "der Termin",
+    "options": [
+      "der Termin",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Termin (der) — запись, приём. запись, приём"
+  },
+  {
+    "id": "ex_praxis_gap_fill_1",
+    "wordId": "praxis",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ___ ist geschlossen.",
+    "sentence_ru": "врачебная практика, кабинет",
+    "answer": "die Praxis",
+    "options": [
+      "die Praxis",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Praxis (die) — врачебная практика, кабинет. врачебная практика, кабинет"
+  },
+  {
+    "id": "ex_notaufnahme_gap_fill_1",
+    "wordId": "notaufnahme",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich muss in ___.",
+    "sentence_ru": "приёмное отделение",
+    "answer": "die Notaufnahme",
+    "options": [
+      "die Notaufnahme",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Notaufnahme (die) — приёмное отделение. приёмное отделение"
+  },
+  {
+    "id": "ex_untersuchung_gap_fill_1",
+    "wordId": "untersuchung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ___ dauert 10 Minuten.",
+    "sentence_ru": "обследование",
+    "answer": "die Untersuchung",
+    "options": [
+      "die Untersuchung",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Untersuchung (die) — обследование. обследование"
+  },
+  {
+    "id": "ex_versicherung_gap_fill_1",
+    "wordId": "versicherung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe eine Krankenversicherung ___.",
+    "sentence_ru": "страховка",
+    "answer": "die Versicherung",
+    "options": [
+      "die Versicherung",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Versicherung (die) — страховка. страховка"
+  },
+  {
+    "id": "ex_tablette_gap_fill_1",
+    "wordId": "tablette",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich nehme eine ___.",
+    "sentence_ru": "таблетка",
+    "answer": "die Tablette",
+    "options": [
+      "die Tablette",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Tablette (die) — таблетка. таблетка"
+  },
+  {
+    "id": "ex_fieber_gap_fill_1",
+    "wordId": "fieber",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe ___.",
+    "sentence_ru": "У меня температура.",
+    "answer": "das Fieber",
+    "options": [
+      "das Fieber",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Fieber (das) — лихорадка, температура. У меня температура."
+  },
+  {
+    "id": "ex_husten_gap_fill_1",
+    "wordId": "husten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe ___.",
+    "sentence_ru": "кашель",
+    "answer": "der Husten",
+    "options": [
+      "der Husten",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Husten (der) — кашель. кашель"
+  },
+  {
+    "id": "ex_schnupfen_gap_fill_1",
+    "wordId": "schnupfen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe ___.",
+    "sentence_ru": "насморк",
+    "answer": "der Schnupfen",
+    "options": [
+      "der Schnupfen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Schnupfen (der) — насморк. насморк"
+  },
+  {
+    "id": "ex_erkältung_gap_fill_1",
+    "wordId": "erkältung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe eine ___.",
+    "sentence_ru": "простуда",
+    "answer": "die Erkältung",
+    "options": [
+      "die Erkältung",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Erkältung (die) — простуда. простуда"
+  },
+  {
+    "id": "ex_übelkeit_gap_fill_1",
+    "wordId": "übelkeit",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe ___.",
+    "sentence_ru": "тошнота",
+    "answer": "die Übelkeit",
+    "options": [
+      "die Übelkeit",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Übelkeit (die) — тошнота. тошнота"
+  },
+  {
+    "id": "ex_erbrechen_gap_fill_1",
+    "wordId": "erbrechen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Das ___ hörte auf.",
+    "sentence_ru": "рвота",
+    "answer": "das Erbrechen",
+    "options": [
+      "das Erbrechen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Erbrechen (das) — рвота. рвота"
+  },
+  {
+    "id": "ex_wunde_gap_fill_1",
+    "wordId": "wunde",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ___ ist tief.",
+    "sentence_ru": "рана",
+    "answer": "die Wunde",
+    "options": [
+      "die Wunde",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Wunde (die) — рана. рана"
+  },
+  {
+    "id": "ex_verletzung_gap_fill_1",
+    "wordId": "verletzung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ___ ist nicht schlimm.",
+    "sentence_ru": "травма, повреждение",
+    "answer": "die Verletzung",
+    "options": [
+      "die Verletzung",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Verletzung (die) — травма, повреждение. травма, повреждение"
+  },
+  {
+    "id": "ex_allergie_gap_fill_1",
+    "wordId": "allergie",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe eine ___.",
+    "sentence_ru": "аллергия",
+    "answer": "die Allergie",
+    "options": [
+      "die Allergie",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Allergie (die) — аллергия. аллергия"
+  },
+  {
+    "id": "ex_durchfall_gap_fill_1",
+    "wordId": "durchfall",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe ___.",
+    "sentence_ru": "понос",
+    "answer": "der Durchfall",
+    "options": [
+      "der Durchfall",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Durchfall (der) — понос. понос"
+  },
+  {
+    "id": "ex_verstopfung_gap_fill_1",
+    "wordId": "verstopfung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe eine ___.",
+    "sentence_ru": "запор",
+    "answer": "die Verstopfung",
+    "options": [
+      "die Verstopfung",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Verstopfung (die) — запор. запор"
+  },
+  {
+    "id": "ex_entzündung_gap_fill_1",
+    "wordId": "entzündung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ___ ist stark.",
+    "sentence_ru": "воспаление",
+    "answer": "die Entzündung",
+    "options": [
+      "die Entzündung",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Entzündung (die) — воспаление. воспаление"
+  },
+  {
+    "id": "ex_fiebermesser_gap_fill_1",
+    "wordId": "fiebermesser",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Wo ist ___?",
+    "sentence_ru": "градусник",
+    "answer": "das Fiebermesser",
+    "options": [
+      "das Fiebermesser",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Fiebermesser (das) — градусник. градусник"
+  },
+  {
+    "id": "ex_sprechstunde_gap_fill_1",
+    "wordId": "sprechstunde",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die ___ beginnt um 9.",
+    "sentence_ru": "часы приёма",
+    "answer": "die Sprechstunde",
+    "options": [
+      "die Sprechstunde",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Sprechstunde (die) — часы приёма. часы приёма"
+  },
+  {
+    "id": "ex_symptom_gap_fill_1",
+    "wordId": "symptom",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Das ist ein typisches ___.",
+    "sentence_ru": "симптом",
+    "answer": "das Symptom",
+    "options": [
+      "das Symptom",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Symptom (das) — симптом. симптом"
+  },
+  {
+    "id": "ex_blutdruck_gap_fill_1",
+    "wordId": "blutdruck",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Mein ___ ist hoch.",
+    "sentence_ru": "кровяное давление",
+    "answer": "der Blutdruck",
+    "options": [
+      "der Blutdruck",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Blutdruck (der) — кровяное давление. кровяное давление"
+  },
+  {
+    "id": "ex_röntgen_gap_fill_1",
+    "wordId": "röntgen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich brauche ein ___.",
+    "sentence_ru": "рентген",
+    "answer": "das Röntgen",
+    "options": [
+      "das Röntgen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Röntgen (das) — рентген. рентген"
+  },
+  {
+    "id": "ex_überweisung_gap_fill_1",
+    "wordId": "überweisung",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich brauche eine ___.",
+    "sentence_ru": "направление (к врачу)",
+    "answer": "die Überweisung",
+    "options": [
+      "die Überweisung",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Überweisung (die) — направление (к врачу). направление (к врачу)"
+  },
+  {
+    "id": "ex_eiter_gap_fill_1",
+    "wordId": "eiter",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die Wunde hat ___.",
+    "sentence_ru": "гной",
+    "answer": "der Eiter",
+    "options": [
+      "der Eiter",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Eiter (der) — гной. гной"
+  },
+  {
+    "id": "ex_sodbrennen_gap_fill_1",
+    "wordId": "sodbrennen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe ___.",
+    "sentence_ru": "изжога",
+    "answer": "das Sodbrennen",
+    "options": [
+      "das Sodbrennen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Sodbrennen (das) — изжога. изжога"
+  },
+  {
+    "id": "ex_schüttelfrost_gap_fill_1",
+    "wordId": "schüttelfrost",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe ___.",
+    "sentence_ru": "озноб",
+    "answer": "der Schüttelfrost",
+    "options": [
+      "der Schüttelfrost",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "Schüttelfrost (der) — озноб. озноб"
+  },
+  {
+    "id": "ex_schwindelig_gap_fill_1",
+    "wordId": "schwindelig",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Mir ist ___.",
+    "sentence_ru": "головокружительный, кружится голова",
+    "answer": "schwindelig",
+    "options": [
+      "schwindelig",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "schwindelig — головокружительный, кружится голова. головокружительный, кружится голова"
+  },
+  {
+    "id": "ex_entzündet_gap_fill_1",
+    "wordId": "entzündet",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die Stelle ist ___.",
+    "sentence_ru": "воспалённый",
+    "answer": "entzündet",
+    "options": [
+      "entzündet",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "entzündet — воспалённый. воспалённый"
+  },
+  {
+    "id": "ex_übel_gap_fill_1",
+    "wordId": "übel",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Mir ist ___.",
+    "sentence_ru": "плохо, дурно",
+    "answer": "übel",
+    "options": [
+      "übel",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "übel — плохо, дурно. плохо, дурно"
+  },
+  {
+    "id": "ex_schwitzen_gap_fill_1",
+    "wordId": "schwitzen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich schwitze viel ___.",
+    "sentence_ru": "потеть",
+    "answer": "schwitzen",
+    "options": [
+      "schwitzen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "schwitzen — потеть. потеть"
+  },
+  {
+    "id": "ex_zunehmen_gap_fill_1",
+    "wordId": "zunehmen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich nehme zu ___.",
+    "sentence_ru": "набирать вес",
+    "answer": "zunehmen",
+    "options": [
+      "zunehmen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "zunehmen — набирать вес. набирать вес"
+  },
+  {
+    "id": "ex_abnehmen_gap_fill_1",
+    "wordId": "abnehmen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich nehme ab ___.",
+    "sentence_ru": "худеть, снижать",
+    "answer": "abnehmen",
+    "options": [
+      "abnehmen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "abnehmen — худеть, снижать. худеть, снижать"
+  },
+  {
+    "id": "ex_schwellen_gap_fill_1",
+    "wordId": "schwellen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Das Bein schwillt an ___.",
+    "sentence_ru": "опухать",
+    "answer": "schwellen",
+    "options": [
+      "schwellen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "schwellen — опухать. опухать"
+  },
+  {
+    "id": "ex_brechen_gap_fill_1",
+    "wordId": "brechen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich breche mir den Arm ___.",
+    "sentence_ru": "ломать",
+    "answer": "brechen",
+    "options": [
+      "brechen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "brechen — ломать. ломать"
+  },
+  {
+    "id": "ex_einnehmen_gap_fill_1",
+    "wordId": "einnehmen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich nehme Tabletten ein ___.",
+    "sentence_ru": "принимать (лекарство)",
+    "answer": "einnehmen",
+    "options": [
+      "einnehmen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "einnehmen — принимать (лекарство). принимать (лекарство)"
+  },
+  {
+    "id": "ex_verschreiben_gap_fill_1",
+    "wordId": "verschreiben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Der Arzt verschreibt ein Medikament ___.",
+    "sentence_ru": "прописывать",
+    "answer": "verschreiben",
+    "options": [
+      "verschreiben",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "verschreiben — прописывать. прописывать"
+  },
+  {
+    "id": "ex_wirken_gap_fill_1",
+    "wordId": "wirken",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Das Medikament wirkt schnell ___.",
+    "sentence_ru": "действовать",
+    "answer": "wirken",
+    "options": [
+      "wirken",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "wirken — действовать. действовать"
+  },
+  {
+    "id": "ex_pflegen_gap_fill_1",
+    "wordId": "pflegen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich pflege meinen Vater ___.",
+    "sentence_ru": "ухаживать",
+    "answer": "pflegen",
+    "options": [
+      "pflegen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "pflegen — ухаживать. ухаживать"
+  },
+  {
+    "id": "ex_husten_v_gap_fill_1",
+    "wordId": "husten_v",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich huste ___.",
+    "sentence_ru": "кашлять",
+    "answer": "husten",
+    "options": [
+      "husten",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "husten — кашлять. кашлять"
+  },
+  {
+    "id": "ex_niesen_gap_fill_1",
+    "wordId": "niesen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich niese ___.",
+    "sentence_ru": "чихать",
+    "answer": "niesen",
+    "options": [
+      "niesen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "niesen — чихать. чихать"
+  },
+  {
+    "id": "ex_bluten_gap_fill_1",
+    "wordId": "bluten",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die Wunde blutet ___.",
+    "sentence_ru": "кровоточить",
+    "answer": "bluten",
+    "options": [
+      "bluten",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "bluten — кровоточить. кровоточить"
+  },
+  {
+    "id": "ex_sich_verletzen_gap_fill_1",
+    "wordId": "sich_verletzen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich habe mich verletzt ___.",
+    "sentence_ru": "пораниться",
+    "answer": "sich verletzen",
+    "options": [
+      "sich verletzen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "sich verletzen — пораниться. пораниться"
+  },
+  {
+    "id": "ex_sich_erholen_gap_fill_1",
+    "wordId": "sich_erholen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich erhole mich ___.",
+    "sentence_ru": "отдыхать, восстанавливаться",
+    "answer": "sich erholen",
+    "options": [
+      "sich erholen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "sich erholen — отдыхать, восстанавливаться. отдыхать, восстанавливаться"
+  },
+  {
+    "id": "ex_heilen_gap_fill_1",
+    "wordId": "heilen",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Die Wunde heilt ___.",
+    "sentence_ru": "исцелять",
+    "answer": "heilen",
+    "options": [
+      "heilen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "heilen — исцелять. исцелять"
+  },
+  {
+    "id": "ex_untersuchen_v_gap_fill_1",
+    "wordId": "untersuchen_v",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Der Arzt untersucht mich ___.",
+    "sentence_ru": "обследовать",
+    "answer": "untersuchen",
+    "options": [
+      "untersuchen",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "untersuchen — обследовать. обследовать"
+  },
+  {
+    "id": "ex_diagnostizieren_gap_fill_1",
+    "wordId": "diagnostizieren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Der Arzt diagnostiziert die Krankheit ___.",
+    "sentence_ru": "диагностировать",
+    "answer": "diagnostizieren",
+    "options": [
+      "diagnostizieren",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "diagnostizieren — диагностировать. диагностировать"
+  },
+  {
+    "id": "ex_behandeln_gap_fill_1",
+    "wordId": "behandeln",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Der Arzt behandelt mich ___.",
+    "sentence_ru": "лечить",
+    "answer": "behandeln",
+    "options": [
+      "behandeln",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "behandeln — лечить. лечить"
+  },
+  {
+    "id": "ex_vereinbaren_gap_fill_1",
+    "wordId": "vereinbaren",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich vereinbare einen Termin ___.",
+    "sentence_ru": "назначать (встречу)",
+    "answer": "vereinbaren",
+    "options": [
+      "vereinbaren",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "vereinbaren — назначать (встречу). назначать (встречу)"
+  },
+  {
+    "id": "ex_sich_übergeben_gap_fill_1",
+    "wordId": "sich_übergeben",
+    "type": "gap_fill",
+    "question": "Заполните пропуск",
+    "sentence": "Ich übergebe mich ___.",
+    "sentence_ru": "тошнить, рвать",
+    "answer": "sich übergeben",
+    "options": [
+      "sich übergeben",
+      "die Krankheit",
+      "die Gesundheit",
+      "der Schmerz"
+    ],
+    "explanation": "sich übergeben — тошнить, рвать. тошнить, рвать"
   }
 ]
