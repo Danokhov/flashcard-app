@@ -1499,43 +1499,6 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
 
             const slide = this.analysisSlides[this.currentAnalysisIndex];
             if (!slide) return;
-
-            slideContainer.innerHTML = `
-              <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">
-                ${slide.title || 'Разбор'}
-              </p>
-              <p class="mb-2 font-semibold text-gray-800">${slide.original}</p>
-              <p class="mb-3 text-gray-700">${slide.translation}</p>
-              ${
-                slide.notes && slide.notes.length
-                  ? `<ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                       ${slide.notes.map(n => `<li>${n}</li>`).join('')}
-                     </ul>`
-                  : ''
-              }
-            `;
-
-            if (progressEl) {
-              const total = this.analysisSlides.length;
-              const current = this.currentAnalysisIndex + 1;
-              progressEl.textContent = `${current} / ${total}`;
-            }
-          },
-
-          nextAnalysisSlide() {
-            if (!this.analysisSlides || !this.analysisSlides.length) return;
-            this.currentAnalysisIndex =
-              (this.currentAnalysisIndex + 1) % this.analysisSlides.length;
-            this.renderAnalysisSlide();
-          },
-
-          prevAnalysisSlide() {
-            if (!this.analysisSlides || !this.analysisSlides.length) return;
-            this.currentAnalysisIndex =
-              (this.currentAnalysisIndex - 1 + this.analysisSlides.length) % this.analysisSlides.length;
-            this.renderAnalysisSlide();
-          },
-
           /* ====== КВИЗ ====== */
           startStoryQuiz() {
             // [ИЗМЕНЕНО] Проверяем, есть ли данные в this.quizData
@@ -3006,12 +2969,21 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                             id: `selected_topic_${topicId}`,
                             week: 1,
                             name: `${topicName}: ${words.length} слов`,
-                            cards: words.map(w => ({
-                                id: w.id,
-                                front: w.translation,
-                                back: w.word,
-                                hintImage: w.image || null
-                            })),
+                            cards: words.map(w => {
+                                // Преобразуем translation в строку
+                                const translation = Array.isArray(w.translation) ? w.translation.join(', ') : (w.translation || '');
+                                // Формируем слово с артиклем для существительных
+                                const shouldShowArticle = w.article && w.article !== '—' && w.partOfSpeech && w.partOfSpeech.toLowerCase().includes('noun');
+                                const wordWithArticle = shouldShowArticle ? `${w.article} ${w.word}` : w.word;
+                                
+                                return {
+                                    id: w.id,
+                                    front: translation,
+                                    back: wordWithArticle,
+                                    backWord: w.word, // Сохраняем слово без артикля для озвучки
+                                    hintImage: w.image || null
+                                };
+                            }),
                             isSelected: true
                         });
                     }
@@ -3507,37 +3479,35 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const controlPanel = document.createElement('div');
                 controlPanel.id = 'word-selection-controls';
                 controlPanel.className = 'mb-4 p-4 bg-white rounded-xl shadow-md flex items-center justify-between gap-3';
-                controlPanel.innerHTML = `
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="select-all-words" class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <span class="font-semibold text-gray-700">Выбрать все</span>
-                    </label>
-                    <button id="add-selected-to-study" class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition hidden">
-                        Учить выбранные
-                    </button>
+                contentListDiv.innerHTML = `
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                            <span>${idx + 1} / ${total}</span>
+                            <span>${progress}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-4">
+                        <div class="text-center mb-6">
+                            <p class="text-lg text-gray-700 font-mono mb-2">${exercise.sentence.replace('___', '<span class=\'underline\'>___</span>')}</p>
+                            ${exercise.sentence_ru ? `<p class='text-gray-500 text-sm italic'>${exercise.sentence_ru}</p>` : ''}
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="gapfill-options">${exercise.options.map(option => `
+                                <button onclick=\"window.App.checkGapFillAnswer('${option}', this)\" class=\"py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-center\">${option}</button>
+                            `).join('')}
+                        </div>
+                        <div id="gapfill-explanation" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                            <p class="text-sm text-blue-800">💡 ${exercise.explanation || ''}</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-center space-x-4">
+                        ${idx > 0 ? `<button onclick=\"window.App.prevGapFillExercise()\" class=\"py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition\">&larr; Назад</button>` : ''}
+                        ${idx < total - 1 ? `<button onclick=\"window.App.nextGapFillExercise()\" class=\"py-2 px-5 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition\">Далее &rarr;</button>` : `<button onclick=\"window.App.finishGapFillExercises()\" class=\"py-2 px-5 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition\">Завершить ✓</button>`}
+                        <button onclick=\"window.App.handleTelegramBackClick()\" class=\"py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition\">✕ Закрыть</button>
+                    </div>
                 `;
-                contentListDiv.appendChild(controlPanel);
-                
-                const selectAllCheckbox = controlPanel.querySelector('#select-all-words');
-                const addToStudyBtn = controlPanel.querySelector('#add-selected-to-study');
-                
-                // Функция обновления кнопки "Учить"
-                const updateStudyButton = () => {
-                    if (this.tempSelectedWords.length > 0) {
-                        addToStudyBtn.textContent = `Учить выбранные (${this.tempSelectedWords.length})`;
-                        addToStudyBtn.classList.remove('hidden');
-                    } else {
-                        addToStudyBtn.classList.add('hidden');
-                    }
-                };
-                
-                // Обработчик "Выбрать все"
-                selectAllCheckbox.addEventListener('change', (e) => {
-                    const isChecked = e.target.checked;
-                    const checkboxes = contentListDiv.querySelectorAll('.word-checkbox');
-                    checkboxes.forEach(cb => {
-                        cb.checked = isChecked;
-                    });
                     
                     if (isChecked) {
                         this.tempSelectedWords = words.map(w => w.id);
@@ -4795,35 +4765,35 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     imageContainer.querySelector('img').classList.add('border-4', 'border-green-500');
                     
                     resultDiv.className = 'p-4 rounded-lg mb-4 bg-green-100 border-2 border-green-500';
-                    resultDiv.innerHTML = `
-                        <div class="flex items-center gap-2 text-green-800 font-semibold">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
-                            </svg>
-                            Правильно! ${exercise.answer}
+                    contentListDiv.innerHTML = `
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                                <span>${idx + 1} / ${total}</span>
+                                <span>${progress}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                        <div class="carousel-card bg-white rounded-xl shadow-lg p-6 mb-4">
+                            <div class="text-center mb-6">
+                                <p class="text-lg text-gray-700 font-mono mb-2">${exercise.sentence.replace('___', '<span class=\'underline\'>___</span>')}</p>
+                                ${exercise.sentence_ru ? `<p class='text-gray-500 text-sm italic'>${exercise.sentence_ru}</p>` : ''}
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 mb-4 max-w-lg mx-auto" id="gapfill-options">${exercise.options.map(option => `
+                                    <button onclick=\"window.App.checkGapFillAnswer('${option}', this)\" class=\"py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-800 font-medium text-center\">${option}</button>
+                                `).join('')}
+                            </div>
+                            <div id="gapfill-explanation" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                                <p class="text-sm text-blue-800">💡 ${exercise.explanation || ''}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-center space-x-4">
+                            ${idx > 0 ? `<button onclick=\"window.App.prevGapFillExercise()\" class=\"py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition\">&larr; Назад</button>` : ''}
+                            ${idx < total - 1 ? `<button onclick=\"window.App.nextGapFillExercise()\" class=\"py-2 px-5 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition\">Далее &rarr;</button>` : `<button onclick=\"window.App.finishGapFillExercises()\" class=\"py-2 px-5 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition\">Завершить ✓</button>`}
+                            <button onclick=\"window.App.handleTelegramBackClick()\" class=\"py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition\">✕ Закрыть</button>
                         </div>
                     `;
-                } else {
-                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
-                    button.classList.add('bg-red-100', 'border-2', 'border-red-500');
-                    
-                    // Красная рамка вокруг картинки
-                    imageContainer.querySelector('img').classList.add('border-4', 'border-red-500');
-                    
-                    // Подсвечиваем правильный ответ
-                    allButtons.forEach(btn => {
-                        if (btn.textContent.trim() === exercise.answer) {
-                            btn.classList.remove('bg-gray-100');
-                            btn.classList.add('bg-green-100', 'border-2', 'border-green-500');
-                        }
-                    });
-                    
-                    resultDiv.className = 'p-4 rounded-lg mb-4 bg-red-100 border-2 border-red-500';
-                    resultDiv.innerHTML = `
-                        <div class="flex items-center gap-2 text-red-800 font-semibold">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
-                            </svg>
                             Неправильно. Правильный ответ: ${exercise.answer}
                         </div>
                     `;
@@ -5474,10 +5444,15 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                     </svg>
                 `;
                 
+                // Получаем слово для озвучки (без артикля, если есть backWord)
+                const wordToSpeak = card.backWord || card.back;
+                // Экранируем кавычки для безопасного использования в onclick
+                const escapedWord = wordToSpeak.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                
                 const germanHtml = `
                     <div class="flex items-center justify-center gap-2">
                         <span>${card.back}</span>
-                        <span onclick="window.App.speakGerman('${card.back}', event)">
+                        <span onclick="window.App.speakGerman('${escapedWord}', event)">
                             ${speakerIconSvg}
                         </span>
                     </div>
@@ -5487,9 +5462,12 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 const frontImage = document.getElementById('card-front-image');
                 const backImage = document.getElementById('card-back-image');
                 
+                // Преобразуем front в строку, если это массив
+                const frontText = Array.isArray(card.front) ? card.front.join(', ') : (card.front || '');
+                
                 if (this.currentDirection === 'ru-de') {
                     // RU → DE: показываем русский текст спереди, немецкий сзади
-                    document.getElementById('card-front-text').textContent = card.front;
+                    document.getElementById('card-front-text').textContent = frontText;
                     document.getElementById('card-back-text').innerHTML = germanHtml;
                     
                     // НЕ показываем изображение на немецкой стороне (задняя сторона)
@@ -5500,7 +5478,7 @@ apiKey: "AIzaSyAyKS1QWLlIaq_WtpNO0J5RbWAguDd5y-0",
                 } else {
                     // DE → RU: показываем немецкий текст спереди, русский сзади
                     document.getElementById('card-front-text').innerHTML = germanHtml;
-                    document.getElementById('card-back-text').textContent = card.front;
+                    document.getElementById('card-back-text').textContent = frontText;
                     
                     // НЕ показываем изображение на немецкой стороне (передняя сторона)
                     frontImage.style.display = 'none';
